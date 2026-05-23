@@ -1,0 +1,231 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type canvas_item;
+
+// Global commands
+uniform bool active = true;
+
+// Height visibility
+uniform int z_height = 0;
+uniform int z_rect_offset = 0;
+uniform int water_line = 0;
+uniform bool use_water_shader = false;
+uniform vec4 water_light_col: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec2 override_texture_size = vec2(-1, -1);
+
+// Standard controls
+//uniform bool standard_effects_enabled = false;
+uniform bool standard_effects_enabled = true;
+uniform float brightness = 1.0;
+uniform float contrast = 1.0;
+uniform float saturation = 1.0;
+
+// Blend controls
+uniform bool blending_enabled = false;
+uniform int blend_type = 0; // 0_Mix, 1_Add, 2_Sub
+uniform bool blend_uses_screen = false; // When true, ignore blend colour and mix against the background
+uniform vec4 blend_col: hint_color = vec4(1.0, 1.0, 1.0, 1.0); // Ignor alpha for convenience
+uniform float blend_mix_degree = 0.5; // Strength of the mix blend, where 1.0 = total override
+
+// For targeting; the highlight + shadow effect that will separate it from the background
+uniform bool outline_enabled = false;
+uniform vec4 outline_col: hint_color = vec4(0.95294, 0.98824, 0.94118, 0.78431);
+uniform vec4 outline_shadow: hint_color = vec4(0.15686, 0.15686, 0.15686, 0.197);
+uniform vec4 outcol_white: hint_color = vec4(0.95294, 0.98824, 0.94118, 0.78431);
+uniform vec4 outcol_red: hint_color = vec4(0.94509, 0.38431, 0.20000, 0.78431);
+
+// Shadow-drawing, for simulating 'lighting'
+uniform bool shadows_enabled = false;
+uniform vec2 light_direction = vec2(0, -1); // (0, -1) means 'coming from the north'
+uniform vec4 shadow_tint: hint_color = vec4(0.15686, 0.15686, 0.15686, 0.197); // By default, #282828 wit 100/255 alpha. Can feed separately.
+
+// Eight colour pairs for palette swapping. Happens BEFORE anything else.
+uniform bool palette_swap_enabled = false;
+uniform int swap_num = 8;
+uniform vec4 replacing_col_1: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_2: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_3: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_4: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_5: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_6: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_7: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_8: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_9: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_1: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_2: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_3: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_4: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_5: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_6: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_7: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_8: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_9: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+
+vec4 apply_water_shader(vec2 coords, vec4 pcol) {
+	
+	float offset = float(z_height) + float(z_rect_offset);
+	
+	if (pcol.a == 1.0) { // If the pixel is not empty, check if the pixel at a z_height y offset would be
+		if (coords.y > float(water_line) + offset + 0.0) { pcol = water_light_col; }
+		if (coords.y > float(water_line) + offset + 1.0) { pcol = water_light_col; }
+		if (coords.y > float(water_line) + offset + 2.0) { pcol = vec4(0.0, 0.0, 0.0, 0.0); }
+		}
+	
+	return pcol;
+	}
+
+// A soft colour matcher that allows for variance tolerance
+bool colour_match(vec3 c1, vec3 c2, float maxDiff) {
+	return (
+		abs(c1.r - c2.r) < maxDiff
+		&& abs(c1.g - c2.g) < maxDiff
+		&& abs(c1.b - c2.b) < maxDiff
+	    );
+	}
+
+// Applies the colour palette by checking for each replacing colour, and applying its replacer colour
+vec4 apply_palette_swap(vec4 pcol) {
+	float variance = 0.001;
+	
+	if (pcol.a != 0.0) {
+		if (colour_match(pcol.rgb, replacing_col_1.rgb, variance)) { pcol = replacer_col_1; }
+		else if (colour_match(pcol.rgb, replacing_col_2.rgb, variance) && swap_num >= 2) { pcol = replacer_col_2; }
+		else if (colour_match(pcol.rgb, replacing_col_3.rgb, variance) && swap_num >= 3) { pcol = replacer_col_3; }
+		else if (colour_match(pcol.rgb, replacing_col_4.rgb, variance) && swap_num >= 4) { pcol = replacer_col_4; }
+		else if (colour_match(pcol.rgb, replacing_col_5.rgb, variance) && swap_num >= 5) { pcol = replacer_col_5; }
+		else if (colour_match(pcol.rgb, replacing_col_6.rgb, variance) && swap_num >= 6) { pcol = replacer_col_6; }
+		else if (colour_match(pcol.rgb, replacing_col_7.rgb, variance) && swap_num >= 7) { pcol = replacer_col_7; }
+		else if (colour_match(pcol.rgb, replacing_col_8.rgb, variance) && swap_num >= 8) { pcol = replacer_col_8; }
+		else if (colour_match(pcol.rgb, replacing_col_9.rgb, variance) && swap_num >= 9) { pcol = replacer_col_9; }
+	}
+	
+	return pcol;
+	}
+
+// Applies various blending effects/modes
+vec4 apply_blend_effects(vec4 pcol, vec4 scol) {
+	vec4 mix_col = blend_col;
+	if (blend_uses_screen) { mix_col = scol; }
+	
+	if (blend_type == 0) { // MIX BLEND
+			pcol.rgb = mix(pcol.rgb, mix_col.rgb, blend_mix_degree);
+		}
+	if (blend_type == 1) { // MULTIPLICATIVE
+		pcol.r = pcol.r * mix_col.r;
+		pcol.g = pcol.g * mix_col.g;
+		pcol.b = pcol.b * mix_col.b;
+	}
+	if (blend_type == 2) { // ADDITIVE
+		pcol.r = max(pcol.r, mix_col.r);
+		pcol.g = max(pcol.g, mix_col.g);
+		pcol.b = max(pcol.b, mix_col.b);
+	}
+	if (blend_type == 3) { // SUBTRACTIVE
+		pcol.r = min(pcol.r, mix_col.r);
+		pcol.g = min(pcol.g, mix_col.g);
+		pcol.b = min(pcol.b, mix_col.b);
+	}
+	return pcol;
+}
+
+// The usual stuff
+vec4 apply_standard_effects(vec4 pcol) {
+	pcol.rgb = mix(vec3(0.0), pcol.rgb, brightness);
+	pcol.rgb = mix(vec3(0.5), pcol.rgb, contrast);
+	pcol.rgb = mix(vec3(dot(vec3(1.0), pcol.rgb) * 0.33333), pcol.rgb, saturation);
+	
+	return pcol;
+}
+
+// EYYYYY
+void fragment() {
+	vec2 ps = TEXTURE_PIXEL_SIZE; // Overall pixel size of the texture
+	vec4 pcol = texture(TEXTURE, UV); // Get the current pixel colour value
+	ivec2 ts = textureSize(TEXTURE, 0); // Texture size, MAYBE? No documentation...
+	vec2 coord = UV * vec2(float(ts.x), float(ts.y));
+	
+	if (override_texture_size != vec2(-1, -1)) { coord = UV * override_texture_size; }
+	
+	// Remove any pixels that need to be removed
+	if (active && use_water_shader) { pcol = apply_water_shader(coord, pcol); }
+	
+	// Change the base colours
+	if (active && palette_swap_enabled) { pcol = apply_palette_swap(pcol); }
+	
+	//Apply blending
+	if (active && blending_enabled) {
+		vec4 scol = textureLod(SCREEN_TEXTURE, SCREEN_UV, 0.0); // Get the colour of the SCREEN at this position
+		pcol = apply_blend_effects(pcol, scol);
+		}
+	
+	// Apply the standard effects, like saturation/brightness and colour mixing
+	if (active && standard_effects_enabled) { pcol = apply_standard_effects(pcol); }
+	
+	// Apply shadow-based tinting to simulate lighting - CURRENTLY ONLY 'BACK' LIGHTING
+	if (active && shadows_enabled) {
+		if (pcol.a != 0.0) { // Only apply to non-transparent pixels
+			float check_dist = 6.0;
+			vec2 check_vec = vec2(light_direction.x * check_dist, light_direction.y * check_dist);
+			if (texture(TEXTURE, UV + check_vec * ps).a != 0.0) {
+//			if (texture(TEXTURE, UV + vec2(0.0, light_direction.y * check_dist) * ps).a != 0.0 &&
+//				texture(TEXTURE, UV + vec2(light_direction.x * check_dist, 0.0) * ps).a != 0.0) {
+				pcol.rgb = mix(pcol.rgb, shadow_tint.rgb, shadow_tint.a);
+			}
+		}
+	}
+
+	// Apply an outline and its shadow
+	if (active && outline_enabled) {
+		// Draw outline
+		if (pcol.a == 0.0) { // If the pixel is empty, we need to check for proximity to other opaque pixels
+			if (texture(TEXTURE, UV + vec2( 0.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0,  0.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0,  0.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 0.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 0.0,  2.0) * ps).a  != 0.0 || // Doublethick starts, inclusive
+				texture(TEXTURE, UV + vec2( 1.0,  2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0,  2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 0.0, -2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0, -2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 2.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0, -2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-2.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-2.0,  0.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-2.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 2.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 2.0,  0.0) * ps).a  != 0.0 || // Doublethick ends, inclusive
+				texture(TEXTURE, UV + vec2(-1.0, -1.0) * ps).a  != 0.0)
+				// If proximity checks pass, render the pixel as the outline colour
+				pcol = outline_col;
+		}
+		// Draw outline's shadow
+		if (pcol.a == 0.0) { // If the pixel is empty, we need to check for proximity to other opaque pixels (again)
+			if (
+				texture(TEXTURE, UV + vec2(-4.0, -2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-4.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-4.0,  0.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-4.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-4.0,  2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-2.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 0.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 2.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-3.0, -3.0) * ps).a  != 0.0 
+				)
+				pcol = outline_shadow; // If proximity checks pass, render the pixel as the outline colour
+		}
+	}
+	
+	// Shift vertically, cut off bottom elements (inc outline), and shift some to water's-edge blue
+	
+	// Stop drawing above the local veil height
+	COLOR = pcol;
+//	vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+//	if (pcol != white) { COLOR = pcol; }
+//	if (pcol.rgb != white.rgb) { COLOR = pcol; }
+}"

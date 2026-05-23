@@ -1,0 +1,1854 @@
+[gd_scene load_steps=66 format=2]
+
+[ext_resource path="res://combat/framing/BattleCell.tscn" type="PackedScene" id=1]
+[ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
+[ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=3]
+[ext_resource path="res://src/shaders/SHADER palette swap.tres" type="Shader" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=4]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=5]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=6]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=7]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=8]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=9]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=10]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=11]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=12]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=13]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=14]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=15]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=16]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=17]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=18]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=19]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=20]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=21]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=22]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=23]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=24]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=25]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=26]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=27]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=28]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=29]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=30]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=31]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=33]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=34]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=35]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=36]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=37]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=38]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=39]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=40]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=41]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=42]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=43]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=44]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=45]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=46]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=47]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=48]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=49]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=50]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=51]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=52]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=53]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=54]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=55]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=56]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=57]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=58]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=59]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=60]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=61]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=62]
+resource_local_to_scene = true
+shader = ExtResource( 5 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.72549, 0.67451, 0.462745, 1 )
+shader_param/replacer_col_2 = Color( 0.352941, 0.439216, 0.717647, 1 )
+shader_param/replacer_col_3 = Color( 0.156863, 0.156863, 0.156863, 0.392157 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[node name="BattleField" type="Node2D"]
+script = ExtResource( 2 )
+path_board = NodePath("Control/MC/VB/HB/Board")
+
+[node name="Control" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+theme = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MC" type="MarginContainer" parent="Control"]
+margin_right = 640.0
+margin_bottom = 360.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VB" type="VBoxContainer" parent="Control/MC"]
+margin_right = 640.0
+margin_bottom = 360.0
+
+[node name="SpacerFore1" type="Panel" parent="Control/MC/VB"]
+margin_right = 640.0
+margin_bottom = 17.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="SpacerFore2" type="Panel" parent="Control/MC/VB"]
+margin_top = 17.0
+margin_right = 640.0
+margin_bottom = 34.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="SpacerFore3" type="Panel" parent="Control/MC/VB"]
+margin_top = 34.0
+margin_right = 640.0
+margin_bottom = 51.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="SpacerFore4" type="Panel" parent="Control/MC/VB"]
+margin_top = 51.0
+margin_right = 640.0
+margin_bottom = 68.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="SpacerFore5" type="Panel" parent="Control/MC/VB"]
+margin_top = 68.0
+margin_right = 640.0
+margin_bottom = 85.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="SpacerFore6" type="Panel" parent="Control/MC/VB"]
+margin_top = 85.0
+margin_right = 640.0
+margin_bottom = 102.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="HB" type="HBoxContainer" parent="Control/MC/VB"]
+margin_top = 102.0
+margin_right = 640.0
+margin_bottom = 342.0
+
+[node name="Spacer1" type="Panel" parent="Control/MC/VB/HB"]
+margin_right = 104.0
+margin_bottom = 240.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="Board" type="GridContainer" parent="Control/MC/VB/HB"]
+margin_left = 104.0
+margin_right = 536.0
+margin_bottom = 240.0
+columns = 6
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BattleCell" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 2 )
+
+[node name="BattleCell2" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 3 )
+margin_left = 72.0
+margin_right = 144.0
+
+[node name="BattleCell31" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 4 )
+margin_left = 144.0
+margin_right = 216.0
+
+[node name="BattleCell3" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 5 )
+margin_left = 216.0
+margin_right = 288.0
+
+[node name="BattleCell4" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 6 )
+margin_left = 288.0
+margin_right = 360.0
+
+[node name="BattleCell5" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 7 )
+margin_left = 360.0
+margin_right = 432.0
+
+[node name="BattleCell6" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 8 )
+margin_top = 48.0
+margin_bottom = 96.0
+
+[node name="BattleCell7" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 9 )
+margin_left = 72.0
+margin_top = 48.0
+margin_right = 144.0
+margin_bottom = 96.0
+
+[node name="BattleCell8" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 10 )
+margin_left = 144.0
+margin_top = 48.0
+margin_right = 216.0
+margin_bottom = 96.0
+
+[node name="BattleCell9" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 11 )
+margin_left = 216.0
+margin_top = 48.0
+margin_right = 288.0
+margin_bottom = 96.0
+
+[node name="BattleCell10" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 12 )
+margin_left = 288.0
+margin_top = 48.0
+margin_right = 360.0
+margin_bottom = 96.0
+
+[node name="BattleCell11" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 13 )
+margin_left = 360.0
+margin_top = 48.0
+margin_right = 432.0
+margin_bottom = 96.0
+
+[node name="BattleCell12" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 14 )
+margin_top = 96.0
+margin_bottom = 144.0
+
+[node name="BattleCell13" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 15 )
+margin_left = 72.0
+margin_top = 96.0
+margin_right = 144.0
+margin_bottom = 144.0
+
+[node name="BattleCell14" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 16 )
+margin_left = 144.0
+margin_top = 96.0
+margin_right = 216.0
+margin_bottom = 144.0
+
+[node name="BattleCell15" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 17 )
+margin_left = 216.0
+margin_top = 96.0
+margin_right = 288.0
+margin_bottom = 144.0
+
+[node name="BattleCell16" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 18 )
+margin_left = 288.0
+margin_top = 96.0
+margin_right = 360.0
+margin_bottom = 144.0
+
+[node name="BattleCell17" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 19 )
+margin_left = 360.0
+margin_top = 96.0
+margin_right = 432.0
+margin_bottom = 144.0
+
+[node name="BattleCell18" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 20 )
+margin_top = 144.0
+margin_bottom = 192.0
+
+[node name="BattleCell19" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 21 )
+margin_left = 72.0
+margin_top = 144.0
+margin_right = 144.0
+margin_bottom = 192.0
+
+[node name="BattleCell20" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 22 )
+margin_left = 144.0
+margin_top = 144.0
+margin_right = 216.0
+margin_bottom = 192.0
+
+[node name="BattleCell21" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 23 )
+margin_left = 216.0
+margin_top = 144.0
+margin_right = 288.0
+margin_bottom = 192.0
+
+[node name="BattleCell22" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 24 )
+margin_left = 288.0
+margin_top = 144.0
+margin_right = 360.0
+margin_bottom = 192.0
+
+[node name="BattleCell23" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 25 )
+margin_left = 360.0
+margin_top = 144.0
+margin_right = 432.0
+margin_bottom = 192.0
+
+[node name="BattleCell24" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 26 )
+margin_top = 192.0
+margin_bottom = 240.0
+
+[node name="BattleCell25" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 27 )
+margin_left = 72.0
+margin_top = 192.0
+margin_right = 144.0
+margin_bottom = 240.0
+
+[node name="BattleCell26" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 28 )
+margin_left = 144.0
+margin_top = 192.0
+margin_right = 216.0
+margin_bottom = 240.0
+
+[node name="BattleCell27" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 29 )
+margin_left = 216.0
+margin_top = 192.0
+margin_right = 288.0
+margin_bottom = 240.0
+
+[node name="BattleCell28" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 30 )
+margin_left = 288.0
+margin_top = 192.0
+margin_right = 360.0
+margin_bottom = 240.0
+
+[node name="BattleCell29" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 31 )
+margin_left = 360.0
+margin_top = 192.0
+margin_right = 432.0
+margin_bottom = 240.0
+
+[node name="ColumnsOG" type="VBoxContainer" parent="Control/MC/VB/HB"]
+visible = false
+margin_left = 384.0
+margin_right = 768.0
+margin_bottom = 180.0
+mouse_filter = 2
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Row0" type="HBoxContainer" parent="Control/MC/VB/HB/ColumnsOG"]
+margin_left = 12.0
+margin_right = 372.0
+margin_bottom = 28.0
+rect_min_size = Vector2( 360, 28 )
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="Col0" parent="Control/MC/VB/HB/ColumnsOG/Row0" instance=ExtResource( 1 )]
+material = SubResource( 33 )
+margin_bottom = 28.0
+
+[node name="Col1" parent="Control/MC/VB/HB/ColumnsOG/Row0" instance=ExtResource( 1 )]
+material = SubResource( 34 )
+margin_left = 60.0
+margin_right = 120.0
+margin_bottom = 28.0
+
+[node name="Col2" parent="Control/MC/VB/HB/ColumnsOG/Row0" instance=ExtResource( 1 )]
+material = SubResource( 35 )
+margin_left = 120.0
+margin_right = 180.0
+margin_bottom = 28.0
+
+[node name="Col3" parent="Control/MC/VB/HB/ColumnsOG/Row0" instance=ExtResource( 1 )]
+material = SubResource( 36 )
+margin_left = 180.0
+margin_right = 240.0
+margin_bottom = 28.0
+
+[node name="Col4" parent="Control/MC/VB/HB/ColumnsOG/Row0" instance=ExtResource( 1 )]
+material = SubResource( 37 )
+margin_left = 240.0
+margin_right = 300.0
+margin_bottom = 28.0
+
+[node name="Col5" parent="Control/MC/VB/HB/ColumnsOG/Row0" instance=ExtResource( 1 )]
+material = SubResource( 38 )
+margin_left = 300.0
+margin_right = 360.0
+margin_bottom = 28.0
+
+[node name="Row1" type="HBoxContainer" parent="Control/MC/VB/HB/ColumnsOG"]
+margin_left = 9.0
+margin_top = 28.0
+margin_right = 375.0
+margin_bottom = 60.0
+rect_min_size = Vector2( 366, 32 )
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="Col0" parent="Control/MC/VB/HB/ColumnsOG/Row1" instance=ExtResource( 1 )]
+material = SubResource( 39 )
+margin_right = 61.0
+margin_bottom = 32.0
+
+[node name="Col1" parent="Control/MC/VB/HB/ColumnsOG/Row1" instance=ExtResource( 1 )]
+material = SubResource( 40 )
+margin_left = 61.0
+margin_right = 122.0
+margin_bottom = 32.0
+
+[node name="Col2" parent="Control/MC/VB/HB/ColumnsOG/Row1" instance=ExtResource( 1 )]
+material = SubResource( 41 )
+margin_left = 122.0
+margin_right = 183.0
+margin_bottom = 32.0
+
+[node name="Col3" parent="Control/MC/VB/HB/ColumnsOG/Row1" instance=ExtResource( 1 )]
+material = SubResource( 42 )
+margin_left = 183.0
+margin_right = 244.0
+margin_bottom = 32.0
+
+[node name="Col4" parent="Control/MC/VB/HB/ColumnsOG/Row1" instance=ExtResource( 1 )]
+material = SubResource( 43 )
+margin_left = 244.0
+margin_right = 305.0
+margin_bottom = 32.0
+
+[node name="Col5" parent="Control/MC/VB/HB/ColumnsOG/Row1" instance=ExtResource( 1 )]
+material = SubResource( 44 )
+margin_left = 305.0
+margin_right = 366.0
+margin_bottom = 32.0
+
+[node name="Row2" type="HBoxContainer" parent="Control/MC/VB/HB/ColumnsOG"]
+margin_left = 6.0
+margin_top = 60.0
+margin_right = 378.0
+margin_bottom = 96.0
+rect_min_size = Vector2( 372, 36 )
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="Col0" parent="Control/MC/VB/HB/ColumnsOG/Row2" instance=ExtResource( 1 )]
+material = SubResource( 45 )
+margin_right = 62.0
+margin_bottom = 36.0
+
+[node name="Col1" parent="Control/MC/VB/HB/ColumnsOG/Row2" instance=ExtResource( 1 )]
+material = SubResource( 46 )
+margin_left = 62.0
+margin_right = 124.0
+margin_bottom = 36.0
+
+[node name="Col2" parent="Control/MC/VB/HB/ColumnsOG/Row2" instance=ExtResource( 1 )]
+material = SubResource( 47 )
+margin_left = 124.0
+margin_right = 186.0
+margin_bottom = 36.0
+
+[node name="Col3" parent="Control/MC/VB/HB/ColumnsOG/Row2" instance=ExtResource( 1 )]
+material = SubResource( 48 )
+margin_left = 186.0
+margin_right = 248.0
+margin_bottom = 36.0
+
+[node name="Col4" parent="Control/MC/VB/HB/ColumnsOG/Row2" instance=ExtResource( 1 )]
+material = SubResource( 49 )
+margin_left = 248.0
+margin_right = 310.0
+margin_bottom = 36.0
+
+[node name="Col5" parent="Control/MC/VB/HB/ColumnsOG/Row2" instance=ExtResource( 1 )]
+material = SubResource( 50 )
+margin_left = 310.0
+margin_right = 372.0
+margin_bottom = 36.0
+
+[node name="Row3" type="HBoxContainer" parent="Control/MC/VB/HB/ColumnsOG"]
+margin_left = 3.0
+margin_top = 96.0
+margin_right = 381.0
+margin_bottom = 136.0
+rect_min_size = Vector2( 378, 40 )
+size_flags_horizontal = 4
+size_flags_vertical = 3
+
+[node name="Col0" parent="Control/MC/VB/HB/ColumnsOG/Row3" instance=ExtResource( 1 )]
+material = SubResource( 51 )
+margin_right = 63.0
+
+[node name="Col1" parent="Control/MC/VB/HB/ColumnsOG/Row3" instance=ExtResource( 1 )]
+material = SubResource( 52 )
+margin_left = 63.0
+margin_right = 126.0
+
+[node name="Col2" parent="Control/MC/VB/HB/ColumnsOG/Row3" instance=ExtResource( 1 )]
+material = SubResource( 53 )
+margin_left = 126.0
+margin_right = 189.0
+
+[node name="Col3" parent="Control/MC/VB/HB/ColumnsOG/Row3" instance=ExtResource( 1 )]
+material = SubResource( 54 )
+margin_left = 189.0
+margin_right = 252.0
+
+[node name="Col4" parent="Control/MC/VB/HB/ColumnsOG/Row3" instance=ExtResource( 1 )]
+material = SubResource( 55 )
+margin_left = 252.0
+margin_right = 315.0
+
+[node name="Col5" parent="Control/MC/VB/HB/ColumnsOG/Row3" instance=ExtResource( 1 )]
+material = SubResource( 56 )
+margin_left = 315.0
+margin_right = 378.0
+
+[node name="Row4" type="HBoxContainer" parent="Control/MC/VB/HB/ColumnsOG"]
+margin_top = 136.0
+margin_right = 384.0
+margin_bottom = 180.0
+rect_min_size = Vector2( 384, 44 )
+size_flags_vertical = 3
+
+[node name="Col0" parent="Control/MC/VB/HB/ColumnsOG/Row4" instance=ExtResource( 1 )]
+material = SubResource( 57 )
+margin_bottom = 44.0
+
+[node name="Col1" parent="Control/MC/VB/HB/ColumnsOG/Row4" instance=ExtResource( 1 )]
+material = SubResource( 58 )
+margin_left = 64.0
+margin_right = 128.0
+margin_bottom = 44.0
+
+[node name="Col2" parent="Control/MC/VB/HB/ColumnsOG/Row4" instance=ExtResource( 1 )]
+material = SubResource( 59 )
+margin_left = 128.0
+margin_right = 192.0
+margin_bottom = 44.0
+
+[node name="Col3" parent="Control/MC/VB/HB/ColumnsOG/Row4" instance=ExtResource( 1 )]
+material = SubResource( 60 )
+margin_left = 192.0
+margin_right = 256.0
+margin_bottom = 44.0
+
+[node name="Col4" parent="Control/MC/VB/HB/ColumnsOG/Row4" instance=ExtResource( 1 )]
+material = SubResource( 61 )
+margin_left = 256.0
+margin_right = 320.0
+margin_bottom = 44.0
+
+[node name="Col5" parent="Control/MC/VB/HB/ColumnsOG/Row4" instance=ExtResource( 1 )]
+material = SubResource( 62 )
+margin_left = 320.0
+margin_right = 384.0
+margin_bottom = 44.0
+
+[node name="Spacer2" type="Panel" parent="Control/MC/VB/HB"]
+margin_left = 536.0
+margin_right = 640.0
+margin_bottom = 240.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="SpacerEnd" type="Panel" parent="Control/MC/VB"]
+margin_top = 342.0
+margin_right = 640.0
+margin_bottom = 360.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="Actors" type="YSort" parent="."]

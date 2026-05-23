@@ -1,0 +1,141 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://src/actors/key_components/Actor.gd" type="Script" id=1]
+[ext_resource path="res://art/actors/artificer.png" type="Texture" id=2]
+[ext_resource path="res://src/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = ExtResource( 4 )
+shader_param/active = true
+shader_param/z_height = 0
+shader_param/z_rect_offset = 0
+shader_param/water_line = 0
+shader_param/use_water_shader = false
+shader_param/water_light_col = Color( 1, 1, 1, 1 )
+shader_param/override_texture_size = Vector2( -1, -1 )
+shader_param/standard_effects_enabled = true
+shader_param/brightness = 1.0
+shader_param/contrast = 1.0
+shader_param/saturation = 1.0
+shader_param/blending_enabled = false
+shader_param/blend_type = 0
+shader_param/blend_uses_screen = false
+shader_param/blend_col = Color( 1, 1, 1, 1 )
+shader_param/blend_mix_degree = 0.5
+shader_param/outline_enabled = false
+shader_param/outline_col = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
+shader_param/outline_shadow = Color( 0.15686, 0.15686, 0.15686, 0.197 )
+shader_param/outcol_white = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
+shader_param/outcol_red = Color( 0.94509, 0.38431, 0.2, 0.78431 )
+shader_param/shadows_enabled = false
+shader_param/light_direction = Vector2( 0, -1 )
+shader_param/shadow_tint = Color( 0.15686, 0.15686, 0.15686, 0.197 )
+shader_param/palette_swap_enabled = false
+shader_param/swap_num = 8
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_3 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_9 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_2 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_3 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="ShaderMaterial" id=4]
+resource_local_to_scene = true
+shader = ExtResource( 4 )
+shader_param/active = true
+shader_param/z_height = 0
+shader_param/z_rect_offset = 0
+shader_param/water_line = 0
+shader_param/use_water_shader = false
+shader_param/water_light_col = Color( 1, 1, 1, 1 )
+shader_param/override_texture_size = Vector2( -1, -1 )
+shader_param/standard_effects_enabled = true
+shader_param/brightness = 1.0
+shader_param/contrast = 1.0
+shader_param/saturation = 1.0
+shader_param/blending_enabled = false
+shader_param/blend_type = 0
+shader_param/blend_uses_screen = false
+shader_param/blend_col = Color( 1, 1, 1, 1 )
+shader_param/blend_mix_degree = 0.5
+shader_param/outline_enabled = false
+shader_param/outline_col = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
+shader_param/outline_shadow = Color( 0.15686, 0.15686, 0.15686, 0.197 )
+shader_param/outcol_white = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
+shader_param/outcol_red = Color( 0.94509, 0.38431, 0.2, 0.78431 )
+shader_param/shadows_enabled = false
+shader_param/light_direction = Vector2( 0, -1 )
+shader_param/shadow_tint = Color( 0.15686, 0.15686, 0.15686, 0.197 )
+shader_param/palette_swap_enabled = false
+shader_param/swap_num = 8
+shader_param/replacing_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_2 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_3 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_9 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_2 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_3 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
+
+[sub_resource type="AnimationNodeStateMachine" id=1]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=2]
+
+[node name="Actor" type="Node2D"]
+material = SubResource( 3 )
+script = ExtResource( 1 )
+faction = 1
+def_immune_fire = true
+
+[node name="ArtMgr" type="Node2D" parent="."]
+
+[node name="HFlipper" type="Node2D" parent="ArtMgr"]
+
+[node name="Shadow" parent="ArtMgr/HFlipper" instance=ExtResource( 3 )]
+margin_left = -12.0
+margin_top = -5.0
+margin_right = 13.0
+margin_bottom = 6.0
+
+[node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
+material = SubResource( 4 )
+position = Vector2( 0, -31 )
+texture = ExtResource( 2 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ArtMgr"]
+root_node = NodePath("../../Utils")
+
+[node name="AnimationTree" type="AnimationTree" parent="ArtMgr/AnimationPlayer"]
+tree_root = SubResource( 1 )
+anim_player = NodePath("..")
+parameters/playback = SubResource( 2 )
+
+[node name="Utils" type="Node" parent="."]
+
+[node name="Timer" type="Timer" parent="Utils"]
+
+[node name="Tween" type="Tween" parent="Utils"]

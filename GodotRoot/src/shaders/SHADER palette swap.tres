@@ -1,0 +1,65 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+code = "shader_type canvas_item;
+
+// Global commands
+uniform bool active = true;
+
+uniform int swap_num = 8;
+uniform vec4 replacing_col_1: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_2: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_3: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_4: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_5: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_6: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_7: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacing_col_8: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_1: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_2: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_3: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_4: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_5: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_6: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_7: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform vec4 replacer_col_8: hint_color = vec4(1.0, 1.0, 1.0, 1.0);
+
+// A soft colour matcher that allows for variance tolerance
+bool colour_match(vec3 c1, vec3 c2, float maxDiff) {
+	return (
+		abs(c1.r - c2.r) < maxDiff
+		&& abs(c1.g - c2.g) < maxDiff
+		&& abs(c1.b - c2.b) < maxDiff
+	    );
+	}
+
+// Applies the colour palette by checking for each replacing colour, and applying its replacer colour
+vec4 apply_palette_swap(vec4 pcol) {
+	float variance = 0.001;
+	
+	if (pcol.a != 0.0) {
+		if (colour_match(pcol.rgb, replacing_col_1.rgb, variance)) { pcol = replacer_col_1; }
+		else if (colour_match(pcol.rgb, replacing_col_2.rgb, variance) && swap_num >= 2) { pcol = replacer_col_2; }
+		else if (colour_match(pcol.rgb, replacing_col_3.rgb, variance) && swap_num >= 3) { pcol = replacer_col_3; }
+		else if (colour_match(pcol.rgb, replacing_col_4.rgb, variance) && swap_num >= 4) { pcol = replacer_col_4; }
+		else if (colour_match(pcol.rgb, replacing_col_5.rgb, variance) && swap_num >= 5) { pcol = replacer_col_5; }
+		else if (colour_match(pcol.rgb, replacing_col_6.rgb, variance) && swap_num >= 6) { pcol = replacer_col_6; }
+		else if (colour_match(pcol.rgb, replacing_col_7.rgb, variance) && swap_num >= 7) { pcol = replacer_col_7; }
+		else if (colour_match(pcol.rgb, replacing_col_8.rgb, variance) && swap_num >= 8) { pcol = replacer_col_8; }
+	}
+	
+	return pcol;
+	}
+
+// EYYYYY
+void fragment() {
+	vec2 ps = TEXTURE_PIXEL_SIZE; // Overall pixel size of the texture
+	vec4 pcol = texture(TEXTURE, UV); // Get the current pixel colour value
+	
+	// Change the base colours
+	if (active) { pcol = apply_palette_swap(pcol); }
+	
+	// Stop drawing above the local veil height
+	vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+	if (pcol != white) { COLOR = pcol; }
+}"
