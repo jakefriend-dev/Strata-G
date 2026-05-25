@@ -14,6 +14,20 @@ var faction: int = -1
 
 # ---
 
+func _ready():
+	turn.connect("update_all_tiletypes", self, "update_tiletype")
+#	$Crack.rect_size = rect_size
+#	$Pit.rect_size = rect_size
+	pass
+
+func update_tiletype(): # Visual only; data is already handled
+	var new_type: int =  turn.grid_tiles.get_cellv(coord)
+	if new_type != type:
+		type = new_type
+	
+	followup_tiletype()
+	pass
+
 func set_depth_tint(max_row: int):
 	var depth: float = abs(row - max_row)-1.0 # Bottom row is 0
 	var shade_delta: float = 0.075
@@ -32,9 +46,9 @@ func set_faction():
 	m.set_shader_param("replacer_col_2", Color(colset[faction][0]))
 	pass
 
-# warning-ignore:unused_argument
 func set_type(to_type: int):
 	type = to_type
+	followup_tiletype()
 	pass
 
 func get_center_gpos() -> Vector2:
@@ -43,6 +57,13 @@ func get_center_gpos() -> Vector2:
 	return gpos
 	pass
 
+func followup_tiletype():
+	if $Type.text != str(type):
+		$Type.text = str(type)
+	if $Crack.visible != (type == turn.tiletypes.CRACK):
+		$Crack.visible = (type == turn.tiletypes.CRACK)
+	if $Pit.visible != (type == turn.tiletypes.PIT):
+		$Pit.visible = (type == turn.tiletypes.PIT)
 
 
 

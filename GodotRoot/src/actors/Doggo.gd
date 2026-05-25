@@ -2,19 +2,19 @@ extends Actor
 
 var last_movedir_y: int = 0
 
-func ready_turn_actions_OLD():
-	# Move 1 direction randomly
-	act.prep_random_move_actor(self)
-	
-	# Perform a charge, then return to the original position
-	act.prep_normal_move(self, Vector2.LEFT, true, true, true)
-	act.prep_simple_attack(self, false, false)
-	act.prep_normal_move(self, Vector2.RIGHT, true, false, true)
-	
-	# All actions readied!
-	act.start_action_queue(self)
-#	print(act.actionlog)
-	pass
+#func ready_turn_actions_OLD():
+#	# Move 1 direction randomly
+#	act.prep_random_move_actor(self)
+#
+#	# Perform a charge, then return to the original position
+#	act.prep_relative_move(self, Vector2.LEFT, true, true, true)
+#	act.prep_simple_attack(self, false, false)
+#	act.prep_relative_move(self, Vector2.RIGHT, true, false, true)
+#
+#	# All actions readied!
+#	act.start_action_queue(self)
+##	print(act.actionlog)
+#	pass
 
 func ready_turn_actions():
 	# First: If we already have a viable enemy target, skip right to the attack without moving
@@ -24,10 +24,10 @@ func ready_turn_actions():
 		var need_to_charge: bool = victim.coord != (coord + Vector2.LEFT)
 		
 		if need_to_charge:
-			act.prep_normal_move(self, Vector2.LEFT, true, true, true)
+			act.prep_relative_move(self, Vector2.LEFT, true, true, true)
 		act.prep_simple_attack(self, false, false)
 		if need_to_charge:
-			act.prep_normal_move(self, Vector2.RIGHT, true, false, true)
+			act.prep_relative_move(self, Vector2.RIGHT, true, false, true)
 		print(name,": Can attack at start of turn, so simply doing so!")
 		act.start_action_queue(self)
 		
@@ -46,7 +46,7 @@ func ready_turn_actions():
 	
 	# Moving up/down is viable! Do so, then attempt to attack from that position
 	if can_move_vert:
-		act.prep_normal_move(self, movedir)
+		act.prep_relative_move(self, movedir)
 		
 		# If we CAN move, check if we could attack from the dest position
 		victim = act.find_first_PC_in_dir(coord + movedir, Vector2.LEFT)
@@ -54,10 +54,10 @@ func ready_turn_actions():
 			var need_to_charge: bool = victim.coord != (coord + Vector2.LEFT)
 		
 			if need_to_charge:
-				act.prep_normal_move(self, Vector2.LEFT, true, true, true)
+				act.prep_relative_move(self, Vector2.LEFT, true, true, true)
 			act.prep_simple_attack(self, false, false)
 			if need_to_charge:
-				act.prep_normal_move(self, Vector2.RIGHT, true, false, true)
+				act.prep_relative_move(self, Vector2.RIGHT, true, false, true)
 			print(name,": Moving up/down and THEN attacking")
 		else:
 			print(name,": Moving up/down, but can't attack after")
@@ -73,7 +73,7 @@ func ready_turn_actions():
 		act.skip_turn(self)
 	else:
 		moptions.shuffle()
-		act.prep_normal_move(self, moptions[0])
+		act.prep_relative_move(self, moptions[0])
 		print(name,": Moving left/right because couldn't move up/down")
 		act.start_action_queue(self)
 	pass

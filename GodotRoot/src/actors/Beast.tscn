@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://src/actors/key_components/Actor.gd" type="Script" id=1]
+[ext_resource path="res://src/actors/Beast.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/ruins beast.png" type="Texture" id=2]
 [ext_resource path="res://src/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
@@ -57,10 +57,8 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="Actor" type="Node2D"]
+[node name="Beast" type="Node2D"]
 script = ExtResource( 1 )
-max_hp = 10
-def_immune_poison = true
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

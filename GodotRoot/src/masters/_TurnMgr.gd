@@ -1,7 +1,7 @@
 extends Node
 
 
-var HALFBOARD_SIZE: Array = [3, 5]
+var default_halfboard_size: Vector2 = Vector2(3, 5)
 
 enum {
 	T_OOC,			# Out of combat - the turn system is not active, aka between fights
@@ -43,6 +43,7 @@ var default_party: Array = ["P2", "P1", "P3"] # Calls these scenes by name when 
 signal set_up_board()
 signal populate_gpos_data()
 signal populate_actors()
+signal update_all_tiletypes()
 
 enum factions {
 	NEUTRAL,
@@ -115,6 +116,12 @@ func monitor_inputs():
 		if doggo == null: return
 		doggo.ready_turn_actions()
 		return
+	if Input.is_action_just_pressed("dev_4"):
+		multi_input_lock = true
+		var beast: Actor = act.get_first_actor_by_name("Beast")
+		if beast == null: return
+		beast.ready_turn_actions()
+		return
 	
 	if battle_details.empty(): return
 	
@@ -177,7 +184,7 @@ func test_new_combat(test: String):
 				return
 		"2":
 			if !init_new_combat({
-				"halfboard_size": [4, 4],
+				"halfboard_size": Vector2(4, 4),
 				"npc_positions": [
 					[4, 0, "Thrower"],
 					[6, 0, "Doggo"],
@@ -205,23 +212,23 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	battle_details = new_battle_details
 	
 	# Set up our board size!
-	var local_board_size: Array = HALFBOARD_SIZE.duplicate()
+	var local_board_size: Vector2 = default_halfboard_size
 	
 	if battle_details.has("halfboard_size"):
 		local_board_size = battle_details["halfboard_size"]
 	else:
 		battle_details["halfboard_size"] = local_board_size
-	local_board_size[0] = int(local_board_size[0]*2)
+	local_board_size.x *= 2
 	# And quickref
-	var w: int = local_board_size[0]
-	var h: int = local_board_size[1]
+	var w: int = local_board_size.x
+	var h: int = local_board_size.y
 	
 	battle_details["board_size"] = local_board_size
 	
 	# Set up all our Array2Ds
 	for grid in ["grid_tiles", "grid_actors", "grid_gpos", "grid_factions"]:
 		set(grid, Array2D.new())
-		get(grid).resize(local_board_size[0], local_board_size[1])
+		get(grid).resizev(local_board_size)
 	
 	# Set up our tile data!
 	var tile_default: int = tiletypes.NORMAL
@@ -232,8 +239,8 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	if battle_details.has("tile_exceptions"):
 		tile_exceptions = battle_details["tile_exceptions"]
 	
-	for x in local_board_size[0]:
-		for y in local_board_size[1]:
+	for x in w:
+		for y in h:
 			var coord: Vector2 = Vector2(x, y)
 			if tile_exceptions.has(coord):
 				grid_tiles.set_cellv(coord, tile_exceptions[coord])
@@ -350,6 +357,15 @@ func can_player_input() -> bool:
 	
 	return false
 	pass
+
+func get_board_size() -> Vector2:
+	if battle_details.has("board_size"):
+		return battle_details["board_size"]
+	return Vector2.ZERO
+func get_halfboard_size() -> Vector2:
+	if battle_details.has("halfboard_size"):
+		return battle_details["halfboard_size"]
+	return Vector2.ZERO
 
 func must_player_turn_be_over() -> bool: # Asked after any player action is executed
 	# The turn is auto-over IF all PC characters are spent

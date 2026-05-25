@@ -119,10 +119,63 @@ func process_action_queue():
 		pass
 	#End Move
 	
+	elif action == "tilechange":
+		if !deets.has("tiletype"):
+			skip_processing_action("No tiletype sent to tilechange")
+			return
+		if not deets["tiletype"] is int:
+			skip_processing_action("Tiletype for tilechange is not an int")
+			return
+		# Validations for datatypes
+		if !deets.has("exact_targets"):
+			skip_processing_action("No targets sent to tilechange at all")
+			return
+		if not deets["exact_targets"] is Array:
+			skip_processing_action("Exact targets for tilechange is not an array")
+			return
+		
+		# Prepare 'actual' changes, including custom logic
+		var impact_dict: Dictionary = {} # Vector keys, int values for tiletype
+		var tiletype: int = deets["tiletype"]
+		for target in deets["exact_targets"]:
+			
+			if turn.grid_tiles.get_cellv(target) == turn.tiletypes.PIT:
+				if !flags.has("can_change_pits"):
+					continue # We don't normally change pits
+			elif tiletype == turn.tiletypes.PIT:
+				if turn.grid_actors.get_cellv(target) != null:
+					# Actors can't be pitted, only cracked
+					impact_dict[target] = turn.tiletypes.CRACK
+					continue
+			elif tiletype == turn.tiletypes.CRACK:
+				if turn.grid_tiles.get_cellv(target) == turn.tiletypes.CRACK:
+					# Actors can't be pitted, only cracked
+					if turn.grid_actors.get_cellv(target) == null:
+						# 'Double-cracking' an (unoccupised) crack is just a pit
+#						print("Upgrading 'crack' tilechange to pit at ",target,"!")
+						impact_dict[target] = turn.tiletypes.PIT
+						continue
+			impact_dict[target] = tiletype
+			pass
+		
+		if impact_dict.empty():
+			skip_processing_action("No tiles need changing, in the end")
+			return
+		
+		# Apply actual changes
+		for coord in impact_dict.keys():
+			turn.grid_tiles.set_cellv(coord, impact_dict[coord])
+		print("Preparing tilechanges:\n",impact_dict)
+		turn.emit_signal("update_all_tiletypes")
+		
+		update_action_log(this_action, true)
+		step_signal()
+	# End TileChange
+	
 	elif action == "attack":
 		# Validations for datatypes
 		if !deets.has("relative_targets") and !deets.has("exact_targets"):
-			skip_processing_action("No targets sent to attack")
+			skip_processing_action("No targets sent to attack at all")
 			return
 		if deets.has("relative_targets") and not deets["relative_targets"] is Array:
 			skip_processing_action("Relative targets for attack is not an array")
@@ -177,6 +230,7 @@ func process_action_queue():
 			step_signal()
 		else:
 			# [PUT THE ACTUAL ATTACK ATTEMPT HERE]
+			print("Damage would be done if damage was implemented")
 			# Maybe move the validity check too
 			update_action_log(this_action, true)
 			step_signal()
@@ -223,13 +277,13 @@ func skip_turn(actor: Actor):
 # PLAYER SHORTCUTS ---------------------------------------------------------------------------------
 
 func quick_player_move(actor: Actor, motion: Vector2, continuous: bool = false):
-	prep_normal_move(actor, motion, continuous)
+	prep_relative_move(actor, motion, continuous)
 	start_action_queue(actor)
 	pass
 
 # MOVE (ORTHAGONAL/ADJACENT) -----------------------------------------------------------------------
 
-func prep_normal_move(
+func prep_relative_move(
 	actor: Actor,
 	motion: Vector2,
 	continuous: bool = false,
@@ -248,6 +302,22 @@ func prep_normal_move(
 		
 		action_queue.append(action)
 		pass
+
+func prep_exact_move(actor: Actor, target: Vector2, allowed_to_cross_faction_lines: bool = false):
+	var motion: Vector2 = target - actor.coord
+	
+	var action: Array = [actor, "move"]
+	var deets: Dictionary = {"motion": motion, "flags": []}
+#	if continuous:
+#		deets["flags"].append("continuous")
+#	if note_starting_coord:
+#		deets["flags"].append("note_starting") # This marks it, typically so you can continuous move back to it
+	if allowed_to_cross_faction_lines:
+		deets["flags"].append("ignore_tile_faction")
+	action.append(deets)
+
+	action_queue.append(action)
+	pass
 
 func prep_random_move_actor(actor, continuous: bool = false, note_starting_coord: bool = false):
 	var action: Array = [actor, "move"]
@@ -330,6 +400,27 @@ func prep_simple_attack(actor: Actor, perform_if_targetless: bool, allow_friendl
 		deets["flags"].append("friendly_fire")
 	action.append(deets)
 	
+	action_queue.append(action)
+	pass
+
+func prep_shaped_attack(actor: Actor, targets: Array, allow_friendly_fire: bool = false):
+	var action: Array = [actor, "attack"]
+	var deets: Dictionary = {"exact_targets": targets, "flags": []}
+	
+	if allow_friendly_fire:
+		deets["flags"].append("friendly_fire")
+	action.append(deets)
+	
+	action_queue.append(action)
+	pass
+
+func prep_tiletype_changes(actor: Actor, targets: Array, tiletype: int):
+	var action: Array = [actor, "tilechange"]
+	var deets: Dictionary = {"exact_targets": targets, "tiletype": tiletype, "flags": []}
+	
+	# Cracked/pit tiles will be handled later, during execution
+	
+	action.append(deets)
 	action_queue.append(action)
 	pass
 
@@ -439,7 +530,6 @@ func get_rand_adj_tile_unoccupied(og_tile: Vector2) -> Vector2:
 	return master_get_rand_adj_tile(og_tile, true)
 func get_rand_adj_tile_any(og_tile: Vector2) -> Vector2:
 	return master_get_rand_adj_tile(og_tile)
-
 func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, relevant_actor: Actor = null) -> Vector2:
 	var opts: Array = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
 	
@@ -470,6 +560,61 @@ func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, 
 	return og_tile + opts[0]
 	pass
 
+func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int) -> Vector2: # NON adjacent specific!
+	var opts: Array = get_all_tiles_by_faction(faction)
+	var valid_opts: Array = []
+	for coord in opts:
+		if can_move_exact_vector(actor, coord, true): # Handles all our validations
+			valid_opts.append(coord)
+	
+	if valid_opts.empty():
+		return actor.coord # The fallback is always just 'stay where you are'
+	
+	valid_opts.shuffle()
+	return valid_opts[0]
 
+# Note that these arrays do NOT contain the center tile itself!
+func get_adj_orthagonal_tiles(center_tile: Vector2, are_pits_allowed: bool = false, denied_factions: int = -1) -> Array:
+	return master_get_adj_tiles(center_tile, true,  are_pits_allowed, denied_factions)
+func get_adj_diagonal_tiles(center_tile: Vector2, are_pits_allowed: bool = false, denied_factions: int = -1) -> Array:
+	return master_get_adj_tiles(center_tile, false, are_pits_allowed, denied_factions)
+func get_adj_3x3_tiles(center_tile: Vector2, are_pits_allowed: bool = false, denied_factions: int = -1) -> Array:
+	var all: Array = []
+	all.append_array(master_get_adj_tiles(center_tile, true,  are_pits_allowed, denied_factions))
+	all.append_array(master_get_adj_tiles(center_tile, false, are_pits_allowed, denied_factions))
+	return all
 
+func master_get_adj_tiles(center_tile: Vector2, type_is_orthag: bool, are_pits_allowed: bool, denied_factions: int) -> Array:
+	var viable_set: Array = []
+	
+	var surrounders: Array = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
+	if !type_is_orthag:
+		surrounders = [
+			Vector2.UP + Vector2.LEFT,
+			Vector2.UP + Vector2.RIGHT,
+			Vector2.DOWN + Vector2.LEFT,
+			Vector2.DOWN + Vector2.RIGHT]
+	
+	for surr in surrounders:
+		var coord: Vector2 = center_tile + surr
+		if !turn.grid_tiles.has_cellv(coord):
+			continue
+		if !are_pits_allowed:
+			if turn.grid_tiles.get_cellv(coord) == turn.tiletypes.PIT:
+				continue
+		if denied_factions != -1:
+			if turn.grid_factions.get_cellv(coord) == denied_factions:
+				continue
+		viable_set.append(coord)
+	
+	return viable_set
 
+func get_all_tiles_by_faction(faction: int) -> Array:
+	var results: Array = []
+	var dataset: Array = turn.grid_factions.get_dataset_with_coords()
+	for entry in dataset:
+		if entry[0] == faction:
+			if !results.has(entry[1]):
+				results.append(entry[1])
+	return results
+	pass

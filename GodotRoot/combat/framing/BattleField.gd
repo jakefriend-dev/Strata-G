@@ -33,8 +33,8 @@ func set_up_board():
 		board.remove_child(c)
 		c.queue_free()
 	
-	var w: int = turn.battle_details["board_size"][0] # Always even
-	var h: int = turn.battle_details["board_size"][1]
+	var w: int = turn.battle_details["board_size"].x #Always even
+	var h: int = turn.battle_details["board_size"].y
 	board.columns = w
 	
 	for y in h:

@@ -54,6 +54,7 @@ act="*res://src/masters/_ActionLib.gd"
 
 settings/fps/force_fps=60
 gdscript/warnings/unassigned_variable=false
+gdscript/warnings/narrowing_conversion=false
 gdscript/warnings/unused_signal=false
 gdscript/warnings/return_value_discarded=false
 gdscript/warnings/integer_division=false

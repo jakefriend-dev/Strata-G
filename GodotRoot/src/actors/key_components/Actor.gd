@@ -19,10 +19,20 @@ var is_facing_left: bool = true # Default true for enemies; false for party
 
 export var bui_visible: bool = true
 
+enum weightclasses {
+	HOVER,  # Flying; not affects by the ground beneath it at all
+	LIGHT,  # Doesn't sink into tiles; doesn't break cracked tiles
+	NORMAL, # Standard; affected by things as usual
+	HEAVY,  # Unaffected by knockback
+}
+
 # Defaults first; manually set
+export (weightclasses) var def_weight: int = weightclasses.NORMAL
+
 export var def_hovering:		bool = false # Not affected by ground type or pits
 export var def_lightweight:		bool = false # Not affected by tiles that you sink in, like mud
 												# Also doesn't break cracked tiles
+export var def_heavywight:		bool = false # Not affected by knockback
 export var def_immune_fire:		bool = false # Not affected by ember floors
 export var def_immune_water:	bool = false # Not slowed by water tiles (even lightweights are)
 export var def_immune_ice:		bool = false # Doesn't slide on ice
@@ -30,6 +40,7 @@ export var def_immune_poison:	bool = false # Doesn't take poison damage
 export var def_immune_magnet:	bool = false # Not pulled by magnet tiles
 export var def_immune_elec:		bool = false # Doesn't take elec damage on static traps
 
+var weight: int
 var is_hovering: bool
 var is_lightweight: bool
 var is_immune_fire: bool
@@ -58,6 +69,7 @@ func perform_initial_data_setup():
 	
 	for term in ["hovering", "lightweight", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
 		set( str("is_"+term), get(str("def_",term)) )
+	weight = def_weight
 	pass
 
 func update_bui():
