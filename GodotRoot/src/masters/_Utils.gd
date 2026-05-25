@@ -63,6 +63,11 @@ func negchance() -> float:
 		return -1.0
 	return 1.0
 
+func negchance_int() -> int:
+	if coin_flip():
+		return -1
+	return 1
+
 func get_rand_vecdir() -> Vector2:
 	var opts: Array = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
 	opts.shuffle()

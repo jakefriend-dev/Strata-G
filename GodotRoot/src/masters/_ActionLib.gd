@@ -214,6 +214,12 @@ func update_action_log(action: Array, passfail: bool):
 	actionlog.append(new_entry)
 	pass
 
+# TURN-RELATED MASTERS -----------------------------------------------------------------------------
+
+func skip_turn(actor: Actor):
+	start_action_queue(actor)
+	pass
+
 # PLAYER SHORTCUTS ---------------------------------------------------------------------------------
 
 func quick_player_move(actor: Actor, motion: Vector2, continuous: bool = false):
@@ -329,6 +335,21 @@ func prep_simple_attack(actor: Actor, perform_if_targetless: bool, allow_friendl
 
 # SUPPORT QUERIES ----------------------------------------------------------------------------------
 
+func vet_move_targetset(actor: Actor, og_options: Array, is_relative: bool = true, allowed_over_faction_lines: bool = false) -> Array:
+	var valid_options: Array = []
+	
+	# We don't want to CHANGE the coord to be exact if relative, because they need to return the same way they were sent!
+	for coord in og_options: if coord is Vector2:
+		if is_relative:
+			if can_move_relative_vector(actor, coord, allowed_over_faction_lines):
+				valid_options.append(coord)
+		else:
+			if can_move_exact_vector(actor, coord, allowed_over_faction_lines):
+				valid_options.append(coord)
+	
+	return valid_options
+	pass
+
 func can_move_relative_vector(actor: Actor, motion: Vector2, allowed_over_faction_lines: bool = false) -> bool:
 	return can_move_exact_vector(actor, actor.coord + motion, allowed_over_faction_lines)
 	
@@ -367,6 +388,38 @@ func can_move_exact_vector(actor: Actor, target: Vector2, allowed_over_faction_l
 			return false
 	
 	return true
+	pass
+
+func find_first_PC_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
+	var result: Actor = find_first_actor_in_dir(og_coord, dir)
+	if result != null:
+		if result.faction == turn.factions.PLAYER:
+			return result
+		
+	return null
+	pass
+
+func find_first_ENEMY_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
+	var result: Actor = find_first_actor_in_dir(og_coord, dir)
+	if result != null:
+		if result.faction == turn.factions.ENEMY:
+			return result
+		
+	return null
+	pass
+
+func find_first_actor_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
+	var check_coord: Vector2 = og_coord
+	
+	while true:
+		check_coord += dir
+		if !turn.grid_actors.has_cellv(check_coord):
+			break
+		var occupant: Actor = turn.grid_actors.get_cellv(check_coord)
+		if occupant != null:
+			return occupant
+	
+	return null
 	pass
 
 func get_first_actor_by_name(nstring: String, must_be_alive: bool = true) -> Actor:
