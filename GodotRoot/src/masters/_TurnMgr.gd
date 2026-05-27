@@ -64,28 +64,42 @@ var board: GridContainer # Owner of CELLS not everything
 # Tile types refer to the GROUND, not any effect on that coordinate (such as oil).
 enum tiletypes {
 	NORMAL, 	#
+	
 	CRACK,  	# Normal, but creates pit when EXITED
 					# Also a cracking effect on an already-cracked tile would create a pit instead
 					# Also-also, featherweights don't break the tiles when leaving
+	
 	PIT,    	# Can't be walked into naturally; CAN be knocked into it for instant KO
+	
 	STEEL,		# Unbreakable; unchangeable without magic
+	
 	GRASS,		# Fire damage is doubled, which also destroys the grass
+	
 	EMBER,   	# It hurts to enter this tile (each time), as fire damage
+	
 	FLOOD,  	# The tile 'sinks' and slows non-swimmers. Lightweights do NOT have immunity
+	
 	SAND,		# Actors only sink on it if they END their turn on sand, unless lightweight
 					# Perhaps can become mud with water effect
 					# If sunk, immune to lightning damage
+	
 	MUD,    	# The tile 'sinks' immediately and slow everyone down; lightweights treat as sand
+	
 	ICE,    	# Any movement direction that isn't a 'jump' causes continued sliding
+	
 	POISON, 	# Poison damage is only taken if you END your turn here
 					# Maybe this should be an effect, not a tile 'type'?
+	
 	MAGNET,		# Actors adjacent to this block who are not ALREADY on a magnet are pulled on to it
 					# Applied at the end of their turn?
+	
 	BOGROT,		# Poison and mud combined; poison only counts if you are sunk into the tile
+	
 	
 	#ELEC,   	# 'Static' on the tile hurts when walking on ONCE, but doing so also discharges it
 	#				# Also still affects hovering actors?
 	#				# Maybe this should be an effect, not a tile 'type'.... yeahhh
+	
 	DNU
 }
 
@@ -174,11 +188,11 @@ func test_new_combat(test: String):
 					[4, 3, "Doggo"],
 					[4, 1, "Rock"],
 				],
-#				"tile_exceptions": {
-#					Vector2(3, 3): 2,
-#					Vector2(2, 1): 1,
-#					Vector2(2, 0): 1,
-#				},
+				"tile_exceptions": {
+					Vector2(3, 3): 2,
+					Vector2(2, 1): 1,
+					Vector2(2, 0): 1,
+				},
 			}):
 				print("TURN MGR: test_new_combat(",test,") failed!")
 				return
@@ -198,12 +212,6 @@ func test_new_combat(test: String):
 
 func init_new_combat(new_battle_details: Dictionary) -> bool:
 	curr_actor = null
-#	pc_actors.clear()
-#	pc_actors_spent.clear()
-#	foe_actors.clear()
-#	foe_actors_defeated.clear()
-#	foe_actors_spent.clear()
-	
 	
 	# Validations!
 	if !new_battle_details.has("npc_positions"): return false
@@ -252,8 +260,8 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	
 	# Set up our faction data (disabling custom factions for now)
 	var use_custom_factions: bool = false
-#	if battle_details.has("custom_factions"):
-#		use_custom_factions = true
+	if battle_details.has("custom_factions"):
+		use_custom_factions = true
 	if use_custom_factions:
 		pass
 	else: # Defaults; even horizontal division
