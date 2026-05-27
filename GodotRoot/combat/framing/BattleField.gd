@@ -42,10 +42,10 @@ func set_up_board():
 			var cell: NinePatchRect = loader.res_battlecell.instance()
 			board.add_child(cell)
 			
-			cell.col = x
-			cell.row = y
-			var coord: Vector2 = Vector2(x, y)
+			var coord: Vector2 = Vector2(x+1, y+1)
 			cell.coord = coord
+			cell.col = coord.x
+			cell.row = coord.y
 			
 			cell.set_faction()
 			
@@ -59,13 +59,13 @@ func populate_gpos_data():
 	var w: int = turn.battle_details["board_size"][0] # Always even
 	var _h: int = turn.battle_details["board_size"][1]
 	
-	var xcoord: int = 0
-	var ycoord: int = 0
+	var xcoord: int = 1
+	var ycoord: int = 1
 	for cell in board.get_children():
 		turn.grid_gpos.set_cell(xcoord, ycoord, cell.get_center_gpos())
 		xcoord += 1
-		if xcoord >= w:
-			xcoord = 0
+		if xcoord > w:
+			xcoord = 1 # Back to the leftmost column, onebased
 			ycoord += 1
 	
 	pass
@@ -113,10 +113,10 @@ func populate_actors():
 		turn.grid_actors.set_cellv(coord, actor) # Overwrites the "text" with the actual object
 	
 	# Manual step just to get test gameplay going
-	turn.pc_actors.append($Actors.get_node("P1"))
-	turn.pc_actors.append($Actors.get_node("P2"))
-	turn.pc_actors.append($Actors.get_node("P3"))
-	turn.curr_actor = turn.pc_actors[0]
+#	turn.pc_actors.append($Actors.get_node("P1"))
+#	turn.pc_actors.append($Actors.get_node("P2"))
+#	turn.pc_actors.append($Actors.get_node("P3"))
+#	turn.curr_actor = turn.pc_actors[0]
 	pass
 
 func update_targeting():

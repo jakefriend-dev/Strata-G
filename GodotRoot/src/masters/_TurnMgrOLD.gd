@@ -6,36 +6,37 @@ var default_halfboard_size: Vector2 = Vector2(3, 5)
 enum {
 	T_OOC,			# Out of combat - the turn system is not active, aka between fights
 	
-	T_BATTLE_SETUP,	# Exists from battle initiation through until first turn selection
+	T_BATTLE_INTRO,	# Only happens once when the battle is won!
 	
-	T_TRANSITION,	# Choose next turn-actor; upcycle numbers like turn count
+	T_START,		# Announce turn start, upcycle numbers like turn count, update shields etc
+	T_PLAYER_ACT,		# The player choose their actions
+	T_PLAYER_END,		# Before the enemy's turn (not sure if/why important)
+	T_FOE_ACT,		# Enemies are, in turn, executing their actions
+	T_FOE_MOVE,	# Enemies are, in turn, picking a new location to move to
+	T_COMPLETE		# After the enemy's turn; if players are alive we loop to TURN_START next
 	
-	T_PRE_TURN,		# Announce turn start, , update shields etc
-	T_TURN,			# The turn is 'live' until manually ended or interrupted (self-death, or a win/lose condition)
-	T_POST_TURN,		# Check any end-of-turn effects, such as the tile being stood on
-	
-	T_BATTLE_LOST,	# Only happens once, when player loses!
-	T_BATTLE_WON,	# Only happens once, when the player wins!
+	T_BATTLE_LOST,	# Only happens once, when player loses! Generally called by enemy turn
+	T_BATTLE_WON,	# Only happens once, when the player wins! Generally called by player turn
 }
 
 var turnstate: int = T_OOC
 # TURNSTATE exists to know the GRANDER SCHEME of turns, mainly if it's the player's or enemy's turn, plus some in-between stages
 
-enum istates {
-	NPT,				# "Not Player's Turn"
-	PLAYER_CONTROL,	# Player has tactical control
-	PLAYER_EXECUTE,	# The player's commands are being executed (like animation delays for switching characters, attack anims, etc); first we spend any consumed points, then we perform the action, then we check to see if the char is spent or not (if yes, force-pick the next unspent char, unless all chars are spent, in which case end the player's turn)
+enum {
+	A_NPT,				# "Not Player's Turn"
+	A_PLAYER_CONTROL,		# Player has tactical control
+	A_PLAYER_EXECUTE,		# The player's commands are being executed (like animation delays for switching characters, attack anims, etc); first we spend any consumed points, then we perform the action, then we check to see if the char is spent or not (if yes, force-pick the next unspent char, unless all chars are spent, in which case end the player's turn)
 }
 
-var inputstate: int = istates.NPT
-var curr_actor: Actor = null # Whichever player OR enemy char is current
+var actionstate: int = A_NPT
+var curr_actor = null # Whichever player OR enemy char is current
 
-#var pc_actors: Array = [] # When a PC no longer has move OR AP remaining, it gets added to pc_actors_spent
-#var pc_actors_spent: Array = [] # Clears at end of each turn
-#
-#var foe_actors: Array = []
-#var foe_actors_spent: Array = [] # When an enemy has performed its action(s), it goes in here
-#var foe_actors_defeated: Array = [] # When an enemy is dead, it goes in here
+var pc_actors: Array = [] # When a PC no longer has move OR AP remaining, it gets added to pc_actors_spent
+var pc_actors_spent: Array = [] # Clears at end of each turn
+
+var foe_actors: Array = []
+var foe_actors_spent: Array = [] # When an enemy has performed its action(s), it goes in here
+var foe_actors_defeated: Array = [] # When an enemy is dead, it goes in here
 
 var default_party: Array = ["P2", "P1", "P3"] # Calls these scenes by name when initializing combat; the first one is always in the front and the last is always in the back.
 
@@ -83,10 +84,10 @@ enum tiletypes {
 					# Applied at the end of their turn?
 	BOGROT,		# Poison and mud combined; poison only counts if you are sunk into the tile
 	
+	DNU
 	#ELEC,   	# 'Static' on the tile hurts when walking on ONCE, but doing so also discharges it
 	#				# Also still affects hovering actors?
 	#				# Maybe this should be an effect, not a tile 'type'.... yeahhh
-	DNU
 }
 
 var multi_input_lock: bool = false # Prevent multiple actions being acecpted too closely together
@@ -99,7 +100,7 @@ var action_lock: bool = false # On any successful action, even by an enemy, yiel
 func _process(_d): monitor_inputs()
 func monitor_inputs():
 	if multi_input_lock: return
-#	if action_lock: return
+	if action_lock: return
 	
 	if Input.is_action_just_pressed("dev_1"):
 		multi_input_lock = true
@@ -123,7 +124,6 @@ func monitor_inputs():
 		return
 	
 	if battle_details.empty(): return
-	if !can_player_input(): return
 	
 	if Input.is_action_just_pressed("player_move_up"):
 		multi_input_lock = true
@@ -155,8 +155,8 @@ func monitor_inputs():
 		return
 	
 	if Input.is_action_just_pressed("player_complete"):
-#		multi_input_lock = true
-#		cycle_next_player()
+		multi_input_lock = true
+		cycle_next_player()
 		return
 	pass
 
@@ -169,10 +169,10 @@ func test_new_combat(test: String):
 		"1":
 			if !init_new_combat({
 				"npc_positions": [
-					[4, 3, "Beast"],
-					[6, 2, "Doggo"],
-					[4, 3, "Doggo"],
-					[4, 1, "Rock"],
+					[3, 2, "Beast"],
+					[5, 1, "Doggo"],
+					[3, 2, "Doggo"],
+					[3, 0, "Rock"],
 				],
 #				"tile_exceptions": {
 #					Vector2(3, 3): 2,
@@ -186,10 +186,10 @@ func test_new_combat(test: String):
 			if !init_new_combat({
 				"halfboard_size": Vector2(4, 4),
 				"npc_positions": [
-					[5, 1, "Thrower"],
-					[7, 1, "Doggo"],
-					[8, 2, "Thrower"],
-					[6, 3, "Rock"],
+					[4, 0, "Thrower"],
+					[6, 0, "Doggo"],
+					[7, 1, "Thrower"],
+					[5, 2, "Rock"],
 				],
 			}):
 				return
@@ -198,11 +198,11 @@ func test_new_combat(test: String):
 
 func init_new_combat(new_battle_details: Dictionary) -> bool:
 	curr_actor = null
-#	pc_actors.clear()
-#	pc_actors_spent.clear()
-#	foe_actors.clear()
-#	foe_actors_defeated.clear()
-#	foe_actors_spent.clear()
+	pc_actors.clear()
+	pc_actors_spent.clear()
+	foe_actors.clear()
+	foe_actors_defeated.clear()
+	foe_actors_spent.clear()
 	
 	
 	# Validations!
@@ -229,7 +229,6 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	for grid in ["grid_tiles", "grid_actors", "grid_gpos", "grid_factions"]:
 		set(grid, Array2D.new())
 		get(grid).resizev(local_board_size)
-		get(grid).onebased = true
 	
 	# Set up our tile data!
 	var tile_default: int = tiletypes.NORMAL
@@ -242,7 +241,7 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	
 	for x in w:
 		for y in h:
-			var coord: Vector2 = Vector2(x+1, y+1)
+			var coord: Vector2 = Vector2(x, y)
 			if tile_exceptions.has(coord):
 				grid_tiles.set_cellv(coord, tile_exceptions[coord])
 			else:
@@ -259,9 +258,9 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	else: # Defaults; even horizontal division
 		for y in h: for x in w:
 			if (x < (w/2)):
-				grid_factions.set_cell(x+1, y+1, factions.PLAYER)
+				grid_factions.set_cell(x, y, factions.PLAYER)
 			else:
-				grid_factions.set_cell(x+1, y+1, factions.ENEMY)
+				grid_factions.set_cell(x, y, factions.ENEMY)
 	
 	# Set up all actors, starting with PCs
 	
@@ -286,9 +285,9 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	if !use_custom_pc_positions:
 		# Default is just standing in a row
 		# Probably want to un-hardcode this at some point
-		grid_actors.set_cell(3, 2, default_party[0])
-		grid_actors.set_cell(2, 2, default_party[1])
-		grid_actors.set_cell(1, 2, default_party[2])
+		grid_actors.set_cell(2, 1, default_party[0])
+		grid_actors.set_cell(1, 1, default_party[1])
+		grid_actors.set_cell(0, 1, default_party[2])
 		print("TURN MGR: 3 PCs default-placed")
 	
 	# DATA-PLACE ENEMIES (AND KEY OBSTACLES)
@@ -324,44 +323,39 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 
 # ---
 
-#func cycle_next_player():
-#	var seq: int = pc_actors.find(curr_actor)
-#
-#	var valid: bool = false
-#
-#	while !valid:
-#		seq += 1
-#		if seq >= pc_actors.size():
-#			seq = 0
-#
-#		var next_pc: Actor = pc_actors[seq]
-#
-#		# Ignore anyone dead or incapable of moving/actions (not implemented yet)
-#		if pc_actors_spent.has(next_pc):
-#			continue
-#
-#		# Otherwise, valid
-#		valid = true
-#		curr_actor = next_pc
-#		break
-#
-#	field.update_targeting()
-#	print("TURN: Cycled to next pc: ",curr_actor)
-#	pass
+func cycle_next_player():
+	var seq: int = pc_actors.find(curr_actor)
+	
+	var valid: bool = false
+	
+	while !valid:
+		seq += 1
+		if seq >= pc_actors.size():
+			seq = 0
+		
+		var next_pc: Actor = pc_actors[seq]
+		
+		# Ignore anyone dead or incapable of moving/actions (not implemented yet)
+		if pc_actors_spent.has(next_pc):
+			continue
+		
+		# Otherwise, valid
+		valid = true
+		curr_actor = next_pc
+		break
+	
+	field.update_targeting()
+	print("TURN: Cycled to next pc: ",curr_actor)
+	pass
 
 # ---
 
 func can_player_input() -> bool:
-	if inputstate != istates.PLAYER_CONTROL:
-		return false
-	if turnstate != T_TURN:
-		return false
-	if curr_actor == null:
-		return false
-	if curr_actor.faction != factions.PLAYER:
-		return false
+	if turnstate == T_PLAYER_ACT:
+		if actionstate == A_PLAYER_CONTROL:
+			return true
 	
-	return true
+	return false
 	pass
 
 func get_board_size() -> Vector2:
@@ -376,13 +370,12 @@ func get_halfboard_size() -> Vector2:
 func must_player_turn_be_over() -> bool: # Asked after any player action is executed
 	# The turn is auto-over IF all PC characters are spent
 	# Spent means: No move or action points remain (or not enough AP to use any valid action), or downed
-#	if pc_actors_spent.size() == 3:
-#		return true
+	if pc_actors_spent.size() == 3:
+		return true
 	return false
 
 func must_battle_be_won() -> bool: # Asked after any enemy is damaged/defeated
-#	return foe_actors_defeated.size() == foe_actors.size()
-	return false
+	return foe_actors_defeated.size() == foe_actors.size()
 
 func must_battle_be_lost() -> bool: # Asked after any PC is damaged/defeated
 	return false

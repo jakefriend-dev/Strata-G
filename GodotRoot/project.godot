@@ -49,6 +49,7 @@ loader="*res://src/masters/_Loader.gd"
 data="*res://src/masters/_Data.gd"
 utils="*res://src/masters/_Utils.gd"
 act="*res://src/masters/_ActionLib.gd"
+vet="*res://src/masters/_Validator.gd"
 
 [debug]
 
