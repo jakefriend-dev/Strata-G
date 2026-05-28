@@ -139,21 +139,21 @@ func process_action_queue():
 		var tiletype: int = deets["tiletype"]
 		for target in deets["exact_targets"]:
 			
-			if turn.grid_tiles.get_cellv(target) == turn.tiletypes.PIT:
+			if batman.grid_tiles.get_cellv(target) == batman.tiletypes.PIT:
 				if !flags.has("can_change_pits"):
 					continue # We don't normally change pits
-			elif tiletype == turn.tiletypes.PIT:
-				if turn.grid_actors.get_cellv(target) != null:
+			elif tiletype == batman.tiletypes.PIT:
+				if batman.grid_actors.get_cellv(target) != null:
 					# Actors can't be pitted, only cracked
-					impact_dict[target] = turn.tiletypes.CRACK
+					impact_dict[target] = batman.tiletypes.CRACK
 					continue
-			elif tiletype == turn.tiletypes.CRACK:
-				if turn.grid_tiles.get_cellv(target) == turn.tiletypes.CRACK:
+			elif tiletype == batman.tiletypes.CRACK:
+				if batman.grid_tiles.get_cellv(target) == batman.tiletypes.CRACK:
 					# Actors can't be pitted, only cracked
-					if turn.grid_actors.get_cellv(target) == null:
+					if batman.grid_actors.get_cellv(target) == null:
 						# 'Double-cracking' an (unoccupised) crack is just a pit
 #						print("Upgrading 'crack' tilechange to pit at ",target,"!")
-						impact_dict[target] = turn.tiletypes.PIT
+						impact_dict[target] = batman.tiletypes.PIT
 						continue
 			impact_dict[target] = tiletype
 			pass
@@ -164,9 +164,9 @@ func process_action_queue():
 		
 		# Apply actual changes
 		for coord in impact_dict.keys():
-			turn.grid_tiles.set_cellv(coord, impact_dict[coord])
+			batman.grid_tiles.set_cellv(coord, impact_dict[coord])
 		print("Preparing tilechanges:\n",impact_dict)
-		turn.emit_signal("update_all_tiletypes")
+		batman.emit_signal("update_all_tiletypes")
 		
 		update_action_log(this_action, true)
 		step_signal()
@@ -213,11 +213,11 @@ func process_action_queue():
 		if skip_if_no_target:
 			var any_target_found: bool = false
 			for target in deets["exact_targets"]:
-				if turn.grid_actors.has_cellv(target):
-					if turn.grid_actors.get_cellv(target) != null:
+				if batman.grid_actors.has_cellv(target):
+					if batman.grid_actors.get_cellv(target) != null:
 						if flags.has("friendly_fire"):
 							any_target_found = true
-						elif turn.grid_actors.get_cellv(target).faction != actor.faction:
+						elif batman.grid_actors.get_cellv(target).faction != actor.faction:
 							any_target_found = true
 			if !any_target_found:
 				skip_processing_action("No targets found for attack when having targets is mandatory; legit skip")
@@ -362,9 +362,9 @@ func do_move_actor(actor: Actor, motion: Vector2, continuous: bool = false): # A
 	var old_coord: Vector2 = actor.coord
 	var new_coord: Vector2 = old_coord + motion
 	actor.coord = new_coord
-	turn.grid_actors.set_cellv(old_coord, null)
-	turn.grid_actors.set_cellv(new_coord, actor)
-	var new_gpos: Vector2 = turn.grid_gpos.get_cellv(new_coord)
+	batman.grid_actors.set_cellv(old_coord, null)
+	batman.grid_actors.set_cellv(new_coord, actor)
+	var new_gpos: Vector2 = batman.grid_gpos.get_cellv(new_coord)
 	
 	print("Moved actor ",actor.ofc_name," to new coord ",new_coord)
 	
@@ -378,7 +378,7 @@ func do_move_actor(actor: Actor, motion: Vector2, continuous: bool = false): # A
 ####		# Different because it CONTINUES TO BE CONTINUOUS
 ####		action_queue.insert(0, [actor, "move", {"motion": motion, "flags": ["continuous"]}])
 		pass
-	elif turn.grid_tiles.get_cellv(new_coord) == turn.tiletypes.ICE:
+	elif batman.grid_tiles.get_cellv(new_coord) == batman.tiletypes.ICE:
 		# Different because it is only ONE additional slip
 		action_queue.insert(0, [actor, "move", {"motion": motion}])
 	step_signal()
@@ -449,12 +449,12 @@ func can_move_exact_vector(actor: Actor, target: Vector2, allowed_over_faction_l
 	var end_coord: Vector2 = target
 	
 	# Can't move off the grid
-	if !turn.grid_tiles.has_cellv(end_coord):
+	if !batman.grid_tiles.has_cellv(end_coord):
 		print("ACT: cmev[1] Cell does not exist on board!")
 		return false
 		
 	# Can't move into *any* other actors, period
-	if turn.grid_actors.get_cellv(end_coord) != null:
+	if batman.grid_actors.get_cellv(end_coord) != null:
 		print("ACT: cmev[2] Actor occupies destination!")
 		return false
 	
@@ -462,18 +462,18 @@ func can_move_exact_vector(actor: Actor, target: Vector2, allowed_over_faction_l
 		# (unless you're neutral? or a non-enemy like a missile?)
 		# Maybe make missiles etc Neutral to represent 'friendly fire'
 	if !allowed_over_faction_lines:
-		if actor.faction == turn.factions.PLAYER:
-			if turn.grid_factions.get_cellv(end_coord) != turn.factions.PLAYER:
+		if actor.faction == batman.factions.PLAYER:
+			if batman.grid_factions.get_cellv(end_coord) != batman.factions.PLAYER:
 				print("ACT: cmev[3a] Player cannot exit player faction area!")
 				return false
-		if actor.faction == turn.factions.ENEMY:
-			if turn.grid_factions.get_cellv(end_coord) != turn.factions.ENEMY:
+		if actor.faction == batman.factions.ENEMY:
+			if batman.grid_factions.get_cellv(end_coord) != batman.factions.ENEMY:
 				print("ACT: cmev[3b] Enemy cannot exit enemy faction area!")
 				return false
 		
 	
 	# Can only move on pits IF you can hover
-	if turn.grid_tiles.get_cellv(end_coord) == turn.tiletypes.PIT:
+	if batman.grid_tiles.get_cellv(end_coord) == batman.tiletypes.PIT:
 		if !actor.is_hovering:
 			print("ACT: cmev[4] Dest is pit but actor can't hover!")
 			return false
@@ -484,7 +484,7 @@ func can_move_exact_vector(actor: Actor, target: Vector2, allowed_over_faction_l
 func find_first_PC_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
 	var result: Actor = find_first_actor_in_dir(og_coord, dir)
 	if result != null:
-		if result.faction == turn.factions.PLAYER:
+		if result.faction == batman.factions.PLAYER:
 			return result
 		
 	return null
@@ -493,7 +493,7 @@ func find_first_PC_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
 func find_first_ENEMY_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
 	var result: Actor = find_first_actor_in_dir(og_coord, dir)
 	if result != null:
-		if result.faction == turn.factions.ENEMY:
+		if result.faction == batman.factions.ENEMY:
 			return result
 		
 	return null
@@ -504,9 +504,9 @@ func find_first_actor_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
 	
 	while true:
 		check_coord += dir
-		if !turn.grid_actors.has_cellv(check_coord):
+		if !batman.grid_actors.has_cellv(check_coord):
 			break
-		var occupant: Actor = turn.grid_actors.get_cellv(check_coord)
+		var occupant: Actor = batman.grid_actors.get_cellv(check_coord)
 		if occupant != null:
 			return occupant
 	
@@ -535,7 +535,7 @@ func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, 
 	
 	# Only check within the bounds of the board
 	for adj in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
-		if !turn.grid_tiles.has_cellv(og_tile + adj):
+		if !batman.grid_tiles.has_cellv(og_tile + adj):
 			opts.erase(adj)
 	
 	# Means it should fail if it's already occupied
@@ -548,7 +548,7 @@ func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, 
 	elif occupation_check:
 		for dir in opts.duplicate():
 			var checkcoord: Vector2 = og_tile + dir
-			if !turn.grid_actors.get_cellv(checkcoord) == null:
+			if !batman.grid_actors.get_cellv(checkcoord) == null:
 				opts.erase(dir)
 	
 	# Sending the OG tile is the failure fallback
@@ -597,13 +597,13 @@ func master_get_adj_tiles(center_tile: Vector2, type_is_orthag: bool, are_pits_a
 	
 	for surr in surrounders:
 		var coord: Vector2 = center_tile + surr
-		if !turn.grid_tiles.has_cellv(coord):
+		if !batman.grid_tiles.has_cellv(coord):
 			continue
 		if !are_pits_allowed:
-			if turn.grid_tiles.get_cellv(coord) == turn.tiletypes.PIT:
+			if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.PIT:
 				continue
 		if denied_factions != -1:
-			if turn.grid_factions.get_cellv(coord) == denied_factions:
+			if batman.grid_factions.get_cellv(coord) == denied_factions:
 				continue
 		viable_set.append(coord)
 	
@@ -611,7 +611,7 @@ func master_get_adj_tiles(center_tile: Vector2, type_is_orthag: bool, are_pits_a
 
 func get_all_tiles_by_faction(faction: int) -> Array:
 	var results: Array = []
-	var dataset: Array = turn.grid_factions.get_dataset_with_coords()
+	var dataset: Array = batman.grid_factions.get_dataset_with_coords()
 	for entry in dataset:
 		if entry[0] == faction:
 			if !results.has(entry[1]):

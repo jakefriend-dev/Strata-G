@@ -19,30 +19,31 @@ var is_facing_left: bool = true # Default true for enemies; false for party
 
 export var bui_visible: bool = true
 
-enum weightclasses {
-	HOVER,  # Flying; not affects by the ground beneath it at all
-	LIGHT,  # Doesn't sink into tiles; doesn't break cracked tiles
-	NORMAL, # Standard; affected by things as usual
-	HEAVY,  # Unaffected by knockback
-}
+#enum weightclasses {
+#	HOVER,  # Flying; not affects by the ground beneath it at all
+#	LIGHT,  # Doesn't sink into tiles; doesn't break cracked tiles
+#	NORMAL, # Standard; affected by things as usual
+#	HEAVY,  # Unaffected by knockback
+#}
 
 # Defaults first; manually set
-export (weightclasses) var def_weight: int = weightclasses.NORMAL
+#export (weightclasses) var def_weight: int = weightclasses.NORMAL
 
-export var def_hovering:		bool = false # Not affected by ground type or pits
-export var def_lightweight:		bool = false # Not affected by tiles that you sink in, like mud
-												# Also doesn't break cracked tiles
-export var def_heavywight:		bool = false # Not affected by knockback
-export var def_immune_fire:		bool = false # Not affected by ember floors
-export var def_immune_water:	bool = false # Not slowed by water tiles (even lightweights are)
-export var def_immune_ice:		bool = false # Doesn't slide on ice
-export var def_immune_poison:	bool = false # Doesn't take poison damage
-export var def_immune_magnet:	bool = false # Not pulled by magnet tiles
-export var def_immune_elec:		bool = false # Doesn't take elec damage on static traps
+export var def_hovering:			bool = false # Not affected by ground type or pits at all
+export var def_lightweight:			bool = false # Not affected by tiles that you sink in, like mud
+#													# Also doesn't break cracked tiles
+export var def_immune_knockback:	bool = false # Not affected by knockback
+export var def_immune_fire:			bool = false # Not affected by ember floors
+export var def_immune_water:		bool = false # Not slowed by water tiles (even lightweights are)
+export var def_immune_ice:			bool = false # Doesn't slide on ice
+export var def_immune_poison:		bool = false # Doesn't take poison damage
+export var def_immune_magnet:		bool = false # Not pulled by magnet tiles
+export var def_immune_elec:			bool = false # Doesn't take elec damage on static traps
 
-var weight: int
+#var weight: int
 var is_hovering: bool
 var is_lightweight: bool
+var is_immune_knockback: bool
 var is_immune_fire: bool
 var is_immune_water: bool
 var is_immune_ice: bool
@@ -67,13 +68,13 @@ func perform_initial_data_setup():
 	
 	def_shield *= 10 # Let the start of turn determine current shield
 	
-	for term in ["hovering", "lightweight", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
+	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
 		set( str("is_"+term), get(str("def_",term)) )
-	weight = def_weight
+#	weight = def_weight
 	pass
 
 func update_bui():
-	if faction == turn.factions.PLAYER:
+	if faction == batman.factions.PLAYER:
 		is_facing_left = false
 	
 	if !is_facing_left:
@@ -100,7 +101,7 @@ func update_outline(): # Should be called every time targeting changes
 	var to_col: Color
 	
 	# White outline if it's your turn
-	if turn.curr_actor == self:
+	if batman.curr_actor == self:
 		use_outline = true
 		to_col = Color("c8f3fcf0")
 	

@@ -44,12 +44,12 @@ config/icon="res://icon.png"
 
 [autoload]
 
-turn="*res://src/masters/_TurnMgr.gd"
 loader="*res://src/masters/_Loader.gd"
 data="*res://src/masters/_Data.gd"
 utils="*res://src/masters/_Utils.gd"
-act="*res://src/masters/_ActionLib.gd"
 vet="*res://src/masters/_Validator.gd"
+batman="*res://src/masters/_BattleMgr.gd"
+act="*res://src/masters/_ActionLib.gd"
 
 [debug]
 

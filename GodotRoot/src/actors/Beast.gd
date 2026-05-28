@@ -6,7 +6,7 @@ var telegraphed_move: int = NOT_SET
 var lunge_delta_target: Vector2
 
 func _ready():
-	lunge_delta_target = turn.get_halfboard_size()
+	lunge_delta_target = batman.get_halfboard_size()
 	lunge_delta_target.x *= -1
 	lunge_delta_target.y = 0
 	set_up_next_turn()
@@ -32,7 +32,7 @@ func do_lunge():
 	# Damage other side (no visual)
 	var opposite: Vector2 = coord + lunge_delta_target
 	act.prep_shaped_attack(self, targeted_locs, true)
-	act.prep_tiletype_changes(self, [opposite], turn.tiletypes.CRACK)
+	act.prep_tiletype_changes(self, [opposite], batman.tiletypes.CRACK)
 	pass
 
 func do_shoot():
@@ -52,7 +52,7 @@ func set_up_next_turn():
 	
 	if telegraphed_move != SHOOT: return
 	
-	var player_tiles: Array = act.get_all_tiles_by_faction(turn.factions.PLAYER)
+	var player_tiles: Array = act.get_all_tiles_by_faction(batman.factions.PLAYER)
 	player_tiles.shuffle()
 	targeted_locs.append(player_tiles.pop_front())
 	targeted_locs.append(player_tiles.pop_front())
@@ -66,7 +66,7 @@ func set_up_next_turn():
 
 func lunge_viability_check() -> bool:
 	var opposite: Vector2 = coord + lunge_delta_target
-	if turn.grid_tiles.get_cellv(opposite) == turn.tiletypes.PIT:
+	if batman.grid_tiles.get_cellv(opposite) == batman.tiletypes.PIT:
 		return false
 	
 	targeted_locs.append(opposite)

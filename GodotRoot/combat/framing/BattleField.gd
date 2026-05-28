@@ -9,9 +9,9 @@ enum {} # put hover, fire, etc states here - one value per current state AND def
 
 func _ready():
 	board = get_node(path_board)
-	turn.field = self
-	turn.actors = $Actors
-	turn.board = board
+	batman.field = self
+	batman.actors = $Actors
+	batman.board = board
 	act.field = self
 	act.actors = $Actors
 	act.board = board
@@ -20,9 +20,9 @@ func _ready():
 		ProjectSettings.get_setting("display/window/size/width"),
 		ProjectSettings.get_setting("display/window/size/height"))
 	
-	turn.connect("set_up_board", self, "set_up_board")
-	turn.connect("populate_gpos_data", self, "populate_gpos_data")
-	turn.connect("populate_actors", self, "populate_actors")
+	batman.connect("set_up_board", self, "set_up_board")
+	batman.connect("populate_gpos_data", self, "populate_gpos_data")
+	batman.connect("populate_actors", self, "populate_actors")
 	pass
 
 func set_up_board():
@@ -33,8 +33,8 @@ func set_up_board():
 		board.remove_child(c)
 		c.queue_free()
 	
-	var w: int = turn.battle_details["board_size"].x #Always even
-	var h: int = turn.battle_details["board_size"].y
+	var w: int = batman.battle_details["board_size"].x #Always even
+	var h: int = batman.battle_details["board_size"].y
 	board.columns = w
 	
 	for y in h:
@@ -51,18 +51,18 @@ func set_up_board():
 			
 			cell.set_depth_tint(h)
 			
-			var type: int = turn.grid_tiles.get_cellv(coord)
+			var type: int = batman.grid_tiles.get_cellv(coord)
 			cell.set_type(type)
 	pass
 
 func populate_gpos_data():
-	var w: int = turn.battle_details["board_size"][0] # Always even
-	var _h: int = turn.battle_details["board_size"][1]
+	var w: int = batman.battle_details["board_size"][0] # Always even
+	var _h: int = batman.battle_details["board_size"][1]
 	
 	var xcoord: int = 1
 	var ycoord: int = 1
 	for cell in board.get_children():
-		turn.grid_gpos.set_cell(xcoord, ycoord, cell.get_center_gpos())
+		batman.grid_gpos.set_cell(xcoord, ycoord, cell.get_center_gpos())
 		xcoord += 1
 		if xcoord > w:
 			xcoord = 1 # Back to the leftmost column, onebased
@@ -78,7 +78,7 @@ func populate_actors():
 		c.queue_free()
 	
 	# Time to populate the board!
-	var actorset: Array = turn.grid_actors.get_dataset_with_coords()
+	var actorset: Array = batman.grid_actors.get_dataset_with_coords()
 #	var res_actor = load("res://src/prefabs/_ActorTEMPLATE.tscn")
 #	print(actorset)
 	
@@ -87,12 +87,12 @@ func populate_actors():
 	for set in actorset: if set is Array:
 		var actorname: String = set[0]
 		var coord: Vector2 = set[1]
-		var gpos: Vector2 = turn.grid_gpos.get_cellv(coord)
+		var gpos: Vector2 = batman.grid_gpos.get_cellv(coord)
 		
 		var thispath: String = path + actorname + ".tscn"
 		if !utils.does_file_exist(thispath):
 			print("BATTLEFIELD: Error, path ",thispath," does not exist! Skipping + erasing from grid")
-			turn.grid_actors.set_cellv(coord, null)
+			batman.grid_actors.set_cellv(coord, null)
 			continue
 		
 		var res_actor = load(thispath)
@@ -103,20 +103,20 @@ func populate_actors():
 		if actor.get("ofc_name") == "--":
 			actor.set("ofc_name", actorname)
 		if ["P1", "P2", "P3"].has(actorname):
-			actor.set("faction", turn.factions.PLAYER)
+			actor.set("faction", batman.factions.PLAYER)
 		else:
-			actor.set("faction", turn.factions.ENEMY)
+			actor.set("faction", batman.factions.ENEMY)
 		actor.set("coord", coord)
 		
 		$Actors.add_child(actor)
 		
-		turn.grid_actors.set_cellv(coord, actor) # Overwrites the "text" with the actual object
+		batman.grid_actors.set_cellv(coord, actor) # Overwrites the "text" with the actual object
 	
 	# Manual step just to get test gameplay going
-#	turn.pc_actors.append($Actors.get_node("P1"))
-#	turn.pc_actors.append($Actors.get_node("P2"))
-#	turn.pc_actors.append($Actors.get_node("P3"))
-#	turn.curr_actor = turn.pc_actors[0]
+#	batman.pc_actors.append($Actors.get_node("P1"))
+#	batman.pc_actors.append($Actors.get_node("P2"))
+#	batman.pc_actors.append($Actors.get_node("P3"))
+#	batman.curr_actor = batman.pc_actors[0]
 	pass
 
 func update_targeting():

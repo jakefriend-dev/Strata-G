@@ -1,8 +1,8 @@
 extends NinePatchRect
 
 var colset: Dictionary = {
-	turn.factions.PLAYER:  ["5392df"],
-	turn.factions.ENEMY:   ["df538e"],
+	batman.factions.PLAYER:  ["5392df"],
+	batman.factions.ENEMY:   ["df538e"],
 }
 
 # Un-set; 0 is default
@@ -15,13 +15,13 @@ var faction: int = -1
 # ---
 
 func _ready():
-	turn.connect("update_all_tiletypes", self, "update_tiletype")
+	batman.connect("update_all_tiletypes", self, "update_tiletype")
 #	$Crack.rect_size = rect_size
 #	$Pit.rect_size = rect_size
 	pass
 
 func update_tiletype(): # Visual only; data is already handled
-	var new_type: int =  turn.grid_tiles.get_cellv(coord)
+	var new_type: int =  batman.grid_tiles.get_cellv(coord)
 	if new_type != type:
 		type = new_type
 	
@@ -41,7 +41,7 @@ func set_depth_tint(max_row: int):
 
 func set_faction():
 	var m: ShaderMaterial = material
-	faction = turn.grid_factions.get_cellv(coord)
+	faction = batman.grid_factions.get_cellv(coord)
 	
 	m.set_shader_param("replacer_col_2", Color(colset[faction][0]))
 	pass
@@ -60,10 +60,10 @@ func get_center_gpos() -> Vector2:
 func followup_tiletype():
 	if $Type.text != str(type):
 		$Type.text = str(type)
-	if $Crack.visible != (type == turn.tiletypes.CRACK):
-		$Crack.visible = (type == turn.tiletypes.CRACK)
-	if $Pit.visible != (type == turn.tiletypes.PIT):
-		$Pit.visible = (type == turn.tiletypes.PIT)
+	if $Crack.visible != (type == batman.tiletypes.CRACK):
+		$Crack.visible = (type == batman.tiletypes.CRACK)
+	if $Pit.visible != (type == batman.tiletypes.PIT):
+		$Pit.visible = (type == batman.tiletypes.PIT)
 
 
 
