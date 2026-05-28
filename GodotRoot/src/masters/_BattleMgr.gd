@@ -4,31 +4,35 @@ extends Node
 var default_halfboard_size: Vector2 = Vector2(3, 5)
 
 enum {
-	T_OOC,			# Out of combat - the turn system is not active, aka between fights
+	C_OOC,			# Out of combat - the turn system is not active, aka between fights
 	
-	T_BATTLE_SETUP,	# Exists from battle initiation through until first turn selection
+	C_BATTLE_SETUP,	# Exists from battle initiation through until first turn selection
 	
-	T_TRANSITION,	# Choose next turn-actor; upcycle numbers like turn count
+	C_TRANSITION,	# Choose next turn-actor; upcycle numbers like turn count
 	
-	T_PRE_TURN,		# Announce turn start, , update shields etc
-	T_TURN,			# The turn is 'live' until manually ended or interrupted (self-death, or a win/lose condition)
-	T_POST_TURN,		# Check any end-of-turn effects, such as the tile being stood on
+	C_PRE_TURN,		# Announce turn start, , update shields etc
+	C_TURN,			# The turn is 'live' until manually ended or interrupted (self-death, or a win/lose condition)
+	C_POST_TURN,		# Check any end-of-turn effects, such as the tile being stood on
 	
-	T_BATTLE_LOST,	# Only happens once, when player loses!
-	T_BATTLE_WON,	# Only happens once, when the player wins!
+	C_BATTLE_LOST,	# Only happens once, when player loses!
+	C_BATTLE_WON,	# Only happens once, when the player wins!
+	
 }
 
-var turnstate: int = T_OOC
+var combatstate: int = C_OOC
 # TURNSTATE exists to know the GRANDER SCHEME of turns, mainly if it's the player's or enemy's turn, plus some in-between stages
 
-enum istates {
-	NPT,				# "Not Player's Turn"
-	PLAYER_CONTROL,	# Player has tactical control
-	PLAYER_EXECUTE,	# The player's commands are being executed (like animation delays for switching characters, attack anims, etc); first we spend any consumed points, then we perform the action, then we check to see if the char is spent or not (if yes, force-pick the next unspent char, unless all chars are spent, in which case end the player's turn)
-}
-
-var inputstate: int = istates.NPT
+#enum istates {
+#	NPT,				# "Not Player's Turn"
+#	PC_BOARD,			# Player has tactical control
+#	PLAYER_EXECUTE,	# The player's commands are being executed (like animation delays for switching characters, attack anims, etc); first we spend any consumed points, then we perform the action, then we check to see if the char is spent or not (if yes, force-pick the next unspent char, unless all chars are spent, in which case end the player's turn)
+#}
+#
+#var inputstate: int = istates.NPT
 var curr_actor: Actor = null # Whichever player OR enemy char is current
+var round_count: int = 0 # per entire cycle of turns
+var total_turns_taken: int = 0
+var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rockets, then they all die, the next one would be Rocket_4 forever, and the turnqueue would still know Rocket_2 died
 
 #var pc_actors: Array = [] # When a PC no longer has move OR AP remaining, it gets added to pc_actors_spent
 #var pc_actors_spent: Array = [] # Clears at end of each turn
@@ -36,6 +40,19 @@ var curr_actor: Actor = null # Whichever player OR enemy char is current
 #var foe_actors: Array = []
 #var foe_actors_spent: Array = [] # When an enemy has performed its action(s), it goes in here
 #var foe_actors_defeated: Array = [] # When an enemy is dead, it goes in here
+var turncount: int = 0 # Starts at 1 for first turn and cycles upwards until resetting
+var turnqueue: Array = [
+	# Full of turndata dictionaries, already sorted in order!
+	# Assumes all turntakers are ALIVE
+		# actor						Null if no longer relevant, otherwise an Actor
+		# init						Float; The original initiative roll (eg. 5.72013)
+		# has_finished_turn			Bool that fires once its turn is complete
+		# ofc_name					Direct from the actor's ofc_name
+		# numerated_name			As "Doggo 1" with a space and all
+		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
+		# turnpos					Int; managed by batman but 
+]
+var slain_turntakers: Array = [] # When turndata is deleted from turnqueue it goes here, to track things like XP and to keep turnqueue clear for living turntakers only.
 
 var default_party: Array = ["P2", "P1", "P3"] # Calls these scenes by name when initializing combat; the first one is always in the front and the last is always in the back.
 
@@ -137,7 +154,7 @@ func monitor_inputs():
 		return
 	
 	if battle_details.empty(): return
-	if !can_player_input(): return
+#	if !can_player_input(): return
 	
 	if Input.is_action_just_pressed("player_move_up"):
 		multi_input_lock = true
@@ -169,8 +186,8 @@ func monitor_inputs():
 		return
 	
 	if Input.is_action_just_pressed("player_complete"):
-#		multi_input_lock = true
-#		cycle_next_player()
+		multi_input_lock = true
+		cycle_to_next_turn()
 		return
 	pass
 
@@ -316,11 +333,13 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 #	print("TURN MGR: All actors (by name). Results:",grid_actors)
 	
 	emit_signal("set_up_board")
-#	yield(VisualServer, "frame_pre_draw")
-	yield(VisualServer, "frame_post_draw")
+	yield(VisualServer, "frame_post_draw") # Only exists to let Control-based nodes set their actual position data; bypass-able once we're sure values won't change though
 	emit_signal("populate_gpos_data")
 	emit_signal("populate_actors")
 	print("TURN MGR: All actor data matched to nodes. Results:",grid_actors)
+	
+	roll_initiative()
+	cycle_to_next_turn()
 	
 #	print("TURN: GPos data is:",grid_gpos)
 	
@@ -330,39 +349,145 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	return true
 	pass
 
-# ---
+# TURN MANAGEMENT ----------------------------------------------------------------------------------
 
-#func cycle_next_player():
-#	var seq: int = pc_actors.find(curr_actor)
-#
-#	var valid: bool = false
-#
-#	while !valid:
-#		seq += 1
-#		if seq >= pc_actors.size():
-#			seq = 0
-#
-#		var next_pc: Actor = pc_actors[seq]
-#
-#		# Ignore anyone dead or incapable of moving/actions (not implemented yet)
-#		if pc_actors_spent.has(next_pc):
-#			continue
-#
-#		# Otherwise, valid
-#		valid = true
-#		curr_actor = next_pc
-#		break
-#
-#	field.update_targeting()
-#	print("TURN: Cycled to next pc: ",curr_actor)
-#	pass
+func roll_initiative():
+	turnqueue.clear()
+	
+	unique_actornames_observed.clear()
+	
+	var actorset: Array = grid_actors.get_dataset_values_list()
+# warning-ignore:unused_variable
+	var actorcount: int = 0
+	
+	for actor in actorset:
+		var initset: Array = actor.get_initiative() # Size 0-3; 0 for rocks etc
+		if !initset.empty():
+			actorcount += 1 # We just don't count rocks
+		
+		var count_of_type: int = 1
+		var n: String = actor.ofc_name
+		if !unique_actornames_observed.has(n):
+			unique_actornames_observed[n] = 1
+		else:
+			count_of_type = unique_actornames_observed[n] + 1
+			unique_actornames_observed[n] = count_of_type
+		var numerated_name: String = str(n," ",count_of_type)	
+		
+		# Go through each turn PER each actor
+		var initcount: int = 0
+		for init in initset:
+			initcount += 1
+			var turndata: Dictionary = {}
+			
+			turndata["actor"] = actor
+			turndata["init"] = init
+			turndata["has_finished_turn"] = false
+			
+			turndata["ofc_name"] = n
+			turndata["numerated_name"] = numerated_name
+			turndata["turncount_of_this_actor"] = initcount # Typically 1, could be 2 or 3 for bosses
+			
+			turnqueue.append(turndata)
+	
+	turnqueue.sort_custom(self, "sort_turnqueue_by_init")
+	
+	# Now assign an int position, so that we can insert turns "behind" a specific actor for things like missiles later! You know, if we want.
+	
+	var count: int = 0
+	for turndata in turnqueue: if turndata is Dictionary:
+		count += 1
+		turndata["turnpos"] = count
+	
+	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
+	pass
+
+func sort_turnqueue_by_init(a: Dictionary, b: Dictionary) -> bool:
+	# True if turndata A should act ahead of turndata B
+	return a["init"] > b["init"]
+	pass
+
+func sort_turnqueue_by_turnpos(a: Dictionary, b: Dictionary) -> bool:
+	# True if turndata A should act ahead of turndata B
+	return a["turnpos"] > b["turnpos"]
+	pass
+
+func cycle_to_next_turn():
+	# If we've never had a turn before, start with the highest number
+	
+	var is_new_round: bool = false
+	if turncount == 0: # It's our first round
+		is_new_round = true
+	elif turncount >= turnqueue.size(): # We've concluded this round - we are ALREADY at size before incrementing therefore we will exceed size after incrementing
+		is_new_round = true
+	
+	if is_new_round:
+		round_count += 1
+		turncount = 1
+	else:
+		turncount += 1
+	total_turns_taken += 1 # Happens regardless
+	
+	var found_next_actor: bool = false
+	for turndata in turnqueue:
+		if turndata["turnpos"] == turncount:
+			found_next_actor = true
+			curr_actor = turndata["actor"]
+			print("BATMAN: cycle_to_next_turn() = [Round ",round_count,", Turn ",turncount,": ",turndata["numerated_name"],"]")
+			return
+	
+	if !found_next_actor:
+		print("BATMAN: Failed to find next actor when cycle_to_next_turn()!")
+		return
+	pass
+
+func insert_turntaker(new_turndata: Dictionary, to_position: int):
+	# Everything AT/BEHIND this position has to have its turnpos incremented
+	# If we want to insert BEFORE just use the thing-after's position, and if we want to insert AFTER use the thing-before's position -1
+	
+	# THIS ASSUMES WE ARE OTHERWISE VALIDATED BTW, besides turnpos I mean!
+	# Just a safety validation
+	new_turndata["turnpos"] = to_position
+	
+	# First, iterate 
+	for existing_turndata in turnqueue:
+		if existing_turndata["turnpos"] >= to_position:
+			existing_turndata["turnpos"] = existing_turndata["turnpos"]+1
+	
+	# Next, add the new data
+	turnqueue.append(new_turndata)
+	
+	# Then sort!
+	turnqueue.sort_custom(self, "sort_turnqueue_by_turnpos")
+	
+	# The question now is... do we iterate our turncount?
+	# I think if we're inserting BEFORE the current turn we should.
+	# So if our turn is 5 before insertion...
+		# Inserting at 4 bumps the current turntaker to 6, so turncount should invisibly increment
+		# Inserting at 5 does the same
+		# Inserting at 6 KEEPS the current turntaker's spot and the new turntaker acts next
+	# Therefore we increment if the new number is LOWER OR EQUAL TO the turncount!
+	if to_position <= turncount:
+		turncount += 1
+	
+	pass
+
+func remove_turntaker(because_it_died: bool = true):
+	
+	
+	if !because_it_died: return
+	# Since we know it died, we need to add it to the slain_turntakers list
+	# We also need to remove ALL INSTANCES if it was a multi-turn actor!
+	pass
+
+# ---
 
 # ---
 
 func can_player_input() -> bool:
-	if inputstate != istates.PLAYER_CONTROL:
-		return false
-	if turnstate != T_TURN:
+#	if inputstate != istates.PLAYER_CONTROL:
+#		return false
+	if combatstate != C_TURN:
 		return false
 	if curr_actor == null:
 		return false

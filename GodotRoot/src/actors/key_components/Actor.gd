@@ -1,6 +1,28 @@
 extends Node2D
 class_name Actor
 
+enum initspeeds {
+	DOES_NOT_ACT,
+	AUTOLAST,
+	LOWGEAR_SLOW,
+	LOWGEAR_FAST,
+	PC_TANK,
+	MIDGEAR_SLOW,
+	MIDGEAR_FAST,
+	PC_SNIPER,
+	HIGHGEAR_SLOW,
+	HIGHGEAR_FAST,
+	PC_LEADER,
+	TOPGEAR_SLOW,
+	TOPGEAR_FAST,
+	AUTOFIRST,
+}
+export (initspeeds) var first_initiative: int = initspeeds.LOWGEAR_FAST
+export (initspeeds) var second_initiative: int = initspeeds.DOES_NOT_ACT
+export (initspeeds) var third_initiative: int = initspeeds.DOES_NOT_ACT
+	# An actor can optionally have up to 3 turns, for a boss; matching the party
+var variance_initiative: float  = -1.0 # Cued by batman at start of combat; percentage from 0-99%
+
 export var max_hp: int = 4
 var hp: int = 4
 
@@ -72,6 +94,21 @@ func perform_initial_data_setup():
 		set( str("is_"+term), get(str("def_",term)) )
 #	weight = def_weight
 	pass
+
+func get_initiative() -> Array:
+	if variance_initiative < 0: # Should set it once ever
+		variance_initiative = rand_range(0.00000, 0.99999)
+	
+	var initset: Array = []
+	
+	if first_initiative > initspeeds.DOES_NOT_ACT:
+		initset.append(float(first_initiative + variance_initiative))
+	if second_initiative > initspeeds.DOES_NOT_ACT:
+		initset.append(float(second_initiative + variance_initiative))
+	if third_initiative > initspeeds.DOES_NOT_ACT:
+		initset.append(float(third_initiative + variance_initiative))
+	
+	return initset
 
 func update_bui():
 	if faction == batman.factions.PLAYER:

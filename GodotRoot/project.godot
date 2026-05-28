@@ -48,8 +48,8 @@ loader="*res://src/masters/_Loader.gd"
 data="*res://src/masters/_Data.gd"
 utils="*res://src/masters/_Utils.gd"
 vet="*res://src/masters/_Validator.gd"
-batman="*res://src/masters/_BattleMgr.gd"
 act="*res://src/masters/_ActionLib.gd"
+batman="*res://src/masters/_BattleMgr.gd"
 
 [debug]
 

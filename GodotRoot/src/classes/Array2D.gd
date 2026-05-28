@@ -31,22 +31,35 @@ func get_dataset_with_coords(return_null = false) -> Array:
 	var x: int = 0
 	for col in data:
 		var y: int = 0
-		for cell in col:
+		for value in col:
 			var coord: Vector2 = Vector2(x, y)
 			if onebased:
 				coord.x += 1
 				coord.y += 1
-			if cell == null:
+			if value == null:
 				if return_null:
-					dataset.append([cell, coord])
+					dataset.append([value, coord])
 			else:
-				dataset.append([cell, coord])
+				dataset.append([value, coord])
 			
 			y += 1
 		x += 1
 		continue
 	
 	return dataset
+	pass
+
+func get_dataset_values_list() -> Array:
+	# Gets all (non-null) values; specifically useful for an array of instances such as actors
+	# Unsorted and with duplicates so you have to know what you want to do with it!
+	var results: Array = []
+	
+	for col in data:
+		for value in col:
+			if value == null: continue
+			results.append(value)
+	
+	return results
 	pass
 
 # ---
