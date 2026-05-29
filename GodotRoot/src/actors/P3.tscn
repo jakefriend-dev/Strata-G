@@ -108,6 +108,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="Actor" type="Node2D"]
 material = SubResource( 3 )
 script = ExtResource( 1 )
+first_initiative = 5
 faction = 1
 def_immune_fire = true
 

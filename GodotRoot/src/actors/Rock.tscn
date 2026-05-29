@@ -59,6 +59,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [node name="Actor" type="Node2D"]
 script = ExtResource( 1 )
+first_initiative = 0
 max_hp = 8
 def_shield = 1
 bui_visible = false

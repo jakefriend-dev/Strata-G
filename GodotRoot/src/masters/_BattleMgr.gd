@@ -49,6 +49,7 @@ var turnqueue: Array = [
 		# has_finished_turn			Bool that fires once its turn is complete
 		# ofc_name					Direct from the actor's ofc_name
 		# numerated_name			As "Doggo 1" with a space and all
+		# numeration				Int; the 1 in Doggo 1
 		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
 		# turnpos					Int; managed by batman but 
 ]
@@ -372,7 +373,7 @@ func roll_initiative():
 		else:
 			count_of_type = unique_actornames_observed[n] + 1
 			unique_actornames_observed[n] = count_of_type
-		var numerated_name: String = str(n," ",count_of_type)	
+		var numerated_name: String = str(n," ",count_of_type)
 		
 		# Go through each turn PER each actor
 		var initcount: int = 0
@@ -386,9 +387,12 @@ func roll_initiative():
 			
 			turndata["ofc_name"] = n
 			turndata["numerated_name"] = numerated_name
+			turndata["numeration"] = count_of_type
 			turndata["turncount_of_this_actor"] = initcount # Typically 1, could be 2 or 3 for bosses
 			
 			turnqueue.append(turndata)
+	
+	
 	
 	turnqueue.sort_custom(self, "sort_turnqueue_by_init")
 	
@@ -399,17 +403,8 @@ func roll_initiative():
 		count += 1
 		turndata["turnpos"] = count
 	
-	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
-	pass
-
-func sort_turnqueue_by_init(a: Dictionary, b: Dictionary) -> bool:
-	# True if turndata A should act ahead of turndata B
-	return a["init"] > b["init"]
-	pass
-
-func sort_turnqueue_by_turnpos(a: Dictionary, b: Dictionary) -> bool:
-	# True if turndata A should act ahead of turndata B
-	return a["turnpos"] > b["turnpos"]
+	print("BATMAN: Initiative rolled!")
+#	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
 	pass
 
 func cycle_to_next_turn():
@@ -433,12 +428,29 @@ func cycle_to_next_turn():
 		if turndata["turnpos"] == turncount:
 			found_next_actor = true
 			curr_actor = turndata["actor"]
-			print("BATMAN: cycle_to_next_turn() = [Round ",round_count,", Turn ",turncount,": ",turndata["numerated_name"],"]")
+			print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(turndata),"]")
 			return
 	
 	if !found_next_actor:
 		print("BATMAN: Failed to find next actor when cycle_to_next_turn()!")
 		return
+	pass
+
+func get_printable_roundturncount() -> String:
+	var text: String = str("r",round_count,".",turncount)
+	return text
+	pass
+
+func get_printable_turntaker_name(turndata: Dictionary) -> String:
+	var name_unnum: String = turndata["ofc_name"]
+	var name_num: String = turndata["numerated_name"]
+	
+	if !unique_actornames_observed.has(name_unnum):
+		return name_unnum
+	elif unique_actornames_observed[name_unnum] == 1:
+		return name_unnum
+	
+	return name_num
 	pass
 
 func insert_turntaker(new_turndata: Dictionary, to_position: int):
@@ -478,6 +490,16 @@ func remove_turntaker(because_it_died: bool = true):
 	if !because_it_died: return
 	# Since we know it died, we need to add it to the slain_turntakers list
 	# We also need to remove ALL INSTANCES if it was a multi-turn actor!
+	pass
+
+func sort_turnqueue_by_init(a: Dictionary, b: Dictionary) -> bool:
+	# True if turndata A should act ahead of turndata B
+	return a["init"] > b["init"]
+	pass
+
+func sort_turnqueue_by_turnpos(a: Dictionary, b: Dictionary) -> bool:
+	# True if turndata A should act ahead of turndata B
+	return a["turnpos"] > b["turnpos"]
 	pass
 
 # ---
