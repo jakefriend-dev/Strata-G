@@ -22,13 +22,16 @@ var variance_initiative: float  = -1.0 # Cued by batman at start of combat; perc
 
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
-export var max_hp: int = 4
-var hp: int = 4
+export var max_health: int = 4
+var health: int = 4
 
 export var def_shield: int = 0
 var shield: int = 0
 
 export var ofc_name: String = "--"
+var bui: Node2D
+
+export var base_damage: int = 1 # For attack shortcuts for simple mobs
 
 enum factions { # Local copy of TurnMgr, must be an exact duplicate!
 	NEUTRAL,
@@ -86,10 +89,10 @@ func _ready():
 	pass
 
 func perform_initial_data_setup():
-	max_hp *= 10
-	hp = max_hp
+	max_health *= batman.BASE_HP_UNIT
+	health = max_health
 	
-	def_shield *= 10 # Let the start of turn determine current shield
+	def_shield *= batman.BASE_HP_UNIT # Let the start of turn determine current shield
 	shield = def_shield
 	
 	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
@@ -139,8 +142,8 @@ func receive_damage(damage: int):
 	
 	# Deduct damage and shield equally until either of them depletes fully
 	while shield > 0 and damage > 0:
-		damage -= 10
-		shield -= 10
+		damage -= 1
+		shield -= 1
 	
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:
@@ -148,17 +151,17 @@ func receive_damage(damage: int):
 		update_bui()
 		return
 	
-	while hp > 0 and damage > 0:
-		damage -= 10
-		hp -= 10
+	while health > 0 and damage > 0:
+		damage -= 1
+		health -= 1
 	
 	var unshielded_damage: int = og_damage - shielded_damage - damage
 	
-	if hp > 0:
+	if health > 0:
 		if shielded_damage == 0:
-			print(name,": Took ",og_damage," damage, ",hp," hp remains")
+			print(name,": Took ",og_damage," damage, ",health," health remains")
 		else:
-			print(name,": Blocked ",shielded_damage," and took ",unshielded_damage," damage, ",shield," shield  and ",hp," hp remains")
+			print(name,": Blocked ",shielded_damage," and took ",unshielded_damage," damage, ",shield," shield  and ",health," health remains")
 		update_bui()
 		return
 	else:
@@ -177,17 +180,13 @@ func update_bui():
 		$ArtMgr/HFlipper.scale.x = -1.0
 	
 	if !has_node("BUI"):
-		var bui = loader.res_bui.instance()
+		bui = loader.res_bui.instance()
+		bui.set("actor", self)
 		add_child(bui)
+		bui.set("owner", self)
 	
-	$BUI/MC/VB/Name.text = ofc_name
-	$BUI/MC/VB/GC/Health/Value.text = str(hp)
-	$BUI/MC/VB/GC/Shield/Value.text = str(shield)
-	$BUI/MC/VB/GC/Shield.visible = (shield > 0)
-#	$BUI/MC/VB/GC/Move/Value.text = str(hp)
-#	$BUI/MC/VB/GC/Actions/Value.text = str(hp)
-	
-	$BUI.visible = bui_visible
+	bui.update_all()
+	bui.visible = bui_visible
 	pass
 
 func update_outline(): # Should be called every time targeting changes

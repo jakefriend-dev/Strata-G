@@ -35,6 +35,8 @@ var round_count: int = 0 # per entire cycle of turns
 var total_turns_taken: int = 0
 var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rockets, then they all die, the next one would be Rocket_4 forever, and the turnqueue would still know Rocket_2 died
 
+const BASE_HP_UNIT: int = 4
+
 #var pc_actors: Array = [] # When a PC no longer has move OR AP remaining, it gets added to pc_actors_spent
 #var pc_actors_spent: Array = [] # Clears at end of each turn
 #

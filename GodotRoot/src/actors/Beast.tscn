@@ -61,6 +61,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 first_initiative = 2
 second_initiative = 4
+max_health = 8
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

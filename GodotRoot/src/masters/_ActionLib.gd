@@ -390,7 +390,7 @@ func get_first_actor_by_name(nstring: String, must_be_alive: bool = true) -> Act
 	for a in actors.get_children(): if a is Actor:
 		if a.ofc_name == nstring:
 			if must_be_alive:
-				if a.hp > 0:
+				if a.health > 0:
 					return a
 			else: return a
 	

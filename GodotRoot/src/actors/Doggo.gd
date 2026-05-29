@@ -132,7 +132,7 @@ func ACT_bite():
 	# Bites to the left; we are dumb so if this gets called we're not worrying about if there's a target or friendly fire.
 #	print("Biting!")
 	
-	act.damage_actor_at_coord(self, coord + Vector2.LEFT, 20)
+	act.damage_actor_at_coord(self, coord + Vector2.LEFT, base_damage*batman.BASE_HP_UNIT)
 	
 	end_action()
 	pass
