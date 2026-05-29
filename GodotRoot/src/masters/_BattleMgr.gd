@@ -30,6 +30,7 @@ var combatstate: int = C_OOC
 #
 #var inputstate: int = istates.NPT
 var curr_actor: Actor = null # Whichever player OR enemy char is current
+var curr_turndata: Dictionary = {} # The more complex packet that includes the actor itself, plus other references from initiative rolling
 var round_count: int = 0 # per entire cycle of turns
 var total_turns_taken: int = 0
 var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rockets, then they all die, the next one would be Rocket_4 forever, and the turnqueue would still know Rocket_2 died
@@ -230,6 +231,7 @@ func test_new_combat(test: String):
 
 func init_new_combat(new_battle_details: Dictionary) -> bool:
 	curr_actor = null
+	curr_turndata.clear()
 	
 	# Validations!
 	if !new_battle_details.has("npc_positions"): return false
@@ -340,7 +342,7 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	print("TURN MGR: All actor data matched to nodes. Results:",grid_actors)
 	
 	roll_initiative()
-	cycle_to_next_turn()
+	cycle_to_next_turn() # This ACTUALLY STARTS the fight!
 	
 #	print("TURN: GPos data is:",grid_gpos)
 	
@@ -427,13 +429,19 @@ func cycle_to_next_turn():
 	for turndata in turnqueue:
 		if turndata["turnpos"] == turncount:
 			found_next_actor = true
+			curr_turndata = turndata
 			curr_actor = turndata["actor"]
-			print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(turndata),"]")
-			return
+			break
 	
 	if !found_next_actor:
 		print("BATMAN: Failed to find next actor when cycle_to_next_turn()!")
 		return
+	
+	# Final setup!
+	
+	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
+	
+	field.update_targeting()
 	pass
 
 func get_printable_roundturncount() -> String:
