@@ -11,7 +11,7 @@ enum {
 	C_TRANSITION,	# Choose next turn-actor; upcycle numbers like turn count
 	
 	C_PRE_TURN,		# Announce turn start, , update shields etc
-	C_TURN,			# The turn is 'live' until manually ended or interrupted (self-death, or a win/lose condition)
+	C_TURN,			# The turn is 'live' until manually ended or interrupted (self-death, or a win/lose condition) - this is the only state in which an actor has agency!
 	C_POST_TURN,		# Check any end-of-turn effects, such as the tile being stood on
 	
 	C_BATTLE_LOST,	# Only happens once, when player loses!
@@ -62,6 +62,7 @@ signal set_up_board()
 signal populate_gpos_data()
 signal populate_actors()
 signal update_all_tiletypes()
+signal pre_turn_refresh(actor)
 
 enum factions {
 	NEUTRAL,
@@ -220,7 +221,7 @@ func test_new_combat(test: String):
 				"halfboard_size": Vector2(4, 4),
 				"npc_positions": [
 					[5, 1, "Thrower"],
-					[7, 1, "Doggo"],
+					[8, 1, "Doggo"],
 					[8, 2, "Thrower"],
 					[6, 3, "Rock"],
 				],
@@ -230,14 +231,16 @@ func test_new_combat(test: String):
 	pass
 
 func init_new_combat(new_battle_details: Dictionary) -> bool:
-	curr_actor = null
-	curr_turndata.clear()
-	
 	# Validations!
 	if !new_battle_details.has("npc_positions"): return false
 	
 	print("---\nTURN MGR: Initializing new combat!")
+	curr_actor = null
+	curr_turndata.clear()
+	
+	combatstate = C_BATTLE_SETUP
 	battle_details = new_battle_details
+	act.flush()
 	
 	# Set up our board size!
 	var local_board_size: Vector2 = default_halfboard_size
@@ -409,16 +412,32 @@ func roll_initiative():
 #	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
 	pass
 
-func end_turn(): cycle_to_next_turn() # Shortcut!
+func end_turn():
+	combatstate = C_POST_TURN
+	
+	# Do post-turn stuff
+	
+	interrupt_turn()
+	pass
+
+func interrupt_turn():
+	# Wipe out the current actionqueue
+	act.flush()
+	
+	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
+	pass
 
 func cycle_to_next_turn():
-	# If we've never had a turn before, start with the highest number
+	combatstate = C_TRANSITION
 	
 	var is_new_round: bool = false
 	if turncount == 0: # It's our first round
 		is_new_round = true
-	elif turncount >= turnqueue.size(): # We've concluded this round - we are ALREADY at size before incrementing therefore we will exceed size after incrementing
-		is_new_round = true
+	else:
+		clean_up_turnqueue() # Always do this, each new turn after the initial. Remember that this also updates turncount and turnqueue.size()!
+		
+		if turncount >= turnqueue.size(): # We've concluded this round - we are ALREADY at size before incrementing therefore we will exceed size after incrementing
+			is_new_round = true
 	
 	if is_new_round:
 		round_count += 1
@@ -446,8 +465,14 @@ func cycle_to_next_turn():
 	field.update_targeting()
 	
 	act.flush()
+	
+	combatstate = C_PRE_TURN
+	emit_signal("pre_turn_refresh", curr_actor)
+	# Nothin' here yet!
+	
+	combatstate = C_TURN
 	if !curr_actor.has_method("begin_turn"):
-		print("BATMAN: Error! Actor ",curr_actor," doesn't have a begin_turn() method, skipping!")
+#		print("BATMAN: Error! Actor ",curr_actor," doesn't have a begin_turn() method, skipping!")
 		yield(utils.yt(0.75, self), "timeout")
 		cycle_to_next_turn()
 		return
@@ -504,20 +529,62 @@ func insert_turndata(new_turndata: Dictionary, to_position: int):
 	pass
 
 func clean_up_turnqueue(): # Ensures any eg. null actors are removed; refreshes turnpos
+	# The simplest way is just to pass everything to a replacement list
+	var new_turnqueue: Array = []
 	
+#	var prev_turncount: int = turncount
+#	var prev_actor: Actor = curr_actor
+	var prev_turndata: Dictionary = curr_turndata
+	var new_turncount: int = turncount
+	
+	var turnpos: int = 0
+	for turndata in turnqueue: if turndata is Dictionary:
+		
+		var current_flag: bool = (turndata == prev_turndata)
+		
+		var actor: Actor = turndata["actor"]
+		if !utils.valid(actor):
+			if current_flag: new_turncount = (turnpos + 1)
+			continue
+		if !actor.active:
+			if current_flag: new_turncount = (turnpos + 1)
+			continue
+		turnpos += 1
+		if current_flag: new_turncount = turnpos
+		turndata["turnpos"] = turnpos
+		new_turnqueue.append(turndata)
+	
+	if new_turncount != turncount:
+		print("BATMAN: Turncount updated from ",turncount," to ",new_turncount," during clean_up_turnqueue()")
+	turncount = new_turncount
+	
+	turnqueue = []
+	turnqueue = new_turnqueue
 	pass
 
 func remove_all_turns_of_actor(actor: Actor):
 	# The simplest way is just to pass everything to a replacement list
 	var new_turnqueue: Array = []
+	var prev_turndata: Dictionary = curr_turndata
+	var new_turncount: int = turncount
 	
 	var turnpos: int = 0
 	for turndata in turnqueue: if turndata is Dictionary:
-		turnpos += 1
+		
+		var current_flag: bool = (turndata == prev_turndata)
+		
 		if turndata["actor"] == actor:
+			if current_flag: new_turncount = (turnpos + 1)
 			continue
+		
+		turnpos += 1
+		if current_flag: new_turncount = turnpos
 		turndata["turnpos"] = turnpos
 		new_turnqueue.append(turndata)
+	
+	if new_turncount != turncount:
+		print("BATMAN: Turncount updated from ",turncount," to ",new_turncount," during remove_all_turns_of_actor()")
+	turncount = new_turncount
 	
 	turnqueue = []
 	turnqueue = new_turnqueue
@@ -542,7 +609,7 @@ func kill_actor(actor: Actor):
 	# Clear the actor from the board
 	for set in grid_actors.get_dataset_with_coords():
 		if set[0] == actor:
-			grid_actors.set_cellv(set[0], null)
+			grid_actors.set_cellv(set[1], null)
 	
 	# Remove the actor from the turnqueue
 	remove_all_turns_of_actor(actor)
@@ -556,6 +623,12 @@ func kill_actor(actor: Actor):
 	pass
 
 # ---
+
+func is_my_turn(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
+	if curr_actor != actor: return false
+	if combatstate != C_TURN: return false
+	return true
+	pass
 
 func can_player_input() -> bool:
 #	if inputstate != istates.PLAYER_CONTROL:

@@ -81,6 +81,8 @@ func _ready():
 	perform_initial_data_setup()
 	$ArtMgr/HFlipper/Shadow.recenter()
 	update_bui()
+	
+	batman.connect("pre_turn_refresh", self, "pre_turn_refresh")
 	pass
 
 func perform_initial_data_setup():
@@ -88,6 +90,7 @@ func perform_initial_data_setup():
 	hp = max_hp
 	
 	def_shield *= 10 # Let the start of turn determine current shield
+	shield = def_shield
 	
 	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
 		set( str("is_"+term), get(str("def_",term)) )
@@ -109,6 +112,14 @@ func get_initiative() -> Array:
 	
 	return initset
 
+func pre_turn_refresh(who: Actor):
+	if who != self: return
+	
+#	print("Pre-turn refresh for ",self)
+	shield = def_shield
+	update_bui()
+	pass
+
 func end_action():
 	act.step_signal()
 	pass
@@ -118,6 +129,45 @@ func end_turn():
 	pass
 
 # ---
+
+func receive_damage(damage: int):
+	if damage <= 0:
+		print(name,": No damage to receive")
+		return
+	
+	var og_damage: int = damage
+	
+	# Deduct damage and shield equally until either of them depletes fully
+	while shield > 0 and damage > 0:
+		damage -= 10
+		shield -= 10
+	
+	var shielded_damage: int = og_damage - damage
+	if damage <= 0:
+		print(name,": Blocked ",shielded_damage," and took no damage, ",shield," shield remains")
+		update_bui()
+		return
+	
+	while hp > 0 and damage > 0:
+		damage -= 10
+		hp -= 10
+	
+	var unshielded_damage: int = og_damage - shielded_damage - damage
+	
+	if hp > 0:
+		if shielded_damage == 0:
+			print(name,": Took ",og_damage," damage, ",hp," hp remains")
+		else:
+			print(name,": Blocked ",shielded_damage," and took ",unshielded_damage," damage, ",shield," shield  and ",hp," hp remains")
+		update_bui()
+		return
+	else:
+		print(name,": Died from taking ",unshielded_damage," (blocked ",shielded_damage,")")
+		batman.kill_actor(self)
+		
+	
+	pass
+# -
 
 func update_bui():
 	if faction == batman.factions.PLAYER:
@@ -132,15 +182,13 @@ func update_bui():
 	
 	$BUI/MC/VB/Name.text = ofc_name
 	$BUI/MC/VB/GC/Health/Value.text = str(hp)
-	$BUI/MC/VB/GC/Shield/Value.text = str(def_shield)
-	$BUI/MC/VB/GC/Shield.visible = (def_shield > 0)
+	$BUI/MC/VB/GC/Shield/Value.text = str(shield)
+	$BUI/MC/VB/GC/Shield.visible = (shield > 0)
 #	$BUI/MC/VB/GC/Move/Value.text = str(hp)
 #	$BUI/MC/VB/GC/Actions/Value.text = str(hp)
 	
 	$BUI.visible = bui_visible
 	pass
-
-# -
 
 func update_outline(): # Should be called every time targeting changes
 	# No outline by default

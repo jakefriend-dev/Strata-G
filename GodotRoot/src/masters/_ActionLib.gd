@@ -7,7 +7,7 @@ var timeout_time: float = (3.0/60.0) # How long between skipped actions if time 
 var min_dur: float = 0.10 # In theory, only relevant for enemies, not the player
 var std_dur: float = 0.25
 
-var last_execution_frame: int
+var last_execution_frame: int = -1
 var action_queue: Array = []
 var curr_action: Array = []
 var prev_action: Array = []
@@ -33,7 +33,11 @@ func _ready():
 
 # PROCESSING ---------------------------------------------------------------------------------------
 
-func flush(): # Run to wipe any stored-between-actions data
+func flush(): # Run to wipe any stored-between-turns data
+	action_queue.clear()
+	curr_action = []
+	prev_action = []
+	last_execution_frame = -1
 	pass
 
 func vet_action(action: Array) -> bool:
@@ -161,7 +165,7 @@ func step_signal(): # The call that an action 'step' has ended, or needs to be s
 	
 	emit_signal("action_step_complete")
 	if action_queue.empty():
-		print("ACT: action_queue has emptied!")
+#		print("ACT: action_queue has emptied!")
 		emit_signal("all_action_steps_complete")
 		return
 	
@@ -213,6 +217,18 @@ func update_actor_coord_data(actor: Actor, newpos: Vector2) -> bool:
 	pass
 
 # ATTACKS ------------------------------------------------------------------------------------------
+
+func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, friendly_fire: bool = true):
+	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
+	if victim == null:
+		return
+	
+	if victim.faction == attacker.faction:
+		if !friendly_fire:
+			return
+	
+	victim.receive_damage(damage)
+	pass
 
 # TILE ADJUSTMENTS ---------------------------------------------------------------------------------
 
@@ -298,12 +314,12 @@ func is_actormove_possible_exact(actor: Actor, target: Vector2, allowed_over_fac
 	
 	# Can't move off the grid
 	if !batman.grid_tiles.has_cellv(end_coord):
-		print("ACT: iamp[1] Cell does not exist on board!")
+#		print("ACT: iamp[1] Cell does not exist on board!")
 		return false
 		
 	# Can't move into *any* other actors, period
 	if batman.grid_actors.get_cellv(end_coord) != null:
-		print("ACT: iamp[2] Other actor occupies destination!")
+#		print("ACT: iamp[2] Other actor occupies destination!")
 		return false
 	
 	# Can't move on to other factions' cells
@@ -312,17 +328,17 @@ func is_actormove_possible_exact(actor: Actor, target: Vector2, allowed_over_fac
 	if !allowed_over_faction_lines:
 		if actor.faction == batman.factions.PLAYER:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.PLAYER:
-				print("ACT: iamp[3a] Player cannot exit its faction area!")
+#				print("ACT: iamp[3a] Player cannot exit its faction area!")
 				return false
 		if actor.faction == batman.factions.ENEMY:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.ENEMY:
-				print("ACT: iamp[3b] Enemy cannot exit its faction area!")
+#				print("ACT: iamp[3b] Enemy cannot exit its faction area!")
 				return false
 	
 	# Can only move on pits IF you can hover
 	if batman.grid_tiles.get_cellv(end_coord) == batman.tiletypes.PIT:
 		if !actor.is_hovering:
-			print("ACT: cmev[4] Dest is pit but actor can't hover!")
+#			print("ACT: cmev[4] Dest is pit but actor can't hover!")
 			return false
 	
 	return true

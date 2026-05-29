@@ -55,6 +55,17 @@ func yping(type: String, caller, disrespect_pause: bool = false) -> YPing:
 	return yping
 	pass
 
+func valid(who: Node) -> bool:
+	if who == null:
+		return false
+	if !who.is_inside_tree():
+		return false
+	if !is_instance_valid(who):
+		return false
+	
+	return true
+	pass
+
 func coin_flip() -> bool:
 	return rand_range(0.00, 0.99) < 0.5
 
