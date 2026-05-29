@@ -25,8 +25,10 @@ var active: bool = true # When false, cannot act. Depletion of health should aut
 export var max_health: int = 4
 var health: int = 4
 
-export var def_shield: int = 0
+export var max_shield: int = 0
 var shield: int = 0
+
+var bonus_shield: int = 0
 
 export var ofc_name: String = "--"
 var bui: Node2D
@@ -75,8 +77,10 @@ var is_immune_poison: bool
 var is_immune_magnet: bool
 var is_immune_elec: bool
 
-# Convenience references; duplicate data
+# Convenience references; duplicate data to batman.grid_actors
 var coord: Vector2
+
+signal shield_broken() # Shield broke but NOT dead
 
 # ---
 
@@ -92,8 +96,8 @@ func perform_initial_data_setup():
 	max_health *= batman.BASE_HP_UNIT
 	health = max_health
 	
-	def_shield *= batman.BASE_HP_UNIT # Let the start of turn determine current shield
-	shield = def_shield
+	max_shield *= batman.BASE_HP_UNIT # Let the start of turn determine current shield
+	shield = max_shield
 	
 	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
 		set( str("is_"+term), get(str("def_",term)) )
@@ -119,7 +123,7 @@ func pre_turn_refresh(who: Actor):
 	if who != self: return
 	
 #	print("Pre-turn refresh for ",self)
-	shield = def_shield
+	shield = max_shield
 	update_bui()
 	pass
 
@@ -139,11 +143,18 @@ func receive_damage(damage: int):
 		return
 	
 	var og_damage: int = damage
+	var og_shield: int = shield
 	
 	# Deduct damage and shield equally until either of them depletes fully
-	while shield > 0 and damage > 0:
+	while bonus_shield > 0 and shield > 0 and damage > 0:
 		damage -= 1
-		shield -= 1
+		if bonus_shield > 1:
+			bonus_shield -= 1
+		else:
+			shield -= 1
+	
+	if og_shield > 0 and shield == 0:
+		emit_signal("shield_broken")
 	
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:

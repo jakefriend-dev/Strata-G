@@ -4,10 +4,13 @@ var actor: Actor
 
 export var path_healthpar: NodePath
 export var path_shieldpar: NodePath
+export var path_bonusshieldpar: NodePath
 var healthpar: GridContainer
 var shieldpar: GridContainer
+var bonusshieldpar: GridContainer
 var res_piphealth = preload("res://combat/HealthPip.tscn")
 var res_pipshield = preload("res://combat/ShieldPip.tscn")
+var res_pipbonusshield = preload("res://combat/BonusShieldPip.tscn")
 
 func _ready():
 	healthpar = get_node(path_healthpar)
@@ -18,7 +21,8 @@ func update_all():
 	if $MC/VB/Name.text != actor.ofc_name:
 		$MC/VB/Name.text = actor.ofc_name
 	edit_max_pips("health", actor.max_health)
-	edit_max_pips("shield", actor.def_shield)
+	edit_max_pips("shield", actor.max_shield)
+	edit_max_pips("bonusshield", actor.bonus_shield)
 	pass
 
 # Use a USER max, not a BASE max - should already be x4'd (or whatever)
@@ -34,6 +38,9 @@ func edit_max_pips(piptype: String, new_max: int):
 	elif piptype == "shield":
 		par = shieldpar
 		res = res_pipshield
+	elif piptype == "bonusshield":
+		par = bonusshieldpar
+		res = res_pipbonusshield
 	else:
 		return
 	
@@ -41,7 +48,6 @@ func edit_max_pips(piptype: String, new_max: int):
 	
 	var old_pipcount: int = par.get_child_count()
 	var new_pipcount: int = int(ceil(float(new_max)/float(batman.BASE_HP_UNIT)))
-#	if new_max == 0: new_pipcount = 0
 	if par.visible != (new_max > 0):
 		par.visible = (new_max > 0)
 	
@@ -89,6 +95,9 @@ func update_values_to_current(piptype: String):
 	elif piptype == "shield":
 		par = shieldpar
 		value = actor.shield
+	elif piptype == "bonusshield":
+		par = bonusshieldpar
+		value = actor.bonusshield
 	else:
 		return
 	
@@ -112,9 +121,9 @@ func update_values_to_current(piptype: String):
 			s.frame = remnant_value
 		pass
 		
-#		if piptype == "health":
-#			if pip.visible != (s.frame > 0):
-#				pip.visible = (s.frame > 0)
+		if piptype == "bonusshield":
+			if pip.visible != (s.frame > 0):
+				pip.visible = (s.frame > 0)
 	pass
 
 
