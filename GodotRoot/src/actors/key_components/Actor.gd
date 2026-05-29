@@ -20,6 +20,8 @@ export (initspeeds) var third_initiative: int = initspeeds.DOES_NOT_ACT
 	# An actor can optionally have up to 3 turns, for a boss; matching the party
 var variance_initiative: float  = -1.0 # Cued by batman at start of combat; percentage from 0-99%
 
+var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
+
 export var max_hp: int = 4
 var hp: int = 4
 
@@ -107,8 +109,12 @@ func get_initiative() -> Array:
 	
 	return initset
 
+func end_action():
+	act.step_signal()
+	pass
+
 func end_turn():
-	
+	batman.end_turn()
 	pass
 
 # ---

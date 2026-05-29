@@ -5,6 +5,8 @@ enum {NOT_SET, LUNGE, SHOOT}
 var telegraphed_move: int = NOT_SET
 var lunge_delta_target: Vector2
 
+var jump_dest_coord: Vector2
+
 func _ready():
 	lunge_delta_target = batman.get_halfboard_size()
 	lunge_delta_target.x *= -1

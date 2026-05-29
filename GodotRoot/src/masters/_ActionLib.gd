@@ -3,22 +3,25 @@ extends Node
 var tween: Tween
 var trans: int = Tween.TRANS_QUINT
 
+var timeout_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
 var min_dur: float = 0.10 # In theory, only relevant for enemies, not the player
 var std_dur: float = 0.25
 
-var curr_actor: Actor
+var last_execution_frame: int
 var action_queue: Array = []
-
-var noted_coord_A: Vector2 = Vector2(-99, -99) # Used for things like 'move continuously *until*...'
+var curr_action: Array = []
+var prev_action: Array = []
 
 signal action_step_complete() # Should fire any time we do an individual action OR each step in a multi-step action -
 signal all_action_steps_complete() # Should fire whenever ALL steps are done
+
+signal actor_collision_attempt(actor_attacking, actor_defending) # Can be used for things like missile collisions
 
 var field: Node2D # Owner of all battle stuff
 var actors: YSort
 var board: GridContainer # Owner of CELLS not everything
 
-var actionlog: Array = [] # Log of all processed AND FAILED actions!
+var actionlog: Array = [] # Historical log of all processed AND FAILED actions! Strings only
 var log_retention: int = 10
 
 # ---
@@ -30,432 +33,277 @@ func _ready():
 
 # PROCESSING ---------------------------------------------------------------------------------------
 
-func step_signal():
-	emit_signal("action_step_complete")
-	process_action_queue()
-	pass
-
 func flush(): # Run to wipe any stored-between-actions data
-	curr_actor = null
-	noted_coord_A = Vector2(-99, -99)
 	pass
 
-#func start_action_queue(actor: Actor):
-#	flush()
-#	curr_actor = actor
-#	process_action_queue()
-#	pass
+func vet_action(action: Array) -> bool:
+	# We expect 2-3 values: A valid actor, a valid method in that actor's script, and *optionally*, an array of param data for the method. The array is allowed to be missing or empty, and can have whatever in it. HOWEVER, in any situation where no paramset is sent, we add an empty array for consistency. A validated action DOES have 3 params.
+	
+	if action.size() != 2 and action.size() != 3:
+		print("ACT: vet_action(",action,") failed: Array is the wrong size")
+		return false
+	
+	if not action[0] is Actor:
+		print("ACT: vet_action(",action,") failed: First param is not an Actor")
+		return false
+	
+	var actor: Actor = action[0]
+	
+	if actor == null:
+		print("ACT: vet_action(",action,") failed: Actor is null")
+		return false
+	
+	if !actor.active:
+		print("ACT: vet_action(",action,") failed: Actor is not active")
+		return false
+	
+	if not action[1] is String:
+		print("ACT: vet_action(",action,") failed: Second param is not a string (for methodname)")
+		return false
+	
+	var methodname: String = action[1]
+	
+	if methodname == "":
+		print("ACT: vet_action(",action,") failed: Method name is blank")
+		return false
+	
+	if !actor.has_method(str("ACT_"+methodname)):
+		print("ACT: vet_action(",action,") failed: Actor does not have method")
+		return false
+	
+	if action.size() == 3:
+		if not action[2] is Array:
+			print("ACT: vet_action(",action,") failed: Third param is not an Array")
+			return false
+	
+	return true
+	pass
 
-func process_action_queue():
+func append_action(actor: Actor, methodname: String, paramset: Array = []):
+	var action: Array = [actor, methodname, paramset]
+	if !vet.action(action):
+		return
+	
+	# Validations complete
+	action_queue.append(action)
+	pass
+
+func insert_action(position: int, actor: Actor, methodname: String, paramset: Array = []):
+	var action: Array = [actor, methodname, paramset]
+	if !vet_action(action):
+		return
+	
+	if position < 0:
+		print("ACT: Invalid index insert_action(",action,", ",position,"), adjusting up to 0!")
+		position = 0
+	elif position > action_queue.size():
+		print("ACT: Invalid index insert_action(",action,", ",position,"), appending instead!")
+		append_action(actor, methodname, paramset)
+		return
+	
+	# Validations complete
+	action_queue.insert(position, action)
+	pass
+
+# For quick-running a single action!
+func execute_action(actor: Actor, methodname: String, paramset: Array = []): 
+	insert_action(0, actor, methodname, paramset)
+	progress_action_queue()
+	pass
+
+func progress_action_queue(): # Calls ONE next action, or if there is none, skips
+	last_execution_frame = get_tree().get_frame()
+	
+	if action_queue.empty():
+		step_signal()
+		return
+	
+	# Final checks on if the actor is STILL valid, given some delays since vet_action()
+	var unvalidated_action: Array = action_queue.pop_front()
+	var actor: Actor = unvalidated_action[0]
+	if actor == null:
+		step_signal()
+		return
+	if !actor.active:
+		step_signal()
+		return
+	
+	# Actor is valid, so action is as well! Update trackers
+	prev_action = []
+	prev_action = curr_action
+	curr_action = []
+	curr_action = unvalidated_action
+	
+	# Gather data...
+	var methodname: String = str("ACT_"+curr_action[1])
+	var paramset: Array = curr_action[2]
+	
+	# Log the action BEFORE executing
+	var logstring: String = str(curr_action)
+	actionlog.insert(0, logstring)
+	if actionlog.size() > log_retention:
+		actionlog.resize(log_retention)
+	
+	# Execute!
+	if paramset.empty():
+		actor.call(methodname)
+	else:
+		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
+		actor.callv(methodname, paramset)
+	
+	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
+	pass
+
+func step_signal(): # The call that an action 'step' has ended, or needs to be skipped
+	# The action_step signals here should NEVER fire the same frame this method is called! If so, we need to wait at LEAST 1 frame before proceeding.
+	if last_execution_frame == get_tree().get_frame():
+		yield(utils.yt(timeout_time, self), "timeout")
+	
+	emit_signal("action_step_complete")
 	if action_queue.empty():
 		print("ACT: action_queue has emptied!")
 		emit_signal("all_action_steps_complete")
 		return
 	
-#	print("ACT: process_action_queue() when queue is: ",action_queue)
-	
-	var queued_data = action_queue[0]
-	action_queue.remove(0)
-	
-	if not queued_data is Array:
-		skip_processing_action("The next action isn't an array")
-		return
-	
-	var this_action: Array = queued_data
-	
-	if this_action.size() < 2:
-		skip_processing_action("The next action isn't large enough for min. details")
-		return
-	if not this_action[0] is Actor:
-		skip_processing_action("The next action doesn't have a valid actor (class)")
-		return
-	if not this_action[1] is String:
-		skip_processing_action("The next action doesn't have a valid action string (class)")
-		return
-	
-	# Set up basic details
-	var actor: Actor = this_action[0]
-	var action: String = this_action[1]
-	var deets: Dictionary = {}
-	if this_action.size() > 2:
-		if this_action[2] is Dictionary:
-			deets = this_action[2]
-	# While flags aren't MANDATORY, it's easier to expect them and validate up front
-	var flags: Array = []
-	if deets.has("flags"):
-		if deets["flags"] is Array:
-			for flag in deets["flags"]:
-				if flag is String:
-					flags.append(flag)
-				else:
-					print("ACT: Ignoring flag [",flag,"] because it is not a string (and needs to be)")
-	
-	if action == "move":
-		if !deets.has("motion"):
-			skip_processing_action("No motion sent to move")
-			return
-		if not deets["motion"] is Vector2:
-			skip_processing_action("Motion for move is not a vector")
-			return
-		
-		var motion: Vector2 = deets["motion"]
-		var continuous: bool = flags.has("continuous")
-		var note_starting: bool = flags.has("note_starting")
-		var ignore_tile_faction: bool = flags.has("ignore_tile_faction")
-		if !attempt_move_actor(actor, motion, continuous, note_starting, ignore_tile_faction):
-			skip_processing_action()
-			update_action_log(this_action, false)
-			return
-		update_action_log(this_action, true)
-		if continuous:
-			# Re-fire any valid continuous move!
-			var repeating_action: Array = this_action
-			if note_starting:
-				flags.erase("note_starting")
-				deets["flags"] = flags
-				repeating_action[2] = deets
-#			print("About to log repeating action: ",repeating_action)
-			action_queue.insert(0, repeating_action)
-		pass
-	#End Move
-	
-	elif action == "tilechange":
-		if !deets.has("tiletype"):
-			skip_processing_action("No tiletype sent to tilechange")
-			return
-		if not deets["tiletype"] is int:
-			skip_processing_action("Tiletype for tilechange is not an int")
-			return
-		# Validations for datatypes
-		if !deets.has("exact_targets"):
-			skip_processing_action("No targets sent to tilechange at all")
-			return
-		if not deets["exact_targets"] is Array:
-			skip_processing_action("Exact targets for tilechange is not an array")
-			return
-		
-		# Prepare 'actual' changes, including custom logic
-		var impact_dict: Dictionary = {} # Vector keys, int values for tiletype
-		var tiletype: int = deets["tiletype"]
-		for target in deets["exact_targets"]:
-			
-			if batman.grid_tiles.get_cellv(target) == batman.tiletypes.PIT:
-				if !flags.has("can_change_pits"):
-					continue # We don't normally change pits
-			elif tiletype == batman.tiletypes.PIT:
-				if batman.grid_actors.get_cellv(target) != null:
-					# Actors can't be pitted, only cracked
-					impact_dict[target] = batman.tiletypes.CRACK
-					continue
-			elif tiletype == batman.tiletypes.CRACK:
-				if batman.grid_tiles.get_cellv(target) == batman.tiletypes.CRACK:
-					# Actors can't be pitted, only cracked
-					if batman.grid_actors.get_cellv(target) == null:
-						# 'Double-cracking' an (unoccupised) crack is just a pit
-#						print("Upgrading 'crack' tilechange to pit at ",target,"!")
-						impact_dict[target] = batman.tiletypes.PIT
-						continue
-			impact_dict[target] = tiletype
-			pass
-		
-		if impact_dict.empty():
-			skip_processing_action("No tiles need changing, in the end")
-			return
-		
-		# Apply actual changes
-		for coord in impact_dict.keys():
-			batman.grid_tiles.set_cellv(coord, impact_dict[coord])
-		print("Preparing tilechanges:\n",impact_dict)
-		batman.emit_signal("update_all_tiletypes")
-		
-		update_action_log(this_action, true)
-		step_signal()
-	# End TileChange
-	
-	elif action == "attack":
-		# Validations for datatypes
-		if !deets.has("relative_targets") and !deets.has("exact_targets"):
-			skip_processing_action("No targets sent to attack at all")
-			return
-		if deets.has("relative_targets") and not deets["relative_targets"] is Array:
-			skip_processing_action("Relative targets for attack is not an array")
-			return
-		if deets.has("exact_targets") and not deets["exact_targets"] is Array:
-			skip_processing_action("Exact targets for attack is not an array")
-			return
-		
-		# Validations for attacks
-		var valid_exact_targets: Array = []
-		
-		if deets.has("relative_targets"):
-			for reltarget in deets["relative_targets"]:
-				if not reltarget is Vector2:
-					print("Skipping invalid relative-target [",reltarget,"] for attack, not a Vec2")
-					continue
-				var target: Vector2 = actor.coord + reltarget
-				if valid_exact_targets.has(target): # No duplicates!
-					continue
-				valid_exact_targets.append(target)
-		
-		if deets.has("exact_targets"):
-			for target in deets["exact_targets"]:
-				if not target is Vector2:
-					print("Skipping invalid exact-target [",target,"] for attack")
-					continue
-				if valid_exact_targets.has(target): # No duplicates!
-					continue
-				valid_exact_targets.append(target)
-		
-		deets["exact_targets"] = valid_exact_targets
-		print("Potential attack targets are: ",valid_exact_targets)
-		
-		var skip_if_no_target: bool = flags.has("skip_if_no_target")
-		if skip_if_no_target:
-			var any_target_found: bool = false
-			for target in deets["exact_targets"]:
-				if batman.grid_actors.has_cellv(target):
-					if batman.grid_actors.get_cellv(target) != null:
-						if flags.has("friendly_fire"):
-							any_target_found = true
-						elif batman.grid_actors.get_cellv(target).faction != actor.faction:
-							any_target_found = true
-			if !any_target_found:
-				skip_processing_action("No targets found for attack when having targets is mandatory; legit skip")
-				update_action_log(this_action, false)
-				return
-			# [PUT THE ACTUAL ATTACK ATTEMPT HERE]
-			print("A target was found, damage would be done if damage was implemented")
-			# Maybe move the validity check too
-			update_action_log(this_action, true)
-			step_signal()
-		else:
-			# [PUT THE ACTUAL ATTACK ATTEMPT HERE]
-			print("Damage would be done if damage was implemented")
-			# Maybe move the validity check too
-			update_action_log(this_action, true)
-			step_signal()
-			pass
-		pass
-	#End Attack
-	
-	else:
-		skip_processing_action("Action ["+action+"] is not valid")
-		return
-	
-	# Successful process!
+	# Since there are more actions, let's process one!
+	progress_action_queue()
 	pass
 
-func skip_processing_action(error_reason: String = ""):
-	if error_reason != "":
-		print("ACT: process_action_queue() skipping action because: "+error_reason)
-	process_action_queue()
-	pass
-
-func update_action_log(action: Array, passfail: bool):
-	if actionlog.size() >= log_retention:
-		var _oldest_log = actionlog.pop_front()
-	
-#	var new_entry: String = ""
-#	if passfail:
-#		new_entry += "[+PASS+]"
-#	else:
-#		new_entry += "[-FAIL-]"
-#	new_entry += " "
-#	new_entry += str(action)
-	
-	var new_entry: Array = [passfail, action]
-	
-	actionlog.append(new_entry)
-	pass
 
 # TURN-RELATED MASTERS -----------------------------------------------------------------------------
 
-func skip_turn(actor: Actor):
-#	start_action_queue(actor)
-	pass
+# Just shortcuts that might be easier to remember.
+func end_action():  step_signal()
+func skip_action(): step_signal()
+
 
 # PLAYER SHORTCUTS ---------------------------------------------------------------------------------
 
-func quick_player_move(actor: Actor, motion: Vector2, continuous: bool = false):
-	prep_relative_move(actor, motion, continuous)
-#	start_action_queue(actor)
-	pass
-
 # MOVE (ORTHAGONAL/ADJACENT) -----------------------------------------------------------------------
 
-func prep_relative_move(
-	actor: Actor,
-	motion: Vector2,
-	continuous: bool = false,
-	note_starting_coord: bool = false,
-	allowed_to_cross_faction_lines: bool = false
-	):
-		var action: Array = [actor, "move"]
-		var deets: Dictionary = {"motion": motion, "flags": []}
-		if continuous:
-			deets["flags"].append("continuous")
-		if note_starting_coord:
-			deets["flags"].append("note_starting") # This marks it, typically so you can continuous move back to it
-		if allowed_to_cross_faction_lines:
-			deets["flags"].append("ignore_tile_faction")
-		action.append(deets)
-		
-		action_queue.append(action)
-		pass
-
-func prep_exact_move(actor: Actor, target: Vector2, allowed_to_cross_faction_lines: bool = false):
-	var motion: Vector2 = target - actor.coord
-	
-	var action: Array = [actor, "move"]
-	var deets: Dictionary = {"motion": motion, "flags": []}
-#	if continuous:
-#		deets["flags"].append("continuous")
-#	if note_starting_coord:
-#		deets["flags"].append("note_starting") # This marks it, typically so you can continuous move back to it
-	if allowed_to_cross_faction_lines:
-		deets["flags"].append("ignore_tile_faction")
-	action.append(deets)
-
-	action_queue.append(action)
+func hotmove(actor: Actor, to_coord: Vector2, dur: float):
+	tween.interpolate_property(actor, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_CIRC, Tween.EASE_IN_OUT)
+	tween.start()
 	pass
 
-func prep_random_move_actor(actor, continuous: bool = false, note_starting_coord: bool = false):
-	var action: Array = [actor, "move"]
-	var motion: Vector2 = get_rand_adj_tile_for_actormoving(actor.coord, actor)
-	motion -= actor.coord # Make it relative!
-	var deets: Dictionary = {"motion": motion, "flags": []}
-	if continuous:
-		deets["flags"].append("continuous")
-	if note_starting_coord:
-		deets["flags"].append("note_starting")
-	action.append(deets)
-	
-	action_queue.append(action)
-	pass
-
-func attempt_move_actor(actor: Actor, motion: Vector2, continuous: bool = false, note_starting_coord: bool = false, ignore_tile_faction: bool = false) -> bool:
-	if note_starting_coord:
-		noted_coord_A = curr_actor.coord
-		print("Noting coord: ",noted_coord_A)
-	
-	# If we've been told to stop, stop!
-	if continuous and !note_starting_coord:
-		if curr_actor.coord == noted_coord_A:
-			print("ACT: Ceasing continuous motion because we've arrived at the stop target!")
-			noted_coord_A = Vector2(-99, -99)
-			return false
-	
-	# If no move remaining, ignore!
-	# MISSING
-	
-	# If unable to move, ignore!
-	if !can_move_relative_vector(actor, motion, ignore_tile_faction):
-		print("ACT: Cannot move ",actor.ofc_name," to ",actor.coord + motion)
+# MUST be called when a move 'officially' changes our data position!
+func update_actor_coord_data(actor: Actor, newpos: Vector2) -> bool:
+	if !batman.grid_actors.has_cellv(newpos):
+		print("ACT: ERROR, Invalid coord! update_actor_coord_data(",actor,", ",newpos,")")
 		return false
 	
-	# Otherwise, move!
-	do_move_actor(actor, motion, continuous)
+	var oldpos: Vector2 = actor.coord
+	if batman.grid_actors.get_cellv(oldpos) != actor:
+		print("ACT: ERROR, Actor not data-recognized at old coords! update_actor_coord_data(",actor,", ",newpos,")")
+		return false
+	
+	var occupant: Actor = batman.grid_actors.get_cellv(newpos)
+	if occupant != null:
+		
+		# Could be intentional for something like a missile collision - emit a signal, and if it IS valid, anyone hooked into it can do what needs doing and if either actor dies (the missile, again), it can retrigger this func manually after an actor is killed to clear space
+		emit_signal("actor_collision_attempt", actor, occupant)
+		print("ACT: ERROR (maybe?), there is already an Actor at dest coords! (",actor,", ",newpos,")")
+		return false
+	
+	actor.coord = newpos
+	batman.grid_actors.set_cellv(oldpos, null)
+	batman.grid_actors.set_cellv(newpos, actor)
+	
 	return true
-	pass
-
-func do_move_actor(actor: Actor, motion: Vector2, continuous: bool = false): # Assumes you have ALREADY done the validation!
-	var old_coord: Vector2 = actor.coord
-	var new_coord: Vector2 = old_coord + motion
-	actor.coord = new_coord
-	batman.grid_actors.set_cellv(old_coord, null)
-	batman.grid_actors.set_cellv(new_coord, actor)
-	var new_gpos: Vector2 = batman.grid_gpos.get_cellv(new_coord)
-	
-	print("Moved actor ",actor.ofc_name," to new coord ",new_coord)
-	
-	tween.interpolate_property(actor, "position", null, new_gpos, std_dur, trans, Tween.EASE_OUT)
-	tween.start()
-	
-	yield(utils.yt(min_dur, self), "unwait")
-	
-	if continuous:
-		# SCRUBBED: Continuous movement is now handled at processing by reinserting the SAME action back into the stack, as the only way to ensure all parameters of the first move are carried forward. That said, this param still has to be sent here so that if continuous motion is already accounted for, it isn't double-accounted for by ice.
-####		# Different because it CONTINUES TO BE CONTINUOUS
-####		action_queue.insert(0, [actor, "move", {"motion": motion, "flags": ["continuous"]}])
-		pass
-	elif batman.grid_tiles.get_cellv(new_coord) == batman.tiletypes.ICE:
-		# Different because it is only ONE additional slip
-		action_queue.insert(0, [actor, "move", {"motion": motion}])
-	step_signal()
 	pass
 
 # ATTACKS ------------------------------------------------------------------------------------------
 
-func prep_simple_attack(actor: Actor, perform_if_targetless: bool, allow_friendly_fire: bool):
-	var action: Array = [actor, "attack"]
-	
-	var relative_target: Vector2
-	if actor.is_facing_left: relative_target = Vector2.LEFT
-	else: relative_target = Vector2.RIGHT
-	
-	var deets: Dictionary = {"relative_targets": [relative_target], "flags": []}
-	if !perform_if_targetless:
-		deets["flags"].append("skip_if_no_target")
-	if allow_friendly_fire:
-		deets["flags"].append("friendly_fire")
-	action.append(deets)
-	
-	action_queue.append(action)
+# TILE ADJUSTMENTS ---------------------------------------------------------------------------------
+
+func change_tiletype_single(coord: Vector2, to_tiletype: int, can_change_pits: bool = false): # Just a shorthand
+	change_tiletype_mass([coord], to_tiletype, can_change_pits)
 	pass
 
-func prep_shaped_attack(actor: Actor, targets: Array, allow_friendly_fire: bool = false):
-	var action: Array = [actor, "attack"]
-	var deets: Dictionary = {"exact_targets": targets, "flags": []}
+# For multiple tiletypes, use multiple calls
+func change_tiletype_mass(coordset: Array, to_tiletype: int, can_change_pits: bool = false):
+	# Prepare 'actual' changes, including custom logic
+	var impact_dict: Dictionary = {} # Vector keys, int values for tiletype
 	
-	if allow_friendly_fire:
-		deets["flags"].append("friendly_fire")
-	action.append(deets)
+	# Validate the deisred changes and see what's actually viable
+	for coord in coordset:
+		
+		# We don't normally change pits
+		if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.PIT:
+			if !can_change_pits:
+				continue
+		
+		# Make sure an actor cannot be pitted
+		elif to_tiletype == batman.tiletypes.PIT:
+			if batman.grid_actors.get_cellv(coord) != null: # Yes, there's an actor!
+				if batman.grid_tiles.get_cellv(coord) != batman.tiletypes.CRACK:
+					# Only bother 'cracking' if it's not already cracked
+					# (Otherwise, this is skipped)
+					impact_dict[coord] = batman.tiletypes.CRACK
+				continue
+		
+		# Make sure a re-cracked unoccupied tile becomes a pit instead
+		elif to_tiletype == batman.tiletypes.CRACK:
+			if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.CRACK:
+				if batman.grid_actors.get_cellv(coord) == null: # Unoccupied pre-cracked tile!
+					impact_dict[coord] = batman.tiletypes.PIT
+					continue
+		
+		# If no other conditions are met, we process as-is!
+		impact_dict[coord] = to_tiletype
+		pass
 	
-	action_queue.append(action)
+	if impact_dict.empty():
+		return
+	
+	# At this point, everything in the impact_dict can and should be changed!
+	# Note that they might not all be the same tiletype anymore.
+	
+	# Apply actual changes
+	for coord in impact_dict.keys():
+		batman.grid_tiles.set_cellv(coord, impact_dict[coord])
+	
+	print("Preparing tilechanges:\n",impact_dict)
+	batman.emit_signal("update_all_tiletypes")
 	pass
 
-func prep_tiletype_changes(actor: Actor, targets: Array, tiletype: int):
-	var action: Array = [actor, "tilechange"]
-	var deets: Dictionary = {"exact_targets": targets, "tiletype": tiletype, "flags": []}
-	
-	# Cracked/pit tiles will be handled later, during execution
-	
-	action.append(deets)
-	action_queue.append(action)
-	pass
 
 # SUPPORT QUERIES ----------------------------------------------------------------------------------
 
-func vet_move_targetset(actor: Actor, og_options: Array, is_relative: bool = true, allowed_over_faction_lines: bool = false) -> Array:
+func vet_actormove_optionset_relative(actor: Actor, og_options: Array, allowed_over_faction_lines: bool = false) -> Array:
+	return master_vet_actormove_optionset(actor, og_options, true, allowed_over_faction_lines)
+func vet_actormove_optionset_exact(actor: Actor, og_options: Array, allowed_over_faction_lines: bool = false) -> Array:
+	return master_vet_actormove_optionset(actor, og_options, true, allowed_over_faction_lines)
+func master_vet_actormove_optionset(actor: Actor, og_options: Array, is_relative: bool = true, allowed_over_faction_lines: bool = false) -> Array:
 	var valid_options: Array = []
-	
+
 	# We don't want to CHANGE the coord to be exact if relative, because they need to return the same way they were sent!
 	for coord in og_options: if coord is Vector2:
 		if is_relative:
-			if can_move_relative_vector(actor, coord, allowed_over_faction_lines):
+			if is_actormove_possible_relative(actor, coord, allowed_over_faction_lines):
 				valid_options.append(coord)
 		else:
-			if can_move_exact_vector(actor, coord, allowed_over_faction_lines):
+			if is_actormove_possible_exact(actor, coord, allowed_over_faction_lines):
 				valid_options.append(coord)
-	
+
 	return valid_options
 	pass
 
-func can_move_relative_vector(actor: Actor, motion: Vector2, allowed_over_faction_lines: bool = false) -> bool:
-	return can_move_exact_vector(actor, actor.coord + motion, allowed_over_faction_lines)
+func is_actormove_possible_relative(actor: Actor, motion: Vector2, allowed_over_faction_lines: bool = false) -> bool:
+	return is_actormove_possible_exact(actor, actor.coord + motion, allowed_over_faction_lines)
 	
-func can_move_exact_vector(actor: Actor, target: Vector2, allowed_over_faction_lines: bool = false) -> bool:
+func is_actormove_possible_exact(actor: Actor, target: Vector2, allowed_over_faction_lines: bool = false) -> bool:
 	var _start_coord: Vector2 = actor.coord
 	var end_coord: Vector2 = target
 	
 	# Can't move off the grid
 	if !batman.grid_tiles.has_cellv(end_coord):
-		print("ACT: cmev[1] Cell does not exist on board!")
+		print("ACT: iamp[1] Cell does not exist on board!")
 		return false
 		
 	# Can't move into *any* other actors, period
 	if batman.grid_actors.get_cellv(end_coord) != null:
-		print("ACT: cmev[2] Actor occupies destination!")
+		print("ACT: iamp[2] Other actor occupies destination!")
 		return false
 	
 	# Can't move on to other factions' cells
@@ -464,13 +312,12 @@ func can_move_exact_vector(actor: Actor, target: Vector2, allowed_over_faction_l
 	if !allowed_over_faction_lines:
 		if actor.faction == batman.factions.PLAYER:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.PLAYER:
-				print("ACT: cmev[3a] Player cannot exit player faction area!")
+				print("ACT: iamp[3a] Player cannot exit its faction area!")
 				return false
 		if actor.faction == batman.factions.ENEMY:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.ENEMY:
-				print("ACT: cmev[3b] Enemy cannot exit enemy faction area!")
+				print("ACT: iamp[3b] Enemy cannot exit its faction area!")
 				return false
-		
 	
 	# Can only move on pits IF you can hover
 	if batman.grid_tiles.get_cellv(end_coord) == batman.tiletypes.PIT:
@@ -481,26 +328,16 @@ func can_move_exact_vector(actor: Actor, target: Vector2, allowed_over_faction_l
 	return true
 	pass
 
-# This returns null if the first actor is not a PC - can't see "over" enemies or rocks! Warning!
-func find_first_PC_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
-	var result: Actor = find_first_actor_in_dir(og_coord, dir)
-	if result != null:
-		if result.faction == batman.factions.PLAYER:
-			return result
-		
-	return null
-	pass
 
-func find_first_ENEMY_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
-	var result: Actor = find_first_actor_in_dir(og_coord, dir)
-	if result != null:
-		if result.faction == batman.factions.ENEMY:
-			return result
-		
-	return null
-	pass
-
-func find_first_actor_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
+func can_see_PC_in_dir(og_coord: Vector2, dir: Vector2) -> bool:
+	return (find_nearest_PC_in_dir(og_coord, dir) != null)
+func can_see_ENEMY_in_dir(og_coord: Vector2, dir: Vector2) -> bool:
+	return (find_nearest_ENEMY_in_dir(og_coord, dir) != null)
+func find_nearest_PC_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
+	return find_nearest_actor_in_dir(og_coord, dir, batman.factions.PLAYER)
+func find_nearest_ENEMY_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
+	return find_nearest_actor_in_dir(og_coord, dir, batman.factions.ENEMY)
+func find_nearest_actor_in_dir(og_coord: Vector2, dir: Vector2, must_be_faction: int = -1) -> Actor:
 	var check_coord: Vector2 = og_coord
 	
 	while true:
@@ -508,10 +345,29 @@ func find_first_actor_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
 		if !batman.grid_actors.has_cellv(check_coord):
 			break
 		var occupant: Actor = batman.grid_actors.get_cellv(check_coord)
-		if occupant != null:
-			return occupant
+		if occupant == null:
+			continue
+		
+		# Can specify that it must be a certain faction; otherwise it'll default just return the first, period
+		if must_be_faction != -1:
+			if occupant.faction != must_be_faction:
+				continue
+		
+		return occupant
 	
 	return null
+	pass
+
+func get_dist_between_actors(first_actor: Actor, second_actor: Actor) -> Vector2:
+	# We assume these are already validated!
+	var dist: Vector2 = second_actor.coord - first_actor.coord
+	return dist.abs()
+	pass
+
+func get_vector_from_actor_a_to_b(first_actor: Actor, second_actor: Actor) -> Vector2:
+	# We assume these are already validated!
+	var dist: Vector2 = second_actor.coord - first_actor.coord
+	return dist
 	pass
 
 func get_first_actor_by_name(nstring: String, must_be_alive: bool = true) -> Actor:
@@ -542,7 +398,7 @@ func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, 
 	# Means it should fail if it's already occupied
 	if relevant_actor != null:
 		for dir in opts.duplicate():
-			if !can_move_relative_vector(relevant_actor, dir):
+			if !is_actormove_possible_relative(relevant_actor, dir):
 				opts.erase(dir)
 	
 	# We don't bother with this if there's a relevant actor, because the necessary check gets handled there
@@ -565,7 +421,7 @@ func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int) -> Vector
 	var opts: Array = get_all_tiles_by_faction(faction)
 	var valid_opts: Array = []
 	for coord in opts:
-		if can_move_exact_vector(actor, coord, true): # Handles all our validations
+		if is_actormove_possible_exact(actor, coord, true): # Handles all our validations
 			valid_opts.append(coord)
 	
 	if valid_opts.empty():
@@ -575,17 +431,17 @@ func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int) -> Vector
 	return valid_opts[0]
 
 # Note that these arrays do NOT contain the center tile itself!
-func get_adj_orthagonal_tiles(center_tile: Vector2, are_pits_allowed: bool = false, denied_factions: int = -1) -> Array:
-	return master_get_adj_tiles(center_tile, true,  are_pits_allowed, denied_factions)
-func get_adj_diagonal_tiles(center_tile: Vector2, are_pits_allowed: bool = false, denied_factions: int = -1) -> Array:
-	return master_get_adj_tiles(center_tile, false, are_pits_allowed, denied_factions)
-func get_adj_3x3_tiles(center_tile: Vector2, are_pits_allowed: bool = false, denied_factions: int = -1) -> Array:
+func get_adj_orthagonal_tiles(center_tile: Vector2, are_pits_allowed: bool = false, must_be_faction: int = -1) -> Array:
+	return master_get_adj_tiles(center_tile, true,  are_pits_allowed, must_be_faction)
+func get_adj_diagonal_tiles(center_tile: Vector2, are_pits_allowed: bool = false, must_be_faction: int = -1) -> Array:
+	return master_get_adj_tiles(center_tile, false, are_pits_allowed, must_be_faction)
+func get_adj_3x3_tiles(center_tile: Vector2, are_pits_allowed: bool = false, must_be_faction: int = -1) -> Array:
 	var all: Array = []
-	all.append_array(master_get_adj_tiles(center_tile, true,  are_pits_allowed, denied_factions))
-	all.append_array(master_get_adj_tiles(center_tile, false, are_pits_allowed, denied_factions))
+	all.append_array(master_get_adj_tiles(center_tile, true,  are_pits_allowed, must_be_faction))
+	all.append_array(master_get_adj_tiles(center_tile, false, are_pits_allowed, must_be_faction))
 	return all
 
-func master_get_adj_tiles(center_tile: Vector2, type_is_orthag: bool, are_pits_allowed: bool, denied_factions: int) -> Array:
+func master_get_adj_tiles(center_tile: Vector2, type_is_orthag: bool, are_pits_allowed: bool, must_be_faction: int) -> Array:
 	var viable_set: Array = []
 	
 	var surrounders: Array = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
@@ -603,8 +459,8 @@ func master_get_adj_tiles(center_tile: Vector2, type_is_orthag: bool, are_pits_a
 		if !are_pits_allowed:
 			if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.PIT:
 				continue
-		if denied_factions != -1:
-			if batman.grid_factions.get_cellv(coord) == denied_factions:
+		if must_be_faction != -1:
+			if batman.grid_factions.get_cellv(coord) != must_be_faction:
 				continue
 		viable_set.append(coord)
 	

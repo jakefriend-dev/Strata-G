@@ -409,6 +409,8 @@ func roll_initiative():
 #	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
 	pass
 
+func end_turn(): cycle_to_next_turn() # Shortcut!
+
 func cycle_to_next_turn():
 	# If we've never had a turn before, start with the highest number
 	
@@ -444,10 +446,13 @@ func cycle_to_next_turn():
 	field.update_targeting()
 	
 	act.flush()
-	if !curr_actor.has_method(""):
-		print("BATMAN: Error! Actor ",curr_actor," doesn't have a X method, skipping!")
+	if !curr_actor.has_method("begin_turn"):
+		print("BATMAN: Error! Actor ",curr_actor," doesn't have a begin_turn() method, skipping!")
 		yield(utils.yt(0.75, self), "timeout")
 		cycle_to_next_turn()
+		return
+	
+	curr_actor.begin_turn()
 	pass
 
 func get_printable_roundturncount() -> String:
@@ -467,7 +472,7 @@ func get_printable_turntaker_name(turndata: Dictionary) -> String:
 	return name_num
 	pass
 
-func insert_turntaker(new_turndata: Dictionary, to_position: int):
+func insert_turndata(new_turndata: Dictionary, to_position: int):
 	# Everything AT/BEHIND this position has to have its turnpos incremented
 	# If we want to insert BEFORE just use the thing-after's position, and if we want to insert AFTER use the thing-before's position -1
 	
@@ -498,12 +503,24 @@ func insert_turntaker(new_turndata: Dictionary, to_position: int):
 	
 	pass
 
-func remove_turntaker(because_it_died: bool = true):
+func clean_up_turnqueue(): # Ensures any eg. null actors are removed; refreshes turnpos
 	
+	pass
+
+func remove_all_turns_of_actor(actor: Actor):
+	# The simplest way is just to pass everything to a replacement list
+	var new_turnqueue: Array = []
 	
-	if !because_it_died: return
-	# Since we know it died, we need to add it to the slain_turntakers list
-	# We also need to remove ALL INSTANCES if it was a multi-turn actor!
+	var turnpos: int = 0
+	for turndata in turnqueue: if turndata is Dictionary:
+		turnpos += 1
+		if turndata["actor"] == actor:
+			continue
+		turndata["turnpos"] = turnpos
+		new_turnqueue.append(turndata)
+	
+	turnqueue = []
+	turnqueue = new_turnqueue
 	pass
 
 func sort_turnqueue_by_init(a: Dictionary, b: Dictionary) -> bool:
@@ -517,6 +534,26 @@ func sort_turnqueue_by_turnpos(a: Dictionary, b: Dictionary) -> bool:
 	pass
 
 # ---
+
+func kill_actor(actor: Actor):
+	# Prevent it from executing actions
+	actor.active = false
+	
+	# Clear the actor from the board
+	for set in grid_actors.get_dataset_with_coords():
+		if set[0] == actor:
+			grid_actors.set_cellv(set[0], null)
+	
+	# Remove the actor from the turnqueue
+	remove_all_turns_of_actor(actor)
+	
+	# Actually delete it! If it has an on-death method, let it do so itself; otherwise we do it
+	if actor.has_method("WHEN_killed"):
+		actor.call("WHEN_killed")
+	else:
+		actor.visible = false
+		actor.queue_free()
+	pass
 
 # ---
 
