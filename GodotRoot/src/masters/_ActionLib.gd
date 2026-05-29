@@ -40,11 +40,11 @@ func flush(): # Run to wipe any stored-between-actions data
 	noted_coord_A = Vector2(-99, -99)
 	pass
 
-func start_action_queue(actor: Actor):
-	flush()
-	curr_actor = actor
-	process_action_queue()
-	pass
+#func start_action_queue(actor: Actor):
+#	flush()
+#	curr_actor = actor
+#	process_action_queue()
+#	pass
 
 func process_action_queue():
 	if action_queue.empty():
@@ -271,14 +271,14 @@ func update_action_log(action: Array, passfail: bool):
 # TURN-RELATED MASTERS -----------------------------------------------------------------------------
 
 func skip_turn(actor: Actor):
-	start_action_queue(actor)
+#	start_action_queue(actor)
 	pass
 
 # PLAYER SHORTCUTS ---------------------------------------------------------------------------------
 
 func quick_player_move(actor: Actor, motion: Vector2, continuous: bool = false):
 	prep_relative_move(actor, motion, continuous)
-	start_action_queue(actor)
+#	start_action_queue(actor)
 	pass
 
 # MOVE (ORTHAGONAL/ADJACENT) -----------------------------------------------------------------------

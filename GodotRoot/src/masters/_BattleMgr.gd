@@ -442,6 +442,12 @@ func cycle_to_next_turn():
 	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
 	
 	field.update_targeting()
+	
+	act.flush()
+	if !curr_actor.has_method(""):
+		print("BATMAN: Error! Actor ",curr_actor," doesn't have a X method, skipping!")
+		yield(utils.yt(0.75, self), "timeout")
+		cycle_to_next_turn()
 	pass
 
 func get_printable_roundturncount() -> String:

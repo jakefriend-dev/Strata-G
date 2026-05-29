@@ -13,7 +13,7 @@ func _ready():
 	pass
 
 func begin_turn():
-	var start_position: Vector2 = coord
+	var _start_position: Vector2 = coord
 	
 	match telegraphed_move:
 		LUNGE: do_lunge()

@@ -166,7 +166,7 @@ func get_row(p_idx: int):
 #	return data[p_idx]
 #
 #func _get_cols() -> Array:
-	return data
+#	return data
 
 
 # I don't like these - it assumes we KNOW what the column/row should be as a whole, which is a screwier way to interact with the dataset than just setting the cells in sequence.

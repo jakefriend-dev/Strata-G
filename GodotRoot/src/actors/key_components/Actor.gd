@@ -127,6 +127,7 @@ func update_bui():
 	$BUI/MC/VB/Name.text = ofc_name
 	$BUI/MC/VB/GC/Health/Value.text = str(hp)
 	$BUI/MC/VB/GC/Shield/Value.text = str(def_shield)
+	$BUI/MC/VB/GC/Shield.visible = (def_shield > 0)
 #	$BUI/MC/VB/GC/Move/Value.text = str(hp)
 #	$BUI/MC/VB/GC/Actions/Value.text = str(hp)
 	

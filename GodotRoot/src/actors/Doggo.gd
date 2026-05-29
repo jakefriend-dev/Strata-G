@@ -49,6 +49,7 @@ func begin_turn():
 		act.prep_relative_move(self, moptions[0])
 		print(name,": Moving left/right because couldn't move up/down")
 		act.start_action_queue(self)
+	end_turn()
 	pass
 
 func check_for_victim() -> bool:
@@ -73,6 +74,23 @@ func set_up_attack(victim: Actor): # Handles the 'charge and bite OR just bite' 
 		act.prep_relative_move(self, Vector2.RIGHT, true, false, true)
 	print(name,": Can attack at start of turn, so simply doing so!")
 	act.start_action_queue(self)
+	end_turn()
+	pass
+
+func ACT_charge_forward():
+	# Quickly move the furthest left you are able, crossing faction lines
+	pass
+
+func ACT_charge_back():
+	# Return to your pre-charge starting position
+	pass
+
+func ACT_bite():
+	# Assuming there's an actor to your left, bite
+	pass
+
+func ACT_walk_1_tile():
+	# Move 1 tile within your faction bounds
 	pass
 
 func begin_turn_OLD():
