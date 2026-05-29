@@ -16,7 +16,66 @@ var last_movedir_y: int = 0
 ##	print(act.actionlog)
 #	pass
 
-func ready_turn_actions():
+func begin_turn():
+	# First: If we already have a viable victim, don't bother moving up or down
+	if check_for_victim():
+		return
+	
+	# No victim? Check if we can vertmove (prioritizing your logged movedir)
+	if last_movedir_y == 0: last_movedir_y = utils.negchance_int()
+	var can_move_vert: bool = true
+	var movedir: Vector2 = Vector2(0, last_movedir_y)
+	
+	if !act.can_move_relative_vector(self, movedir): # If you can't move your preferred way, flip!
+		last_movedir_y *= -1
+		movedir = Vector2(0, last_movedir_y)
+		if !act.can_move_relative_vector(self, movedir):
+			can_move_vert = false
+	
+	# If vertmove is possible, do that! Then victimcheck again
+	if can_move_vert:
+		act.prep_relative_move(self, movedir)
+		print("Moving up and down to seek a target...")
+		check_for_victim()
+		return
+	
+	# If we CAN'T move up or down, move forward or back (at random) if able, then end your turn
+	var moptions: Array = act.vet_move_targetset(self, [Vector2.LEFT, Vector2.RIGHT])
+	if moptions.empty():
+		print(name,": Can't do anything; skip!")
+		act.skip_turn(self)
+	else:
+		moptions.shuffle()
+		act.prep_relative_move(self, moptions[0])
+		print(name,": Moving left/right because couldn't move up/down")
+		act.start_action_queue(self)
+	pass
+
+func check_for_victim() -> bool:
+	var victim: Actor = act.find_first_actor_in_dir(coord, Vector2.LEFT)
+	if victim != null:
+		if victim.faction == factions.PLAYER:
+			set_up_attack(victim)
+			return true
+	return false
+	pass
+
+func set_up_attack(victim: Actor): # Handles the 'charge and bite OR just bite' stuff
+	var need_to_charge: bool = victim.coord != (coord + Vector2.LEFT)
+	
+	if need_to_charge:
+		print("Charging to bite target!")
+		act.prep_relative_move(self, Vector2.LEFT, true, true, true)
+	else:
+		print("Biting target (no need to charge)")
+	act.prep_simple_attack(self, false, false)
+	if need_to_charge:
+		act.prep_relative_move(self, Vector2.RIGHT, true, false, true)
+	print(name,": Can attack at start of turn, so simply doing so!")
+	act.start_action_queue(self)
+	pass
+
+func begin_turn_OLD():
 	# First: If we already have a viable enemy target, skip right to the attack without moving
 	var victim: Actor = act.find_first_PC_in_dir(coord, Vector2.LEFT)
 	if victim != null:
@@ -77,3 +136,5 @@ func ready_turn_actions():
 		print(name,": Moving left/right because couldn't move up/down")
 		act.start_action_queue(self)
 	pass
+
+

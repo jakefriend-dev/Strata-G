@@ -12,7 +12,7 @@ func _ready():
 	set_up_next_turn()
 	pass
 
-func ready_turn_actions():
+func begin_turn():
 	var start_position: Vector2 = coord
 	
 	match telegraphed_move:

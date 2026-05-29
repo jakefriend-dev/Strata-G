@@ -481,6 +481,7 @@ func can_move_exact_vector(actor: Actor, target: Vector2, allowed_over_faction_l
 	return true
 	pass
 
+# This returns null if the first actor is not a PC - can't see "over" enemies or rocks! Warning!
 func find_first_PC_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
 	var result: Actor = find_first_actor_in_dir(og_coord, dir)
 	if result != null:

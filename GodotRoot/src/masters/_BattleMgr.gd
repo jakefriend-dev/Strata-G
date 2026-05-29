@@ -142,18 +142,18 @@ func monitor_inputs():
 		multi_input_lock = true
 		test_new_combat("2")
 		return
-	if Input.is_action_just_pressed("dev_3"):
-		multi_input_lock = true
-		var doggo: Actor = act.get_first_actor_by_name("Doggo")
-		if doggo == null: return
-		doggo.ready_turn_actions()
-		return
-	if Input.is_action_just_pressed("dev_4"):
-		multi_input_lock = true
-		var beast: Actor = act.get_first_actor_by_name("Beast")
-		if beast == null: return
-		beast.ready_turn_actions()
-		return
+#	if Input.is_action_just_pressed("dev_3"):
+#		multi_input_lock = true
+#		var doggo: Actor = act.get_first_actor_by_name("Doggo")
+#		if doggo == null: return
+#		doggo.ready_turn_actions()
+#		return
+#	if Input.is_action_just_pressed("dev_4"):
+#		multi_input_lock = true
+#		var beast: Actor = act.get_first_actor_by_name("Beast")
+#		if beast == null: return
+#		beast.ready_turn_actions()
+#		return
 	
 	if battle_details.empty(): return
 #	if !can_player_input(): return

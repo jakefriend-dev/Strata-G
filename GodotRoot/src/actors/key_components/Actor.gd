@@ -107,6 +107,12 @@ func get_initiative() -> Array:
 	
 	return initset
 
+func end_turn():
+	
+	pass
+
+# ---
+
 func update_bui():
 	if faction == batman.factions.PLAYER:
 		is_facing_left = false
