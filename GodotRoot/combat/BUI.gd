@@ -15,6 +15,7 @@ var res_pipbonusshield = preload("res://combat/BonusShieldPip.tscn")
 func _ready():
 	healthpar = get_node(path_healthpar)
 	shieldpar = get_node(path_shieldpar)
+	bonusshieldpar = get_node(path_bonusshieldpar)
 	pass
 
 func update_all():
@@ -77,8 +78,8 @@ func edit_max_pips(piptype: String, new_max: int):
 			thiscount += 1
 			var newpip = res.instance()
 			newpip.set("name", str(thiscount))
-			newpip.set("owner", self)
 			par.add_child(newpip)
+			newpip.set("owner", self)
 		pass # We should now have the right quantity of pips
 	
 	# Run a value updater regardless!
@@ -97,7 +98,7 @@ func update_values_to_current(piptype: String):
 		value = actor.shield
 	elif piptype == "bonusshield":
 		par = bonusshieldpar
-		value = actor.bonusshield
+		value = actor.bonus_shield
 	else:
 		return
 	

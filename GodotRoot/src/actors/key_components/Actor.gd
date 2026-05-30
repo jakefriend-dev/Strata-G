@@ -28,7 +28,7 @@ var health: int = 4
 export var max_shield: int = 0
 var shield: int = 0
 
-var bonus_shield: int = 0
+var bonus_shield: int = 0 # Generally never starts with any, I think?
 
 export var ofc_name: String = "--"
 var bui: Node2D
@@ -146,9 +146,9 @@ func receive_damage(damage: int):
 	var og_shield: int = shield
 	
 	# Deduct damage and shield equally until either of them depletes fully
-	while bonus_shield > 0 and shield > 0 and damage > 0:
+	while (bonus_shield > 0 or shield > 0) and damage > 0:
 		damage -= 1
-		if bonus_shield > 1:
+		if bonus_shield > 0:
 			bonus_shield -= 1
 		else:
 			shield -= 1
