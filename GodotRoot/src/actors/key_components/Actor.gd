@@ -141,6 +141,40 @@ func end_turn():
 	batman.end_turn()
 	pass
 
+func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99)) -> bool:
+	# Ignore status quo
+	if (to_ghost and is_ghost):
+		return false
+	elif (!to_ghost and !is_ghost):
+		return false
+	
+	# Only changes from here!
+	
+	# Becoming ghost
+	if to_ghost:
+		# Switch out of the actor grid
+		act.remove_actor_from_actorgrid(self)
+		if !batman.ghost_actors.has(self):
+			batman.ghost_actors.append(self)
+		is_ghost = true
+		if newly_claimed_tile == Vector2(-99, -99): # We HAVE to claim something if we're going ghost mode, to ensure we have somewhere to come back to
+			claimed_tile = coord
+		else:
+			claimed_tile = newly_claimed_tile
+		return true
+	
+	# Return to gridlocked mortal form
+	else:
+		# We should always be tracking our own coord fwiw, even while ghosted, so this should still be up to date
+		if !act.is_tile_available(coord, self):
+			print(name," ERROR: Attempted to return from ghost mode while our current coord was unavailable!")
+			return false
+		if batman.ghost_actors.has(self):
+			batman.ghost_actors.erase(self)
+		is_ghost = false
+		return true
+	pass
+
 func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
 	if Vector2(-99, -99): claiming_coord = coord
 	
@@ -172,6 +206,9 @@ func monitor_position_as_coordinate():
 	
 	coord = batman.field.actorpos_to_tilecoord(position)
 	if coord == last_coord: return
+	if is_ghost: return
+	
+	# We always want to track our own coordinate personally, but don't want to manage the grid coord unless we're not a ghost
 	
 	act.change_actor_coord(self, coord)
 	pass

@@ -116,6 +116,7 @@ func populate_actors():
 		
 		$Actors.add_child(actor)
 		
+		batman.living_actors.append(actor)
 		batman.grid_actors.set_cellv(coord, actor) # Overwrites the "text" with the actual object
 	
 	# Manual step just to get test gameplay going

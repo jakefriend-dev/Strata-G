@@ -431,6 +431,12 @@ func change_actor_coord(actor: Actor, new_coord: Vector2):
 	return false
 	pass
 
+func remove_actor_from_actorgrid(actor: Actor):
+	for set in batman.grid_actors.get_dataset_with_coords():
+		if set[0] == actor:
+			batman.grid_actors.set_cellv(set[1], null)
+	pass
+
 func release_all_claims():
 	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
 	for set in dataset:

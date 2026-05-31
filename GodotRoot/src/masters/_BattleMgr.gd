@@ -37,12 +37,6 @@ var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rocket
 
 const BASE_HP_UNIT: int = 4
 
-#var pc_actors: Array = [] # When a PC no longer has move OR AP remaining, it gets added to pc_actors_spent
-#var pc_actors_spent: Array = [] # Clears at end of each turn
-#
-#var foe_actors: Array = []
-#var foe_actors_spent: Array = [] # When an enemy has performed its action(s), it goes in here
-#var foe_actors_defeated: Array = [] # When an enemy is dead, it goes in here
 var turncount: int = 0 # Starts at 1 for first turn and cycles upwards until resetting
 var turnqueue: Array = [
 	# Full of turndata dictionaries, already sorted in order!
@@ -56,8 +50,18 @@ var turnqueue: Array = [
 		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
 		# turnpos					Int; managed by batman but 
 ]
-var living_turntakers: Array = []
-var slain_turntakers: Array = [] # When turndata is deleted from turnqueue it goes here, to track things like XP and to keep turnqueue clear for living turntakers only.
+var living_actors: Array = [] # Does not count things like rocks that have no turns
+var slain_actors: Array = [] # When turndata is deleted from turnqueue it goes here, to track things like XP and to keep turnqueue clear for living turntakers only.
+
+var ghost_actors: Array = []
+var grid_actors:   Array2D	# Initially this TEMPORARILY populates string names,
+							# then is written over as actual instances. Note that this
+							# IGNORES ghost actors, and REACTS to actor position changes
+							# rather than having to be manually set.
+var grid_claims:   Array2D
+var grid_tiles:    Array2D
+var grid_gpos:     Array2D
+var grid_factions: Array2D
 
 var default_party: Array = ["P2", "P1", "P3"] # Calls these scenes by name when initializing combat; the first one is always in the front and the last is always in the back.
 
@@ -72,15 +76,6 @@ enum factions {
 	PLAYER,
 	ENEMY,
 }
-
-var grid_actors:   Array2D	# Initially this TEMPORARILY populates string names,
-							# then is written over as actual instances. Note that this
-							# IGNORES ghost actors, and REACTS to actor position changes
-							# rather than having to be manually set.
-var grid_claims:   Array2D
-var grid_tiles:    Array2D
-var grid_gpos:     Array2D
-var grid_factions: Array2D
 
 var battle_details: Dictionary = {}
 var field: Node2D # Owner of all battle stuff
@@ -615,13 +610,19 @@ func kill_actor(actor: Actor):
 	# Prevent it from executing actions
 	actor.active = false
 	
-	# Clear the actor from the board
-	for set in grid_actors.get_dataset_with_coords():
-		if set[0] == actor:
-			grid_actors.set_cellv(set[1], null)
+	# Clear the actor from the board and all tracking lists
+	act.remove_actor_from_actorgrid(actor)
+	if ghost_actors.has(actor):
+		ghost_actors.erase(actor)
+	if living_actors.has(actor):
+		living_actors.erase(actor)
+	slain_actors.append(actor.ofc_name) # This can maybe be improved later if enemies have local XP
 	
 	# Remove the actor from the turnqueue
 	remove_all_turns_of_actor(actor)
+	
+	# Wipe its tile claims
+	act.release_actor_claims(actor)
 	
 	# Actually delete it! If it has an on-death method, let it do so itself; otherwise we do it
 	if actor.has_method("WHEN_killed"):
