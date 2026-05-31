@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
 [ext_resource path="res://combat/HealthPip.tscn" type="PackedScene" id=2]
 [ext_resource path="res://combat/BUI.gd" type="Script" id=3]
 [ext_resource path="res://combat/ShieldPip.tscn" type="PackedScene" id=4]
 [ext_resource path="res://combat/BonusShieldPip.tscn" type="PackedScene" id=5]
+[ext_resource path="res://combat/ActionPointPip.tscn" type="PackedScene" id=6]
 
 [node name="BUI" type="Node2D"]
 position = Vector2( 0, 16 )
@@ -12,6 +13,7 @@ script = ExtResource( 3 )
 path_healthpar = NodePath("MC/VB/GC/Health")
 path_shieldpar = NodePath("MC/VB/GC/Shield")
 path_bonusshieldpar = NodePath("MC/VB/GC/BonusShield")
+path_actionpar = NodePath("MC/VB/GC/AP")
 
 [node name="MC" type="MarginContainer" parent="."]
 margin_left = -200.0
@@ -26,9 +28,9 @@ __meta__ = {
 
 [node name="VB" type="VBoxContainer" parent="MC"]
 margin_left = 149.0
-margin_top = 182.0
+margin_top = 175.0
 margin_right = 251.0
-margin_bottom = 218.0
+margin_bottom = 225.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = -2
@@ -47,8 +49,9 @@ text = "P1"
 [node name="GC" type="GridContainer" parent="MC/VB"]
 margin_top = 12.0
 margin_right = 102.0
-margin_bottom = 36.0
+margin_bottom = 50.0
 size_flags_horizontal = 4
+custom_constants/vseparation = 0
 custom_constants/hseparation = 0
 columns = 3
 
@@ -126,6 +129,28 @@ custom_constants/hseparation = -4
 columns = 4
 
 [node name="1" parent="MC/VB/GC/BonusShield" instance=ExtResource( 5 )]
+
+[node name="AP" type="GridContainer" parent="MC/VB/GC"]
+margin_top = 24.0
+margin_right = 44.0
+margin_bottom = 38.0
+custom_constants/vseparation = -4
+custom_constants/hseparation = -4
+columns = 4
+
+[node name="1" parent="MC/VB/GC/AP" instance=ExtResource( 6 )]
+
+[node name="2" parent="MC/VB/GC/AP" instance=ExtResource( 6 )]
+margin_left = 10.0
+margin_right = 24.0
+
+[node name="3" parent="MC/VB/GC/AP" instance=ExtResource( 6 )]
+margin_left = 20.0
+margin_right = 34.0
+
+[node name="4" parent="MC/VB/GC/AP" instance=ExtResource( 6 )]
+margin_left = 30.0
+margin_right = 44.0
 
 [node name="HealthOLD" type="HBoxContainer" parent="MC/VB/GC"]
 visible = false

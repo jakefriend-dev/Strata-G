@@ -33,6 +33,9 @@ var bonus_shield: int = 0 # Generally never starts with any, I think?
 export var ofc_name: String = "--"
 var bui: Node2D
 
+export var base_action_points: int = 4 # Used for movement AND attacks!
+var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
+
 export var base_damage: int = 1 # For attack shortcuts for simple mobs
 
 enum factions { # Local copy of TurnMgr, must be an exact duplicate!
@@ -104,6 +107,8 @@ func perform_initial_data_setup():
 	
 	max_shield *= batman.BASE_HP_UNIT # Let the start of turn determine current shield
 	shield = max_shield
+	
+	action_points = base_action_points
 	
 	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
 		set( str("is_"+term), get(str("def_",term)) )

@@ -62,6 +62,7 @@ script = ExtResource( 1 )
 first_initiative = 2
 second_initiative = 4
 max_health = 8
+base_action_points = 5
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

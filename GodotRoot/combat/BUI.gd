@@ -5,17 +5,21 @@ var actor: Actor
 export var path_healthpar: NodePath
 export var path_shieldpar: NodePath
 export var path_bonusshieldpar: NodePath
+export var path_actionpar: NodePath
 var healthpar: GridContainer
 var shieldpar: GridContainer
 var bonusshieldpar: GridContainer
+var actionpar: GridContainer
 var res_piphealth = preload("res://combat/HealthPip.tscn")
 var res_pipshield = preload("res://combat/ShieldPip.tscn")
 var res_pipbonusshield = preload("res://combat/BonusShieldPip.tscn")
+var res_pipaction = preload("res://combat/ActionPointPip.tscn")
 
 func _ready():
 	healthpar = get_node(path_healthpar)
 	shieldpar = get_node(path_shieldpar)
 	bonusshieldpar = get_node(path_bonusshieldpar)
+	actionpar = get_node(path_actionpar)
 	pass
 
 func update_all():
@@ -23,7 +27,8 @@ func update_all():
 		$MC/VB/Name.text = actor.ofc_name
 	edit_max_pips("health", actor.max_health)
 	edit_max_pips("shield", actor.max_shield)
-	edit_max_pips("bonusshield", actor.bonus_shield)
+	edit_max_pips("bonus_shield", actor.bonus_shield)
+	edit_max_pips("action_points", actor.base_action_points)
 	pass
 
 # Use a USER max, not a BASE max - should already be x4'd (or whatever)
@@ -39,16 +44,28 @@ func edit_max_pips(piptype: String, new_max: int):
 	elif piptype == "shield":
 		par = shieldpar
 		res = res_pipshield
-	elif piptype == "bonusshield":
+	elif piptype == "bonus_shield":
 		par = bonusshieldpar
 		res = res_pipbonusshield
+	elif piptype == "action_points":
+		par = actionpar
+		res = res_pipaction
 	else:
 		return
+	
+	var uses_base_hp_factor: bool = true
+	if piptype == "action_points":
+		uses_base_hp_factor = false
 	
 	# Okay, from here it's valid! Unless there's no change to make, I guess
 	
 	var old_pipcount: int = par.get_child_count()
-	var new_pipcount: int = int(ceil(float(new_max)/float(batman.BASE_HP_UNIT)))
+	var new_pipcount: int
+	if uses_base_hp_factor:
+		new_pipcount = int(ceil(float(new_max)/float(batman.BASE_HP_UNIT)))
+	else:
+		new_pipcount = new_max
+	
 	if par.visible != (new_max > 0):
 		par.visible = (new_max > 0)
 	
@@ -89,23 +106,41 @@ func edit_max_pips(piptype: String, new_max: int):
 # This function DOESN'T KNOW if our pip quantity is correct or not! Assume max pips are already set correctly! If you want to do both, make a general-master function.
 func update_values_to_current(piptype: String):
 	var par: GridContainer
-	var value: int
+	var curr_value: int
 	if piptype == "health":
 		par = healthpar
-		value = actor.health
+		curr_value = actor.health
 	elif piptype == "shield":
 		par = shieldpar
-		value = actor.shield
-	elif piptype == "bonusshield":
+		curr_value = actor.shield
+	elif piptype == "bonus_shield":
 		par = bonusshieldpar
-		value = actor.bonus_shield
+		curr_value = actor.bonus_shield
+	elif piptype == "action_points":
+		par = actionpar
+		curr_value = actor.action_points
 	else:
 		return
 	
 	# Should be post-validation now
+	var uses_base_hp_factor: bool = true
+	if piptype == "action_points":
+		uses_base_hp_factor = false
+	
+	# Exception case first, to get it out of the way - an action point is just an action point.
+	if !uses_base_hp_factor:
+		for pip in par.get_children():
+			var this_base: int = int(pip.name)
+			var s: Sprite = pip.get_node("Sprite")
+			
+			if this_base <= curr_value: # We're 'full'
+				s.frame = 1
+			else: # We're 'empty'
+				s.frame = 0
+		return
 	
 	# Base value rounds UP: 7 health would be base 2 even though that's 8
-	var base_value: int = int(ceil(float(value)/float(batman.BASE_HP_UNIT)))
+	var base_value: int = int(ceil(float(curr_value)/float(batman.BASE_HP_UNIT)))
 	
 	for pip in par.get_children():
 		var this_base: int = int(pip.name)
@@ -118,11 +153,11 @@ func update_values_to_current(piptype: String):
 		else: # We're the one in contention!
 			# Base 6 and x4 would mean this covers health values 21, 22, 23, 24
 			var under_value: int = (base_value-1)*4
-			var remnant_value: int = value - under_value
+			var remnant_value: int = curr_value - under_value
 			s.frame = remnant_value
 		pass
 		
-		if piptype == "bonusshield":
+		if piptype == "bonus_shield":
 			if pip.visible != (s.frame > 0):
 				pip.visible = (s.frame > 0)
 	pass
