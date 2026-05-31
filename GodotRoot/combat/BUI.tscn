@@ -135,22 +135,22 @@ margin_top = 24.0
 margin_right = 44.0
 margin_bottom = 38.0
 custom_constants/vseparation = -4
-custom_constants/hseparation = -4
-columns = 4
+custom_constants/hseparation = -8
+columns = 8
 
 [node name="1" parent="MC/VB/GC/AP" instance=ExtResource( 6 )]
 
 [node name="2" parent="MC/VB/GC/AP" instance=ExtResource( 6 )]
-margin_left = 10.0
-margin_right = 24.0
+margin_left = 6.0
+margin_right = 20.0
 
 [node name="3" parent="MC/VB/GC/AP" instance=ExtResource( 6 )]
-margin_left = 20.0
-margin_right = 34.0
+margin_left = 12.0
+margin_right = 26.0
 
 [node name="4" parent="MC/VB/GC/AP" instance=ExtResource( 6 )]
-margin_left = 30.0
-margin_right = 44.0
+margin_left = 18.0
+margin_right = 32.0
 
 [node name="HealthOLD" type="HBoxContainer" parent="MC/VB/GC"]
 visible = false
