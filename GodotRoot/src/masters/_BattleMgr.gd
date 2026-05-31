@@ -77,6 +77,17 @@ enum factions {
 	ENEMY,
 }
 
+# ACTION MANAGEMENT
+var last_execution_frame: int = -1
+var action_queue: Array = []
+var curr_action: Array = []
+var prev_action: Array = []
+var timeout_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
+var actionlog: Array = [] # Historical log of all processed AND FAILED actions! Strings only
+var log_retention: int = 10
+signal action_step_complete() # Should fire any time we do an individual action
+signal all_action_steps_complete() # Should fire whenever ALL steps are done
+
 var battle_details: Dictionary = {}
 var field: Node2D # Owner of all battle stuff
 var actors: YSort
@@ -86,13 +97,11 @@ var board: GridContainer # Owner of CELLS not everything
 enum tiletypes {
 	NORMAL, 	#
 	
-	CRACK,  	# Normal, but creates pit when EXITED
-					# Also a cracking effect on an already-cracked tile would create a pit instead
-					# Also-also, featherweights don't break the tiles when leaving
+	JAGGED,  	# Sharp and jagged; causes damage and AP loss when stepped on (this also repairs it)
 	
-	PIT,    	# Can't be walked into naturally; CAN be knocked into it for instant KO
+	PIT,    	# Can't be walked into naturally; like a wall without blocking projectiles or LOS
 	
-	STEEL,		# Unbreakable; unchangeable without magic
+	STEEL,		# Unbreakable; cannot be cracked
 	
 	GRASS,		# Fire damage is doubled, which also destroys the grass
 	
@@ -127,9 +136,7 @@ enum tiletypes {
 var multi_input_lock: bool = false # Prevent multiple actions being acecpted too closely together
 var action_lock: bool = false # On any successful action, even by an enemy, yield until all actions are complete!
 
-
 # ---
-
 
 func _process(_d): monitor_inputs()
 func monitor_inputs():
@@ -199,6 +206,13 @@ func _physics_process(_delta):
 	multi_input_lock = false
 	pass
 
+
+
+# BATTLE MANAGEMENT --------------------------------------------------------------------------------
+
+
+### Battle setup
+
 func test_new_combat(test: String):
 	match test:
 		"1":
@@ -261,7 +275,7 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 		set(grid, Array2D.new())
 		get(grid).resizev(local_board_size)
 		get(grid).onebased = true
-	act.flush() # Save this until AFTER the claims grid exists
+	flush_actionqueue() # Save this until AFTER the claims grid exists
 	
 	# Set up our tile data!
 	var tile_default: int = tiletypes.NORMAL
@@ -356,8 +370,6 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	return true
 	pass
 
-# TURN MANAGEMENT ----------------------------------------------------------------------------------
-
 func roll_initiative():
 	turnqueue.clear()
 	
@@ -413,23 +425,8 @@ func roll_initiative():
 #	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
 	pass
 
-func end_turn():
-	combatstate = C_POST_TURN
-	
-	# Do post-turn stuff
-	
-	interrupt_turn()
-	pass
 
-func interrupt_turn():
-	# Wipe out the current actionqueue
-	act.flush()
-	if utils.valid(curr_actor):
-		if curr_actor.has_method("on_turn_reset"):
-			curr_actor.call("on_turn_reset")
-	
-	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
-	pass
+### Turn management
 
 func cycle_to_next_turn():
 	combatstate = C_TRANSITION
@@ -468,7 +465,7 @@ func cycle_to_next_turn():
 	
 	field.update_targeting()
 	
-	act.flush()
+	flush_actionqueue()
 	
 	combatstate = C_PRE_TURN
 	emit_signal("pre_turn_refresh", curr_actor)
@@ -484,52 +481,22 @@ func cycle_to_next_turn():
 	curr_actor.begin_turn()
 	pass
 
-func get_printable_roundturncount() -> String:
-	var text: String = str("r",round_count,".",turncount)
-	return text
+func end_turn(): # Includes post-turn before 
+	combatstate = C_POST_TURN
+	
+	# Do post-turn stuff
+	
+	interrupt_turn()
 	pass
 
-func get_printable_turntaker_name(turndata: Dictionary) -> String:
-	var name_unnum: String = turndata["ofc_name"]
-	var name_num: String = turndata["numerated_name"]
+func interrupt_turn(): # IMMEDIATELY ends the turn, no post-turn (needed for eg. death)
+	# Wipe out the current actionqueue
+	flush_actionqueue()
+	if utils.valid(curr_actor):
+		if curr_actor.has_method("on_turn_reset"):
+			curr_actor.call("on_turn_reset")
 	
-	if !unique_actornames_observed.has(name_unnum):
-		return name_unnum
-	elif unique_actornames_observed[name_unnum] == 1:
-		return name_unnum
-	
-	return name_num
-	pass
-
-func insert_turndata(new_turndata: Dictionary, to_position: int):
-	# Everything AT/BEHIND this position has to have its turnpos incremented
-	# If we want to insert BEFORE just use the thing-after's position, and if we want to insert AFTER use the thing-before's position -1
-	
-	# THIS ASSUMES WE ARE OTHERWISE VALIDATED BTW, besides turnpos I mean!
-	# Just a safety validation
-	new_turndata["turnpos"] = to_position
-	
-	# First, iterate 
-	for existing_turndata in turnqueue:
-		if existing_turndata["turnpos"] >= to_position:
-			existing_turndata["turnpos"] = existing_turndata["turnpos"]+1
-	
-	# Next, add the new data
-	turnqueue.append(new_turndata)
-	
-	# Then sort!
-	turnqueue.sort_custom(self, "sort_turnqueue_by_turnpos")
-	
-	# The question now is... do we iterate our turncount?
-	# I think if we're inserting BEFORE the current turn we should.
-	# So if our turn is 5 before insertion...
-		# Inserting at 4 bumps the current turntaker to 6, so turncount should invisibly increment
-		# Inserting at 5 does the same
-		# Inserting at 6 KEEPS the current turntaker's spot and the new turntaker acts next
-	# Therefore we increment if the new number is LOWER OR EQUAL TO the turncount!
-	if to_position <= turncount:
-		turncount += 1
-	
+	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
 
 func clean_up_turnqueue(): # Ensures any eg. null actors are removed; refreshes turnpos
@@ -566,6 +533,37 @@ func clean_up_turnqueue(): # Ensures any eg. null actors are removed; refreshes 
 	turnqueue = new_turnqueue
 	pass
 
+func insert_turndata(new_turndata: Dictionary, to_position: int):
+	# Everything AT/BEHIND this position has to have its turnpos incremented
+	# If we want to insert BEFORE just use the thing-after's position, and if we want to insert AFTER use the thing-before's position -1
+	
+	# THIS ASSUMES WE ARE OTHERWISE VALIDATED BTW, besides turnpos I mean!
+	# Just a safety validation
+	new_turndata["turnpos"] = to_position
+	
+	# First, iterate 
+	for existing_turndata in turnqueue:
+		if existing_turndata["turnpos"] >= to_position:
+			existing_turndata["turnpos"] = existing_turndata["turnpos"]+1
+	
+	# Next, add the new data
+	turnqueue.append(new_turndata)
+	
+	# Then sort!
+	turnqueue.sort_custom(self, "sort_turnqueue_by_turnpos")
+	
+	# The question now is... do we iterate our turncount?
+	# I think if we're inserting BEFORE the current turn we should.
+	# So if our turn is 5 before insertion...
+		# Inserting at 4 bumps the current turntaker to 6, so turncount should invisibly increment
+		# Inserting at 5 does the same
+		# Inserting at 6 KEEPS the current turntaker's spot and the new turntaker acts next
+	# Therefore we increment if the new number is LOWER OR EQUAL TO the turncount!
+	if to_position <= turncount:
+		turncount += 1
+	
+	pass
+
 func remove_all_turns_of_actor(actor: Actor):
 	# The simplest way is just to pass everything to a replacement list
 	var new_turnqueue: Array = []
@@ -594,6 +592,13 @@ func remove_all_turns_of_actor(actor: Actor):
 	turnqueue = new_turnqueue
 	pass
 
+func is_my_turn(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
+	if curr_actor != actor: return false
+	if !actor.active: return false
+	if combatstate != C_TURN: return false
+	return true
+	pass
+
 func sort_turnqueue_by_init(a: Dictionary, b: Dictionary) -> bool:
 	# True if turndata A should act ahead of turndata B
 	return a["init"] > b["init"]
@@ -602,6 +607,170 @@ func sort_turnqueue_by_init(a: Dictionary, b: Dictionary) -> bool:
 func sort_turnqueue_by_turnpos(a: Dictionary, b: Dictionary) -> bool:
 	# True if turndata A should act ahead of turndata B
 	return a["turnpos"] > b["turnpos"]
+	pass
+
+func get_printable_roundturncount() -> String:
+	var text: String = str("r",round_count,".",turncount)
+	return text
+	pass
+
+func get_printable_turntaker_name(turndata: Dictionary) -> String:
+	var name_unnum: String = turndata["ofc_name"]
+	var name_num: String = turndata["numerated_name"]
+	
+	if !unique_actornames_observed.has(name_unnum):
+		return name_unnum
+	elif unique_actornames_observed[name_unnum] == 1:
+		return name_unnum
+	
+	return name_num
+	pass
+
+
+### Action management
+
+func vet_action(action: Array) -> bool:
+	# We expect 2-3 values: A valid actor, a valid method in that actor's script, and *optionally*, an array of param data for the method. The array is allowed to be missing or empty, and can have whatever in it. HOWEVER, in any situation where no paramset is sent, we add an empty array for consistency. A validated action DOES have 3 params.
+	
+	if action.size() != 2 and action.size() != 3:
+		print("BATMAN: vet_action(",action,") failed: Array is the wrong size")
+		return false
+	
+	if not action[0] is Actor:
+		print("BATMAN: vet_action(",action,") failed: First param is not an Actor")
+		return false
+	
+	var actor: Actor = action[0]
+	
+	if actor == null:
+		print("BATMAN: vet_action(",action,") failed: Actor is null")
+		return false
+	
+	if !actor.active:
+		print("BATMAN: vet_action(",action,") failed: Actor is not active")
+		return false
+	
+	if not action[1] is String:
+		print("BATMAN: vet_action(",action,") failed: Second param is not a string (for methodname)")
+		return false
+	
+	var methodname: String = action[1]
+	
+	if methodname == "":
+		print("BATMAN: vet_action(",action,") failed: Method name is blank")
+		return false
+	
+	if !actor.has_method(str("ACT_"+methodname)):
+		print("BATMAN: vet_action(",action,") failed: Actor does not have method")
+		return false
+	
+	if action.size() == 3:
+		if not action[2] is Array:
+			print("BATMAN: vet_action(",action,") failed: Third param is not an Array")
+			return false
+	
+	return true
+	pass
+
+func append_action(actor: Actor, methodname: String, paramset: Array = []):
+	var action: Array = [actor, methodname, paramset]
+	if !vet.action(action):
+		return
+	
+	# Validations complete
+	action_queue.append(action)
+	pass
+
+func insert_action(position: int, actor: Actor, methodname: String, paramset: Array = []):
+	var action: Array = [actor, methodname, paramset]
+	if !vet_action(action):
+		return
+	
+	if position < 0:
+		print("BATMAN: Invalid index insert_action(",action,", ",position,"), adjusting up to 0!")
+		position = 0
+	elif position > action_queue.size():
+		print("BATMAN: Invalid index insert_action(",action,", ",position,"), appending instead!")
+		append_action(actor, methodname, paramset)
+		return
+	
+	# Validations complete
+	action_queue.insert(position, action)
+	pass
+
+# For quick-running a single action immediately!
+func execute_action(actor: Actor, methodname: String, paramset: Array = []): 
+	insert_action(0, actor, methodname, paramset)
+	progress_action_queue()
+	pass
+
+func progress_action_queue(): # Calls ONE next action, or if there is none, skips
+	last_execution_frame = get_tree().get_frame()
+	
+	if action_queue.empty():
+		end_action()
+		return
+	
+	# Final checks on if the actor is STILL valid, given some delays since vet_action()
+	var unvalidated_action: Array = action_queue.pop_front()
+	var actor: Actor = unvalidated_action[0]
+	if actor == null:
+		end_action()
+		return
+	if !actor.active:
+		end_action()
+		return
+	
+	# Actor is valid, so action is as well! Update trackers
+	prev_action = []
+	prev_action = curr_action
+	curr_action = []
+	curr_action = unvalidated_action
+	
+	# Gather data...
+	var methodname: String = str("ACT_"+curr_action[1])
+	var paramset: Array = curr_action[2]
+	
+	# Log the action BEFORE executing
+	var logstring: String = str(curr_action)
+	actionlog.insert(0, logstring)
+	if actionlog.size() > log_retention:
+		actionlog.resize(log_retention)
+	
+	# Execute!
+	if paramset.empty():
+		actor.call(methodname)
+	else:
+		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
+		actor.callv(methodname, paramset)
+	
+	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
+	pass
+
+func skip_action(): end_action() # Just a shortcut
+
+func end_action(): # The call that an action 'step' has ended, or needs to be skipped
+	# The action_step signals here should NEVER fire the same frame this method is called! If so, we need to wait at LEAST 1 frame before proceeding.
+	if last_execution_frame == get_tree().get_frame():
+		yield(utils.yt(timeout_time, self), "timeout")
+	
+	emit_signal("action_step_complete")
+	if action_queue.empty():
+#		print("BATMAN: action_queue has emptied!")
+		emit_signal("all_action_steps_complete")
+		return
+	
+	# Since there are more actions, let's process one!
+	progress_action_queue()
+	pass
+
+func flush_actionqueue(): # Run to wipe any stored-between-turns data
+	act.release_most_claims()
+	
+	action_queue.clear()
+	curr_action = []
+	prev_action = []
+	last_execution_frame = -1
 	pass
 
 # ---
@@ -633,13 +802,6 @@ func kill_actor(actor: Actor):
 	pass
 
 # ---
-
-func is_my_turn(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
-	if curr_actor != actor: return false
-	if !actor.active: return false
-	if combatstate != C_TURN: return false
-	return true
-	pass
 
 func can_player_input() -> bool:
 #	if inputstate != istates.PLAYER_CONTROL:

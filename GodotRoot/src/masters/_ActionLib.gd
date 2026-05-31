@@ -3,26 +3,11 @@ extends Node
 var tween: Tween
 var trans: int = Tween.TRANS_QUINT
 
-var timeout_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
-var min_dur: float = 0.10 # In theory, only relevant for enemies, not the player
-var std_dur: float = 0.25
-
-var last_execution_frame: int = -1
-var action_queue: Array = []
-var curr_action: Array = []
-var prev_action: Array = []
-
-signal action_step_complete() # Should fire any time we do an individual action OR each step in a multi-step action -
-signal all_action_steps_complete() # Should fire whenever ALL steps are done
-
 signal actor_collision_attempt(actor_attacking, actor_defending) # Can be used for things like missile collisions
 
 var field: Node2D # Owner of all battle stuff
 var actors: YSort
 var board: GridContainer # Owner of CELLS not everything
-
-var actionlog: Array = [] # Historical log of all processed AND FAILED actions! Strings only
-var log_retention: int = 10
 
 # ---
 
@@ -30,156 +15,6 @@ func _ready():
 	tween = Tween.new()
 	add_child(tween)
 	pass
-
-# PROCESSING ---------------------------------------------------------------------------------------
-
-func flush(): # Run to wipe any stored-between-turns data
-	release_most_claims()
-	
-	action_queue.clear()
-	curr_action = []
-	prev_action = []
-	last_execution_frame = -1
-	pass
-
-func vet_action(action: Array) -> bool:
-	# We expect 2-3 values: A valid actor, a valid method in that actor's script, and *optionally*, an array of param data for the method. The array is allowed to be missing or empty, and can have whatever in it. HOWEVER, in any situation where no paramset is sent, we add an empty array for consistency. A validated action DOES have 3 params.
-	
-	if action.size() != 2 and action.size() != 3:
-		print("ACT: vet_action(",action,") failed: Array is the wrong size")
-		return false
-	
-	if not action[0] is Actor:
-		print("ACT: vet_action(",action,") failed: First param is not an Actor")
-		return false
-	
-	var actor: Actor = action[0]
-	
-	if actor == null:
-		print("ACT: vet_action(",action,") failed: Actor is null")
-		return false
-	
-	if !actor.active:
-		print("ACT: vet_action(",action,") failed: Actor is not active")
-		return false
-	
-	if not action[1] is String:
-		print("ACT: vet_action(",action,") failed: Second param is not a string (for methodname)")
-		return false
-	
-	var methodname: String = action[1]
-	
-	if methodname == "":
-		print("ACT: vet_action(",action,") failed: Method name is blank")
-		return false
-	
-	if !actor.has_method(str("ACT_"+methodname)):
-		print("ACT: vet_action(",action,") failed: Actor does not have method")
-		return false
-	
-	if action.size() == 3:
-		if not action[2] is Array:
-			print("ACT: vet_action(",action,") failed: Third param is not an Array")
-			return false
-	
-	return true
-	pass
-
-func append_action(actor: Actor, methodname: String, paramset: Array = []):
-	var action: Array = [actor, methodname, paramset]
-	if !vet.action(action):
-		return
-	
-	# Validations complete
-	action_queue.append(action)
-	pass
-
-func insert_action(position: int, actor: Actor, methodname: String, paramset: Array = []):
-	var action: Array = [actor, methodname, paramset]
-	if !vet_action(action):
-		return
-	
-	if position < 0:
-		print("ACT: Invalid index insert_action(",action,", ",position,"), adjusting up to 0!")
-		position = 0
-	elif position > action_queue.size():
-		print("ACT: Invalid index insert_action(",action,", ",position,"), appending instead!")
-		append_action(actor, methodname, paramset)
-		return
-	
-	# Validations complete
-	action_queue.insert(position, action)
-	pass
-
-# For quick-running a single action!
-func execute_action(actor: Actor, methodname: String, paramset: Array = []): 
-	insert_action(0, actor, methodname, paramset)
-	progress_action_queue()
-	pass
-
-func progress_action_queue(): # Calls ONE next action, or if there is none, skips
-	last_execution_frame = get_tree().get_frame()
-	
-	if action_queue.empty():
-		step_signal()
-		return
-	
-	# Final checks on if the actor is STILL valid, given some delays since vet_action()
-	var unvalidated_action: Array = action_queue.pop_front()
-	var actor: Actor = unvalidated_action[0]
-	if actor == null:
-		step_signal()
-		return
-	if !actor.active:
-		step_signal()
-		return
-	
-	# Actor is valid, so action is as well! Update trackers
-	prev_action = []
-	prev_action = curr_action
-	curr_action = []
-	curr_action = unvalidated_action
-	
-	# Gather data...
-	var methodname: String = str("ACT_"+curr_action[1])
-	var paramset: Array = curr_action[2]
-	
-	# Log the action BEFORE executing
-	var logstring: String = str(curr_action)
-	actionlog.insert(0, logstring)
-	if actionlog.size() > log_retention:
-		actionlog.resize(log_retention)
-	
-	# Execute!
-	if paramset.empty():
-		actor.call(methodname)
-	else:
-		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
-		actor.callv(methodname, paramset)
-	
-	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
-	pass
-
-func step_signal(): # The call that an action 'step' has ended, or needs to be skipped
-	# The action_step signals here should NEVER fire the same frame this method is called! If so, we need to wait at LEAST 1 frame before proceeding.
-	if last_execution_frame == get_tree().get_frame():
-		yield(utils.yt(timeout_time, self), "timeout")
-	
-	emit_signal("action_step_complete")
-	if action_queue.empty():
-#		print("ACT: action_queue has emptied!")
-		emit_signal("all_action_steps_complete")
-		return
-	
-	# Since there are more actions, let's process one!
-	progress_action_queue()
-	pass
-
-# TURN-RELATED MASTERS -----------------------------------------------------------------------------
-
-# Just shortcuts that might be easier to remember.
-func end_action():  step_signal()
-func skip_action(): step_signal()
 
 # AVAILABILITY & TRAVERSABILITY --------------------------------------------------------------------
 
@@ -318,15 +153,15 @@ func change_tiletype_mass(coordset: Array, to_tiletype: int, can_change_pits: bo
 #		# Make sure an actor cannot be pitted
 #		elif to_tiletype == batman.tiletypes.PIT:
 #			if batman.grid_actors.get_cellv(coord) != null: # Yes, there's an actor!
-#				if batman.grid_tiles.get_cellv(coord) != batman.tiletypes.CRACK:
+#				if batman.grid_tiles.get_cellv(coord) != batman.tiletypes.JAGGED:
 #					# Only bother 'cracking' if it's not already cracked
 #					# (Otherwise, this is skipped)
-#					impact_dict[coord] = batman.tiletypes.CRACK
+#					impact_dict[coord] = batman.tiletypes.JAGGED
 #				continue
 #
 #		# Make sure a re-cracked unoccupied tile becomes a pit instead
-#		elif to_tiletype == batman.tiletypes.CRACK:
-#			if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.CRACK:
+#		elif to_tiletype == batman.tiletypes.JAGGED:
+#			if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.JAGGED:
 #				if batman.grid_actors.get_cellv(coord) == null: # Unoccupied pre-cracked tile!
 #					impact_dict[coord] = batman.tiletypes.PIT
 #					continue

@@ -28,8 +28,8 @@ func begin_turn():
 	
 	# If vertmove is possible, do that! Then victimcheck again
 	if can_move_vert:
-		act.execute_action(self, "walk_1_tile", [movedir])
-		yield(act, "all_action_steps_complete")
+		batman.execute_action(self, "walk_1_tile", [movedir])
+		yield(batman, "all_action_steps_complete")
 		
 		if can_see_victim():
 			return
@@ -42,8 +42,8 @@ func begin_turn():
 		print(name,": Can't do anything; skip!")
 	else:
 		moptions.shuffle()
-		act.execute_action(self, "walk_1_tile", [moptions[0]])
-		yield(act, "all_action_steps_complete")
+		batman.execute_action(self, "walk_1_tile", [moptions[0]])
+		yield(batman, "all_action_steps_complete")
 	
 	end_turn()
 	pass
@@ -63,17 +63,17 @@ func sequence_attack(victim: Actor): # Handles the 'charge and bite OR just bite
 #	var charge_x_cells: int = act.get_dist_between_actors(self, victim).x
 	
 	if need_to_charge:
-		act.execute_action(self, "charge_forward")
-		yield(act, "all_action_steps_complete")
+		batman.execute_action(self, "charge_forward")
+		yield(batman, "all_action_steps_complete")
 		if !batman.is_my_turn(self): return
 	
-	act.execute_action(self, "bite")
-	yield(act, "all_action_steps_complete")
+	batman.execute_action(self, "bite")
+	yield(batman, "all_action_steps_complete")
 	if !batman.is_my_turn(self): return
 	
 	if need_to_charge:
-		act.execute_action(self, "charge_back")
-		yield(act, "all_action_steps_complete")
+		batman.execute_action(self, "charge_back")
+		yield(batman, "all_action_steps_complete")
 		if !batman.is_my_turn(self): return
 	
 	end_turn()
@@ -88,7 +88,7 @@ func ACT_charge_forward():
 	var xdist: int = chargies.size()
 	
 	if xdist == 0: # Just in case
-		act.skip_action()
+		batman.skip_action()
 		return
 	
 	# We're clear! Mark the endpoint and claim before moving
@@ -104,43 +104,12 @@ func ACT_charge_forward():
 	end_action()
 	pass
 
-func ACT_charge_forward_OLD(xdist: int):
-	# Quickly move the furthest left you are able, crossing faction lines
-#	print("Charging to bite target!")
-	var check_coord: Vector2 = Vector2.ZERO
-	var valid_xdist: int = 0
-	for x in xdist:
-		check_coord.x -= 1
-		if act.is_actormove_possible_relative(self, check_coord, true):
-			valid_xdist += 1
-		else:
-			break
-	
-	if valid_xdist == 0:
-		act.skip_action()
-		return
-	
-	var dest_coord: Vector2 = coord
-	dest_coord.x -= valid_xdist
-	
-	if !act.update_actor_coord_data(self, dest_coord):
-		act.skip_action()
-		return
-	
-	# Perform a visual movement to the destination cell!
-	var dur: float = float(valid_xdist)*0.1
-	act.hotmove(self, dest_coord, dur)
-	yield(utils.yt(dur, self), "timeout")
-	
-	end_action()
-	pass
-
 func ACT_charge_back():
 #	print("Returning from our charge!")
 	
 	# Safety check; we should not start from our claimed tile
 	if coord == claimed_tile:
-		act.skip_action()
+		batman.skip_action()
 		return
 	
 	var valid_xdist: float = abs(claimed_tile.x - coord.x)
@@ -171,7 +140,7 @@ func ACT_walk_1_tile(motion: Vector2):
 	var dest_coord: Vector2 = coord + motion
 	
 #	if !act.update_actor_coord_data(self, dest_coord):
-#		act.skip_action()
+#		batman.skip_action()
 #		return
 	
 	var dur: float = 0.5

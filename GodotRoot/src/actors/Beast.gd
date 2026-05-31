@@ -34,7 +34,7 @@ func do_lunge():
 	# Damage other side (no visual)
 	var opposite: Vector2 = coord + lunge_delta_target
 	act.prep_shaped_attack(self, targeted_locs, true)
-	act.prep_tiletype_changes(self, [opposite], batman.tiletypes.CRACK)
+	act.prep_tiletype_changes(self, [opposite], batman.tiletypes.JAGGED)
 	pass
 
 func do_shoot():

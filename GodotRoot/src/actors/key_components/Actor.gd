@@ -133,13 +133,9 @@ func pre_turn_refresh(who: Actor):
 	update_bui()
 	pass
 
-func end_action():
-	act.step_signal()
-	pass
-
-func end_turn():
-	batman.end_turn()
-	pass
+# Just shortcuts
+func end_action(): batman.end_action()
+func end_turn():   batman.end_turn()
 
 func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99)) -> bool:
 	# Ignore status quo

@@ -60,8 +60,8 @@ func get_center_gpos() -> Vector2:
 func followup_tiletype():
 	if $Type.text != str(type):
 		$Type.text = str(type)
-	if $Crack.visible != (type == batman.tiletypes.CRACK):
-		$Crack.visible = (type == batman.tiletypes.CRACK)
+	if $Crack.visible != (type == batman.tiletypes.JAGGED):
+		$Crack.visible = (type == batman.tiletypes.JAGGED)
 	if $Pit.visible != (type == batman.tiletypes.PIT):
 		$Pit.visible = (type == batman.tiletypes.PIT)
 
