@@ -61,6 +61,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 max_health = 2
 max_shield = 2
+base_action_points = 3
 def_immune_poison = true
 def_immune_elec = true
 

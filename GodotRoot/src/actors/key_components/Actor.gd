@@ -36,7 +36,8 @@ var bui: Node2D
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
 
-export var base_damage: int = 1 # For attack shortcuts for simple mobs
+export var base_damage: int = 1 # For attack shortcuts for simple mobs (gets auto-factored)
+var bonus_damage: int = 0
 
 enum factions { # Local copy of TurnMgr, must be an exact duplicate!
 	NEUTRAL,
@@ -109,6 +110,7 @@ func perform_initial_data_setup():
 	shield = max_shield
 	
 	action_points = base_action_points
+	base_damage *= batman.BASE_HP_UNIT
 	
 	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
 		set( str("is_"+term), get(str("def_",term)) )
@@ -130,11 +132,46 @@ func get_initiative() -> Array:
 	
 	return initset
 
+func choose_action():
+	# At the start of turn, AND every time the action queue empties, this should fire until we're unable to act and need to end the turn manually (or automatically...?)
+	if has_method("turn_cleanup"):
+		call("turn_cleanup")
+	
+	if has_method("prep_next_action"):
+		call("prep_next_action")
+	
+	batman.progress_action_queue() # If empty when this is called (ie. we could not afford an action at all, or chose not to take one), consider the turn auto-over
+	pass
+
+func can_afford(cost: int) -> bool:
+	if action_points >= cost:
+		return true
+	return false
+	pass
+
+func spend(cost: int):
+	if cost <= 0: return
+	
+	action_points -= cost
+	if action_points < 0:
+		print(name,": ERROR, tried to spend more action points than had available!")
+		action_points = 0
+	update_bui()
+	pass
+
+func refresh_action_points():
+	action_points = base_action_points
+	
+	update_bui()
+	pass
+
 func pre_turn_refresh(who: Actor):
 	if who != self: return
 	
 #	print("Pre-turn refresh for ",self)
 	shield = max_shield
+	action_points = base_action_points
+	
 	update_bui()
 	pass
 

@@ -82,7 +82,8 @@ var last_execution_frame: int = -1
 var action_queue: Array = []
 var curr_action: Array = []
 var prev_action: Array = []
-var timeout_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
+var timeout_action_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
+var timeout_turn_time: float = (12.0/60.0) # How long between ended turns if time has not passed
 var actionlog: Array = [] # Historical log of all processed AND FAILED actions! Strings only
 var log_retention: int = 10
 signal action_step_complete() # Should fire any time we do an individual action
@@ -137,6 +138,10 @@ var multi_input_lock: bool = false # Prevent multiple actions being acecpted too
 var action_lock: bool = false # On any successful action, even by an enemy, yield until all actions are complete!
 
 # ---
+
+func _ready():
+	connect("all_action_steps_complete", self, "prompt_next_turntaker_action")
+	pass
 
 func _process(_d): monitor_inputs()
 func monitor_inputs():
@@ -471,17 +476,16 @@ func cycle_to_next_turn():
 	emit_signal("pre_turn_refresh", curr_actor)
 	# Nothin' here yet!
 	
-	combatstate = C_TURN
-	if !curr_actor.has_method("begin_turn"):
-#		print("BATMAN: Error! Actor ",curr_actor," doesn't have a begin_turn() method, skipping!")
-		yield(utils.yt(0.75, self), "timeout")
-		cycle_to_next_turn()
-		return
+	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
-	curr_actor.begin_turn()
+	combatstate = C_TURN
+	curr_actor.choose_action()
 	pass
 
-func end_turn(): # Includes post-turn before 
+func end_turn(): # Includes post-turn before
+	if last_execution_frame == get_tree().get_frame():
+		yield(utils.yt(timeout_turn_time, self), "timeout")
+	
 	combatstate = C_POST_TURN
 	
 	# Do post-turn stuff
@@ -493,8 +497,10 @@ func interrupt_turn(): # IMMEDIATELY ends the turn, no post-turn (needed for eg.
 	# Wipe out the current actionqueue
 	flush_actionqueue()
 	if utils.valid(curr_actor):
-		if curr_actor.has_method("on_turn_reset"):
-			curr_actor.call("on_turn_reset")
+		if curr_actor.has_method("turn_cleanup"): # END of turn, to be clear
+			curr_actor.call("turn_cleanup")
+#	curr_actor.spend(curr_actor.action_points)
+	curr_actor.refresh_action_points()
 	
 	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
@@ -674,7 +680,7 @@ func vet_action(action: Array) -> bool:
 
 func append_action(actor: Actor, methodname: String, paramset: Array = []):
 	var action: Array = [actor, methodname, paramset]
-	if !vet.action(action):
+	if !vet_action(action):
 		return
 	
 	# Validations complete
@@ -707,8 +713,8 @@ func execute_action(actor: Actor, methodname: String, paramset: Array = []):
 func progress_action_queue(): # Calls ONE next action, or if there is none, skips
 	last_execution_frame = get_tree().get_frame()
 	
-	if action_queue.empty():
-		end_action()
+	if action_queue.empty(): # No actions queued when this was called! Time to move on
+		end_turn()
 		return
 	
 	# Final checks on if the actor is STILL valid, given some delays since vet_action()
@@ -747,17 +753,23 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
 	pass
 
+func prompt_next_turntaker_action():
+	if combatstate == C_TURN:
+		if curr_actor.faction == factions.ENEMY:
+			curr_actor.choose_action()
+	pass
+
 func skip_action(): end_action() # Just a shortcut
 
 func end_action(): # The call that an action 'step' has ended, or needs to be skipped
 	# The action_step signals here should NEVER fire the same frame this method is called! If so, we need to wait at LEAST 1 frame before proceeding.
 	if last_execution_frame == get_tree().get_frame():
-		yield(utils.yt(timeout_time, self), "timeout")
+		yield(utils.yt(timeout_action_time, self), "timeout")
 	
 	emit_signal("action_step_complete")
 	if action_queue.empty():
 #		print("BATMAN: action_queue has emptied!")
-		emit_signal("all_action_steps_complete")
+		emit_signal("all_action_steps_complete") # Will try and prompt NPCs to make another move
 		return
 	
 	# Since there are more actions, let's process one!

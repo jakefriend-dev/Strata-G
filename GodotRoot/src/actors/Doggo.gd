@@ -2,81 +2,113 @@ extends Actor
 
 var last_movedir_y: int = 0
 
+const COST_CHARGE: int = 3
+const COST_BITE_NOCHARGE: int = 2
+const COST_WALK: int = 1
+const COST_ENRAGE: int = 2
+
+var is_enraged: bool = false
+var victim: Actor
+
 # ---
 
-func on_turn_reset():
+func _ready():
+	last_movedir_y = utils.negchance_int()
+	pass
+
+func turn_cleanup():
 	allowed_over_faction_lines = false
+	victim = null
 	pass
 
 # -
 
-func begin_turn():
-	# First: If we already have a viable victim, don't bother moving up or down
+
+
+func prep_next_action(): # This func should END with setting up one or multiple actions!
+	# Can we see a victim?
 	if can_see_victim():
-		return
-	
-	# No victim? Check if we can vertmove (prioritizing your logged movedir)
-	if last_movedir_y == 0: last_movedir_y = utils.negchance_int()
-	var movedir: Vector2 = Vector2(0, last_movedir_y)
-	
-	var can_move_vert: bool = true
-	if !act.is_tile_traversable_relative(self, movedir): # If you can't move your preferred way, flip!
-		last_movedir_y *= -1
-		movedir = Vector2(0, last_movedir_y)
-		if !act.is_tile_traversable_relative(self, movedir):
-			can_move_vert = false
-	
-	# If vertmove is possible, do that! Then victimcheck again
-	if can_move_vert:
-		batman.execute_action(self, "walk_1_tile", [movedir])
-		yield(batman, "all_action_steps_complete")
 		
-		if can_see_victim():
+		# If so, can we bite WITHOUT needing to charge?
+		if victim.coord == (coord + Vector2.LEFT):
+			if can_afford(COST_BITE_NOCHARGE):
+				spend(COST_BITE_NOCHARGE)
+				batman.append_action(self, "bite")
+				return
+			# If we're literally next to the target and can't afford to bite, we have 1 or 0 AP left and are already where we want to be; give up manually and wait
 			return
-		end_turn()
+		
+		# Nope! Time to consider other options. From here on, we're not adjacent to our victim, but we CAN see one.
+		
+		# If we can afford to charge, do that!
+		if can_afford(COST_CHARGE):
+			spend(COST_CHARGE) # This is the charge-AND-bite combo
+			batman.append_action(self, "charge_forward")
+			batman.append_action(self, "bite")
+			batman.append_action(self, "charge_back")
+			return
+		# Otherwise, if we can SEE the target but not afford to attack it, get angry!
+		elif can_afford(COST_ENRAGE):
+			spend(COST_ENRAGE)
+			batman.append_action(self, "enrage")
+			return
+		# *Otherwise*, if we can move towards the target, do that.
+		elif can_afford(COST_WALK):
+			if act.is_tile_traversable_relative(self, Vector2.LEFT):
+				spend(COST_WALK)
+				batman.append_action(self, "walk", [Vector2.LEFT])
+				return
+		# If we can see the target but can't do ANYTHING, just end the turn.
 		return
 	
-	# If we CAN'T move up or down, move forward or back (at random) if able, then end your turn
-	var moptions: Array = act.vet_actormove_optionset_relative(self, [Vector2.LEFT, Vector2.RIGHT])
-	if moptions.empty():
-		print(name,": Can't do anything; skip!")
-	else:
-		moptions.shuffle()
-		batman.execute_action(self, "walk_1_tile", [moptions[0]])
-		yield(batman, "all_action_steps_complete")
+	# From here on, we know we CAN'T see the target. So we need to move!
 	
-	end_turn()
+	if !can_afford(COST_WALK):
+		# Or not - we've got no gas left.
+		return
+	
+	# Move up or down if able (prioritizing your last direction)
+	var movedir: Vector2 = Vector2(0, last_movedir_y)
+	if act.is_tile_traversable_relative(self, movedir):
+		spend(COST_WALK)
+		batman.append_action(self, "walk", [movedir])
+		return
+	
+	# If you can't move your preferred way, flip!
+	last_movedir_y *= -1
+	movedir = Vector2(0, last_movedir_y)
+	if act.is_tile_traversable_relative(self, movedir):
+		spend(COST_WALK)
+		batman.append_action(self, "walk", [movedir])
+		return
+	
+	# If we can't vertmove, horzmove? This will be at random.
+	var moptions: Array = act.vet_actormove_optionset_relative(self, [Vector2.LEFT, Vector2.RIGHT])
+	if !moptions.empty():
+		moptions.shuffle()
+		spend(COST_WALK)
+		batman.append_action(self, "walk", [moptions[0]])
+		return
+	
+	# Can't go anywhere, can't do nothin' :(
 	pass
 
+
+
+
+
+
+
+
+
 func can_see_victim() -> bool:
-	var victim: Actor = act.find_nearest_actor_in_dir(coord, Vector2.LEFT)
+	victim = act.find_nearest_actor_in_dir(coord, Vector2.LEFT)
 #	print("victim: ",victim)
 	if victim != null:
 		if victim.faction == factions.PLAYER:
-			sequence_attack(victim)
 			return true
+	victim = null
 	return false
-	pass
-
-func sequence_attack(victim: Actor): # Handles the 'charge and bite OR just bite' stuff
-	var need_to_charge: bool = (victim.coord != (coord + Vector2.LEFT))
-#	var charge_x_cells: int = act.get_dist_between_actors(self, victim).x
-	
-	if need_to_charge:
-		batman.execute_action(self, "charge_forward")
-		yield(batman, "all_action_steps_complete")
-		if !batman.is_my_turn(self): return
-	
-	batman.execute_action(self, "bite")
-	yield(batman, "all_action_steps_complete")
-	if !batman.is_my_turn(self): return
-	
-	if need_to_charge:
-		batman.execute_action(self, "charge_back")
-		yield(batman, "all_action_steps_complete")
-		if !batman.is_my_turn(self): return
-	
-	end_turn()
 	pass
 
 # -
@@ -127,13 +159,17 @@ func ACT_bite():
 	# Bites to the left; we are dumb so if this gets called we're not worrying about if there's a target or friendly fire.
 #	print("Biting!")
 	
-	act.damage_actor_at_coord(self, coord + Vector2.LEFT, base_damage*batman.BASE_HP_UNIT)
+	act.damage_actor_at_coord(self, coord + Vector2.LEFT, base_damage)
 	if !batman.is_my_turn(self): return
 	
 	end_action()
 	pass
 
-func ACT_walk_1_tile(motion: Vector2):
+func ACT_enrage():
+	end_action()
+	pass
+
+func ACT_walk(motion: Vector2):
 	# Move 1 tile within your faction bounds
 #	print("Moving ",motion," to seek a target (if vertmove, may still charge")
 	
