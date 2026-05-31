@@ -56,6 +56,7 @@ var turnqueue: Array = [
 		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
 		# turnpos					Int; managed by batman but 
 ]
+var living_turntakers: Array = []
 var slain_turntakers: Array = [] # When turndata is deleted from turnqueue it goes here, to track things like XP and to keep turnqueue clear for living turntakers only.
 
 var default_party: Array = ["P2", "P1", "P3"] # Calls these scenes by name when initializing combat; the first one is always in the front and the last is always in the back.
@@ -73,7 +74,10 @@ enum factions {
 }
 
 var grid_actors:   Array2D	# Initially this TEMPORARILY populates string names,
-								# then is written over as actual instances
+							# then is written over as actual instances. Note that this
+							# IGNORES ghost actors, and REACTS to actor position changes
+							# rather than having to be manually set.
+var grid_claims:   Array2D
 var grid_tiles:    Array2D
 var grid_gpos:     Array2D
 var grid_factions: Array2D
@@ -259,7 +263,7 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	battle_details["board_size"] = local_board_size
 	
 	# Set up all our Array2Ds
-	for grid in ["grid_tiles", "grid_actors", "grid_gpos", "grid_factions"]:
+	for grid in ["grid_tiles", "grid_actors", "grid_gpos", "grid_factions", "grid_claims"]:
 		set(grid, Array2D.new())
 		get(grid).resizev(local_board_size)
 		get(grid).onebased = true

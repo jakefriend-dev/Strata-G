@@ -77,6 +77,8 @@ var is_immune_poison: bool
 var is_immune_magnet: bool
 var is_immune_elec: bool
 
+export var keep_claims_at_eot: bool = false # Set true for the RARE cases (like a missile) where you don't want to wipe its claim at the end of a turn
+
 # Convenience references; duplicate data to batman.grid_actors
 var coord: Vector2
 
@@ -133,6 +135,15 @@ func end_action():
 
 func end_turn():
 	batman.end_turn()
+	pass
+
+
+func _process(_delta):
+	monitor_position_as_coordinate()
+	pass
+
+func monitor_position_as_coordinate():
+	
 	pass
 
 # ---

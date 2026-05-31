@@ -34,6 +34,8 @@ func _ready():
 # PROCESSING ---------------------------------------------------------------------------------------
 
 func flush(): # Run to wipe any stored-between-turns data
+	release_most_claims()
+	
 	action_queue.clear()
 	curr_action = []
 	prev_action = []
@@ -191,30 +193,30 @@ func hotmove(actor: Actor, to_coord: Vector2, dur: float):
 	pass
 
 # MUST be called when a move 'officially' changes our data position!
-func update_actor_coord_data(actor: Actor, newpos: Vector2) -> bool:
-	if !batman.grid_actors.has_cellv(newpos):
-		print("ACT: ERROR, Invalid coord! update_actor_coord_data(",actor,", ",newpos,")")
-		return false
-	
-	var oldpos: Vector2 = actor.coord
-	if batman.grid_actors.get_cellv(oldpos) != actor:
-		print("ACT: ERROR, Actor not data-recognized at old coords! update_actor_coord_data(",actor,", ",newpos,")")
-		return false
-	
-	var occupant: Actor = batman.grid_actors.get_cellv(newpos)
-	if occupant != null:
-		
-		# Could be intentional for something like a missile collision - emit a signal, and if it IS valid, anyone hooked into it can do what needs doing and if either actor dies (the missile, again), it can retrigger this func manually after an actor is killed to clear space
-		emit_signal("actor_collision_attempt", actor, occupant)
-		print("ACT: ERROR (maybe?), there is already an Actor at dest coords! (",actor,", ",newpos,")")
-		return false
-	
-	actor.coord = newpos
-	batman.grid_actors.set_cellv(oldpos, null)
-	batman.grid_actors.set_cellv(newpos, actor)
-	
-	return true
-	pass
+#func update_actor_coord_data(actor: Actor, newpos: Vector2) -> bool:
+#	if !batman.grid_actors.has_cellv(newpos):
+#		print("ACT: ERROR, Invalid coord! update_actor_coord_data(",actor,", ",newpos,")")
+#		return false
+#
+#	var oldpos: Vector2 = actor.coord
+#	if batman.grid_actors.get_cellv(oldpos) != actor:
+#		print("ACT: ERROR, Actor not data-recognized at old coords! update_actor_coord_data(",actor,", ",newpos,")")
+#		return false
+#
+#	var occupant: Actor = batman.grid_actors.get_cellv(newpos)
+#	if occupant != null:
+#
+#		# Could be intentional for something like a missile collision - emit a signal, and if it IS valid, anyone hooked into it can do what needs doing and if either actor dies (the missile, again), it can retrigger this func manually after an actor is killed to clear space
+#		emit_signal("actor_collision_attempt", actor, occupant)
+#		print("ACT: ERROR (maybe?), there is already an Actor at dest coords! (",actor,", ",newpos,")")
+#		return false
+#
+#	actor.coord = newpos
+#	batman.grid_actors.set_cellv(oldpos, null)
+#	batman.grid_actors.set_cellv(newpos, actor)
+#
+#	return true
+#	pass
 
 # ATTACKS ------------------------------------------------------------------------------------------
 
@@ -344,6 +346,31 @@ func is_actormove_possible_exact(actor: Actor, target: Vector2, allowed_over_fac
 	return true
 	pass
 
+# -
+
+func release_all_claims():
+	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
+	for set in dataset:
+		batman.grid_claims.set_cellv(set[1], null)
+	pass
+
+func release_most_claims(): # Allows SOME actors to keep their claims
+	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
+	for set in dataset:
+		var actor: Actor = set[0]
+		if actor.keep_claims_at_eot:
+			continue
+		batman.grid_claims.set_cellv(set[1], null)
+	pass
+
+func release_actor_claims(actor: Actor):
+	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
+	for set in dataset:
+		if set[0] == actor:
+			batman.grid_claims.set_cellv(set[1], null)
+	pass
+
+# -
 
 func can_see_PC_in_dir(og_coord: Vector2, dir: Vector2) -> bool:
 	return (find_nearest_PC_in_dir(og_coord, dir) != null)
