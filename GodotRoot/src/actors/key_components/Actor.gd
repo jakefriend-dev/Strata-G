@@ -54,6 +54,28 @@ var is_facing_left: bool = true # Default true for enemies; false for party
 
 export var bui_visible: bool = true
 
+# A list of effects for tracking and live usage
+var ongoing_turn_effects: Dictionary = {
+	# All ongoing effects are in the format: [STRING key, INT ticks remaining]
+	# Any string inc custom stuff can be used; if it does nothing it'll just be ignored
+	# If an effect already exists when a new one is added, it'll set to the highest of either ticks
+	
+	# A call is made each START and END of turn
+	# If you want 'only for the rest of this turn,' mark 1 tick
+	# If you want 'until the start of next turn' like a superguard, mark 2 ticks
+	# If you want 'the rest of this turn until the end of the next' like rage, mark 3 ticks
+	
+	# Generally for SELF-EFFECTS you want a formula of ((X-1) + Y), where:
+		# X is the total number of rounds you want the effect to last (including the current one)
+		# Y is a int(bool) where 1 if it ends at the end of your turn
+}
+# Concluded effects are logged by the ROUND as a key, and an array of the effects as a value
+var concluded_effects: Dictionary = {
+	# Example:
+	# 3: ["poison", "power_surge"],
+	# 5: ["enrage"],
+}
+
 #enum weightclasses {
 #	HOVER,  # Flying; not affects by the ground beneath it at all
 #	LIGHT,  # Doesn't sink into tiles; doesn't break cracked tiles
@@ -114,14 +136,14 @@ func _ready():
 	pass
 
 func perform_initial_data_setup():
-	max_health *= batman.BASE_HP_UNIT
+	max_health *= batman.BASE_HP_FACTOR
 	health = max_health
 	
-	max_shield *= batman.BASE_HP_UNIT # Let the start of turn determine current shield
+	max_shield *= batman.BASE_HP_FACTOR # Let the start of turn determine current shield
 	shield = max_shield
 	
 	action_points = base_action_points
-	base_damage *= batman.BASE_HP_UNIT
+	base_damage *= batman.BASE_HP_FACTOR
 	
 	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
 		set( str("is_"+term), get(str("def_",term)) )
@@ -190,18 +212,92 @@ func master_pre_turn_setup(who: Actor):
 	actions_completed_this_turn = 0
 	shield = max_shield
 	action_points = base_action_points
+	tick_down_ongoing_effects()
 	
 	update_bui()
 	pass
 
 func master_post_turn_teardown(): # Teardown happens EVEN IF turn is interrupted! Baseline needs!
 	turns_completed_total += 1
+	tick_down_ongoing_effects()
 	refresh_action_points()
 	pass
 
 # Just shortcuts
 func end_action(): batman.end_action()
 func end_turn():   batman.end_turn()
+
+func start_effect(effect_name: String, turns_to_last: int = 1, until_end_of_turn: bool = true):
+	var ticks: int = (turns_to_last * 2)
+	if until_end_of_turn:
+		ticks -= 1
+	
+	# When until_end_of_turn is false, it'll treat it as ending at the start of a turn - in almost all cases we want to end effects at the end of a turn, but a reaction guard ability might be different
+	
+	if batman.curr_actor != self:
+		# When it's my turn, a "1-turn" effect typically means "for the rest of the turn"
+		
+		# When it's NOT my turn, ie. someone else is applying this effect to us, a "1-turn" effect typically means "until the end of your upcoming turn," so we need to add a tick to survive the start-of-turn tickover. This is basically always true, otherwise effects on others would only last UNTIL their turn starts and generally do nothing to them
+		
+		# So let's add a tick!
+		ticks += 1
+		pass
+	
+	# For existing effects, re-up the tick count to the higher of the new-vs-current
+	if ongoing_turn_effects.has(effect_name):
+		var existing_ticks: int = ongoing_turn_effects[effect_name]
+		if ticks > existing_ticks:
+			ongoing_turn_effects[effect_name] = ticks
+			batman.update_action_log(str(name," RE-effected with [",effect_name,"], topped up to ",ticks," ticks!"))
+		return
+	
+	# Otherwise, it's a new effect!
+	ongoing_turn_effects[effect_name] = ticks
+	batman.update_action_log(str(name," effected with [",effect_name,"] for ",ticks," ticks!"))
+	pass
+
+func clear_effect(effect_name: String):
+	if !ongoing_turn_effects.has(effect_name): return
+	
+	ongoing_turn_effects.erase(effect_name)
+	log_ended_effect(effect_name, true)
+	pass
+
+func check_effect(effect_name: String) -> bool:
+	return ongoing_turn_effects.has(effect_name)
+	pass
+
+func tick_down_ongoing_effects():
+	var new_dict: Dictionary = {}
+	
+	for key in ongoing_turn_effects.keys():
+		var ticks: int = ongoing_turn_effects[key]
+		ticks -= 1
+		
+		# If we've run out, log it in our records
+		if ticks <= 0:
+			log_ended_effect(key, false)
+			continue
+		
+		# Otherwise, pass it to the new temp dict to carry forward
+		new_dict[key] = ticks
+		pass
+	
+	ongoing_turn_effects.clear()
+	ongoing_turn_effects = new_dict
+	pass
+
+func log_ended_effect(effect_name: String, manual_end: bool):
+	if manual_end:
+		batman.update_action_log(str(name," ended its effect [",effect_name,"]"))
+	else:
+		batman.update_action_log(str(name,"'s effect [",effect_name,"] timed out"))
+	
+	if !concluded_effects.has(batman.round_count):
+		concluded_effects[batman.round_count] = []
+	if !concluded_effects[batman.round_count].has(effect_name):
+		concluded_effects[batman.round_count].append(effect_name)
+	pass
 
 func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99)) -> bool:
 	# Ignore status quo
@@ -298,7 +394,7 @@ func receive_damage(damage: int):
 	
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:
-		batman.update_action_log(str(name,": Blocked ",shielded_damage," and took no damage, ",shield," shield remains"))
+		batman.update_action_log(str(name,": Blocked ",shielded_damage," and took no damage"))
 		update_bui()
 		return
 	
@@ -310,9 +406,9 @@ func receive_damage(damage: int):
 	
 	if health > 0:
 		if shielded_damage == 0:
-			batman.update_action_log(str(name,": Took ",og_damage," damage, ",health," health remains"))
+			batman.update_action_log(str(name,": Took ",og_damage," damage"))
 		else:
-			batman.update_action_log(str(name,": Blocked ",shielded_damage," and took ",unshielded_damage," damage, ",shield," shield and ",health," health remains"))
+			batman.update_action_log(str(name,": Blocked ",shielded_damage," and took ",unshielded_damage," damage"))
 		update_bui()
 		return
 	else:

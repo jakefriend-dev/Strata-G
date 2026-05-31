@@ -62,7 +62,7 @@ func edit_max_pips(piptype: String, new_max: int):
 	var old_pipcount: int = par.get_child_count()
 	var new_pipcount: int
 	if uses_base_hp_factor:
-		new_pipcount = int(ceil(float(new_max)/float(batman.BASE_HP_UNIT)))
+		new_pipcount = int(ceil(float(new_max)/float(batman.BASE_HP_FACTOR)))
 	else:
 		new_pipcount = new_max
 	
@@ -140,7 +140,7 @@ func update_values_to_current(piptype: String):
 		return
 	
 	# Base value rounds UP: 7 health would be base 2 even though that's 8
-	var base_value: int = int(ceil(float(curr_value)/float(batman.BASE_HP_UNIT)))
+	var base_value: int = int(ceil(float(curr_value)/float(batman.BASE_HP_FACTOR)))
 	
 	for pip in par.get_children():
 		var this_base: int = int(pip.name)

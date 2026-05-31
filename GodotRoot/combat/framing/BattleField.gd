@@ -147,7 +147,7 @@ func update_debuglog():
 	
 	var index: int = 0
 	var dupe_log: Array = batman.actionlog.duplicate()
-	for n in 4:
+	for n in 5:
 		# This is the number of lines we want to display to the player; separate from the number of lines being logged at all
 		
 		# Prevent us from checking 'past' the line in question

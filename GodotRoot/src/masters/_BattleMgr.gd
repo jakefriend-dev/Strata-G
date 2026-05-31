@@ -40,7 +40,7 @@ var round_count: int = 0 # per entire cycle of turns
 var total_turns_taken: int = 0
 var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rockets, then they all die, the next one would be Rocket_4 forever, and the turnqueue would still know Rocket_2 died
 
-const BASE_HP_UNIT: int = 4
+const BASE_HP_FACTOR: int = 4
 
 var turncount: int = 0 # Starts at 1 for first turn and cycles upwards until resetting
 var turnqueue: Array = [
@@ -465,7 +465,7 @@ func cycle_to_next_turn():
 		curr_actor = null
 		field.update_targeting()
 		emit_signal("new_round_started")
-		update_action_log(str("Begin round ",round_count))
+		update_action_log(str("ROUND [",round_count,"] - BEGIN!"))
 		yield(utils.yt(0.75, self), "timeout")
 	else:
 		turncount += 1

@@ -3,7 +3,7 @@
 [ext_resource path="res://combat/framing/BattleCell.tscn" type="PackedScene" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=3]
-[ext_resource path="res://text/fonts/built/Font BUI Generic.tres" type="DynamicFont" id=4]
+[ext_resource path="res://text/fonts/built/Font Readout.tres" type="DynamicFont" id=4]
 [ext_resource path="res://src/shaders/SHADER palette swap.tres" type="Shader" id=5]
 
 [sub_resource type="StyleBoxEmpty" id=1]
@@ -992,12 +992,13 @@ __meta__ = {
 }
 
 [node name="LabelOld" type="Label" parent="DebugLog/VB"]
-margin_right = 224.0
+margin_right = 194.0
 margin_bottom = 48.0
 custom_colors/font_color = Color( 0.631373, 0.603922, 0.184314, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 0.380392 )
 custom_fonts/font = ExtResource( 4 )
 text = "Testing one two, testing one two
-Testing one two, testing one two
+ROUND [2] - BEGIN!
 Testing one two, testing one two"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1005,9 +1006,10 @@ __meta__ = {
 
 [node name="LabelNew" type="Label" parent="DebugLog/VB"]
 margin_top = 51.0
-margin_right = 224.0
+margin_right = 194.0
 margin_bottom = 65.0
 custom_colors/font_color = Color( 1, 0.933333, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 4 )
 text = "Testing one two, testing one two"
 __meta__ = {

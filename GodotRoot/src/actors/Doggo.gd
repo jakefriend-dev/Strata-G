@@ -7,7 +7,6 @@ const COST_BITE_NOCHARGE: int = 2
 const COST_ENRAGE: int = 2
 const COST_WALK: int = 1
 
-var is_enraged: bool = false
 var victim: Actor
 
 # ---
@@ -66,6 +65,21 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		return
 	
 	# From here on, we know we CAN'T see the target. So we need to move!
+	
+	# If we're enraged, charge/bite regardless! (If we can afford it)
+	if check_effect("enrage"):
+		if act.is_tile_traversable_relative(self, coord + Vector2.LEFT):
+			if can_afford(COST_CHARGE):
+				spend(COST_CHARGE)
+				batman.append_action(self, "charge_forward")
+				batman.append_action(self, "bite")
+				batman.append_action(self, "charge_back")
+				return
+		else:
+			if can_afford(COST_BITE_NOCHARGE):
+				spend(COST_BITE_NOCHARGE)
+				batman.append_action(self, "bite")
+				return
 	
 	if !can_afford(COST_WALK):
 		# Or not - we've got no gas left.
@@ -156,13 +170,22 @@ func ACT_bite():
 	# Bites to the left; we are dumb so if this gets called we're not worrying about if there's a target or friendly fire.
 #	print("Biting!")
 	
-	act.damage_actor_at_coord(self, coord + Vector2.LEFT, base_damage)
+	var damage: int = base_damage
+	if check_effect("enrage"):
+		damage += batman.BASE_HP_FACTOR
+	act.damage_actor_at_coord(self, coord + Vector2.LEFT, damage)
+	clear_effect("enrage") # Whether it's active of not
 	if !batman.is_my_turn(self): return
 	
 	end_action()
 	pass
 
 func ACT_enrage():
+	start_effect("enrage", 2)
+	
+	yield(utils.yt(0.5, self), "timeout")
+	if !batman.is_my_turn(self): return
+	
 	end_action()
 	pass
 
