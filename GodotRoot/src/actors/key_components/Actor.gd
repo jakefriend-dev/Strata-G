@@ -36,6 +36,8 @@ var bui: Node2D
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
 
+var actions_taken_this_turn: int = 0 # An action is what we think of as an attack
+
 export var base_damage: int = 1 # For attack shortcuts for simple mobs (gets auto-factored)
 var bonus_damage: int = 0
 
@@ -61,7 +63,7 @@ export var bui_visible: bool = true
 
 export var def_hovering:			bool = false # Not affected by ground type or pits at all
 export var def_lightweight:			bool = false # Not affected by tiles that you sink in, like mud
-#													# Also doesn't break cracked tiles
+export var def_immune_jagged:		bool = false # Doesn't take damage or AP penalties from jaggies
 export var def_immune_knockback:	bool = false # Not affected by knockback
 export var def_immune_fire:			bool = false # Not affected by ember floors
 export var def_immune_water:		bool = false # Not slowed by water tiles (even lightweights are)
@@ -73,6 +75,7 @@ export var def_immune_elec:			bool = false # Doesn't take elec damage on static 
 #var weight: int
 var is_hovering: bool
 var is_lightweight: bool
+var is_immune_jagged: bool
 var is_immune_knockback: bool
 var is_immune_fire: bool
 var is_immune_water: bool
@@ -112,7 +115,7 @@ func perform_initial_data_setup():
 	action_points = base_action_points
 	base_damage *= batman.BASE_HP_UNIT
 	
-	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec"]:
+	for term in ["hovering", "lightweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
 		set( str("is_"+term), get(str("def_",term)) )
 #	weight = def_weight
 	pass
@@ -134,11 +137,14 @@ func get_initiative() -> Array:
 
 func choose_action():
 	# At the start of turn, AND every time the action queue empties, this should fire until we're unable to act and need to end the turn manually (or automatically...?)
-	if has_method("turn_cleanup"):
-		call("turn_cleanup")
+	if has_method("pre_action_cleanup"):
+		call("pre_action_cleanup")
 	
 	if has_method("prep_next_action"):
 		call("prep_next_action")
+	
+	if !batman.action_queue.empty():
+		actions_taken_this_turn += 1
 	
 	batman.progress_action_queue() # If empty when this is called (ie. we could not afford an action at all, or chose not to take one), consider the turn auto-over
 	pass
@@ -169,6 +175,7 @@ func pre_turn_refresh(who: Actor):
 	if who != self: return
 	
 #	print("Pre-turn refresh for ",self)
+	actions_taken_this_turn = 0
 	shield = max_shield
 	action_points = base_action_points
 	

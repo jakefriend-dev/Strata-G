@@ -4,8 +4,8 @@ var last_movedir_y: int = 0
 
 const COST_CHARGE: int = 3
 const COST_BITE_NOCHARGE: int = 2
-const COST_WALK: int = 1
 const COST_ENRAGE: int = 2
+const COST_WALK: int = 1
 
 var is_enraged: bool = false
 var victim: Actor
@@ -16,16 +16,20 @@ func _ready():
 	last_movedir_y = utils.negchance_int()
 	pass
 
-func turn_cleanup():
+func pre_turn_setup():
 	allowed_over_faction_lines = false
 	victim = null
 	pass
 
+#func post_turn_teardown():
+#	allowed_over_faction_lines = false
+#	victim = null
+#	pass
+
 # -
 
-
-
 func prep_next_action(): # This func should END with setting up one or multiple actions!
+	
 	# Can we see a victim?
 	if can_see_victim():
 		
@@ -92,14 +96,6 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	
 	# Can't go anywhere, can't do nothin' :(
 	pass
-
-
-
-
-
-
-
-
 
 func can_see_victim() -> bool:
 	victim = act.find_nearest_actor_in_dir(coord, Vector2.LEFT)

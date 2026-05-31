@@ -63,6 +63,7 @@ first_initiative = 2
 second_initiative = 4
 max_health = 8
 base_action_points = 5
+def_immune_jagged = true
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

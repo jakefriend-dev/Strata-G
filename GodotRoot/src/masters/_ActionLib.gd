@@ -369,7 +369,7 @@ func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, 
 			if !is_tile_traversable_relative(relevant_actor, dir):
 				opts.erase(dir)
 	
-	# We don't bother with this if there's a relevant actor, because the necessary check gets handled there
+	# We don't bother with this if there's a relevant actor, because the necessary check gets handled there - this is if occupation matters and there's NOT a relevant actor (I guess?)
 	elif occupation_check:
 		for dir in opts.duplicate():
 			var checkcoord: Vector2 = og_tile + dir

@@ -474,7 +474,9 @@ func cycle_to_next_turn():
 	
 	combatstate = C_PRE_TURN
 	emit_signal("pre_turn_refresh", curr_actor)
-	# Nothin' here yet!
+	if utils.valid(curr_actor):
+		if curr_actor.has_method("pre_turn_setup"):
+			curr_actor.call("pre_turn_setup")
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
@@ -497,8 +499,8 @@ func interrupt_turn(): # IMMEDIATELY ends the turn, no post-turn (needed for eg.
 	# Wipe out the current actionqueue
 	flush_actionqueue()
 	if utils.valid(curr_actor):
-		if curr_actor.has_method("turn_cleanup"): # END of turn, to be clear
-			curr_actor.call("turn_cleanup")
+		if curr_actor.has_method("post_turn_teardown"):
+			curr_actor.call("post_turn_teardown")
 #	curr_actor.spend(curr_actor.action_points)
 	curr_actor.refresh_action_points()
 	
