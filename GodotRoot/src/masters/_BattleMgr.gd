@@ -10,12 +10,17 @@ enum {
 	
 	C_TRANSITION,	# Choose next turn-actor; upcycle numbers like turn count
 	
-	C_PRE_TURN,		# Announce turn start, , update shields etc
-	C_TURN,			# The turn is 'live' until manually ended or interrupted (self-death, or a win/lose condition) - this is the only state in which an actor has agency!
-	C_POST_TURN,		# Check any end-of-turn effects, such as the tile being stood on
+	C_PRE_TURN,				# Announce turn start, , update shields etc
+	C_TURN,					# The turn is 'live' until manually ended or interrupted
+								# (self-death, or a win/lose condition)
+								# This is the only state in which an actor has agency!
+	C_END_TURN_NATURALLY,	# Check any end-of-turn effects, such as the tile being stood on
+								# Skippable if interrupted!
+	C_POST_TURN,			# The turn is in its wrap-up state
+								# Mandatory stuff like action refreshes and data cleanup
 	
-	C_BATTLE_LOST,	# Only happens once, when player loses!
-	C_BATTLE_WON,	# Only happens once, when the player wins!
+	C_BATTLE_LOST,			# Only happens once, when player loses!
+	C_BATTLE_WON,			# Only happens once, when the player wins!
 	
 }
 
@@ -69,7 +74,11 @@ signal set_up_board()
 signal populate_gpos_data()
 signal populate_actors()
 signal update_all_tiletypes()
-signal pre_turn_refresh(actor)
+signal pre_turn_setup(actor)
+signal new_round_started()
+signal on_turn_ended_naturally()
+signal on_turn_ended_via_interruption()
+signal on_turn_exited()
 
 enum factions {
 	NEUTRAL,
@@ -445,12 +454,14 @@ func cycle_to_next_turn():
 		if turncount >= turnqueue.size(): # We've concluded this round - we are ALREADY at size before incrementing therefore we will exceed size after incrementing
 			is_new_round = true
 	
+	total_turns_taken += 1 # Happens regardless
 	if is_new_round:
 		round_count += 1
 		turncount = 1
+		emit_signal("new_round_started")
+		yield(utils.yt(0.75, self), "timeout")
 	else:
 		turncount += 1
-	total_turns_taken += 1 # Happens regardless
 	
 	var found_next_actor: bool = false
 	for turndata in turnqueue:
@@ -473,7 +484,7 @@ func cycle_to_next_turn():
 	flush_actionqueue()
 	
 	combatstate = C_PRE_TURN
-	emit_signal("pre_turn_refresh", curr_actor)
+	emit_signal("pre_turn_setup", curr_actor)
 	if utils.valid(curr_actor):
 		if curr_actor.has_method("pre_turn_setup"):
 			curr_actor.call("pre_turn_setup")
@@ -484,25 +495,39 @@ func cycle_to_next_turn():
 	curr_actor.choose_action()
 	pass
 
-func end_turn(): # Includes post-turn before
+func end_turn(): # Includes post-turn; assumes NO interruption
 	if last_execution_frame == get_tree().get_frame():
 		yield(utils.yt(timeout_turn_time, self), "timeout")
 	
-	combatstate = C_POST_TURN
+	combatstate = C_END_TURN_NATURALLY
+	emit_signal("on_turn_ended_naturally")
 	
-	# Do post-turn stuff
+	# Do post-turn effects here
+	# vvv
 	
-	interrupt_turn()
+	# ^^^
+	
+	exit_turn()
 	pass
 
-func interrupt_turn(): # IMMEDIATELY ends the turn, no post-turn (needed for eg. death)
+func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (use for death)
+	var turn_exited_via_interruption: bool = (
+		bool(combatstate != C_END_TURN_NATURALLY)
+		)
+	combatstate = C_POST_TURN
+	
+	if turn_exited_via_interruption:
+		emit_signal("on_turn_ended_via_interruption")
+	emit_signal("on_turn_exited")
+	
 	# Wipe out the current actionqueue
 	flush_actionqueue()
+	
 	if utils.valid(curr_actor):
+		
+		curr_actor.master_post_turn_teardown()
 		if curr_actor.has_method("post_turn_teardown"):
 			curr_actor.call("post_turn_teardown")
-#	curr_actor.spend(curr_actor.action_points)
-	curr_actor.refresh_action_points()
 	
 	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
@@ -792,6 +817,10 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 func kill_actor(actor: Actor):
 	# Prevent it from executing actions
 	actor.active = false
+	if actor.is_in_group("actors"):
+		actor.remove_from_group("actors")
+	if actor.is_in_group("live_actors"):
+		actor.remove_from_group("live_actors")
 	
 	# Clear the actor from the board and all tracking lists
 	act.remove_actor_from_actorgrid(actor)
@@ -806,6 +835,8 @@ func kill_actor(actor: Actor):
 	
 	# Wipe its tile claims
 	act.release_actor_claims(actor)
+	
+	# Clear its targeting data
 	
 	# Actually delete it! If it has an on-death method, let it do so itself; otherwise we do it
 	if actor.has_method("WHEN_killed"):

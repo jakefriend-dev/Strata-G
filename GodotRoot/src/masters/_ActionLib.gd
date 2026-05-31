@@ -266,7 +266,8 @@ func change_actor_coord(actor: Actor, new_coord: Vector2):
 	return false
 	pass
 
-func remove_actor_from_actorgrid(actor: Actor):
+func remove_actor_from_actorgrid(actor):
+	if not actor is Actor: return
 	for set in batman.grid_actors.get_dataset_with_coords():
 		if set[0] == actor:
 			batman.grid_actors.set_cellv(set[1], null)

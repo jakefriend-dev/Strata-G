@@ -36,7 +36,10 @@ var bui: Node2D
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
 
-var actions_taken_this_turn: int = 0 # An action is what we think of as an attack
+var actions_completed_this_turn: int = 0 # An action is what we think of as an attack;
+										# like all 3 steps of Doggo's charge attack is 1 action
+var turns_completed_this_round: int = 0 # Includes interruptions, just if you had a turn at all
+var turns_completed_total: int = 0
 
 export var base_damage: int = 1 # For attack shortcuts for simple mobs (gets auto-factored)
 var bonus_damage: int = 0
@@ -98,11 +101,16 @@ signal shield_broken() # Shield broke but NOT dead
 # ---
 
 func _ready():
+	add_to_group("actors")
+	if first_initiative != initspeeds.DOES_NOT_ACT:
+		add_to_group("live_actors")
+	
 	perform_initial_data_setup()
 	$ArtMgr/HFlipper/Shadow.recenter()
 	update_bui()
 	
-	batman.connect("pre_turn_refresh", self, "pre_turn_refresh")
+	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
+	batman.connect("new_round_started", self, "master_pre_round_setup")
 	pass
 
 func perform_initial_data_setup():
@@ -144,7 +152,7 @@ func choose_action():
 		call("prep_next_action")
 	
 	if !batman.action_queue.empty():
-		actions_taken_this_turn += 1
+		actions_completed_this_turn += 1
 	
 	batman.progress_action_queue() # If empty when this is called (ie. we could not afford an action at all, or chose not to take one), consider the turn auto-over
 	pass
@@ -171,15 +179,24 @@ func refresh_action_points():
 	update_bui()
 	pass
 
-func pre_turn_refresh(who: Actor):
+func master_pre_round_setup():
+	turns_completed_this_round = 0
+	pass
+
+func master_pre_turn_setup(who: Actor):
 	if who != self: return
 	
 #	print("Pre-turn refresh for ",self)
-	actions_taken_this_turn = 0
+	actions_completed_this_turn = 0
 	shield = max_shield
 	action_points = base_action_points
 	
 	update_bui()
+	pass
+
+func master_post_turn_teardown(): # Teardown happens EVEN IF turn is interrupted! Baseline needs!
+	turns_completed_total += 1
+	refresh_action_points()
 	pass
 
 # Just shortcuts
