@@ -77,10 +77,14 @@ var is_immune_poison: bool
 var is_immune_magnet: bool
 var is_immune_elec: bool
 
+var is_ghost: bool = false # When true, allowed to break many rules. You almost ALWAYS turn this off at the end of a turn; meant as a temporary thing for like a charge-through attack.
+var allowed_over_faction_lines: bool = false
 export var keep_claims_at_eot: bool = false # Set true for the RARE cases (like a missile) where you don't want to wipe its claim at the end of a turn
 
 # Convenience references; duplicate data to batman.grid_actors
+var last_pos: Vector2 = Vector2.ZERO
 var coord: Vector2
+var claimed_tile: Vector2 = Vector2.ZERO
 
 signal shield_broken() # Shield broke but NOT dead
 
@@ -137,13 +141,39 @@ func end_turn():
 	batman.end_turn()
 	pass
 
+func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
+	if Vector2(-99, -99): claiming_coord = coord
+	
+	# Only one claim is ever allowed at a time!
+	act.release_actor_claims(self)
+	claimed_tile = Vector2.ZERO
+	
+	if act.is_tile_available(claiming_coord, self):
+		batman.grid_claims.set_cellv(claiming_coord, self)
+		claimed_tile = claiming_coord
+		return true
+	
+	return false
+	pass
+
+func release_claims():
+	act.release_actor_claims(self)
+	pass
 
 func _process(_delta):
 	monitor_position_as_coordinate()
 	pass
 
 func monitor_position_as_coordinate():
+	if last_pos == position: return
 	
+	last_pos = position
+	var last_coord: Vector2 = coord
+	
+	coord = batman.field.actorpos_to_tilecoord(position)
+	if coord == last_coord: return
+	
+	act.change_actor_coord(self, coord)
 	pass
 
 # ---

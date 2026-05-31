@@ -2,6 +2,9 @@ extends Node2D
 
 export var path_board: NodePath
 var board: GridContainer
+var board_offset: Vector2
+
+const CELL_SIZE: Vector2 = Vector2(72, 48)
 
 enum {} # put hover, fire, etc states here - one value per current state AND default of that state
 
@@ -55,7 +58,10 @@ func set_up_board():
 			cell.set_type(type)
 	pass
 
-func populate_gpos_data():
+func populate_gpos_data():# This happens AFTER yielding a draw frame, so it's reliable
+	
+	board_offset = board.rect_global_position
+	
 	var w: int = batman.battle_details["board_size"][0] # Always even
 	var _h: int = batman.battle_details["board_size"][1]
 	
@@ -122,6 +128,21 @@ func populate_actors():
 func update_targeting():
 	for actor in $Actors.get_children():
 		actor.update_outline()
+	pass
+
+# -
+
+func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:
+	actorpos -= board_offset # Adjust it to board-local coordinates
+	
+	var tpos: Vector2 = actorpos / CELL_SIZE
+	tpos = tpos.floor()
+	tpos += Vector2(1, 1) # Always one-based!
+	
+#	var tile_position = world_position/override_grid_size
+#	tile_position = tile_position.floor()
+#	return tile_position
+	return tpos
 	pass
 
 

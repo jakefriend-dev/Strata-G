@@ -175,13 +175,73 @@ func step_signal(): # The call that an action 'step' has ended, or needs to be s
 	progress_action_queue()
 	pass
 
-
 # TURN-RELATED MASTERS -----------------------------------------------------------------------------
 
 # Just shortcuts that might be easier to remember.
 func end_action():  step_signal()
 func skip_action(): step_signal()
 
+# AVAILABILITY & TRAVERSABILITY --------------------------------------------------------------------
+
+	# (ghosts are not considered in these checks)
+	
+	# OCCUPIED: The tile has an actor in it
+	# AVAILABLE: The tile has *neither* an actor nor a claim
+	# TRAVERSABLE: The tile is available AND a specific actor is capable of being there
+		# (ie. it's not a "pit but I can't hover" situation, or a faction bounds issue)
+
+func get_all_tiles_in_dir(og_cell: Vector2, dir: Vector2) -> Array:
+	if dir == Vector2.ZERO: return []
+	
+	var coords_in_dir: Array = []
+	var check_cell: Vector2 = og_cell
+	
+	while true:
+		check_cell += dir
+		if batman.grid_tiles.has_cellv(check_cell):
+			coords_in_dir.append(check_cell)
+		else:
+			break
+	
+	return coords_in_dir
+	pass
+
+func list_all_traversible_tiles_in_dir(dir: Vector2, actor: Actor) -> Array:
+	var og_cell: Vector2 = actor.coord
+	var all_cells_in_dur: Array = get_all_tiles_in_dir(og_cell, dir)
+	return list_all_traversible_tiles_in_set(all_cells_in_dur, actor)
+
+# Returns successfully-claimed tiles IN ORDER, breaking on first issue
+func list_all_traversible_tiles_in_set(exact_coords: Array, actor: Actor) -> Array:
+	var claimed_cells: Array = []
+	
+	for exact_coord in exact_coords:
+		if (batman.grid_claims.get_cellv(exact_coord) == null or batman.grid_claims.get_cellv(exact_coord) == self):
+			if is_tile_traversable_exact(actor, exact_coord):
+				batman.grid_claims.set_cellv(exact_coord, actor)
+				claimed_cells.append(exact_coord)
+	
+	return claimed_cells
+	pass
+
+func is_tile_available(exact_coord: Vector2, exception_actor: Actor = null) -> bool:
+	# When and ONLY when exception_actor is populated, we'll allow it to return itself.
+	
+	var found_actor: Actor = batman.grid_actors.get_cellv(exact_coord)
+	if found_actor != null:
+		if exception_actor == null:
+			return false
+		elif exception_actor != found_actor:
+			return false
+	
+	var found_claimant: Actor = batman.grid_claims.get_cellv(exact_coord)
+	if found_claimant != null:
+		if exception_actor == null:
+			return false
+		elif exception_actor != found_claimant:
+			return false
+	
+	return true
 
 # PLAYER SHORTCUTS ---------------------------------------------------------------------------------
 
@@ -251,21 +311,25 @@ func change_tiletype_mass(coordset: Array, to_tiletype: int, can_change_pits: bo
 			if !can_change_pits:
 				continue
 		
-		# Make sure an actor cannot be pitted
+		# HACK: For now, we're removing the pit function entirely
 		elif to_tiletype == batman.tiletypes.PIT:
-			if batman.grid_actors.get_cellv(coord) != null: # Yes, there's an actor!
-				if batman.grid_tiles.get_cellv(coord) != batman.tiletypes.CRACK:
-					# Only bother 'cracking' if it's not already cracked
-					# (Otherwise, this is skipped)
-					impact_dict[coord] = batman.tiletypes.CRACK
-				continue
+			continue
 		
-		# Make sure a re-cracked unoccupied tile becomes a pit instead
-		elif to_tiletype == batman.tiletypes.CRACK:
-			if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.CRACK:
-				if batman.grid_actors.get_cellv(coord) == null: # Unoccupied pre-cracked tile!
-					impact_dict[coord] = batman.tiletypes.PIT
-					continue
+#		# Make sure an actor cannot be pitted
+#		elif to_tiletype == batman.tiletypes.PIT:
+#			if batman.grid_actors.get_cellv(coord) != null: # Yes, there's an actor!
+#				if batman.grid_tiles.get_cellv(coord) != batman.tiletypes.CRACK:
+#					# Only bother 'cracking' if it's not already cracked
+#					# (Otherwise, this is skipped)
+#					impact_dict[coord] = batman.tiletypes.CRACK
+#				continue
+#
+#		# Make sure a re-cracked unoccupied tile becomes a pit instead
+#		elif to_tiletype == batman.tiletypes.CRACK:
+#			if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.CRACK:
+#				if batman.grid_actors.get_cellv(coord) == null: # Unoccupied pre-cracked tile!
+#					impact_dict[coord] = batman.tiletypes.PIT
+#					continue
 		
 		# If no other conditions are met, we process as-is!
 		impact_dict[coord] = to_tiletype
@@ -288,65 +352,84 @@ func change_tiletype_mass(coordset: Array, to_tiletype: int, can_change_pits: bo
 
 # SUPPORT QUERIES ----------------------------------------------------------------------------------
 
-func vet_actormove_optionset_relative(actor: Actor, og_options: Array, allowed_over_faction_lines: bool = false) -> Array:
-	return master_vet_actormove_optionset(actor, og_options, true, allowed_over_faction_lines)
-func vet_actormove_optionset_exact(actor: Actor, og_options: Array, allowed_over_faction_lines: bool = false) -> Array:
-	return master_vet_actormove_optionset(actor, og_options, true, allowed_over_faction_lines)
-func master_vet_actormove_optionset(actor: Actor, og_options: Array, is_relative: bool = true, allowed_over_faction_lines: bool = false) -> Array:
+func vet_actormove_optionset_relative(actor: Actor, og_options: Array) -> Array:
+	return master_vet_actormove_optionset(actor, og_options, true)
+func vet_actormove_optionset_exact(actor: Actor, og_options: Array) -> Array:
+	return master_vet_actormove_optionset(actor, og_options, true)
+func master_vet_actormove_optionset(actor: Actor, og_options: Array, is_relative: bool = true) -> Array:
 	var valid_options: Array = []
 
 	# We don't want to CHANGE the coord to be exact if relative, because they need to return the same way they were sent!
 	for coord in og_options: if coord is Vector2:
 		if is_relative:
-			if is_actormove_possible_relative(actor, coord, allowed_over_faction_lines):
+			if is_tile_traversable_relative(actor, coord):
 				valid_options.append(coord)
 		else:
-			if is_actormove_possible_exact(actor, coord, allowed_over_faction_lines):
+			if is_tile_traversable_exact(actor, coord):
 				valid_options.append(coord)
 
 	return valid_options
 	pass
 
-func is_actormove_possible_relative(actor: Actor, motion: Vector2, allowed_over_faction_lines: bool = false) -> bool:
-	return is_actormove_possible_exact(actor, actor.coord + motion, allowed_over_faction_lines)
+func is_tile_traversable_relative(actor: Actor, motion: Vector2) -> bool:
+	return is_tile_traversable_exact(actor, actor.coord + motion)
 	
-func is_actormove_possible_exact(actor: Actor, target: Vector2, allowed_over_faction_lines: bool = false) -> bool:
+func is_tile_traversable_exact(actor: Actor, target: Vector2) -> bool:
 	var _start_coord: Vector2 = actor.coord
 	var end_coord: Vector2 = target
 	
 	# Can't move off the grid
 	if !batman.grid_tiles.has_cellv(end_coord):
-#		print("ACT: iamp[1] Cell does not exist on board!")
+		print("ACT: iamp[1] Cell does not exist on board!")
 		return false
-		
-	# Can't move into *any* other actors, period
-	if batman.grid_actors.get_cellv(end_coord) != null:
-#		print("ACT: iamp[2] Other actor occupies destination!")
-		return false
+	
+	# IN MOST CIRCUMSTANCES, you can't enter an unavailable space!
+	if !actor.is_ghost:
+		if !is_tile_available(end_coord):
+			print("ACT: iamp[2] Cell is unavailable!")
+			return false
 	
 	# Can't move on to other factions' cells
 		# (unless you're neutral? or a non-enemy like a missile?)
 		# Maybe make missiles etc Neutral to represent 'friendly fire'
-	if !allowed_over_faction_lines:
+	if !actor.allowed_over_faction_lines:
 		if actor.faction == batman.factions.PLAYER:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.PLAYER:
-#				print("ACT: iamp[3a] Player cannot exit its faction area!")
+				print("ACT: iamp[3a] Player cannot exit its faction area!")
 				return false
 		if actor.faction == batman.factions.ENEMY:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.ENEMY:
-#				print("ACT: iamp[3b] Enemy cannot exit its faction area!")
+				print("ACT: iamp[3b] Enemy cannot exit its faction area!")
 				return false
 	
 	# Can only move on pits IF you can hover
 	if batman.grid_tiles.get_cellv(end_coord) == batman.tiletypes.PIT:
 		if !actor.is_hovering:
-#			print("ACT: cmev[4] Dest is pit but actor can't hover!")
+			print("ACT: cmev[4] Dest is pit but actor can't hover!")
 			return false
 	
 	return true
 	pass
 
 # -
+
+# Note that this only clears the FIRST previous cell!
+func change_actor_coord(actor: Actor, new_coord: Vector2):
+	var dataset: Array = batman.grid_actors.get_dataset_with_coords()
+	var old_coord: Vector2
+	for set in dataset:
+		if set[0] == actor:
+			old_coord = set[1]
+			if old_coord == new_coord:
+				print("ACT: ERROR, tried to change actor grid coord to the same as it was?")
+				return false
+			batman.grid_actors.set_cellv(old_coord, null)
+			batman.grid_actors.set_cellv(new_coord, actor)
+			return true
+	
+	print("ACT: ERROR, tried to change actor grid coord when it wasn't already on the grid?")
+	return false
+	pass
 
 func release_all_claims():
 	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
@@ -355,6 +438,7 @@ func release_all_claims():
 	pass
 
 func release_most_claims(): # Allows SOME actors to keep their claims
+	
 	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
 	for set in dataset:
 		var actor: Actor = set[0]
@@ -441,7 +525,7 @@ func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, 
 	# Means it should fail if it's already occupied
 	if relevant_actor != null:
 		for dir in opts.duplicate():
-			if !is_actormove_possible_relative(relevant_actor, dir):
+			if !is_tile_traversable_relative(relevant_actor, dir):
 				opts.erase(dir)
 	
 	# We don't bother with this if there's a relevant actor, because the necessary check gets handled there
@@ -464,7 +548,7 @@ func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int) -> Vector
 	var opts: Array = get_all_tiles_by_faction(faction)
 	var valid_opts: Array = []
 	for coord in opts:
-		if is_actormove_possible_exact(actor, coord, true): # Handles all our validations
+		if is_tile_traversable_exact(actor, coord): # Handles all our validations
 			valid_opts.append(coord)
 	
 	if valid_opts.empty():

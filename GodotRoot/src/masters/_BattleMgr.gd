@@ -246,7 +246,6 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	
 	combatstate = C_BATTLE_SETUP
 	battle_details = new_battle_details
-	act.flush()
 	
 	# Set up our board size!
 	var local_board_size: Vector2 = default_halfboard_size
@@ -267,6 +266,7 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 		set(grid, Array2D.new())
 		get(grid).resizev(local_board_size)
 		get(grid).onebased = true
+	act.flush() # Save this until AFTER the claims grid exists
 	
 	# Set up our tile data!
 	var tile_default: int = tiletypes.NORMAL
@@ -429,6 +429,9 @@ func end_turn():
 func interrupt_turn():
 	# Wipe out the current actionqueue
 	act.flush()
+	if utils.valid(curr_actor):
+		if curr_actor.has_method("on_turn_reset"):
+			curr_actor.call("on_turn_reset")
 	
 	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
@@ -632,6 +635,7 @@ func kill_actor(actor: Actor):
 
 func is_my_turn(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
 	if curr_actor != actor: return false
+	if !actor.active: return false
 	if combatstate != C_TURN: return false
 	return true
 	pass
