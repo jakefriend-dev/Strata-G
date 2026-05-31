@@ -279,7 +279,7 @@ func monitor_position_as_coordinate():
 
 func receive_damage(damage: int):
 	if damage <= 0:
-		print(name,": No damage to receive")
+#		print(name,": No damage to receive")
 		return
 	
 	var og_damage: int = damage
@@ -298,7 +298,7 @@ func receive_damage(damage: int):
 	
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:
-		print(name,": Blocked ",shielded_damage," and took no damage, ",shield," shield remains")
+		batman.update_action_log(str(name,": Blocked ",shielded_damage," and took no damage, ",shield," shield remains"))
 		update_bui()
 		return
 	
@@ -310,17 +310,20 @@ func receive_damage(damage: int):
 	
 	if health > 0:
 		if shielded_damage == 0:
-			print(name,": Took ",og_damage," damage, ",health," health remains")
+			batman.update_action_log(str(name,": Took ",og_damage," damage, ",health," health remains"))
 		else:
-			print(name,": Blocked ",shielded_damage," and took ",unshielded_damage," damage, ",shield," shield  and ",health," health remains")
+			batman.update_action_log(str(name,": Blocked ",shielded_damage," and took ",unshielded_damage," damage, ",shield," shield and ",health," health remains"))
 		update_bui()
 		return
 	else:
-		print(name,": Died from taking ",unshielded_damage," (blocked ",shielded_damage,")")
+		if shielded_damage == 0:
+			batman.update_action_log(str(name,": Died from taking ",unshielded_damage," damage"))
+		else:
+			batman.update_action_log(str(name,": Died from taking ",unshielded_damage," damage (blocked ",shielded_damage,")"))
 		batman.kill_actor(self)
-		
 	
 	pass
+
 # -
 
 func update_bui():

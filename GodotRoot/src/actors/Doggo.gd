@@ -148,6 +148,7 @@ func ACT_charge_back():
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	
+	allowed_over_faction_lines = false
 	end_action()
 	pass
 
@@ -175,7 +176,7 @@ func ACT_walk(motion: Vector2):
 #		batman.skip_action()
 #		return
 	
-	var dur: float = 0.5
+	var dur: float = 0.75
 	
 	act.hotmove(self, dest_coord, dur)
 	yield(utils.yt(dur, self), "timeout")

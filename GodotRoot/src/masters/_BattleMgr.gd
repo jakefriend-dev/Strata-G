@@ -93,10 +93,14 @@ var curr_action: Array = []
 var prev_action: Array = []
 var timeout_action_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
 var timeout_turn_time: float = (12.0/60.0) # How long between ended turns if time has not passed
-var actionlog: Array = [] # Historical log of all processed AND FAILED actions! Strings only
-var log_retention: int = 10
 signal action_step_complete() # Should fire any time we do an individual action
 signal all_action_steps_complete() # Should fire whenever ALL steps are done
+
+#var actionlog: Array = [] # Historical log of all processed AND FAILED actions! Strings only
+var actionlog: Array = [] # Log of notable actions for on-screen visibility! Strings only
+								# NEWEST first!
+var log_retention: int = 32
+signal action_log_updated()
 
 var battle_details: Dictionary = {}
 var field: Node2D # Owner of all battle stuff
@@ -458,7 +462,10 @@ func cycle_to_next_turn():
 	if is_new_round:
 		round_count += 1
 		turncount = 1
+		curr_actor = null
+		field.update_targeting()
 		emit_signal("new_round_started")
+		update_action_log(str("Begin round ",round_count))
 		yield(utils.yt(0.75, self), "timeout")
 	else:
 		turncount += 1
@@ -764,11 +771,11 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var methodname: String = str("ACT_"+curr_action[1])
 	var paramset: Array = curr_action[2]
 	
-	# Log the action BEFORE executing
-	var logstring: String = str(curr_action)
-	actionlog.insert(0, logstring)
-	if actionlog.size() > log_retention:
-		actionlog.resize(log_retention)
+#	# Log the action BEFORE executing
+#	var logstring: String = str(curr_action)
+#	actionlog.insert(0, logstring)
+#	if actionlog.size() > log_retention:
+#		actionlog.resize(log_retention)
 	
 	# Execute!
 	if paramset.empty():
@@ -778,6 +785,14 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 		actor.callv(methodname, paramset)
 	
 	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
+	pass
+
+func update_action_log(new_logline: String):
+	actionlog.insert(0, new_logline)
+	if actionlog.size() > log_retention:
+		actionlog.resize(log_retention)
+	
+	emit_signal("action_log_updated")
 	pass
 
 func prompt_next_turntaker_action():

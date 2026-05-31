@@ -1,7 +1,12 @@
 extends Node2D
 
 export var path_board: NodePath
+export var path_actors: NodePath
+export var path_debuglog_par: NodePath
 var board: GridContainer
+var actors: YSort
+var debuglog_par: VBoxContainer
+
 var board_offset: Vector2
 
 const CELL_SIZE: Vector2 = Vector2(72, 48)
@@ -12,17 +17,22 @@ enum {} # put hover, fire, etc states here - one value per current state AND def
 
 func _ready():
 	board = get_node(path_board)
+	actors = get_node(path_actors)
+	debuglog_par = get_node(path_debuglog_par)
 	batman.field = self
-	batman.actors = $Actors
+	batman.actors = actors
 	batman.board = board
 	act.field = self
-	act.actors = $Actors
+	act.actors = actors
 	act.board = board
+	
+	update_debuglog()
 	
 	$Control/MC.rect_size = Vector2(
 		ProjectSettings.get_setting("display/window/size/width"),
 		ProjectSettings.get_setting("display/window/size/height"))
 	
+	batman.connect("action_log_updated", self, "update_debuglog")
 	batman.connect("set_up_board", self, "set_up_board")
 	batman.connect("populate_gpos_data", self, "populate_gpos_data")
 	batman.connect("populate_actors", self, "populate_actors")
@@ -78,9 +88,9 @@ func populate_gpos_data():# This happens AFTER yielding a draw frame, so it's re
 
 func populate_actors():
 	# Clear any historical actors
-	while $Actors.get_child_count() > 0:
-		var c = $Actors.get_child(0)
-		$Actors.remove_child(c)
+	while actors.get_child_count() > 0:
+		var c = actors.get_child(0)
+		actors.remove_child(c)
 		c.queue_free()
 	
 	# Time to populate the board!
@@ -114,21 +124,57 @@ func populate_actors():
 			actor.set("faction", batman.factions.ENEMY)
 		actor.set("coord", coord)
 		
-		$Actors.add_child(actor)
+		actors.add_child(actor)
 		
 		batman.living_actors.append(actor)
 		batman.grid_actors.set_cellv(coord, actor) # Overwrites the "text" with the actual object
 	
 	# Manual step just to get test gameplay going
-#	batman.pc_actors.append($Actors.get_node("P1"))
-#	batman.pc_actors.append($Actors.get_node("P2"))
-#	batman.pc_actors.append($Actors.get_node("P3"))
+#	batman.pc_actors.append(actors.get_node("P1"))
+#	batman.pc_actors.append(actors.get_node("P2"))
+#	batman.pc_actors.append(actors.get_node("P3"))
 #	batman.curr_actor = batman.pc_actors[0]
 	pass
 
 func update_targeting():
-	for actor in $Actors.get_children():
+	for actor in actors.get_children():
 		actor.update_outline()
+	pass
+
+func update_debuglog():
+	var newtext: String = ""
+	var oldtext: String = ""
+	
+	var index: int = 0
+	var dupe_log: Array = batman.actionlog.duplicate()
+	for n in 4:
+		# This is the number of lines we want to display to the player; separate from the number of lines being logged at all
+		
+		# Prevent us from checking 'past' the line in question
+		var needsize: int = index + 1
+		if batman.actionlog.size() < needsize:
+			break
+		
+		if index == 0:
+			newtext = dupe_log[index]
+		elif index == 1:
+			oldtext = dupe_log[index]
+		else:
+			oldtext = str(dupe_log[index] + "\n" + oldtext)
+		
+		index += 1
+		pass
+	
+	var labelnew: Label = debuglog_par.get_node("LabelNew")
+	if labelnew.text != newtext:
+		labelnew.text = newtext
+	
+	var labelold: Label = debuglog_par.get_node("LabelOld")
+	if labelold.text != oldtext:
+		labelold.text = oldtext
+	
+	if labelold.visible != (labelold.text != ""):
+		labelold.visible = (labelold.text != "")
 	pass
 
 # -
