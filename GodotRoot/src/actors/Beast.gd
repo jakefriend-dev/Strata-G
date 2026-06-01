@@ -227,7 +227,7 @@ func ACT_shoot():
 	print("shoot")
 	
 	for target in targeted_tiles:
-		act.damage_actor_at_coord(self, target, base_damage)
+		act.damage_actor_at_coord(self, target, base_damage, false)
 	
 	release_targeted_tiles()
 	end_action()
@@ -259,10 +259,10 @@ func ACT_lunge_forward():
 	# Damage impact! All adjacent cells take 1 base, our cell takes 2 base
 	for target in targeted_tiles:
 		if target == coord:
-			act.damage_actor_at_coord(self, target, base_damage)
+			act.damage_actor_at_coord(self, target, base_damage, true)
 			act.change_tiletype_single(target, batman.tiletypes.JAGGED)
 		else:
-			act.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR)
+			act.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR, false)
 	release_targeted_tiles()
 	
 	yield(utils.yt(post_jump_rumble_time, self), "timeout")

@@ -123,7 +123,7 @@ func hotjump(actor: Actor, to_coord: Vector2, dur: float, height: float = 100.0)
 
 # ATTACKS ------------------------------------------------------------------------------------------
 
-func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, friendly_fire: bool = true):
+func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, is_melee: bool, friendly_fire: bool = true):
 	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
 	if victim == null:
 		return
@@ -132,7 +132,7 @@ func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, f
 		if !friendly_fire:
 			return
 	
-	victim.receive_damage(damage)
+	victim.receive_damage(damage, is_melee)
 	pass
 
 # TILE ADJUSTMENTS ---------------------------------------------------------------------------------

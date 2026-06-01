@@ -434,13 +434,15 @@ func monitor_position_as_coordinate():
 
 # ---
 
-func receive_damage(damage: int):
+func receive_damage(damage: int, is_melee: bool):
 	if damage <= 0:
 #		print(name,": No damage to receive")
 		return
 	
 	var og_damage: int = damage
 	var og_shield: int = shield
+	var desctext: String = " melee"
+	if !is_melee: desctext = " ranged"
 	
 	# Deduct damage and shield equally until either of them depletes fully
 	while (bonus_shield > 0 or shield > 0) and damage > 0:
@@ -455,7 +457,7 @@ func receive_damage(damage: int):
 	
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:
-		batman.update_action_log(str(name,": Blocked ",shielded_damage," and took no damage"))
+		batman.update_action_log(str(name,": Blocked ",shielded_damage,desctext," and took no damage"))
 		update_bui()
 		return
 	
@@ -467,16 +469,16 @@ func receive_damage(damage: int):
 	
 	if health > 0:
 		if shielded_damage == 0:
-			batman.update_action_log(str(name,": Took ",og_damage," damage"))
+			batman.update_action_log(str(name,": Took ",og_damage,desctext," damage"))
 		else:
-			batman.update_action_log(str(name,": Blocked ",shielded_damage," and took ",unshielded_damage," damage"))
+			batman.update_action_log(str(name,": Blocked ",shielded_damage," and took ",unshielded_damage,desctext," damage"))
 		update_bui()
 		return
 	else:
 		if shielded_damage == 0:
-			batman.update_action_log(str(name,": Died from taking ",unshielded_damage," damage"))
+			batman.update_action_log(str(name,": Died from taking ",unshielded_damage,desctext," damage"))
 		else:
-			batman.update_action_log(str(name,": Died from taking ",unshielded_damage," damage (blocked ",shielded_damage,")"))
+			batman.update_action_log(str(name,": Died from taking ",unshielded_damage,desctext," damage (blocked ",shielded_damage,")"))
 		batman.kill_actor(self)
 	
 	pass

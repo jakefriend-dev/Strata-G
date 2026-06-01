@@ -57,7 +57,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="Actor" type="Node2D"]
+[node name="PlayerTank" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 3
 max_shield = 1
