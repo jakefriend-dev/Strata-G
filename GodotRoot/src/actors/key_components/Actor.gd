@@ -22,6 +22,8 @@ var variance_initiative: float  = -1.0 # Cued by batman at start of combat; perc
 
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
+var pcrefs: Resource
+
 export var max_health: int = 4
 var health: int = 4
 
@@ -139,6 +141,11 @@ func _ready():
 	$ArtMgr/Shadow.recenter()
 	vis_object = $ArtMgr/HFlipper
 	update_bui()
+	
+	pcrefs = load("res://src/actors/key_components/Test.tres")
+	pcrefs.actor = self
+	if faction == batman.factions.PLAYER:
+		pcrefs.check_resources()
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
 	batman.connect("new_round_started", self, "master_pre_round_setup")
