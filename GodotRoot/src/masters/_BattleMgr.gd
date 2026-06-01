@@ -748,6 +748,10 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	last_execution_frame = get_tree().get_frame()
 	
 	if action_queue.empty(): # No actions queued when this was called! Time to move on
+		
+		if curr_actor.has_method("post_all_action_prep"):
+			curr_actor.call("post_all_action_prep")
+		
 		end_turn()
 		return
 	

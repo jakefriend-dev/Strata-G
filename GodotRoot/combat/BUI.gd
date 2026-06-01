@@ -6,20 +6,24 @@ export var path_healthpar: NodePath
 export var path_shieldpar: NodePath
 export var path_bonusshieldpar: NodePath
 export var path_actionpar: NodePath
+#export var path_bonusactionpar: NodePath
 var healthpar: GridContainer
 var shieldpar: GridContainer
 var bonusshieldpar: GridContainer
 var actionpar: GridContainer
+#var bonusactionpar: GridContainer
 var res_piphealth = preload("res://combat/HealthPip.tscn")
 var res_pipshield = preload("res://combat/ShieldPip.tscn")
 var res_pipbonusshield = preload("res://combat/BonusShieldPip.tscn")
 var res_pipaction = preload("res://combat/ActionPointPip.tscn")
+var res_pipbonusaction = preload("res://combat/BonusActionPointPip.tscn")
 
 func _ready():
 	healthpar = get_node(path_healthpar)
 	shieldpar = get_node(path_shieldpar)
 	bonusshieldpar = get_node(path_bonusshieldpar)
 	actionpar = get_node(path_actionpar)
+#	bonusactionpar = get_node(path_bonusactionpar) # Not needed; shared!
 	pass
 
 func update_all():
@@ -28,7 +32,7 @@ func update_all():
 	edit_max_pips("health", actor.max_health)
 	edit_max_pips("shield", actor.max_shield)
 	edit_max_pips("bonus_shield", actor.bonus_shield)
-	edit_max_pips("action_points", actor.base_action_points)
+	edit_max_pips("action_points", actor.base_action_points + actor.bonus_actions)
 	pass
 
 # Use a USER max, not a BASE max - should already be x4'd (or whatever)
@@ -37,7 +41,9 @@ func edit_max_pips(piptype: String, new_max: int):
 		return
 	
 	var par: GridContainer
-	var res
+	var res = null
+	var bonus_res = null
+	
 	if piptype == "health":
 		par = healthpar
 		res = res_piphealth
@@ -50,12 +56,16 @@ func edit_max_pips(piptype: String, new_max: int):
 	elif piptype == "action_points":
 		par = actionpar
 		res = res_pipaction
+		bonus_res = res_pipbonusaction
 	else:
 		return
 	
 	var uses_base_hp_factor: bool = true
+	var bonus_pip_tier: int = new_max
 	if piptype == "action_points":
 		uses_base_hp_factor = false
+		bonus_pip_tier = actor.base_action_points
+	bonus_pip_tier += 1 # Starts one ABOVE the normal tier
 	
 	# Okay, from here it's valid! Unless there's no change to make, I guess
 	
@@ -93,7 +103,12 @@ func edit_max_pips(piptype: String, new_max: int):
 #		print("Adding ",delta," pips!")
 		for n in delta:
 			thiscount += 1
-			var newpip = res.instance()
+			
+			var res_to_use = res
+			if thiscount >= bonus_pip_tier and bonus_res != null:
+				res_to_use = bonus_res
+			
+			var newpip = res_to_use.instance()
 			newpip.set("name", str(thiscount))
 			par.add_child(newpip)
 			newpip.set("owner", self)
@@ -118,7 +133,7 @@ func update_values_to_current(piptype: String):
 		curr_value = actor.bonus_shield
 	elif piptype == "action_points":
 		par = actionpar
-		curr_value = actor.action_points
+		curr_value = actor.action_points + actor.bonus_actions
 	else:
 		return
 	

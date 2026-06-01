@@ -182,6 +182,7 @@ func ACT_bite():
 
 func ACT_enrage():
 	start_effect("enrage", 2)
+	add_bonus_actions(1)
 	
 	yield(utils.yt(0.5, self), "timeout")
 	if !batman.is_my_turn(self): return

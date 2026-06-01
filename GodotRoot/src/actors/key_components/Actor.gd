@@ -35,6 +35,7 @@ var bui: Node2D
 
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
+var bonus_actions: int = 0 # Can be added to in buffs and the like!
 
 var actions_completed_this_turn: int = 0 # An action is what we think of as an attack;
 										# like all 3 steps of Doggo's charge attack is 1 action
@@ -184,7 +185,7 @@ func choose_action():
 	pass
 
 func can_afford(cost: int) -> bool:
-	if action_points >= cost:
+	if (action_points + bonus_actions) >= cost:
 		return true
 	return false
 	pass
@@ -192,15 +193,34 @@ func can_afford(cost: int) -> bool:
 func spend(cost: int):
 	if cost <= 0: return
 	
-	action_points -= cost
-	if action_points < 0:
-		print(name,": ERROR, tried to spend more action points than had available!")
-		action_points = 0
+	var og_cost: int = cost
+	var og_actions: int = (action_points + bonus_actions)
+	
+	while bonus_actions > 0 and cost > 0:
+		bonus_actions -= 1
+		cost -= 1
+	
+	while action_points > 0 and cost > 0:
+		action_points -= 1
+		cost -= 1
+	
+	if cost > 0: # Note that this 'goes through' even if it's an issue; the print is the only notice
+		print(name,": ERROR, tried to spend ",og_cost," action points when only ",og_actions," we available!")
+	
+	if action_points < 0: action_points = 0
+	if bonus_actions < 0: bonus_actions = 0
+	update_bui()
+	pass
+
+func add_bonus_actions(value: int):
+	bonus_actions += value
 	update_bui()
 	pass
 
 func refresh_action_points():
 	action_points = base_action_points
+	if !check_effect("keeps_bonus_actions"):
+		bonus_actions = 0
 	
 	update_bui()
 	pass
@@ -215,15 +235,17 @@ func master_pre_turn_setup(who: Actor):
 #	print("Pre-turn refresh for ",self)
 	actions_completed_this_turn = 0
 	shield = max_shield
-	action_points = base_action_points
-	tick_down_ongoing_effects()
+	if !check_effect("keeps_bonus_shield"):
+		bonus_shield = 0
+#	action_points = base_action_points # This is handled during turn teardown
+	tick_down_ongoing_effects(true)
 	
 	update_bui()
 	pass
 
 func master_post_turn_teardown(): # Teardown happens EVEN IF turn is interrupted! Baseline needs!
 	turns_completed_total += 1
-	tick_down_ongoing_effects()
+	tick_down_ongoing_effects(false)
 	refresh_action_points()
 	pass
 
@@ -271,7 +293,7 @@ func check_effect(effect_name: String) -> bool:
 	return ongoing_turn_effects.has(effect_name)
 	pass
 
-func tick_down_ongoing_effects():
+func tick_down_ongoing_effects(_is_turn_start: bool):
 	var new_dict: Dictionary = {}
 	
 	for key in ongoing_turn_effects.keys():
@@ -354,6 +376,10 @@ func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
 
 func release_claims():
 	act.release_actor_claims(self)
+	pass
+
+func release_targeted_tiles():
+	
 	pass
 
 func _process(_delta):

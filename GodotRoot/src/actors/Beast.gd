@@ -3,7 +3,7 @@ extends Actor
 var targeted_locs: Array = []
 enum {NOT_SET, LUNGE, SHOOT, POST_LUNGE, POST_SHOOT}
 var telegraphed_move: int = NOT_SET
-var executed_telegraph: bool = false # Used to trigger enraged state
+var executed_main_attack: bool = false
 
 var lunge_delta_target: Vector2 # A static *relative* reference to the opposite side of the board
 
@@ -11,14 +11,17 @@ var jump_dest_coord: Vector2
 
 const COST_PRE_SHOOT: int = 2
 const COST_SHOOT: int = 2
+# Shoot+telegraph are 4 combined
 const COST_PRE_LUNGE: int = 2
 const COST_LUNGE: int = 2
-const COST_DEBUFF_STOMP: int = 3
+# Lunge+telegraph are 4 combined
+const COST_SUPERDEBUFF: int = 3
 const COST_REPOJUMP: int = 2
-const COST_ENRAGE: int = 2
+#const COST_ENRAGE: int = 2
 const COST_WALK: int = 1
 var next_telegraph_cost: int = 0
 
+var get_bonus_action_next_turn: bool = false
 
 # ---
 
@@ -32,7 +35,7 @@ func _ready():
 func pre_turn_setup():
 	allowed_over_faction_lines = false
 	jump_dest_coord = coord + lunge_delta_target
-	executed_telegraph = false
+	executed_main_attack = false
 	pass
 
 func prep_next_action():
@@ -43,26 +46,25 @@ func prep_next_action():
 		next_telegraph_cost = COST_PRE_SHOOT
 		if can_afford(COST_LUNGE):
 			if act.is_tile_traversable_exact(self, jump_dest_coord):
-				executed_telegraph = true
+				executed_main_attack = true
 				spend(COST_LUNGE)
 				batman.append_action(self, "lunge_forward")
 				batman.append_action(self, "lunge_back")
 				return
+			else: release_targeted_tiles()
+		else: release_targeted_tiles()
 	
 	if telegraphed_move == SHOOT:
 		telegraphed_move = POST_SHOOT
 		next_telegraph_cost = COST_PRE_LUNGE
 		if can_afford(COST_SHOOT):
-			executed_telegraph = true
+			executed_main_attack = true
 			spend(COST_SHOOT)
 			batman.append_action(self, "shoot")
 			return
-		else:
-			# Need to relinquish any targeted tiles We can't follow through
-			targeted_locs.clear()
-			pass
+		else: release_targeted_tiles()
 	
-	# Turn-starting telegraph follow-ups are done with; now prioritize turn ending telegraphs
+	# Turn-starting telegraph follow-ups are done with; now prioritize turn *ending* telegraphs
 	# If we can afford a telegraph and nothing but, that's always what we should do!
 	if action_points == next_telegraph_cost:
 	
@@ -78,14 +80,14 @@ func prep_next_action():
 			batman.append_action(self, "pre_lunge")
 			return
 	
+	#
 	# We've accounted for everything telegraph-related; what's left is just playing with AP!
+	#
 	
-	
-	
-	# When we've done a successful telegraph attack, just move around a bit, if we can
-	if executed_telegraph:
+	# When we've done a successful main attack, just move around a bit, if we can
+	if executed_main_attack:
 		
-		# The walk check, which we will probably do if we can!
+		# The walk check
 		var walk_coord: Vector2
 		var walk_conditions_met: bool = false
 		if can_afford(COST_WALK):
@@ -93,40 +95,70 @@ func prep_next_action():
 			if walk_coord != coord:
 				walk_conditions_met = true
 		
-		# The repo check...
+		# In the condition we have TONS of action points, do a superdebuff!
+		if walk_conditions_met and can_afford(COST_WALK + next_telegraph_cost + COST_SUPERDEBUFF):
+			spend(COST_SUPERDEBUFF)
+			batman.append_action(self, "debuff")
+			return
+		
+		# The repo check - typically we don't want to do this unless we can also telegraph
 		var repo_coord: Vector2
-		var repo_conditions_met: bool = false
+		var repo_normal_conditions_met: bool = false
+		var repo_emergency_conditions_met: bool = false
 		if can_afford(COST_REPOJUMP):
 			repo_coord = act.get_rand_faction_tile_for_actormoving(self, faction)
 			if repo_coord != coord:
-				repo_conditions_met = true
+				repo_emergency_conditions_met = true
+				if can_afford(COST_REPOJUMP + next_telegraph_cost):
+					repo_normal_conditions_met = true
 		
-		# If we can't random-walk (we're stuck), always try to repojump
-		if !walk_conditions_met and repo_conditions_met:
-			spend(COST_REPOJUMP)
-			batman.append_action(self, "repo_jump", [repo_coord])
-			return
-		
-		# If we can't repojump but can walk (frankly this should never happen???), do that
-		if walk_conditions_met and !repo_conditions_met:
+		if walk_conditions_met:
+			# If we can do both easily, err on the side of walking 2/3rds of the time
+			if repo_normal_conditions_met:
+				var walkpref: bool = (rand_range(0.0, 3.0) <= 2.0)
+				if walkpref:
+					spend(COST_WALK)
+					batman.append_action(self, "walk", [walk_coord])
+					return
+				else:
+					spend(COST_REPOJUMP)
+					batman.append_action(self, "repo_jump", [repo_coord])
+					return
+			# Otherwise, just default to walking
 			spend(COST_WALK)
 			batman.append_action(self, "walk", [walk_coord])
 			return
 		
-		# If we can do both, err on the side of walking 2/3rds of the time
-		if walk_conditions_met and repo_conditions_met:
-			var walkpref: bool = (rand_range(0.0, 3.0) <= 2.0)
-			if walkpref:
-				spend(COST_WALK)
-				batman.append_action(self, "walk", [walk_coord])
-				return
-			else:
-				spend(COST_REPOJUMP)
-				batman.append_action(self, "repo_jump", [repo_coord])
-				return
+		# If we can't random-walk (we're stuck), repojump if you can
+		elif repo_emergency_conditions_met:
+			spend(COST_REPOJUMP)
+			batman.append_action(self, "repo_jump", [repo_coord])
+			return
+		
+		return # No attempting to squeeze in an additional main attack!
 	
+	# If we FAILED to execute a main attack this turn so far, including if we weren't able to set one up last turn, pick a different option we typically wouldn't do
+
+	# If we can afford to debuff the party AND do a telegraph after, do that
+	if can_afford(next_telegraph_cost + COST_SUPERDEBUFF):
+		executed_main_attack = true
+		spend(COST_SUPERDEBUFF)
+		batman.append_action(self, "debuff")
+		return
 	
+	# Otherwise, stop attempting to execute a main attack, then give up and cycle again
+	executed_main_attack = true
+	prep_next_action()
 	pass
+
+func post_all_action_prep():
+	if get_bonus_action_next_turn:
+		get_bonus_action_next_turn = false
+		add_bonus_actions(1)
+		start_effect("keeps_bonus_action", 1, false)
+	pass
+
+# ---
 
 func ACT_pre_shoot():
 	
@@ -158,19 +190,22 @@ func ACT_lunge_back():
 	end_action()
 	pass
 
-func ACT_debuff_stomp():
+func ACT_debuff():
+	get_bonus_action_next_turn = true
 	
+	for actor in batman.living_actors: if actor is Actor:
+		if actor == self: continue # We handle ourselves later!
+		
+		# Enemies gain 1AP, playerside loses 1AP
+		if actor.faction == batman.factions.ENEMY:
+			actor.add_bonus_actions(1)
+		elif actor.faction == batman.factions.PLAYER:
+			actor.spend(1)
 	
 	end_action()
 	pass
 
 func ACT_repo_jump():
-	
-	
-	end_action()
-	pass
-
-func ACT_enrage():
 	
 	
 	end_action()
