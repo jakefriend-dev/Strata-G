@@ -87,6 +87,14 @@ func hotmove(actor: Actor, to_coord: Vector2, dur: float):
 	tween.start()
 	pass
 
+func hotjump(actor: Actor, to_coord: Vector2, dur: float, height: float = 100.0):
+	tween.interpolate_property(actor, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	tween.interpolate_property(actor.vis_object, "position:y", null, -height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	tween.interpolate_property(actor.vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
+	tween.start()
+	pass
+
+
 # MUST be called when a move 'officially' changes our data position!
 #func update_actor_coord_data(actor: Actor, newpos: Vector2) -> bool:
 #	if !batman.grid_actors.has_cellv(newpos):
@@ -206,10 +214,10 @@ func master_vet_actormove_optionset(actor: Actor, og_options: Array, is_relative
 	return valid_options
 	pass
 
-func is_tile_traversable_relative(actor: Actor, motion: Vector2) -> bool:
-	return is_tile_traversable_exact(actor, actor.coord + motion)
+func is_tile_traversable_relative(actor: Actor, motion: Vector2, ignore_ghost: bool = false) -> bool:
+	return is_tile_traversable_exact(actor, actor.coord + motion, ignore_ghost)
 	
-func is_tile_traversable_exact(actor: Actor, target: Vector2) -> bool:
+func is_tile_traversable_exact(actor: Actor, target: Vector2, ignore_ghost: bool = false) -> bool:
 	var _start_coord: Vector2 = actor.coord
 	var end_coord: Vector2 = target
 	
@@ -219,7 +227,7 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2) -> bool:
 		return false
 	
 	# IN MOST CIRCUMSTANCES, you can't enter an unavailable space!
-	if !actor.is_ghost:
+	if !actor.is_ghost and !ignore_ghost:
 		if !is_tile_available(end_coord):
 #			print("ACT: iamp[2] Cell is unavailable!")
 			return false
@@ -386,11 +394,11 @@ func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, 
 	return og_tile + opts[0]
 	pass
 
-func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int) -> Vector2: # NON adjacent specific!
+func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int, ignore_ghost: bool = false) -> Vector2: # NON adjacent specific!
 	var opts: Array = get_all_tiles_by_faction(faction)
 	var valid_opts: Array = []
 	for coord in opts:
-		if is_tile_traversable_exact(actor, coord): # Handles all our validations
+		if is_tile_traversable_exact(actor, coord, ignore_ghost): # Handles all our validations
 			valid_opts.append(coord)
 	
 	if valid_opts.empty():

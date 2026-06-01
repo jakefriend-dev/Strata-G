@@ -118,6 +118,9 @@ var is_ghost: bool = false # When true, allowed to break many rules. You almost 
 var allowed_over_faction_lines: bool = false
 export var keep_claims_at_eot: bool = false # Set true for the RARE cases (like a missile) where you don't want to wipe its claim at the end of a turn
 
+var targeted_tiles: Array = [] # Just an array of Vector2 coords that is fed to BatMan
+var vis_object: Node2D # Typically the parent of all the visual stuff that has Z height
+
 # Convenience references; duplicate data to batman.grid_actors
 var last_pos: Vector2 = Vector2.ZERO
 var coord: Vector2
@@ -133,7 +136,8 @@ func _ready():
 		add_to_group("live_actors")
 	
 	perform_initial_data_setup()
-	$ArtMgr/HFlipper/Shadow.recenter()
+	$ArtMgr/Shadow.recenter()
+	vis_object = $ArtMgr/HFlipper
 	update_bui()
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
@@ -378,8 +382,35 @@ func release_claims():
 	act.release_actor_claims(self)
 	pass
 
-func release_targeted_tiles():
+func set_targeted_tiles(targetset: Array): # Also operates as an overwrite
+	targeted_tiles = targetset
+	batman.update_targeted_tiles()
+	pass
+
+func append_some_targeted_tiles(targetset: Array):
+	for target in targetset:
+		if !targeted_tiles.has(target):
+			targeted_tiles.append(target)
 	
+	batman.update_targeted_tiles()
+	pass
+
+func remove_some_targeted_tiles(targetset: Array):
+	var new_targetset: Array = []
+	
+	# Pass ahead any target NOT in the inbound param set
+	for target in targeted_tiles:
+		if !targetset.has(target):
+			new_targetset.append(target)
+	
+	targeted_tiles = []
+	targeted_tiles = new_targetset
+	batman.update_targeted_tiles()
+	pass
+
+func release_targeted_tiles():
+	targeted_tiles = []
+	batman.update_targeted_tiles()
 	pass
 
 func _process(_delta):
@@ -451,7 +482,7 @@ func receive_damage(damage: int):
 	pass
 
 # -
-
+	
 func update_bui():
 	if faction == batman.factions.PLAYER:
 		is_facing_left = false

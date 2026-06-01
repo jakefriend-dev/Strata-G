@@ -65,11 +65,11 @@ def_immune_poison = true
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
-[node name="HFlipper" type="Node2D" parent="ArtMgr"]
-
-[node name="Shadow" parent="ArtMgr/HFlipper" instance=ExtResource( 3 )]
+[node name="Shadow" parent="ArtMgr" instance=ExtResource( 3 )]
 margin_left = -28.0
 margin_right = 28.0
+
+[node name="HFlipper" type="Node2D" parent="ArtMgr"]
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )

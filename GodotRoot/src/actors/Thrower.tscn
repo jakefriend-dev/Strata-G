@@ -67,11 +67,11 @@ def_immune_elec = true
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
-[node name="HFlipper" type="Node2D" parent="ArtMgr"]
-
-[node name="Shadow" parent="ArtMgr/HFlipper" instance=ExtResource( 3 )]
+[node name="Shadow" parent="ArtMgr" instance=ExtResource( 3 )]
 margin_right = 16.0
 margin_bottom = 5.0
+
+[node name="HFlipper" type="Node2D" parent="ArtMgr"]
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )

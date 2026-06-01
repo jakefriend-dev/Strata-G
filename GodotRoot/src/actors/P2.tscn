@@ -65,12 +65,12 @@ faction = 1
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
-[node name="HFlipper" type="Node2D" parent="ArtMgr"]
-
-[node name="Shadow" parent="ArtMgr/HFlipper" instance=ExtResource( 3 )]
+[node name="Shadow" parent="ArtMgr" instance=ExtResource( 3 )]
 margin_left = -13.0
 margin_top = -4.0
 margin_right = 12.0
+
+[node name="HFlipper" type="Node2D" parent="ArtMgr"]
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )

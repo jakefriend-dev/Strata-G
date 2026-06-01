@@ -115,13 +115,13 @@ def_immune_fire = true
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
-[node name="HFlipper" type="Node2D" parent="ArtMgr"]
-
-[node name="Shadow" parent="ArtMgr/HFlipper" instance=ExtResource( 3 )]
+[node name="Shadow" parent="ArtMgr" instance=ExtResource( 3 )]
 margin_left = -12.0
 margin_top = -5.0
 margin_right = 13.0
 margin_bottom = 6.0
+
+[node name="HFlipper" type="Node2D" parent="ArtMgr"]
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 4 )

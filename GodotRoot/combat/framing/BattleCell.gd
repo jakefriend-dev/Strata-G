@@ -5,6 +5,8 @@ var colset: Dictionary = {
 	batman.factions.ENEMY:   ["df538e"],
 }
 
+var targetcol: Color = Color("ff9696")
+
 # Un-set; 0 is default
 var row: int = -1
 var col: int = -1
@@ -16,6 +18,7 @@ var faction: int = -1
 
 func _ready():
 	batman.connect("update_all_tiletypes", self, "update_tiletype")
+	batman.connect("targeted_tiles_updated", self, "update_targeting")
 #	$Crack.rect_size = rect_size
 #	$Pit.rect_size = rect_size
 	pass
@@ -26,6 +29,15 @@ func update_tiletype(): # Visual only; data is already handled
 		type = new_type
 	
 	followup_tiletype()
+	pass
+
+func update_targeting():
+	var to_smod: Color = Color.white
+	if batman.targeted_tiles.has(coord):
+		to_smod = targetcol
+	
+	if self_modulate != to_smod:
+		self_modulate = to_smod
 	pass
 
 func set_depth_tint(max_row: int):
@@ -64,7 +76,7 @@ func followup_tiletype():
 		$Crack.visible = (type == batman.tiletypes.JAGGED)
 	if $Pit.visible != (type == batman.tiletypes.PIT):
 		$Pit.visible = (type == batman.tiletypes.PIT)
-
+	pass
 
 
 

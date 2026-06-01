@@ -67,6 +67,7 @@ var grid_claims:   Array2D
 var grid_tiles:    Array2D
 var grid_gpos:     Array2D
 var grid_factions: Array2D
+var targeted_tiles: Array = [] # Just a list of Vector2 coords
 
 var default_party: Array = ["P2", "P1", "P3"] # Calls these scenes by name when initializing combat; the first one is always in the front and the last is always in the back.
 
@@ -79,6 +80,7 @@ signal new_round_started()
 signal on_turn_ended_naturally()
 signal on_turn_ended_via_interruption()
 signal on_turn_exited()
+signal targeted_tiles_updated()
 
 enum factions {
 	NEUTRAL,
@@ -378,6 +380,7 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	print("TURN MGR: All actor data matched to nodes. Results:",grid_actors)
 	
 	roll_initiative()
+	perform_local_pre_combat_setup()
 	cycle_to_next_turn() # This ACTUALLY STARTS the fight!
 	
 #	print("TURN: GPos data is:",grid_gpos)
@@ -427,8 +430,7 @@ func roll_initiative():
 			turndata["turncount_of_this_actor"] = initcount # Typically 1, could be 2 or 3 for bosses
 			
 			turnqueue.append(turndata)
-	
-	
+		pass
 	
 	turnqueue.sort_custom(self, "sort_turnqueue_by_init")
 	
@@ -443,6 +445,11 @@ func roll_initiative():
 #	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
 	pass
 
+func perform_local_pre_combat_setup():
+	for actor in living_actors:
+		if actor.has_method("pre_combat_setup"):
+			actor.call("pre_combat_setup")
+	pass
 
 ### Turn management
 
@@ -484,7 +491,7 @@ func cycle_to_next_turn():
 	
 	# Final setup!
 	
-	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
+#	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
 	
 	field.update_targeting()
 	
@@ -833,6 +840,21 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 
 # ---
 
+func update_targeted_tiles():
+	targeted_tiles = []
+	
+	for actor in living_actors: if actor is Actor: if actor.active:
+		var local_targeted_tiles: Array = actor.targeted_tiles
+		for target in local_targeted_tiles: if target is Vector2:
+			if !grid_tiles.has_cellv(target):
+				continue # Mini validation
+			
+			if !targeted_tiles.has(target):
+				targeted_tiles.append(target)
+	
+	emit_signal("targeted_tiles_updated")
+	pass
+
 func kill_actor(actor: Actor):
 	# Prevent it from executing actions
 	actor.active = false
@@ -856,6 +878,7 @@ func kill_actor(actor: Actor):
 	act.release_actor_claims(actor)
 	
 	# Clear its targeting data
+	actor.release_targeted_tiles()
 	
 	# Actually delete it! If it has an on-death method, let it do so itself; otherwise we do it
 	if actor.has_method("WHEN_killed"):
@@ -863,6 +886,22 @@ func kill_actor(actor: Actor):
 	else:
 		actor.visible = false
 		actor.queue_free()
+	pass
+
+func get_all_current_players() -> Array:
+	var results: Array = []
+	for actor in living_actors: if actor is Actor: if actor.active:
+		if actor.faction == factions.PLAYER:
+			results.append(actor)
+	return results
+	pass
+
+func get_all_current_enemies() -> Array:
+	var results: Array = []
+	for actor in living_actors: if actor is Actor: if actor.active:
+		if actor.faction == factions.ENEMY:
+			results.append(actor)
+	return results
 	pass
 
 # ---
