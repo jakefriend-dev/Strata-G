@@ -147,9 +147,8 @@ func _ready():
 	vis_object = $ArtMgr/HFlipper
 #	update_bui()
 	
-	var res_pcrefs = load("res://src/actors/key_components/ActorPCRefs.gd")
 	pcrefs = Node.new()
-	pcrefs.set_script(res_pcrefs)
+	pcrefs.set_script(loader.res_pcrefs)
 	pcrefs.set("name", "PCRefs")
 	pcrefs.set("actor", self)
 	$Utils.add_child(pcrefs)

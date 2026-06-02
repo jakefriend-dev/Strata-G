@@ -2,7 +2,7 @@
 
 [ext_resource path="res://art/_placeholder/white_effect_boomstar.png" type="Texture" id=1]
 [ext_resource path="res://art/_placeholder/fight_guy temp.png" type="Texture" id=2]
-[ext_resource path="res://combat/battle_effects/EffectShape.gd" type="Script" id=3]
+[ext_resource path="res://combat/battle_effects/EffectParticle.gd" type="Script" id=3]
 
 [sub_resource type="CanvasItemMaterial" id=1]
 blend_mode = 1
@@ -67,7 +67,7 @@ scale_random = 0.2
 scale_curve = SubResource( 5 )
 color_ramp = SubResource( 8 )
 
-[node name="EffectShape" type="Node2D"]
+[node name="EffectParticle" type="Node2D"]
 script = ExtResource( 3 )
 
 [node name="sample" type="Sprite" parent="."]

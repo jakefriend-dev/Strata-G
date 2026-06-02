@@ -99,8 +99,6 @@ func populate_actors():
 	
 	# Time to populate the board!
 	var actorset: Array = batman.grid_actors.get_dataset_with_coords()
-#	var res_actor = load("res://src/prefabs/_ActorTEMPLATE.tscn")
-#	print(actorset)
 	
 	var path: String = "res://src/actors/"
 	

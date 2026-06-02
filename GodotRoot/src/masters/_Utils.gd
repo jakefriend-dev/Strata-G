@@ -1,11 +1,15 @@
 extends Node
 
+var tween: Tween
 
 # ---
 
 # -
 
-
+func _ready():
+	tween = Tween.new()
+	add_child(tween)
+	pass
 
 
 func does_file_exist(path):

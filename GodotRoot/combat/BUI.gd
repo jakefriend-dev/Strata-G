@@ -12,11 +12,7 @@ var shieldpar: GridContainer
 var bonusshieldpar: GridContainer
 var actionpar: GridContainer
 #var bonusactionpar: GridContainer
-var res_piphealth = preload("res://combat/HealthPip.tscn")
-var res_pipshield = preload("res://combat/ShieldPip.tscn")
-var res_pipbonusshield = preload("res://combat/BonusShieldPip.tscn")
-var res_pipaction = preload("res://combat/ActionPointPip.tscn")
-var res_pipbonusaction = preload("res://combat/BonusActionPointPip.tscn")
+
 
 func _ready():
 	healthpar = get_node(path_healthpar)
@@ -47,17 +43,17 @@ func edit_max_pips(piptype: String, new_max: int):
 	
 	if piptype == "health":
 		par = healthpar
-		res = res_piphealth
+		res = loader.res_piphealth
 	elif piptype == "shield":
 		par = shieldpar
-		res = res_pipshield
+		res = loader.res_pipshield
 	elif piptype == "bonus_shield":
 		par = bonusshieldpar
-		res = res_pipbonusshield
+		res = loader.res_pipbonusshield
 	elif piptype == "action_points":
 		par = actionpar
-		res = res_pipaction
-		bonus_res = res_pipbonusaction
+		res = loader.res_pipaction
+		bonus_res = loader.res_pipbonusaction
 	else:
 		return
 	

@@ -11,6 +11,9 @@ var par_node: Node2D
 var persistent: bool = false # If true and has actor, it'll follow them until the actor dies or releases them
 var actor: Actor = null # Set for non-temporary effects
 
+var dying: bool = false
+var final_death: bool = false
+
 # ---
 
 func _ready():
@@ -28,11 +31,21 @@ func _ready():
 	play_effect()
 	pass
 
-func gather_lifetime():
-	if persistent:
-		lifetime = -1.0
-		return
+func validate_or_die() -> bool:
+	if !$ZPar.has_node(effect_name):
+		return false
 	
+	if $ZPar.get_node(effect_name).get_child_count() == 0:
+		return false
+	
+	for p in $ZPar.get_node(effect_name).get_children(): # SUCCESS if at least 1 child is a Particles2D
+		if p is Particles2D:
+			return true
+	
+	return false
+	pass
+
+func gather_lifetime():
 	for p in par_node.get_children(): if p is Particles2D:
 		var local_lifetime: float = utils.get_max_lifetime_from_particle(p)
 		if local_lifetime > lifetime:
@@ -54,6 +67,7 @@ func play_effect():
 		p.restart()
 	
 	if lifetime > 0 and !persistent:
+		dying = true
 		$Timer.start(lifetime)
 		yield($Timer, "timeout")
 		die()
@@ -61,21 +75,36 @@ func play_effect():
 
 # -
 
-func validate_or_die() -> bool:
-	if !$ZPar.has_node(effect_name):
-		return false
+func end_persistent():
+	for p in par_node.get_children(): if p is Particles2D:
+		p.emitting = false
 	
-	if $ZPar.get_node(effect_name).get_child_count() == 0:
-		return false
+	if lifetime > 0:
+		$Timer.start(lifetime)
+		yield($Timer, "timeout")
+	die()
+	pass
+
+func quick_clear():
+	for p in par_node.get_children(): if p is Particles2D:
+		p.emitting = false
 	
-	for p in $ZPar.get_node(effect_name).get_children(): # SUCCESS if at least 1 child is a Particles2D
-		if p is Particles2D:
-			return true
+	dying = true
 	
-	return false
+	var dur: float = 12.0/60.0
+	
+	utils.tween.interpolate_property(self, "modulate:a", null, 0.0, dur, Tween.TRANS_CUBIC, Tween.EASE_IN)
+	utils.tween.start()
+	
+	yield(utils.yt(dur, self), "timeout")
+	die()
 	pass
 
 func die(instant: bool = false):
+	# No double-calls!
+	if final_death: return
+	final_death = true
+	
 	if !instant:
 		yield(utils.yping("idle", self), "ping")
 	

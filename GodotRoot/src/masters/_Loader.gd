@@ -1,4 +1,15 @@
 extends Node
 
-var res_bui = preload("res://combat/BUI.tscn")
+# Battlefield
 var res_battlecell = preload("res://combat/framing/BattleCell.tscn")
+
+# Battle UI
+var res_bui = preload("res://combat/BUI.tscn")
+var res_piphealth = preload("res://combat/HealthPip.tscn")
+var res_pipshield = preload("res://combat/ShieldPip.tscn")
+var res_pipbonusshield = preload("res://combat/BonusShieldPip.tscn")
+var res_pipaction = preload("res://combat/ActionPointPip.tscn")
+var res_pipbonusaction = preload("res://combat/BonusActionPointPip.tscn")
+
+# Actors
+var res_pcrefs = preload("res://src/actors/key_components/ActorPCRefs.gd")
