@@ -2,10 +2,14 @@ extends Node2D
 
 export var path_board: NodePath
 export var path_actors: NodePath
+export var path_effects: NodePath
+export var path_misc: NodePath
 export var path_debuglog_par: NodePath
 export var path_turndisplay_par: NodePath
 var board: GridContainer
 var actors: YSort
+var effects: YSort
+var misc: YSort
 var debuglog_par: VBoxContainer
 var turndisplay_par: VBoxContainer
 
@@ -20,8 +24,11 @@ enum {} # put hover, fire, etc states here - one value per current state AND def
 func _ready():
 	board = get_node(path_board)
 	actors = get_node(path_actors)
+	effects = get_node(path_effects)
+	misc = get_node(path_misc)
 	debuglog_par = get_node(path_debuglog_par)
 	turndisplay_par = get_node(path_turndisplay_par)
+	
 	batman.field = self
 	batman.actors = actors
 	batman.board = board

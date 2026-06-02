@@ -672,6 +672,8 @@ shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
 script = ExtResource( 2 )
 path_board = NodePath("Control/MC/VB/HB/Board")
 path_actors = NodePath("FieldObjects/Actors")
+path_effects = NodePath("FieldObjects/Effects")
+path_misc = NodePath("FieldObjects/Misc")
 path_debuglog_par = NodePath("DebugLog/VB")
 path_turndisplay_par = NodePath("TurnDisplay/VB")
 
@@ -980,6 +982,8 @@ custom_styles/panel = SubResource( 1 )
 [node name="Actors" type="YSort" parent="FieldObjects"]
 
 [node name="Effects" type="YSort" parent="FieldObjects"]
+
+[node name="Misc" type="YSort" parent="FieldObjects"]
 
 [node name="DebugLog" type="Node2D" parent="."]
 position = Vector2( 4, 4 )

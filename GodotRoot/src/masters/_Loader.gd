@@ -13,3 +13,4 @@ var res_pipbonusaction = preload("res://combat/BonusActionPointPip.tscn")
 
 # Actors
 var res_pcrefs = preload("res://src/actors/key_components/ActorPCRefs.gd")
+var res_effect_particle = preload("res://combat/battle_effects/EffectParticle.tscn")

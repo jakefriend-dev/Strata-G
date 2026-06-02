@@ -113,7 +113,17 @@ func die(instant: bool = false):
 	queue_free()
 	pass
 
+# ---
 
+func _process(_d): # Basic position tracking, for persistent effects only
+	if dying: return
+	if !persistent: return
+	if !utils.valid(actor): return
+	
+	var apos: Vector2 = actor.position
+	if position != apos:
+		position = apos
+	pass
 
 
 

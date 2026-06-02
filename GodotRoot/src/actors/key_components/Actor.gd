@@ -495,10 +495,12 @@ func receive_damage(damage: int, is_melee: bool):
 	if (shield+bonus_shield) < (og_shield+og_bonus_shield):
 #		print("Some quantity of shield consumed!")
 		emit_signal("on_shield_consumed", is_melee)
+		act.quick_effect(self, "blocked")
 	
 	if (og_shield+og_bonus_shield) > 0 and shield == 0:
 #		print("Shield BROKEN!")
 		emit_signal("on_shield_broken", is_melee)
+		act.quick_effect(self, "shield_broken")
 	
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:
@@ -512,6 +514,7 @@ func receive_damage(damage: int, is_melee: bool):
 		health -= 1
 	
 	var unshielded_damage: int = og_damage - shielded_damage - damage
+	act.quick_effect(self, "damage", unshielded_damage)
 	
 	if health > 0:
 		if shielded_damage == 0:

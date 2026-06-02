@@ -304,16 +304,20 @@ func ACT_lunge_back():
 	pass
 
 func ACT_debuff():
-	print("debuffing...!")
+#	print("debuffing...!")
 	get_bonus_action_next_turn = true
 	
 	for actor in batman.living_actors: if actor is Actor:
-		if actor == self: continue # We handle ourselves later!
+		if actor == self:
+			act.quick_effect(self, "quick_good")
+			continue # We handle ourselves later!
 		
 		# Enemies gain 1AP, playerside loses 1AP
 		if actor.faction == batman.factions.ENEMY:
+			act.quick_effect(actor, "quick_good")
 			actor.add_bonus_actions(1)
 		elif actor.faction == batman.factions.PLAYER:
+			act.quick_effect(actor, "quick_bad")
 			actor.spend(1)
 	
 	end_action()

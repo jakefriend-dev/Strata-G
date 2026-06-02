@@ -22,7 +22,7 @@ curve = SubResource( 4 )
 [sub_resource type="ParticlesMaterial" id=6]
 lifetime_randomness = 0.38
 emission_shape = 1
-emission_sphere_radius = 12.0
+emission_sphere_radius = 6.0
 flag_disable_z = true
 direction = Vector3( 0, -1, 0 )
 spread = 60.45
@@ -49,7 +49,7 @@ gradient = SubResource( 7 )
 [sub_resource type="ParticlesMaterial" id=9]
 lifetime_randomness = 0.38
 emission_shape = 1
-emission_sphere_radius = 24.88
+emission_sphere_radius = 8.0
 flag_disable_z = true
 direction = Vector3( 0, -1, 0 )
 spread = 60.45
@@ -78,11 +78,11 @@ texture = ExtResource( 2 )
 one_shot = true
 
 [node name="ZPar" type="Node2D" parent="."]
-position = Vector2( 1, -56 )
+position = Vector2( 1, -40 )
 
-[node name="DamageBoom" type="Node2D" parent="ZPar"]
+[node name="damage" type="Node2D" parent="ZPar"]
 
-[node name="DarkBoom" type="Particles2D" parent="ZPar/DamageBoom"]
+[node name="DarkBoom" type="Particles2D" parent="ZPar/damage"]
 material = SubResource( 1 )
 emitting = false
 amount = 1
@@ -92,7 +92,7 @@ explosiveness = 0.8
 process_material = SubResource( 6 )
 texture = ExtResource( 1 )
 
-[node name="LightBoom" type="Particles2D" parent="ZPar/DamageBoom"]
+[node name="LightBoom" type="Particles2D" parent="ZPar/damage"]
 material = SubResource( 1 )
 emitting = false
 amount = 1

@@ -469,3 +469,65 @@ func get_all_tiles_by_faction(faction: int) -> Array:
 				results.append(entry[1])
 	return results
 	pass
+
+# ---
+
+func quick_effect(actor: Actor, effect: String, variant = null):
+	match effect:
+		
+		"damage":
+			spawn_effect_on_actor(actor, "damage", false, float(variant))
+		
+		"blocked":
+			pass
+		
+		"shield_broken":
+			pass
+		
+		"quick_good":
+			pass
+		
+		"quick_bad":
+			pass
+		
+		"buff": # Implies somewhat persistent
+			pass
+		
+		"debuff": # Implies somewhat persistent
+			pass
+	pass
+
+func spawn_effect_on_actor(actor: Actor, effect: String, persistent: bool, intensity: float = 1.0, misc: String = ""):
+	var pos: Vector2 = actor.position
+	var ep: Node2D = loader.res_effect_particle.instance()
+	ep.set("position", pos + Vector2.DOWN)
+	ep.set("actor", actor)
+	ep.set("effect_name", effect)
+	ep.set("persistent", persistent)
+	ep.set("intensity", intensity)
+	ep.set("misc", misc)
+	
+	batman.field.effects.add_child(ep)
+	# The EP begins itself via _ready()
+	pass
+
+func end_effect_on_actor(actor: Actor, effect: String, immediate: bool = false):
+	for ep in batman.field.effects.get_children():
+		if ep.actor == actor:
+			if ep.effect == effect:
+				# Valid!
+				if immediate:
+					ep.quick_clear()
+				else:
+					ep.end_persistent()
+	pass
+
+
+
+
+
+
+
+
+
+
