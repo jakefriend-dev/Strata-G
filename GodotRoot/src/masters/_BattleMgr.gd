@@ -800,8 +800,12 @@ func monitor_action_processing_time(delta: float):
 
 func prompt_next_turntaker_action():
 	if combatstate == C_TURN:
-#		if curr_actor.faction == factions.ENEMY:
-		curr_actor.choose_action()
+		if utils.valid(curr_actor):
+			if curr_actor.alive_check():
+				curr_actor.choose_action()
+				return
+		# Branch where current actor is no longer valid; most likely because it died mid-turn
+		end_turn()
 	pass
 
 func skip_action(): end_action() # Just a shortcut

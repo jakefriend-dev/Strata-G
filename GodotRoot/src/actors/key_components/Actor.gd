@@ -133,6 +133,7 @@ var claimed_tile: Vector2 = Vector2.ZERO
 
 signal on_shield_consumed(is_melee) # Shield consumed at all
 signal on_shield_broken(is_melee) # Shield depleted, but we are NOT yet dead
+signal on_blocked_all_damage(is_melee) # Shield remains; health unaffected
 
 # ---
 
@@ -206,7 +207,7 @@ func choose_action():
 	# Players have a custom call
 	if faction == batman.factions.PLAYER:
 		player.inputstate = player.istates.READY_FOR_PLAYER_INPUT
-		print("Ready for player char to act: ",name)
+#		print("Ready for player char to act: ",name)
 		yield(player, "party_action_chosen")
 		pass
 	
@@ -503,6 +504,7 @@ func receive_damage(damage: int, is_melee: bool):
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:
 		batman.update_action_log(str(name,": Blocked ",shielded_damage,desctext," and took no damage"))
+		emit_signal("on_blocked_all_damage", is_melee)
 		update_bui()
 		return
 	

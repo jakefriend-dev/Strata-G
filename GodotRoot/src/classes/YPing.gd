@@ -5,7 +5,7 @@ signal ping() # Manually emitted by timeout AFTER confirming the user exists to 
 var caller # in theory any node
 var callername # stored! in case it dies
 
-enum {UNDEFINED, FRAME_VIS, FRAME_PHYS, FRAME_IDLE, GAME_SETUP, GAME_RELEASED}
+enum {UNDEFINED, FRAME_VIS, FRAME_PHYS, FRAME_IDLE}#, GAME_SETUP, GAME_RELEASED}
 var type = UNDEFINED
 
 var ignore_pause: bool = false
