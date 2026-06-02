@@ -56,7 +56,7 @@ func pre_turn_setup():
 
 func prep_next_action():
 	jump_dest_coord = coord + lunge_delta_target
-	ghost_mode(false)
+#	ghost_mode(false)
 	
 	# First, check if we've telegraphed anything; if yes, can we follow-through?
 	if !executed_main_attack: # Only try our lunge or shoot ONCE, as first priority
@@ -197,7 +197,7 @@ func post_all_action_prep():
 # ---
 
 func ACT_pre_shoot():
-	print("pre_shoot")
+#	print("pre_shoot")
 	var picked_tiles: Array = []
 	
 	# First, always choose at least 1 tile a player is on
@@ -224,7 +224,7 @@ func ACT_pre_shoot():
 	pass
 
 func ACT_shoot():
-	print("shoot")
+#	print("shoot")
 	
 	for target in targeted_tiles:
 		act.damage_actor_at_coord(self, target, base_damage, false)
@@ -234,7 +234,7 @@ func ACT_shoot():
 	pass
 
 func ACT_pre_lunge():
-	print("pre_lunge")
+#	print("pre_lunge")
 	
 	var picked_tiles: Array = act.get_adj_orthagonal_tiles(jump_dest_coord, true)
 	picked_tiles.append(jump_dest_coord)
@@ -245,7 +245,7 @@ func ACT_pre_lunge():
 	pass
 
 func ACT_lunge_forward():
-	print("lunge_forward")
+#	print("lunge_forward")
 	allowed_over_faction_lines = true
 	claim_tile()
 	ghost_mode(true)
@@ -272,7 +272,7 @@ func ACT_lunge_forward():
 	pass
 
 func ACT_lunge_back():
-	print("lunge_back")
+#	print("lunge_back")
 	
 	# Attempt to return to a random tile
 	var target_tile: Vector2 = claimed_tile
@@ -297,7 +297,7 @@ func ACT_lunge_back():
 	pass
 
 func ACT_debuff():
-	print("debuff")
+	print("debuffing...!")
 	get_bonus_action_next_turn = true
 	
 	for actor in batman.living_actors: if actor is Actor:
@@ -313,7 +313,7 @@ func ACT_debuff():
 	pass
 
 func ACT_repo_jump(exact_coord: Vector2):
-	print("repo_jump")
+#	print("repo_jump")
 	var dur: float = 0.5
 	
 	act.hotjump(self, exact_coord, dur)
@@ -327,7 +327,7 @@ func ACT_repo_jump(exact_coord: Vector2):
 	pass
 
 func ACT_walk(exact_coord: Vector2):
-	print("walk")
+#	print("walk")
 	var dur: float = 0.5
 	
 	act.hotmove(self, exact_coord, dur)

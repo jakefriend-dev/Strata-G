@@ -117,6 +117,8 @@ var is_immune_magnet: bool
 var is_immune_elec: bool
 
 var is_ghost: bool = false # When true, allowed to break many rules. You almost ALWAYS turn this off at the end of a turn; meant as a temporary thing for like a charge-through attack.
+var just_exited_ghost_mode: bool = false # Helps us bypass some errors
+
 var allowed_over_faction_lines: bool = false
 export var keep_claims_at_eot: bool = false # Set true for the RARE cases (like a missile) where you don't want to wipe its claim at the end of a turn
 
@@ -248,6 +250,7 @@ func master_pre_turn_setup(who: Actor):
 	shield = max_shield
 	if !check_effect("keeps_bonus_shield"):
 		bonus_shield = 0
+	ghost_mode(false)
 #	action_points = base_action_points # This is handled during turn teardown
 	tick_down_ongoing_effects(true)
 	
@@ -367,6 +370,8 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 		if batman.ghost_actors.has(self):
 			batman.ghost_actors.erase(self)
 		is_ghost = false
+		just_exited_ghost_mode = true
+		act.change_actor_coord(self, coord) # Manually - otherwise the system won't recognize the 'change'!
 		return true
 	pass
 
@@ -422,6 +427,7 @@ func release_targeted_tiles():
 
 func _process(_delta):
 	monitor_position_as_coordinate()
+	if just_exited_ghost_mode: just_exited_ghost_mode = false
 	pass
 
 func monitor_position_as_coordinate():
@@ -431,6 +437,7 @@ func monitor_position_as_coordinate():
 	var last_coord: Vector2 = coord
 	
 	coord = batman.field.actorpos_to_tilecoord(position)
+	
 	if coord == last_coord: return
 	if is_ghost: return
 	
@@ -489,6 +496,12 @@ func receive_damage(damage: int, is_melee: bool):
 		batman.kill_actor(self)
 	
 	pass
+
+func alive_check() -> bool:
+	if health <= 0: return false
+	if !active: return false
+	if !batman.living_actors.has(self): return false
+	return true
 
 # -
 	

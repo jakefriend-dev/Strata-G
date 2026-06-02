@@ -270,7 +270,12 @@ func change_actor_coord(actor: Actor, new_coord: Vector2):
 			batman.grid_actors.set_cellv(new_coord, actor)
 			return true
 	
-	print("ACT: ERROR, tried to change actor grid coord when it wasn't already on the grid?")
+	if actor.just_exited_ghost_mode: # Allow a bypass if we are newly returning to the grid!
+		batman.grid_actors.set_cellv(new_coord, actor)
+		return true
+	
+	print("ACT: ERROR, tried to change actor grid coord for actor: ",actor," when it wasn't already on the grid and DIDN'T just exit ghost_mode? old: ",old_coord," and new: ",new_coord)
+	
 	return false
 	pass
 

@@ -97,6 +97,8 @@ var timeout_action_time: float = (3.0/60.0) # How long between skipped actions i
 var timeout_turn_time: float = (12.0/60.0) # How long between ended turns if time has not passed
 signal action_step_complete() # Should fire any time we do an individual action
 signal all_action_steps_complete() # Should fire whenever ALL steps are done
+var actions_are_processing: bool = false
+var action_processing_time: float = 0.0
 
 #var actionlog: Array = [] # Historical log of all processed AND FAILED actions! Strings only
 var actionlog: Array = [] # Log of notable actions for on-screen visibility! Strings only
@@ -149,84 +151,15 @@ enum tiletypes {
 	DNU
 }
 
-var multi_input_lock: bool = false # Prevent multiple actions being acecpted too closely together
-var action_lock: bool = false # On any successful action, even by an enemy, yield until all actions are complete!
-
 # ---
 
 func _ready():
 	connect("all_action_steps_complete", self, "prompt_next_turntaker_action")
 	pass
 
-func _process(_d): monitor_inputs()
-func monitor_inputs():
-	if multi_input_lock: return
-#	if action_lock: return
-	
-	if Input.is_action_just_pressed("dev_1"):
-		multi_input_lock = true
-		test_new_combat("1")
-		return
-	if Input.is_action_just_pressed("dev_2"):
-		multi_input_lock = true
-		test_new_combat("2")
-		return
-#	if Input.is_action_just_pressed("dev_3"):
-#		multi_input_lock = true
-#		var doggo: Actor = act.get_first_actor_by_name("Doggo")
-#		if doggo == null: return
-#		doggo.ready_turn_actions()
-#		return
-#	if Input.is_action_just_pressed("dev_4"):
-#		multi_input_lock = true
-#		var beast: Actor = act.get_first_actor_by_name("Beast")
-#		if beast == null: return
-#		beast.ready_turn_actions()
-#		return
-	
-	if battle_details.empty(): return
-#	if !can_player_input(): return
-	
-	if Input.is_action_just_pressed("player_move_up"):
-		multi_input_lock = true
-		if act.quick_player_move(curr_actor, Vector2.UP, true):
-			action_lock = true
-			yield(act, "all_action_steps_complete")
-			action_lock = false
-		return
-	if Input.is_action_just_pressed("player_move_down"):
-		multi_input_lock = true
-		if act.quick_player_move(curr_actor, Vector2.DOWN, true):
-			action_lock = true
-			yield(act, "all_action_steps_complete")
-			action_lock = false
-		return
-	if Input.is_action_just_pressed("player_move_left"):
-		multi_input_lock = true
-		if act.quick_player_move(curr_actor, Vector2.LEFT):
-			action_lock = true
-			yield(act, "all_action_steps_complete")
-			action_lock = false
-		return
-	if Input.is_action_just_pressed("player_move_right"):
-		multi_input_lock = true
-		if act.quick_player_move(curr_actor, Vector2.RIGHT):
-			action_lock = true
-			yield(act, "all_action_steps_complete")
-			action_lock = false
-		return
-	
-	if Input.is_action_just_pressed("player_complete"):
-		multi_input_lock = true
-		cycle_to_next_turn()
-		return
+func _process(delta):
+	monitor_action_processing_time(delta)
 	pass
-
-func _physics_process(_delta):
-	multi_input_lock = false
-	pass
-
-
 
 # BATTLE MANAGEMENT --------------------------------------------------------------------------------
 
@@ -778,6 +711,9 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	curr_action = []
 	curr_action = unvalidated_action
 	
+	action_processing_time = 0.0
+	actions_are_processing = true
+	
 	# Gather data...
 	var methodname: String = str("ACT_"+curr_action[1])
 	var paramset: Array = curr_action[2]
@@ -806,6 +742,12 @@ func update_action_log(new_logline: String):
 	emit_signal("action_log_updated")
 	pass
 
+func monitor_action_processing_time(delta: float):
+	if !actions_are_processing: return
+	
+	action_processing_time += delta
+	pass
+
 func prompt_next_turntaker_action():
 	if combatstate == C_TURN:
 		if curr_actor.faction == factions.ENEMY:
@@ -815,9 +757,14 @@ func prompt_next_turntaker_action():
 func skip_action(): end_action() # Just a shortcut
 
 func end_action(): # The call that an action 'step' has ended, or needs to be skipped
+	if combatstate != C_TURN: return
+	
 	# The action_step signals here should NEVER fire the same frame this method is called! If so, we need to wait at LEAST 1 frame before proceeding.
 	if last_execution_frame == get_tree().get_frame():
 		yield(utils.yt(timeout_action_time, self), "timeout")
+	
+	actions_are_processing = false
+	print("Action processing time logged: ",action_processing_time)
 	
 	emit_signal("action_step_complete")
 	if action_queue.empty():
