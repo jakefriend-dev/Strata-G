@@ -92,10 +92,10 @@ func prep_next_action():
 	
 	if telegraphed_move == NOT_SET: # Handles something like if we failed to telegraph last turn
 		if utils.coin_flip():
-			telegraphed_move == POST_LUNGE
+			telegraphed_move = POST_LUNGE
 			next_telegraph_cost = COST_PRE_SHOOT
 		else:
-			telegraphed_move == POST_SHOOT
+			telegraphed_move = POST_SHOOT
 			next_telegraph_cost = COST_PRE_LUNGE
 	
 	# Turn-starting telegraph follow-ups are done with; now prioritize turn *ending* telegraphs

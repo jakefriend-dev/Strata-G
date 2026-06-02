@@ -105,11 +105,12 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="PlayerSniper" type="Node2D"]
+[node name="P3" type="Node2D"]
 material = SubResource( 3 )
 script = ExtResource( 1 )
 first_initiative = 5
 max_health = 3
+ofc_name = "Sniper"
 faction = 1
 def_immune_fire = true
 

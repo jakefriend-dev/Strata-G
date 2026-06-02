@@ -51,10 +51,17 @@ func list_all_traversible_tiles_in_set(exact_coords: Array, actor: Actor) -> Arr
 	var claimed_cells: Array = []
 	
 	for exact_coord in exact_coords:
-		if (batman.grid_claims.get_cellv(exact_coord) == null or batman.grid_claims.get_cellv(exact_coord) == self):
-			if is_tile_traversable_exact(actor, exact_coord):
-				batman.grid_claims.set_cellv(exact_coord, actor)
-				claimed_cells.append(exact_coord)
+		# Break if it's a non-empty cell that ISN'T US
+		if batman.grid_claims.get_cellv(exact_coord) != null:
+			if batman.grid_claims.get_cellv(exact_coord) != self:
+				break
+		# Break if it's not traversable
+		if !is_tile_traversable_exact(actor, exact_coord):
+			break
+		
+		# Otherwise, it's good!
+		batman.grid_claims.set_cellv(exact_coord, actor)
+		claimed_cells.append(exact_coord)
 	
 	return claimed_cells
 	pass
@@ -124,6 +131,8 @@ func hotjump(actor: Actor, to_coord: Vector2, dur: float, height: float = 100.0)
 # ATTACKS ------------------------------------------------------------------------------------------
 
 func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, is_melee: bool, friendly_fire: bool = true):
+	if !batman.grid_actors.has_cellv(exact_coord): return
+	
 	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
 	if victim == null:
 		return
@@ -325,14 +334,17 @@ func find_nearest_actor_in_dir(og_coord: Vector2, dir: Vector2, must_be_faction:
 	while true:
 		check_coord += dir
 		if !batman.grid_actors.has_cellv(check_coord):
+			# Give up when we're OFF the grid as a failsafe
 			break
 		var occupant: Actor = batman.grid_actors.get_cellv(check_coord)
 		if occupant == null:
+			# Ignore empty tiles
 			continue
 		
 		# Can specify that it must be a certain faction; otherwise it'll default just return the first, period
 		if must_be_faction != -1:
 			if occupant.faction != must_be_faction:
+				# Ignore factionally-irrelevant actors
 				continue
 		
 		return occupant

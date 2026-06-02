@@ -3,9 +3,11 @@ extends Node2D
 export var path_board: NodePath
 export var path_actors: NodePath
 export var path_debuglog_par: NodePath
+export var path_turndisplay_par: NodePath
 var board: GridContainer
 var actors: YSort
 var debuglog_par: VBoxContainer
+var turndisplay_par: VBoxContainer
 
 var board_offset: Vector2
 
@@ -19,6 +21,7 @@ func _ready():
 	board = get_node(path_board)
 	actors = get_node(path_actors)
 	debuglog_par = get_node(path_debuglog_par)
+	turndisplay_par = get_node(path_turndisplay_par)
 	batman.field = self
 	batman.actors = actors
 	batman.board = board
@@ -27,6 +30,7 @@ func _ready():
 	act.board = board
 	
 	update_debuglog()
+	update_turn_display()
 	
 	$Control/MC.rect_size = Vector2(
 		ProjectSettings.get_setting("display/window/size/width"),
@@ -101,11 +105,11 @@ func populate_actors():
 	var path: String = "res://src/actors/"
 	
 	for set in actorset: if set is Array:
-		var actorname: String = set[0]
+		var actor_scenename: String = set[0]
 		var coord: Vector2 = set[1]
 		var gpos: Vector2 = batman.grid_gpos.get_cellv(coord)
 		
-		var thispath: String = path + actorname + ".tscn"
+		var thispath: String = path + actor_scenename + ".tscn"
 		if !utils.does_file_exist(thispath):
 			print("BATTLEFIELD: Error, path ",thispath," does not exist! Skipping + erasing from grid")
 			batman.grid_actors.set_cellv(coord, null)
@@ -115,10 +119,10 @@ func populate_actors():
 		var actor: Node2D = res_actor.instance()
 		
 		actor.set("position", gpos)
-		actor.set("name", actorname)
+#		actor.set("name", actorname)
 		if actor.get("ofc_name") == "--":
-			actor.set("ofc_name", actorname)
-		if ["P1", "P2", "P3"].has(actorname):
+			actor.set("ofc_name", actor.get("name"))
+		if ["P1", "P2", "P3"].has(actor_scenename):
 			actor.set("faction", batman.factions.PLAYER)
 		else:
 			actor.set("faction", batman.factions.ENEMY)
@@ -175,6 +179,70 @@ func update_debuglog():
 	
 	if labelold.visible != (labelold.text != ""):
 		labelold.visible = (labelold.text != "")
+	pass
+
+func update_turn_display():
+	var currtext: String = ""
+	var nexttext: String = ""
+	
+	if batman.combatstate == batman.C_OOC:
+		push_turn_display_changes(currtext, nexttext)
+		return
+	
+	# Once we're actually IN combat, we can do the real code!
+	
+	var prev: Array = []
+	var next: Array = []
+	
+	for turndata in batman.turnqueue: if turndata is Dictionary:
+		var n: String = batman.get_readable_turntaker_name(turndata)
+		if turndata["actor"].faction == batman.factions.PLAYER:
+			n += " *"
+		else:
+			n += "  "
+		
+		if turndata["turnpos"] == batman.turncount:
+			currtext = n
+			continue
+		if turndata["turnpos"] < batman.turncount:
+			prev.append(n)
+			continue
+		next.append(n)
+		pass
+	
+#	print("prev: ",prev)
+#	print("curr: ",currtext)
+#	print("next: ",next)
+	
+	var first: bool = true
+	for n in next:
+		if first:
+			first = false
+		else:
+			nexttext += "\n"
+		nexttext += n
+	for n in prev:
+		if first:
+			first = false
+		else:
+			nexttext += "\n"
+		nexttext += n
+	
+	push_turn_display_changes(currtext, nexttext)
+	pass
+
+func push_turn_display_changes(currtext: String, nexttext: String):
+	var labelcurr: Label = turndisplay_par.get_node("Curr")
+	var labelnext: Label = turndisplay_par.get_node("Next")
+	
+	if labelcurr.text != currtext:
+		labelcurr.text = currtext
+	if labelnext.text != nexttext:
+		labelnext.text = nexttext
+	if labelcurr.visible != (labelcurr.text != ""):
+		labelcurr.visible = (labelcurr.text != "")
+	if labelnext.visible != (labelnext.text != ""):
+		labelnext.visible = (labelnext.text != "")
 	pass
 
 # -

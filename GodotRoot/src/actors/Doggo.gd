@@ -29,6 +29,9 @@ func pre_turn_setup():
 
 func prep_next_action(): # This func should END with setting up one or multiple actions!
 	
+	var can_charge_left: bool = act.is_tile_traversable_relative(self, Vector2.LEFT)
+	print("doggo can charge left? ",can_charge_left)
+	
 	# Can we see a victim?
 	if can_see_victim():
 		
@@ -43,21 +46,21 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		
 		# Nope! Time to consider other options. From here on, we're not adjacent to our victim, but we CAN see one.
 		
-		# If we can afford to charge, do that!
-		if can_afford(COST_CHARGE):
+		# If we can afford to charge (and have space to), do that!
+		if can_afford(COST_CHARGE) and can_charge_left:
 			spend(COST_CHARGE) # This is the charge-AND-bite combo
 			batman.append_action(self, "charge_forward")
 			batman.append_action(self, "bite")
 			batman.append_action(self, "charge_back")
 			return
-		# Otherwise, if we can SEE the target but not afford to attack it, get angry!
-		elif can_afford(COST_ENRAGE):
+		# Otherwise, if we can SEE the target but can't attack it - get angry!
+		elif !check_effect("enrage") and can_afford(COST_ENRAGE):
 			spend(COST_ENRAGE)
 			batman.append_action(self, "enrage")
 			return
 		# *Otherwise*, if we can move towards the target, do that.
 		elif can_afford(COST_WALK):
-			if act.is_tile_traversable_relative(self, Vector2.LEFT):
+			if can_charge_left:
 				spend(COST_WALK)
 				batman.append_action(self, "walk", [Vector2.LEFT])
 				return
@@ -68,8 +71,9 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	
 	# If we're enraged, charge/bite regardless! (If we can afford it)
 	if check_effect("enrage"):
-		if act.is_tile_traversable_relative(self, coord + Vector2.LEFT):
+		if can_charge_left:
 			if can_afford(COST_CHARGE):
+				print("Doggo charging REGARDLESS OF LACK OF LOS because it enraged last turn! Ostensibly we have at least 1 tile we're allowed to charge into")
 				spend(COST_CHARGE)
 				batman.append_action(self, "charge_forward")
 				batman.append_action(self, "bite")
@@ -77,6 +81,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 				return
 		else:
 			if can_afford(COST_BITE_NOCHARGE):
+				print("Doggo biting REGARDLESS OF LACK OF LOS because it enraged last turn! And we don't have the ability to charge")
 				spend(COST_BITE_NOCHARGE)
 				batman.append_action(self, "bite")
 				return
@@ -127,6 +132,7 @@ func ACT_charge_forward():
 	# Claim everything to your left (that you can move to!
 	allowed_over_faction_lines = true
 	var chargies: Array = act.list_all_traversible_tiles_in_dir(Vector2.LEFT, self)
+	print("chargies: ",chargies)
 	var xdist: int = chargies.size()
 	
 	if xdist == 0: # Just in case
@@ -182,7 +188,7 @@ func ACT_bite():
 
 func ACT_enrage():
 	start_effect("enrage", 2)
-	add_bonus_actions(1)
+#	add_bonus_actions(1)
 	
 	yield(utils.yt(0.5, self), "timeout")
 	if !batman.is_my_turn(self): return

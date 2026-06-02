@@ -673,6 +673,7 @@ script = ExtResource( 2 )
 path_board = NodePath("Control/MC/VB/HB/Board")
 path_actors = NodePath("FieldObjects/Actors")
 path_debuglog_par = NodePath("DebugLog/VB")
+path_turndisplay_par = NodePath("TurnDisplay/VB")
 
 [node name="Control" type="Control" parent="."]
 margin_right = 40.0
@@ -1012,6 +1013,46 @@ custom_colors/font_color = Color( 1, 0.933333, 0, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 4 )
 text = "Testing one two, testing one two"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TurnDisplay" type="Node2D" parent="."]
+position = Vector2( 636, 4 )
+
+[node name="VB" type="VBoxContainer" parent="TurnDisplay"]
+margin_left = -640.0
+margin_bottom = 65.0
+rect_min_size = Vector2( 640, 0 )
+custom_constants/separation = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Curr" type="Label" parent="TurnDisplay/VB"]
+margin_right = 640.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 0.870588, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 4 )
+text = "Test!!!"
+align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Next" type="Label" parent="TurnDisplay/VB"]
+margin_top = 17.0
+margin_right = 640.0
+margin_bottom = 82.0
+custom_colors/font_color = Color( 0.576471, 0.6, 0.733333, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 4 )
+text = "P1
+Beast
+P2
+P3"
+align = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }

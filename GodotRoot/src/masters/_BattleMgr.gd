@@ -50,7 +50,7 @@ var turnqueue: Array = [
 		# init						Float; The original initiative roll (eg. 5.72013)
 		# has_finished_turn			Bool that fires once its turn is complete
 		# ofc_name					Direct from the actor's ofc_name
-		# numerated_name			As "Doggo 1" with a space and all
+		# numerated_name			As "Doggo 1" with a space and all, even if there's only 1
 		# numeration				Int; the 1 in Doggo 1
 		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
 		# turnpos					Int; managed by batman but 
@@ -374,6 +374,8 @@ func roll_initiative():
 		count += 1
 		turndata["turnpos"] = count
 	
+	field.update_turn_display()
+	
 	print("BATMAN: Initiative rolled!")
 #	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
 	pass
@@ -422,13 +424,13 @@ func cycle_to_next_turn():
 		print("BATMAN: Failed to find next actor when cycle_to_next_turn()!")
 		return
 	
-	# Final setup!
+	# Final setup! We've cleared validations!
 	
 #	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
 	
 	field.update_targeting()
-	
 	flush_actionqueue()
+	field.update_turn_display()
 	
 	combatstate = C_PRE_TURN
 	emit_signal("pre_turn_setup", curr_actor)
@@ -640,9 +642,18 @@ func vet_action(action: Array) -> bool:
 		print("BATMAN: vet_action(",action,") failed: Method name is blank")
 		return false
 	
-	if !actor.has_method(str("ACT_"+methodname)):
-		print("BATMAN: vet_action(",action,") failed: Actor does not have method")
-		return false
+	# Non-players need to have the action in their script OR common library
+	if actor.faction != factions.PLAYER:
+		if !actor.has_method(str("ACT_"+methodname)):
+			print("BATMAN: vet_action(",action,") failed: Actor does not have method in its script")
+			return false
+		
+	# Players specifically need to have the action in ONE OF their script, common library, or player library
+	else:
+		if !actor.has_method(str("ACT_"+methodname)):
+			if !actor.pcrefs.has_method(str("ACT_"+methodname)):
+				print("BATMAN: vet_action(",action,") failed: Actor does not have method in its script OR player refs lib")
+				return false
 	
 	if action.size() == 3:
 		if not action[2] is Array:
@@ -715,21 +726,30 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	actions_are_processing = true
 	
 	# Gather data...
-	var methodname: String = str("ACT_"+curr_action[1])
+	var raw_methodname: String = curr_action[1]
+	var methodname: String = str("ACT_"+raw_methodname)
 	var paramset: Array = curr_action[2]
+	var caller: Object = actor
+	if !actor.has_method(methodname):
+		# Common library
+		if actor.faction == factions.PLAYER:
+#			print("Calling the PC's action via PCRefs")
+			caller = actor.pcrefs
+		else:
+			print("MAJOR ERROR! A non-player character does not have the called method ",methodname,"()")
+			
+			pass
 	
-#	# Log the action BEFORE executing
-#	var logstring: String = str(curr_action)
-#	actionlog.insert(0, logstring)
-#	if actionlog.size() > log_retention:
-#		actionlog.resize(log_retention)
+	# Log the action BEFORE executing
+	var logline: String = str("[",actor.ofc_name,"] ",raw_methodname)
+	update_action_log(logline)
 	
 	# Execute!
 	if paramset.empty():
-		actor.call(methodname)
+		caller.call(methodname)
 	else:
 		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
-		actor.callv(methodname, paramset)
+		caller.callv(methodname, paramset)
 	
 	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
 	pass
@@ -750,8 +770,8 @@ func monitor_action_processing_time(delta: float):
 
 func prompt_next_turntaker_action():
 	if combatstate == C_TURN:
-		if curr_actor.faction == factions.ENEMY:
-			curr_actor.choose_action()
+#		if curr_actor.faction == factions.ENEMY:
+		curr_actor.choose_action()
 	pass
 
 func skip_action(): end_action() # Just a shortcut
@@ -802,6 +822,19 @@ func update_targeted_tiles():
 	emit_signal("targeted_tiles_updated")
 	pass
 
+func get_readable_turntaker_name(turndata: Dictionary) -> String:
+	var actor: Actor = turndata["actor"]
+	
+	if !unique_actornames_observed.has(actor.ofc_name):
+		return actor.ofc_name
+	
+	var qty: int = unique_actornames_observed[actor.ofc_name]
+	if qty == 1:
+		return actor.ofc_name
+	
+	return turndata["numerated_name"]
+	pass
+
 func kill_actor(actor: Actor):
 	# Prevent it from executing actions
 	actor.active = false
@@ -820,6 +853,7 @@ func kill_actor(actor: Actor):
 	
 	# Remove the actor from the turnqueue
 	remove_all_turns_of_actor(actor)
+	field.update_turn_display()
 	
 	# Wipe its tile claims
 	act.release_actor_claims(actor)

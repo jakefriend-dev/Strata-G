@@ -57,9 +57,10 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="PlayerLeader" type="Node2D"]
+[node name="P1" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 7
+ofc_name = "Leader"
 base_action_points = 5
 faction = 1
 

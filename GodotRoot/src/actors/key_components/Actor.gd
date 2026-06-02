@@ -22,7 +22,7 @@ var variance_initiative: float  = -1.0 # Cued by batman at start of combat; perc
 
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
-var pcrefs: Resource
+var pcrefs: Node
 
 export var max_health: int = 4
 var health: int = 4
@@ -144,10 +144,23 @@ func _ready():
 	vis_object = $ArtMgr/HFlipper
 	update_bui()
 	
-	pcrefs = load("res://src/actors/key_components/Test.tres")
-	pcrefs.actor = self
-	if faction == batman.factions.PLAYER:
-		pcrefs.check_resources()
+	var res_pcrefs = load("res://src/actors/key_components/ActorPCRefs.gd")
+	pcrefs = Node.new()
+	pcrefs.set_script(res_pcrefs)
+	pcrefs.set("name", "PCRefs")
+	pcrefs.set("actor", self)
+	$Utils.add_child(pcrefs)
+	pcrefs.set("owner", self)
+	match name:
+		"P1":
+			pcrefs.set("staple_attack", "basic_shot")
+			pcrefs.set("staple_cost", 2)
+		"P2":
+			pcrefs.set("staple_attack", "basic_melee")
+			pcrefs.set("staple_cost", 2)
+		"P3":
+			pcrefs.set("staple_attack", "basic_shot")
+			pcrefs.set("staple_cost", 1)
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
 	batman.connect("new_round_started", self, "master_pre_round_setup")
@@ -188,7 +201,15 @@ func choose_action():
 	if has_method("pre_action_cleanup"):
 		call("pre_action_cleanup")
 	
-	if has_method("prep_next_action"):
+	# Players have a custom call
+	if faction == batman.factions.PLAYER:
+		player.inputstate = player.istates.READY_FOR_PLAYER_INPUT
+		print("Ready for player char to act: ",name)
+		yield(player, "party_action_chosen")
+		pass
+	
+	# Everyone/thing else
+	elif has_method("prep_next_action"):
 		call("prep_next_action")
 	
 	if !batman.action_queue.empty():
@@ -308,6 +329,8 @@ func check_effect(effect_name: String) -> bool:
 	pass
 
 func tick_down_ongoing_effects(_is_turn_start: bool):
+	if batman.curr_actor != self: return # We only tick down our OWN!
+	
 	var new_dict: Dictionary = {}
 	
 	for key in ongoing_turn_effects.keys():
