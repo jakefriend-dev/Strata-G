@@ -705,7 +705,6 @@ func reaction(actor: Actor, methodname: String, paramset: Array = []):
 func insert_action(position: int, actor: Actor, methodname: String, paramset: Array = []):
 	var action: Array = [actor, methodname, paramset]
 	if !vet_action(action):
-		print("BATMAN: Rejected insert_action() due to vetting failure!")
 		return
 	
 	if position < 0:
@@ -717,7 +716,6 @@ func insert_action(position: int, actor: Actor, methodname: String, paramset: Ar
 		return
 	
 	# Validations complete
-	print("insert_action() successful!")
 	action_queue.insert(position, action)
 	pass
 
