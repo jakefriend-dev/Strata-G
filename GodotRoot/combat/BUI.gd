@@ -27,8 +27,9 @@ func _ready():
 	pass
 
 func update_all():
-	if $MC/VB/Name.text != actor.ofc_name:
-		$MC/VB/Name.text = actor.ofc_name
+	var print_name: String = actor.get_multifactored_actor_name()
+	if $MC/VB/Name.text != print_name:
+		$MC/VB/Name.text = print_name
 	edit_max_pips("health", actor.max_health)
 	edit_max_pips("shield", actor.max_shield)
 	edit_max_pips("bonus_shield", actor.bonus_shield)

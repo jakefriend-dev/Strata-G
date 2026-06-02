@@ -195,8 +195,9 @@ func update_turn_display():
 	var next: Array = []
 	
 	for turndata in batman.turnqueue: if turndata is Dictionary:
-		var n: String = batman.get_readable_turntaker_name(turndata)
-		if turndata["actor"].faction == batman.factions.PLAYER:
+		var actor: Actor = turndata["actor"]
+		var n: String = actor.get_multifactored_actor_name()
+		if actor.faction == batman.factions.PLAYER:
 			n += " *"
 		else:
 			n += "  "

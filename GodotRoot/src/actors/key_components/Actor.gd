@@ -33,6 +33,7 @@ var shield: int = 0
 var bonus_shield: int = 0 # Generally never starts with any, I think?
 
 export var ofc_name: String = "--"
+var numerated_name: String = ""
 var bui: Node2D
 
 export var base_action_points: int = 4 # Used for movement AND attacks!
@@ -143,7 +144,7 @@ func _ready():
 	perform_initial_data_setup()
 	$ArtMgr/Shadow.recenter()
 	vis_object = $ArtMgr/HFlipper
-	update_bui()
+#	update_bui()
 	
 	var res_pcrefs = load("res://src/actors/key_components/ActorPCRefs.gd")
 	pcrefs = Node.new()
@@ -569,14 +570,25 @@ func update_outline(): # Should be called every time targeting changes
 	
 	var sm: ShaderMaterial = $ArtMgr/HFlipper/Sprite.material
 	if use_outline:
-		sm.set_shader_param("c8f3fcf0", to_col)
+		sm.set_shader_param("outline_col", to_col)
 	sm.set_shader_param("outline_enabled", use_outline)
 	pass
 
 # -
 
+func get_multifactored_actor_name() -> String:
+	if !batman.unique_actornames_observed.has(ofc_name):
+		return ofc_name
+	
+	var qty: int = batman.unique_actornames_observed[ofc_name]
+	if qty == 1:
+		return ofc_name
+	
+	return numerated_name
+	pass
+
 func is_targeted() -> bool:
-	return false
+	return batman.targeted_tiles.has(coord)
 
 func _to_string() -> String:
 	if ofc_name != "--":

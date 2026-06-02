@@ -350,6 +350,7 @@ func roll_initiative():
 			count_of_type = unique_actornames_observed[n] + 1
 			unique_actornames_observed[n] = count_of_type
 		var numerated_name: String = str(n," ",count_of_type)
+		actor.numerated_name = numerated_name
 		
 		# Go through each turn PER each actor
 		var initcount: int = 0
@@ -379,6 +380,8 @@ func roll_initiative():
 		turndata["turnpos"] = count
 	
 	field.update_turn_display()
+	for actor in actors.get_children():
+		actor.update_bui()
 	
 	print("BATMAN: Initiative rolled!")
 #	print("BATMAN: Initiative rolled, turnqueue looks like:\n",turnqueue)
@@ -548,6 +551,25 @@ func insert_turndata(new_turndata: Dictionary, to_position: int):
 	if to_position <= turncount:
 		turncount += 1
 	
+	for actor in actors.get_children():
+		actor.update_bui()
+	
+	pass
+
+func get_first_turndata_by_actor(actor: Actor) -> Dictionary:
+	for turndata in turnqueue:
+		if turndata["actor"] == actor:
+			return turndata
+	return {}
+	pass
+
+func get_all_turndata_by_actor(actor: Actor) -> Array:
+	# Multiple turns means an array!
+	var results: Array = []
+	for turndata in turnqueue:
+		if turndata["actor"] == actor:
+			results.append(turndata)
+	return results
 	pass
 
 func remove_all_turns_of_actor(actor: Actor):
@@ -719,7 +741,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	# Final checks on if the actor is STILL valid, given some delays since vet_action()
 	var unvalidated_action: Array = action_queue.pop_front()
 	var actor: Actor = unvalidated_action[0]
-	if actor == null:
+	if !utils.valid(actor):
 		end_action()
 		return
 	if !actor.active:
@@ -830,19 +852,6 @@ func update_targeted_tiles():
 				targeted_tiles.append(target)
 	
 	emit_signal("targeted_tiles_updated")
-	pass
-
-func get_readable_turntaker_name(turndata: Dictionary) -> String:
-	var actor: Actor = turndata["actor"]
-	
-	if !unique_actornames_observed.has(actor.ofc_name):
-		return actor.ofc_name
-	
-	var qty: int = unique_actornames_observed[actor.ofc_name]
-	if qty == 1:
-		return actor.ofc_name
-	
-	return turndata["numerated_name"]
 	pass
 
 func kill_actor(actor: Actor):
