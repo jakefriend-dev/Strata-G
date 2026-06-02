@@ -2,6 +2,7 @@ extends Node
 
 
 var default_halfboard_size: Vector2 = Vector2(3, 5)
+const DETERMINISTIC: bool = false # When true, randomness is not initiated
 
 enum {
 	C_OOC,			# Out of combat - the turn system is not active, aka between fights
@@ -173,7 +174,7 @@ func test_new_combat(test: String):
 				"npc_positions": [
 					[4, 3, "Beast"],
 					[6, 2, "Doggo"],
-					[4, 3, "Doggo"],
+					[6, 4, "Doggo"],
 					[4, 1, "Rock"],
 				],
 				"tile_exceptions": {
@@ -199,6 +200,9 @@ func test_new_combat(test: String):
 	pass
 
 func init_new_combat(new_battle_details: Dictionary) -> bool:
+	
+	if !DETERMINISTIC: randomize()
+	
 	# Validations!
 	if !new_battle_details.has("npc_positions"): return false
 	
@@ -672,9 +676,14 @@ func append_action(actor: Actor, methodname: String, paramset: Array = []):
 	action_queue.append(action)
 	pass
 
+func reaction(actor: Actor, methodname: String, paramset: Array = []):
+	insert_action(0, actor, methodname, paramset)
+	pass
+
 func insert_action(position: int, actor: Actor, methodname: String, paramset: Array = []):
 	var action: Array = [actor, methodname, paramset]
 	if !vet_action(action):
+		print("BATMAN: Rejected insert_action() due to vetting failure!")
 		return
 	
 	if position < 0:
@@ -686,14 +695,15 @@ func insert_action(position: int, actor: Actor, methodname: String, paramset: Ar
 		return
 	
 	# Validations complete
+	print("insert_action() successful!")
 	action_queue.insert(position, action)
 	pass
 
-# For quick-running a single action immediately!
-func execute_action(actor: Actor, methodname: String, paramset: Array = []): 
-	insert_action(0, actor, methodname, paramset)
-	progress_action_queue()
-	pass
+## For quick-running a single action immediately!
+#func execute_action(actor: Actor, methodname: String, paramset: Array = []): 
+#	insert_action(0, actor, methodname, paramset)
+#	progress_action_queue()
+#	pass
 
 func progress_action_queue(): # Calls ONE next action, or if there is none, skips
 	last_execution_frame = get_tree().get_frame()
@@ -784,7 +794,7 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 		yield(utils.yt(timeout_action_time, self), "timeout")
 	
 	actions_are_processing = false
-	print("Action processing time logged: ",action_processing_time)
+#	print("Action processing time logged: ",action_processing_time)
 	
 	emit_signal("action_step_complete")
 	if action_queue.empty():

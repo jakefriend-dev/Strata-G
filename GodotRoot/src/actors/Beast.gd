@@ -8,6 +8,7 @@ var executed_main_attack: bool = false
 var lunge_delta_target: Vector2 # A static *relative* reference to the opposite side of the board
 var jump_dest_coord: Vector2
 var post_jump_rumble_time: float = 0.2
+var lunge_return_tile: Vector2
 
 const COST_PRE_SHOOT: int = 2
 const COST_SHOOT: int = 2
@@ -33,7 +34,8 @@ func _ready():
 	pass
 
 func pre_combat_setup():
-	print("Beast pre combat setup!")
+#	print("Beast pre combat setup!")
+	jump_dest_coord = coord + lunge_delta_target
 	if utils.coin_flip():
 		telegraphed_move = LUNGE
 		ACT_pre_lunge()
@@ -64,9 +66,11 @@ func prep_next_action():
 			telegraphed_move = POST_LUNGE
 			next_telegraph_cost = COST_PRE_SHOOT
 			if can_afford(COST_LUNGE):
-				print("checking if we can lunge to exact jump_dest_coord ",jump_dest_coord)
+#				print("checking if we can lunge to exact jump_dest_coord ",jump_dest_coord)
+				ghost_mode(true)
 				allowed_over_faction_lines = true
 				if act.is_tile_traversable_exact(self, jump_dest_coord):
+					ghost_mode(false)
 					allowed_over_faction_lines = false
 					print("yep!")
 					executed_main_attack = true
@@ -75,6 +79,7 @@ func prep_next_action():
 					batman.append_action(self, "lunge_back")
 					return
 				else:
+					ghost_mode(false)
 					allowed_over_faction_lines = false
 					print("nope?")
 					release_targeted_tiles()
@@ -248,6 +253,15 @@ func ACT_lunge_forward():
 #	print("lunge_forward")
 	allowed_over_faction_lines = true
 	claim_tile()
+	ghost_mode(false)
+	
+	# Attempt to return to a random tile (BEFORE enabling ghost mode)
+	lunge_return_tile = claimed_tile
+	var rand_tile: Vector2 = act.get_rand_faction_tile_for_actormoving(self, faction, true)
+	if rand_tile != coord:
+		lunge_return_tile = rand_tile
+		claim_tile(lunge_return_tile)
+	
 	ghost_mode(true)
 	
 	var dur: float = 0.5
@@ -274,16 +288,9 @@ func ACT_lunge_forward():
 func ACT_lunge_back():
 #	print("lunge_back")
 	
-	# Attempt to return to a random tile
-	var target_tile: Vector2 = claimed_tile
-	var rand_tile: Vector2 = act.get_rand_faction_tile_for_actormoving(self, faction, true)
-	if rand_tile != coord:
-		target_tile = rand_tile
-		claim_tile(target_tile)
-	
 	var dur: float = 0.5
 	
-	act.hotjump(self, target_tile, dur)
+	act.hotjump(self, lunge_return_tile, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	

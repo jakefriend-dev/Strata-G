@@ -130,7 +130,8 @@ var last_pos: Vector2 = Vector2.ZERO
 var coord: Vector2
 var claimed_tile: Vector2 = Vector2.ZERO
 
-signal shield_broken() # Shield broke but NOT dead
+signal on_shield_consumed(is_melee) # Shield consumed at all
+signal on_shield_broken(is_melee) # Shield depleted, but we are NOT yet dead
 
 # ---
 
@@ -478,6 +479,7 @@ func receive_damage(damage: int, is_melee: bool):
 	
 	var og_damage: int = damage
 	var og_shield: int = shield
+	var og_bonus_shield: int = bonus_shield
 	var desctext: String = " melee"
 	if !is_melee: desctext = " ranged"
 	
@@ -489,8 +491,13 @@ func receive_damage(damage: int, is_melee: bool):
 		else:
 			shield -= 1
 	
-	if og_shield > 0 and shield == 0:
-		emit_signal("shield_broken")
+	if (shield+bonus_shield) < (og_shield+og_bonus_shield):
+#		print("Some quantity of shield consumed!")
+		emit_signal("on_shield_consumed", is_melee)
+	
+	if (og_shield+og_bonus_shield) > 0 and shield == 0:
+#		print("Shield BROKEN!")
+		emit_signal("on_shield_broken", is_melee)
 	
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:

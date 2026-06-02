@@ -30,7 +30,7 @@ func pre_turn_setup():
 func prep_next_action(): # This func should END with setting up one or multiple actions!
 	
 	var can_charge_left: bool = act.is_tile_traversable_relative(self, Vector2.LEFT)
-	print("doggo can charge left? ",can_charge_left)
+#	print("doggo can charge left? ",can_charge_left)
 	
 	# Can we see a victim?
 	if can_see_victim():
@@ -64,7 +64,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 				spend(COST_WALK)
 				batman.append_action(self, "walk", [Vector2.LEFT])
 				return
-		# If we can see the target but can't do ANYTHING, just end the turn.
+		# If we can see the target but can't do ANYTHING else, just end the turn.
 		return
 	
 	# From here on, we know we CAN'T see the target. So we need to move!
@@ -132,7 +132,7 @@ func ACT_charge_forward():
 	# Claim everything to your left (that you can move to!
 	allowed_over_faction_lines = true
 	var chargies: Array = act.list_all_traversible_tiles_in_dir(Vector2.LEFT, self)
-	print("chargies: ",chargies)
+#	print("chargies: ",chargies)
 	var xdist: int = chargies.size()
 	
 	if xdist == 0: # Just in case
