@@ -92,7 +92,7 @@ var concluded_effects: Dictionary = {
 
 export var def_hovering:			bool = false # Not affected by ground type or pits at all
 export var def_lightweight:			bool = false # Not affected by tiles that you sink in, like mud
-export var def_heavyweight:			bool = false # Not affected by wind or knockback
+export var def_heavyweight:			bool = false # Not affected by wind OR knockback
 export var def_immune_jagged:		bool = false # Doesn't take damage or AP penalties from jaggies
 export var def_immune_knockback:	bool = false # Not affected by knockback
 													# Separated from weight just in case!
