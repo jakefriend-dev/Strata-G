@@ -40,6 +40,9 @@ var bonus_shield: int = 0 # Generally never starts with any, I think?
 
 export var ofc_name: String = "--"
 var numerated_name: String = ""
+
+enum bui_levels {FULL, PIPS_ONLY, HEALTH_ONLY, NOTHING}
+export (bui_levels) var bui_info_tier: int = bui_levels.FULL
 var bui: Node2D
 
 export var base_action_points: int = 4 # Used for movement AND attacks!
@@ -61,8 +64,6 @@ enum factions { # Local copy of TurnMgr, must be an exact duplicate!
 }
 export (factions) var faction: int = factions.ENEMY # Enemy if not manually set
 var is_facing_left: bool = true # Default true for enemies; false for party
-
-export var bui_visible: bool = true
 
 # A list of effects for tracking and live usage
 var ongoing_turn_effects: Dictionary = {
@@ -570,7 +571,6 @@ func update_bui():
 		bui.set("owner", self)
 	
 	bui.update_all()
-	bui.visible = bui_visible
 	pass
 
 func update_outline(): # Should be called every time targeting changes

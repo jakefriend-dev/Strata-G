@@ -30,6 +30,8 @@ func update_all():
 	edit_max_pips("shield", actor.max_shield)
 	edit_max_pips("bonus_shield", actor.bonus_shield)
 	edit_max_pips("action_points", actor.base_action_points + actor.bonus_actions)
+	
+	visible = (actor.bui_info_tier < actor.bui_levels.NOTHING)
 	pass
 
 # Use a USER max, not a BASE max - should already be x4'd (or whatever)

@@ -146,6 +146,7 @@ func ACT_charge_forward():
 	# Perform a visual movement to the destination cell!
 	var dur: float = float(xdist)*0.1
 	act.hotmove(self, dest_coord, dur)
+	
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	

@@ -72,7 +72,7 @@ func prep_next_action():
 				if act.is_tile_traversable_exact(self, jump_dest_coord):
 					ghost_mode(false)
 					allowed_over_faction_lines = false
-					print("yep!")
+#					print("yep!")
 					executed_main_attack = true
 					spend(COST_LUNGE)
 					batman.append_action(self, "lunge_forward")
@@ -81,7 +81,7 @@ func prep_next_action():
 				else:
 					ghost_mode(false)
 					allowed_over_faction_lines = false
-					print("nope?")
+#					print("nope?")
 					release_targeted_tiles()
 			else: release_targeted_tiles()
 		

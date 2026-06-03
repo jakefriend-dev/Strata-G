@@ -57,12 +57,13 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="Actor" type="Node2D"]
+[node name="Rock" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 0
 max_health = 6
+ofc_name = "Rock"
+bui_info_tier = 3
 base_action_points = 0
-bui_visible = false
 def_immune_fire = true
 def_immune_poison = true
 def_immune_magnet = true
