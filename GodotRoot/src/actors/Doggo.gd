@@ -182,7 +182,7 @@ func ACT_bite():
 	act.damage_actor_at_coord(self, coord + Vector2.LEFT, damage, true)
 	
 	clear_effect("enrage") # Whether it's active of not
-	act.end_effect_on_actor(self, "buff")
+	act.end_effect_on_actor(self, "buff", true)
 	if !batman.is_my_turn(self): return
 	
 	end_action()

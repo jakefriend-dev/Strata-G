@@ -136,6 +136,7 @@ signal on_shield_broken_through(is_melee) # Shield depleted, and damage surpasse
 signal on_shield_broken_held(is_melee) # Shield depleted exactly w/o damage
 signal on_shield_broken_any(is_melee) # Shield depleted, any circumstance
 signal on_blocked_all_damage(is_melee) # Shield remains; health unaffected
+signal on_phys_combat_any_contact() # Happens no matter what, as long as it wasn't like, poison
 
 # ---
 
@@ -485,6 +486,9 @@ func receive_damage(damage: int, is_melee: bool):
 	var og_bonus_shield: int = bonus_shield
 	var desctext: String = " melee"
 	if !is_melee: desctext = " ranged"
+	
+	emit_signal("on_phys_combat_any_contact")
+	act.quick_effect(self, "spark_burst")
 	
 	# Deduct damage and shield equally until either of them depletes fully
 	while (bonus_shield > 0 or shield > 0) and damage > 0:
