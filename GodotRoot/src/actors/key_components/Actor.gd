@@ -1,6 +1,14 @@
 extends Node2D
 class_name Actor
 
+onready var sprite: Sprite = $ArtMgr/HFlipper/Sprite
+onready var hflipper: Node2D = $ArtMgr/HFlipper
+onready var shadow: ColorRect = $ArtMgr/Shadow
+onready var aniplayer: AnimationPlayer = $ArtMgr/AnimationPlayer
+
+var pcrefs: Node
+
+
 enum initspeeds {
 	DOES_NOT_ACT, # Things like rocks
 	# ENEMIES:
@@ -21,8 +29,6 @@ export (initspeeds) var third_initiative: int = initspeeds.DOES_NOT_ACT
 var variance_initiative: float  = -1.0 # Cued by batman at start of combat; percentage from 0-99%
 
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
-
-var pcrefs: Node
 
 export var max_health: int = 4
 var health: int = 4
