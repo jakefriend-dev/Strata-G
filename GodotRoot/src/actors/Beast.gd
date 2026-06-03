@@ -274,9 +274,11 @@ func ACT_lunge_forward():
 	for target in targeted_tiles:
 		if target == coord:
 			act.damage_actor_at_coord(self, target, base_damage, true)
+			act.quick_effect(target, "dust")
 			act.change_tiletype_single(target, batman.tiletypes.JAGGED)
 		else:
 			act.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR, false)
+			act.quick_effect(target, "dust")
 	release_targeted_tiles()
 	
 	yield(utils.yt(post_jump_rumble_time, self), "timeout")

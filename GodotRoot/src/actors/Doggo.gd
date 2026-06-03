@@ -190,6 +190,7 @@ func ACT_bite():
 
 func ACT_enrage():
 	start_effect("enrage", 2)
+	act.quick_effect(self, "quick_good")
 	act.quick_effect(self, "buff")
 #	add_bonus_actions(1)
 	

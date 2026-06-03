@@ -132,7 +132,9 @@ var coord: Vector2
 var claimed_tile: Vector2 = Vector2.ZERO
 
 signal on_shield_consumed(is_melee) # Shield consumed at all
-signal on_shield_broken(is_melee) # Shield depleted, but we are NOT yet dead
+signal on_shield_broken_through(is_melee) # Shield depleted, and damage surpassed it
+signal on_shield_broken_held(is_melee) # Shield depleted exactly w/o damage
+signal on_shield_broken_any(is_melee) # Shield depleted, any circumstance
 signal on_blocked_all_damage(is_melee) # Shield remains; health unaffected
 
 # ---
@@ -495,12 +497,16 @@ func receive_damage(damage: int, is_melee: bool):
 	if (shield+bonus_shield) < (og_shield+og_bonus_shield):
 #		print("Some quantity of shield consumed!")
 		emit_signal("on_shield_consumed", is_melee)
-		act.quick_effect(self, "blocked")
 	
 	if (og_shield+og_bonus_shield) > 0 and shield == 0:
 #		print("Shield BROKEN!")
-		emit_signal("on_shield_broken", is_melee)
-		act.quick_effect(self, "shield_broken")
+		if damage > 0:
+			emit_signal("on_shield_broken_through", is_melee)
+			act.quick_effect(self, "shield_broken")
+		else:
+			emit_signal("on_shield_broken_held", is_melee)
+			act.quick_effect(self, "blocked")
+		emit_signal("on_shield_broken_any", is_melee)
 	
 	var shielded_damage: int = og_damage - damage
 	if damage <= 0:
