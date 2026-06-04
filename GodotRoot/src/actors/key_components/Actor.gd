@@ -41,8 +41,8 @@ var bonus_shield: int = 0 # Generally never starts with any, I think?
 export var ofc_name: String = "--"
 var numerated_name: String = ""
 
-enum bui_levels {FULL, PIPS_ONLY, HEALTH_ONLY, NOTHING}
-export (bui_levels) var bui_info_tier: int = bui_levels.FULL
+enum bui_tiers {FULL, JUST_PIPS, JUST_HEALTH, INVIS_UNTIL_HIT, NOTHING_EVER}
+export (bui_tiers) var bui_level: int = bui_tiers.FULL
 var bui: Node2D
 
 export var base_action_points: int = 4 # Used for movement AND attacks!
@@ -556,7 +556,7 @@ func alive_check() -> bool:
 	return true
 
 # -
-	
+
 func update_bui():
 	if faction == batman.factions.PLAYER:
 		is_facing_left = false

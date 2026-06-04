@@ -20,6 +20,8 @@ func _ready():
 	bonusshieldpar = get_node(path_bonusshieldpar)
 	actionpar = get_node(path_actionpar)
 #	bonusactionpar = get_node(path_bonusactionpar) # Not needed; shared!
+	
+	actor.connect("on_phys_combat_any_contact", self, "check_bui_tier_on_hit")
 	pass
 
 func update_all():
@@ -31,7 +33,22 @@ func update_all():
 	edit_max_pips("bonus_shield", actor.bonus_shield)
 	edit_max_pips("action_points", actor.base_action_points + actor.bonus_actions)
 	
-	visible = (actor.bui_info_tier < actor.bui_levels.NOTHING)
+	if visible != ought_be_visible():
+		visible = ought_be_visible()
+	pass
+
+func ought_be_visible() -> bool:
+	
+	if (actor.bui_level == actor.bui_tiers.FULL
+	or actor.bui_level == actor.bui_tiers.JUST_PIPS
+	or actor.bui_level == actor.bui_tiers.JUST_HEALTH):
+		return true
+	
+	return false
+
+func check_bui_tier_on_hit():
+	if actor.bui_level == actor.bui_tiers.INVIS_UNTIL_HIT:
+		actor.bui_level = actor.bui_tiers.JUST_HEALTH
 	pass
 
 # Use a USER max, not a BASE max - should already be x4'd (or whatever)
