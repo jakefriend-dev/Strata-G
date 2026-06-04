@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://src/actors/key_components/Actor.gd" type="Script" id=1]
+[ext_resource path="res://src/actors/PlayerLeader.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/blue.png" type="Texture" id=2]
 [ext_resource path="res://src/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
@@ -62,7 +62,6 @@ script = ExtResource( 1 )
 first_initiative = 7
 ofc_name = "Leader"
 base_action_points = 5
-base_damage = 2
 faction = 1
 
 [node name="ArtMgr" type="Node2D" parent="."]

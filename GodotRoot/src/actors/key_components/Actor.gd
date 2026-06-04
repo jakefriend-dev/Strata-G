@@ -87,38 +87,38 @@ var concluded_effects: Dictionary = {
 	# 5: ["enrage"],
 }
 
-#enum weightclasses {
-#	HOVER,  # Flying; not affects by the ground beneath it at all
-#	LIGHT,  # Doesn't sink into tiles; doesn't break cracked tiles
-#	NORMAL, # Standard; affected by things as usual
-#	HEAVY,  # Unaffected by knockback
-#}
+enum weightclasses {
+	HOVER,  # Flying; not affects by the ground beneath it at ALL. Allowed to enter pit tiles!
+	LIGHT,  # Doesn't sink into certain tiles; immediately moved by wind; doesn't break lilypads?
+	NORMAL, # Standard; affected by things as usual
+	HEAVY,  # Unaffected by knockback, jagged tiles, or wind; always sinks
+}
 
 # Defaults first; manually set
-#export (weightclasses) var def_weight: int = weightclasses.NORMAL
+export (weightclasses) var def_weight: int = weightclasses.NORMAL
 
-export var def_hovering:			bool = false # Not affected by ground type or pits at all
-export var def_lightweight:			bool = false # Not affected by tiles that you sink in, like mud
-export var def_heavyweight:			bool = false # Not affected by wind OR knockback
+#export var def_hovering:			bool = false # Not affected by ground type or pits at all
+#export var def_lightweight:			bool = false # Not affected by tiles that you sink in, like mud
+#export var def_heavyweight:			bool = false # Not affected by wind OR knockback
+export var def_unmovable:			bool = false # Not affected by ANY external factors! (Can still move ITSELF of course)
 export var def_immune_jagged:		bool = false # Doesn't take damage or AP penalties from jaggies
-export var def_immune_knockback:	bool = false # Not affected by knockback
-													# Separated from weight just in case!
-													# But 'heavyweight' also does that
 export var def_immune_fire:			bool = false # Not affected by ember floors
 export var def_immune_water:		bool = false # Not slowed by water tiles (even lightweights are)
+export var def_immune_sand:			bool = false # Doesn't sink or take penalty from sand
 export var def_immune_ice:			bool = false # Doesn't slide on ice
 export var def_immune_poison:		bool = false # Doesn't take poison damage
 export var def_immune_magnet:		bool = false # Not pulled by magnet tiles
 export var def_immune_elec:			bool = false # Doesn't take elec damage on static traps
 
-#var weight: int
-var is_hovering: bool
-var is_lightweight: bool
-var is_heavyweight: bool
+var weight: int
+#var is_hovering: bool
+#var is_lightweight: bool
+#var is_heavyweight: bool
+var is_unmovable: bool
 var is_immune_jagged: bool
-var is_immune_knockback: bool
 var is_immune_fire: bool
 var is_immune_water: bool
+var is_immune_sand: bool
 var is_immune_ice: bool
 var is_immune_poison: bool
 var is_immune_magnet: bool
@@ -188,9 +188,10 @@ func perform_initial_data_setup():
 	action_points = base_action_points
 	base_damage *= batman.BASE_HP_FACTOR
 	
-	for term in ["hovering", "lightweight", "heavyweight", "immune_knockback", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
+	for term in ["unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
+#	for term in ["hovering", "lightweight", "heavyweight", "unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
 		set( str("is_"+term), get(str("def_",term)) )
-#	weight = def_weight
+	weight = def_weight
 	pass
 
 func get_initiative() -> Array:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://src/actors/key_components/Actor.gd" type="Script" id=1]
+[ext_resource path="res://src/actors/PlayerSniper.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/artificer.png" type="Texture" id=2]
 [ext_resource path="res://src/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
@@ -112,7 +112,7 @@ first_initiative = 5
 max_health = 3
 ofc_name = "Sniper"
 faction = 1
-def_immune_fire = true
+def_weight = 1
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

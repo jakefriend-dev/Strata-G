@@ -63,8 +63,7 @@ max_health = 2
 max_shield = 2
 ofc_name = "Thrower"
 base_action_points = 3
-def_heavyweight = true
-def_immune_knockback = true
+def_weight = 3
 def_immune_poison = true
 
 [node name="ArtMgr" type="Node2D" parent="."]

@@ -44,5 +44,44 @@ func ACT_ended_on_sand():
 	# Lose a movestep, unless lightweight
 	pass
 
+# CHECKS -----------------------------------------------------------------------
+
+func affected_by_jagged() -> bool:
+	if actor.is_immune_jagged: return false
+	if actor.weight == actor.weightclasses.HEAVY: return false
+	if actor.weight == actor.weightclasses.HOVER: return false
+	return true
+
+func fixes_jagged_on_contact() -> bool:
+	if actor.weight == actor.weightclasses.HOVER: return false
+	return true
+
+func affected_by_force() -> bool: # Wind AND knockback
+	if actor.is_unmovable: return false
+	if actor.weight == actor.weightclasses.HEAVY: return false
+	return true
+
+func affected_by_ice() -> bool:
+	if actor.weight == actor.weightclasses.LIGHT: return false
+	if actor.is_unmovable: return false
+	if actor.is_immune_ice: return false
+	return true
+
+func affected_by_sinking() -> bool:
+	if actor.weight == actor.weightclasses.LIGHT: return false
+	return true
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
