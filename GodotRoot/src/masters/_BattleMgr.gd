@@ -180,8 +180,9 @@ func _process(delta):
 	monitor_action_processing_time(delta)
 	pass
 
-# BATTLE MANAGEMENT --------------------------------------------------------------------------------
 
+
+# BATTLE MANAGEMENT --------------------------------------------------------------------------------
 
 ### Battle setup
 
@@ -410,6 +411,8 @@ func perform_local_pre_combat_setup():
 		if actor.has_method("pre_combat_setup"):
 			actor.call("pre_combat_setup")
 	pass
+
+
 
 ### Turn management
 
@@ -653,6 +656,7 @@ func get_printable_turntaker_name(turndata: Dictionary) -> String:
 	pass
 
 
+
 ### Action management
 
 func vet_action(action: Array) -> bool:
@@ -736,12 +740,6 @@ func insert_action(position: int, actor: Actor, methodname: String, paramset: Ar
 	# Validations complete
 	action_queue.insert(position, action)
 	pass
-
-## For quick-running a single action immediately!
-#func execute_action(actor: Actor, methodname: String, paramset: Array = []): 
-#	insert_action(0, actor, methodname, paramset)
-#	progress_action_queue()
-#	pass
 
 func progress_action_queue(): # Calls ONE next action, or if there is none, skips
 	last_execution_frame = get_tree().get_frame()
@@ -857,7 +855,9 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	last_execution_frame = -1
 	pass
 
-# ---
+
+
+# TILE TARGETING AND TILETYPES -------------------------------------------------
 
 func update_targeted_tiles():
 	targeted_tiles = []
@@ -873,6 +873,10 @@ func update_targeted_tiles():
 	
 	emit_signal("targeted_tiles_updated")
 	pass
+
+
+
+# ---
 
 func kill_actor(actor: Actor):
 	# Prevent it from executing actions

@@ -267,6 +267,12 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2, ignore_ghost: bool
 
 # Note that this only clears the FIRST previous cell!
 func change_actor_coord(actor: Actor, new_coord: Vector2):
+	var occupant: Actor = batman.grid_actors.get_cellv(new_coord)
+	if occupant != null:
+		print("ACT: change_actor_coord(",actor,", ",new_coord,") when OCCUPIED already by ",occupant,"! Error, error, breakpoint!")
+		
+		pass
+	
 	var dataset: Array = batman.grid_actors.get_dataset_with_coords()
 	var old_coord: Vector2
 	for set in dataset:

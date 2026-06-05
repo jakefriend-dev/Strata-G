@@ -133,10 +133,22 @@ export var keep_claims_at_eot: bool = false # Set true for the RARE cases (like 
 var targeted_tiles: Array = [] # Just an array of Vector2 coords that is fed to BatMan
 var vis_object: Node2D # Typically the parent of all the visual stuff that has Z height
 
-# Convenience references; duplicate data to batman.grid_actors
+# Convenience references; duplicate data to batman.grid_actors but DRIVEN FROM HERE (important)
 var last_pos: Vector2 = Vector2.ZERO
 var coord: Vector2
+var prior_actionstep_coord: Vector2 # Update this at the end of every actionstep for every actor! This helps us understand what happened this actionstep for tiletype changes
 var claimed_tile: Vector2 = Vector2.ZERO
+
+var moving_style: int = movetypes.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
+enum movetypes { # WAYS of moving, for the purpose of things like determining ice slippy-ness.
+	NOT_MOVING,
+	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
+	BY_JUMP,
+	BY_WARP,
+	BY_SPECIAL_TRAVEL, # A cartwheel might be immune to slipping, for instance
+	MOVED_EXTERNALLY, # Similar to BY_TRAVEL but helps separate external forces from ourselves
+	DNU
+}
 
 signal on_shield_consumed(is_melee) # Shield consumed at all
 signal on_shield_broken_through(is_melee) # Shield depleted, and damage surpassed it
@@ -470,17 +482,71 @@ func monitor_position_as_coordinate():
 	if last_pos == position: return
 	
 	last_pos = position
-	var last_coord: Vector2 = coord
+	var last_tick_coord: Vector2 = coord
 	
 	coord = batman.field.actorpos_to_tilecoord(position)
 	
-	if coord == last_coord: return
+	if coord == last_tick_coord: return
 	if is_ghost: return
 	
 	# We always want to track our own coordinate personally, but don't want to manage the grid coord unless we're not a ghost
 	
 	act.change_actor_coord(self, coord)
+	
 	pass
+
+# ---
+
+func on_entered_new_tile(new_coord: Vector2, old_coord: Vector2):
+	var new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
+	var _old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
+	
+	match new_tiletype:
+		batman.tiletypes.POISON:
+			receive_damage(1, false) # Minimum damage value
+		batman.tiletypes.JAGGED:
+			receive_damage(4, false) # Full hit, then restore it
+			act.change_tiletype_single(new_coord, batman.tiletypes.NORMAL)
+		
+		batman.tiletypes.MUD:
+			sink_into_tile()
+		batman.tiletypes.WATER:
+			sink_into_tile()
+		batman.tiletypes.BOGROT:
+			sink_into_tile()
+	pass
+
+func on_exited_old_tile(new_coord: Vector2, old_coord: Vector2):
+	var new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
+	var old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
+	pass
+
+func on_rested_whileon_tile():
+	var tiletype: int = batman.grid_tiles.get_cellv(coord)
+	
+	match tiletype:
+		batman.tiletypes.POISON:
+			receive_damage(1, false) # Minimum damage value
+		batman.tiletypes.SAND:
+			sink_into_tile()
+	pass
+
+func on_actionstep_ended_whileon_tile():
+	var tiletype: int = batman.grid_tiles.get_cellv(coord)
+	
+	match tiletype:
+		batman.tiletypes.ICE:
+			pass
+	pass
+
+func on_turn_ended_whileon_tile():
+	var tiletype: int = batman.grid_tiles.get_cellv(coord)
+	
+	match tiletype:
+		batman.tiletypes.HOT:
+			receive_damage(4, false) # Full damage at the END of your turn
+	pass
+
 
 # ---
 
@@ -548,6 +614,9 @@ func receive_damage(damage: int, is_melee: bool):
 			batman.update_action_log(str(name,": Died from taking ",unshielded_damage,desctext," damage (blocked ",shielded_damage,")"))
 		batman.kill_actor(self)
 	
+	pass
+
+func sink_into_tile():
 	pass
 
 func alive_check() -> bool:
