@@ -259,6 +259,7 @@ func ACT_lunge_forward():
 	lunge_return_tile = claimed_tile
 	var rand_tile: Vector2 = act.get_rand_faction_tile_for_actormoving(self, faction, true)
 	if rand_tile != coord:
+		print(name," ACT_lunge_forward() picked new tile whose occupant is ",batman.grid_actors.get_cellv(rand_tile))
 		lunge_return_tile = rand_tile
 		claim_tile(lunge_return_tile)
 	
@@ -292,6 +293,11 @@ func ACT_lunge_back():
 	
 	var dur: float = 0.5
 	
+	var occupant_of_dest: Actor = batman.grid_actors.get_cellv(lunge_return_tile)
+	print(name," ACT_lunge_back() when is_ghost ",is_ghost," and occupant of lunge dest: ",occupant_of_dest)
+	if occupant_of_dest != null:
+		# Breakpoint!
+		pass
 	act.hotjump(self, lunge_return_tile, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return

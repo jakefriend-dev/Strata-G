@@ -151,16 +151,21 @@ func change_tiletype_single(coord: Vector2, to_tiletype: int, can_change_pits: b
 	pass
 
 # For multiple tiletypes, use multiple calls
-func change_tiletype_mass(coordset: Array, to_tiletype: int, can_change_pits: bool = false):
+func change_tiletype_mass(coordset: Array, to_tiletype: int, restrictions_override: bool = false):
 	# Prepare 'actual' changes, including custom logic
 	var impact_dict: Dictionary = {} # Vector keys, int values for tiletype
 	
 	# Validate the deisred changes and see what's actually viable
 	for coord in coordset:
 		
+		# Steel should be immune
+		if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.STEEL:
+			if !restrictions_override:
+				continue
+		
 		# We don't normally change pits
 		if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.PIT:
-			if !can_change_pits:
+			if !restrictions_override:
 				continue
 		
 		# HACK: For now, we're removing the pit function entirely
@@ -223,10 +228,10 @@ func master_vet_actormove_optionset(actor: Actor, og_options: Array, is_relative
 	return valid_options
 	pass
 
-func is_tile_traversable_relative(actor: Actor, motion: Vector2, ignore_ghost: bool = false) -> bool:
-	return is_tile_traversable_exact(actor, actor.coord + motion, ignore_ghost)
+func is_tile_traversable_relative(actor: Actor, motion: Vector2, regardless_of_ghost: bool = false) -> bool:
+	return is_tile_traversable_exact(actor, actor.coord + motion, regardless_of_ghost)
 	
-func is_tile_traversable_exact(actor: Actor, target: Vector2, ignore_ghost: bool = false) -> bool:
+func is_tile_traversable_exact(actor: Actor, target: Vector2, regardless_of_ghost: bool = false) -> bool:
 	var _start_coord: Vector2 = actor.coord
 	var end_coord: Vector2 = target
 	
@@ -235,8 +240,11 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2, ignore_ghost: bool
 #		print("ACT: iamp[1] Cell does not exist on board!")
 		return false
 	
+#	if !actor.is_ghost and !ignore_ghost:
+#		print("WOULD HAVE BEEN AN ISSUE HERE JFYI")
+	
 	# IN MOST CIRCUMSTANCES, you can't enter an unavailable space!
-	if !actor.is_ghost and !ignore_ghost:
+	if !actor.is_ghost or regardless_of_ghost:
 		if !is_tile_available(end_coord):
 #			print("ACT: iamp[2] Cell is unavailable!")
 			return false
@@ -256,7 +264,7 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2, ignore_ghost: bool
 	
 	# Can only move on pits IF you can hover
 	if batman.grid_tiles.get_cellv(end_coord) == batman.tiletypes.PIT:
-		if !actor.is_hovering:
+		if actor.weight != actor.weightclasses.HOVER:
 #			print("ACT: cmev[4] Dest is pit but actor can't hover!")
 			return false
 	
@@ -417,11 +425,11 @@ func master_get_rand_adj_tile(og_tile: Vector2, occupation_check: bool = false, 
 	return og_tile + opts[0]
 	pass
 
-func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int, ignore_ghost: bool = false) -> Vector2: # NON adjacent specific!
+func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int, regardless_of_ghost: bool = false) -> Vector2: # NON adjacent specific!
 	var opts: Array = get_all_tiles_by_faction(faction)
 	var valid_opts: Array = []
 	for coord in opts:
-		if is_tile_traversable_exact(actor, coord, ignore_ghost): # Handles all our validations
+		if is_tile_traversable_exact(actor, coord, regardless_of_ghost): # Handles all our validations
 			valid_opts.append(coord)
 	
 	if valid_opts.empty():

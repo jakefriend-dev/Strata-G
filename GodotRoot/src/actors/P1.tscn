@@ -62,6 +62,7 @@ script = ExtResource( 1 )
 first_initiative = 7
 ofc_name = "Leader"
 base_action_points = 5
+base_damage = 2
 faction = 1
 
 [node name="ArtMgr" type="Node2D" parent="."]

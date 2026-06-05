@@ -192,8 +192,8 @@ func test_new_combat(test: String):
 			if !init_new_combat({
 				"npc_positions": [
 					[4, 3, "Beast"],
-					[6, 2, "Doggo"],
-					[6, 4, "Doggo"],
+					[6, 2, "Beast"],
+					[6, 4, "Beast"],
 					[4, 1, "Rock"],
 				],
 				"tile_exceptions": {
