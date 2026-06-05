@@ -517,8 +517,12 @@ func on_entered_new_tile(new_coord: Vector2, old_coord: Vector2):
 	pass
 
 func on_exited_old_tile(new_coord: Vector2, old_coord: Vector2):
-	var new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
+	var _new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
 	var old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
+	
+	match old_tiletype:
+		batman.tiletypes.SAND:
+			spend(1)
 	pass
 
 func on_rested_whileon_tile():
