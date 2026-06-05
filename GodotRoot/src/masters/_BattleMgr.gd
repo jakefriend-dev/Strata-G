@@ -114,48 +114,66 @@ var board: GridContainer # Owner of CELLS not everything
 
 # Tile types refer to the GROUND, not any effect on that coordinate (such as oil).
 enum tiletypes {
+	# CORE TYPES
+	
 	NORMAL, 	#
 	
-	JAGGED,  	# Sharp and jagged; causes damage and AP loss when stepped on (this also repairs it)
+	STEEL,		# Unbreakable; type cannot be changed
 	
 	PIT,    	# Can't be walked into naturally; like a wall without blocking projectiles or LOS
 	
-	STEEL,		# Unbreakable; cannot be cracked
+	# COMMITTED SPECIALS
 	
-	GRASS,		# Fire damage is doubled, which also destroys the grass
+	JAGGED,  	# Sharp and jagged; causes damage and AP loss when stepped on (this also repairs it)
 	
-	EMBER,   	# It hurts to enter this tile (each time), as fire damage
+	ICE,    	# Any movement direction that isn't a 'jump' causes continued sliding
 	
-	FLOOD,  	# The tile 'sinks' and slows non-swimmers. Lightweights do NOT have immunity
+	HOT,	   	# It hurts to enter this tile (each time), as fire damage
 	
 	SAND,		# Actors only sink on it if they END their turn on sand, unless lightweight
 					# Perhaps can become mud with water effect
 					# If sunk, immune to lightning damage
 	
-	MUD,    	# The tile 'sinks' immediately and slow everyone down; lightweights treat as sand
-	
-	ICE,    	# Any movement direction that isn't a 'jump' causes continued sliding
-	
 	POISON, 	# Poison damage is only taken if you END your turn here
 					# Maybe this should be an effect, not a tile 'type'?
+	
+	# NOT SURE ABOUT COMMITTING TO THESE
+	
+	GRASS,		# Fire damage is doubled, which also destroys the grass
+	
+	MUD,    	# The tile 'sinks' immediately and slow everyone down; lightweights treat as sand
+	
+	FLOOD,  	# The tile 'sinks' and slows non-swimmers. Lightweights do NOT have immunity
 	
 	MAGNET,		# Actors adjacent to this block who are not ALREADY on a magnet are pulled on to it
 					# Applied at the end of their turn?
 	
 	BOGROT,		# Poison and mud combined; poison only counts if you are sunk into the tile
 	
+	TRENCH,		# Provides 'cover,' so to speak, at the cost of some movement
+					# You gain 1 bonus shield by entering it
+					# You lose 1 bonus shield by exiting it (and 1 extra AP to climb out)
+					# This gives the effect of "slightly protected by cover"
+					# Maybe you can 'shoot over' sunk actors...?
 	
 	#ELEC,   	# 'Static' on the tile hurts when walking on ONCE, but doing so also discharges it
 	#				# Also still affects hovering actors?
 	#				# Maybe this should be an effect, not a tile 'type'.... yeahhh
 	
+	# LILYPAD: A type of water that can break into 'real' water tiles
+	
+	# CONVEYOR: Moves you (physically, not as force) 1 tile
+	
 	DNU
 }
+var tt_as_strings: Array = []
 
 # ---
 
 func _ready():
 	connect("all_action_steps_complete", self, "prompt_next_turntaker_action")
+	tt_as_strings = tiletypes.keys()
+	print(tt_as_strings)
 	pass
 
 func _process(delta):

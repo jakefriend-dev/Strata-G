@@ -1,11 +1,10 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://art/general/9patch cell dummy.png" type="Texture" id=1]
 [ext_resource path="res://src/shaders/SHADER palette swap.tres" type="Shader" id=2]
 [ext_resource path="res://combat/framing/BattleCell.gd" type="Script" id=3]
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=4]
 [ext_resource path="res://art/_placeholder/tile effects2.png" type="Texture" id=5]
-[ext_resource path="res://art/_placeholder/tile effects1.png" type="Texture" id=6]
 
 [sub_resource type="ShaderMaterial" id=1]
 resource_local_to_scene = true
@@ -46,7 +45,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Type" type="Label" parent="."]
+[node name="TypeNum" type="Label" parent="."]
 visible = false
 margin_left = 5.0
 margin_top = 3.0
@@ -58,12 +57,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Crack" type="Sprite" parent="."]
-visible = false
-position = Vector2( 4, 3 )
-scale = Vector2( 0.64, 0.43 )
-texture = ExtResource( 6 )
-centered = false
+[node name="TypeStr" type="Label" parent="."]
+margin_left = 5.0
+margin_top = 3.0
+margin_right = 67.0
+margin_bottom = 45.0
+theme = ExtResource( 4 )
+custom_colors/font_color_shadow = Color( 0.635294, 0.635294, 0.635294, 1 )
+text = "0"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Pit" type="Sprite" parent="."]
 visible = false

@@ -19,8 +19,6 @@ var faction: int = -1
 func _ready():
 	batman.connect("update_all_tiletypes", self, "update_tiletype")
 	batman.connect("targeted_tiles_updated", self, "update_targeting")
-#	$Crack.rect_size = rect_size
-#	$Pit.rect_size = rect_size
 	pass
 
 func update_tiletype(): # Visual only; data is already handled
@@ -70,10 +68,12 @@ func get_center_gpos() -> Vector2:
 	pass
 
 func followup_tiletype():
-	if $Type.text != str(type):
-		$Type.text = str(type)
-	if $Crack.visible != (type == batman.tiletypes.JAGGED):
-		$Crack.visible = (type == batman.tiletypes.JAGGED)
+	if $TypeNum.text != str(type):
+		$TypeNum.text = str(type)
+	var plaintext: String = batman.tt_as_strings[type]
+	if plaintext == "NORMAL": plaintext = ""
+	if $TypeStr.text != plaintext:
+		$TypeStr.text = plaintext
 	if $Pit.visible != (type == batman.tiletypes.PIT):
 		$Pit.visible = (type == batman.tiletypes.PIT)
 	pass
