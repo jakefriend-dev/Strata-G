@@ -6,7 +6,11 @@ onready var hflipper: Node2D = $ArtMgr/HFlipper
 onready var shadow: ColorRect = $ArtMgr/Shadow
 onready var aniplayer: AnimationPlayer = $ArtMgr/AnimationPlayer
 
-var pcrefs: Node
+
+var lib_helper:  ActionLibrary # Baseline helper functions like "Find nearest PC in dir" or "get 3x3 coords"
+var lib_general: ActionLibrary # Common behaviour/actions anyone can use, like walking 1 tile or common buffs
+var lib_player:  ActionLibrary # Common players-only shared behaviour/actions
+var lib_enemy:   ActionLibrary # Common enemies-only shared behaviour/actions
 
 
 enum initspeeds {
@@ -163,22 +167,7 @@ func _ready():
 	vis_object = $ArtMgr/HFlipper
 #	update_bui()
 	
-	pcrefs = Node.new()
-	pcrefs.set_script(loader.res_pcrefs)
-	pcrefs.set("name", "PCRefs")
-	pcrefs.set("actor", self)
-	$Utils.add_child(pcrefs)
-	pcrefs.set("owner", self)
-	match name:
-		"P1":
-			pcrefs.set("staple_attack", "basic_shot")
-			pcrefs.set("staple_cost", 2)
-		"P2":
-			pcrefs.set("staple_attack", "basic_melee")
-			pcrefs.set("staple_cost", 2)
-		"P3":
-			pcrefs.set("staple_attack", "basic_shot")
-			pcrefs.set("staple_cost", 1)
+	initialize_action_libraries()
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
 	batman.connect("new_round_started", self, "master_pre_round_setup")
@@ -199,6 +188,57 @@ func perform_initial_data_setup():
 		set( str("is_"+term), get(str("def_",term)) )
 	weight = def_weight
 	pass
+
+func initialize_action_libraries():
+	var libnames: Array = ["helper", "general", "player", "enemy"]
+	
+	for lib_name in libnames: if lib_name is String:
+		var var_name: String = str("lib_",lib_name)
+		var res_name: String = str("res_lib_",lib_name)
+		var node_name: String = str("Lib",lib_name.capitalize())
+		
+		var lib: Node = Node.new()
+		lib.set_script(loader.get(res_name))
+		lib.set("name", node_name)
+		lib.set("actor", self)
+	
+		$Utils.add_child(lib)
+		lib.set("owner", self)
+		set(var_name, lib)
+		
+		# Messy but we will have to fix at a later time
+		if lib_name == "player":
+			match name:
+				"P1":
+					lib.set("staple_attack", "basic_shot")
+					lib.set("staple_cost", 2)
+				"P2":
+					lib.set("staple_attack", "basic_melee")
+					lib.set("staple_cost", 2)
+				"P3":
+					lib.set("staple_attack", "basic_shot")
+					lib.set("staple_cost", 1)
+		pass
+	
+	# At this point, all libraries are set, and just need to be made aware of each other
+	for lib_name in libnames: if lib_name is String:
+#		var var_name: String = str("lib_",lib_name)
+		var node_name: String = str("Lib",lib_name.capitalize())
+		var lib: Node = $Utils.get_node(node_name)
+		
+		for otherlib_name in libnames: if otherlib_name is String:
+			if otherlib_name == lib_name: continue
+			
+			var othervar_name: String = str("lib_",otherlib_name)
+			var othernode_name: String = str("Lib",otherlib_name.capitalize())
+			var otherlib: Node = $Utils.get_node(othernode_name)
+			
+			lib.set(othervar_name, otherlib)
+		pass
+	# Done!
+	pass
+
+# ---
 
 func get_initiative() -> Array:
 	if variance_initiative < 0: # Should set it once ever

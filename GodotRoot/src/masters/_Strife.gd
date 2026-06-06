@@ -49,7 +49,6 @@ func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, i
 	victim.receive_damage(damage, is_melee)
 	pass
 
-
 # ---
 
 func quick_effect(actor_or_coord, effect: String, variant = null):

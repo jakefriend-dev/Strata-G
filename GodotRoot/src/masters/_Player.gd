@@ -84,7 +84,7 @@ func attempt_player_char_move(dir: Vector2):
 
 func attempt_player_char_basicattack():
 	var playerchar: Actor = batman.curr_actor
-	var COST: int = playerchar.pcrefs.staple_cost
+	var COST: int = playerchar.lib_player.staple_cost
 	if !playerchar.can_afford(COST): return
 	
 	# Should be valid, then!

@@ -12,5 +12,8 @@ var res_pipaction = preload("res://combat/ActionPointPip.tscn")
 var res_pipbonusaction = preload("res://combat/BonusActionPointPip.tscn")
 
 # Actors
-var res_pcrefs = preload("res://src/actors/key_components/ActorPCRefs.gd")
+var res_lib_helper = preload("res://src/actors/action_libraries/ALib1_Helper.gd")
+var res_lib_general = preload("res://src/actors/action_libraries/ALib2_General.gd")
+var res_lib_player = preload("res://src/actors/action_libraries/ALib3_Player.gd")
+var res_lib_enemy = preload("res://src/actors/action_libraries/ALib4_Enemy.gd")
 var res_effect_particle = preload("res://combat/battle_effects/EffectParticle.tscn")
