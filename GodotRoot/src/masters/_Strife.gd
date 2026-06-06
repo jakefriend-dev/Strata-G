@@ -13,6 +13,25 @@ extends Node
 	# Tile entry/exit effects
 	# Global checks for if a given actor is 'allowed' to move to a given tile
 
+# Made up a few on the fly here, probably no harm
+enum elements {NORMAL, FIRE, WATER, ELEC, MAGIC, POISON, ROCK, AIR, ICE, SHADOW}
+
+enum hitrange {CONTACT, DISTANT}
+
+enum impacts {PHYSICAL, ABSTRACT}
+
+# For actors, to help handle things like ice or conveyor effect motion
+enum moves { # WAYS of moving, for the purpose of things like determining ice slippy-ness.
+	NOT_MOVING,
+	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
+	BY_JUMP,
+	BY_WARP,
+	BY_SPECIAL_TRAVEL, # A cartwheel might be immune to slipping, for instance
+	MOVED_EXTERNALLY, # Similar to BY_TRAVEL but helps separate external forces from ourselves
+		# If someone else warps our position, we'll just use BY_WARP rather than make another WARPED_EXTERNALLY
+	DNU
+}
+
 # ---
 
 # TILE CROSSOVER EFFECTS AND IMPACTS -------------------------------------------
@@ -132,6 +151,7 @@ func is_affected_by_sinking(actor: Actor) -> bool:
 	if actor.weight == actor.weightclasses.LIGHT: return false
 	return true
 
+# End of tiletype checks!
 
 
 

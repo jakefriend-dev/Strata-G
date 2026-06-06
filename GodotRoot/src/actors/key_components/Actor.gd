@@ -141,16 +141,8 @@ var coord: Vector2
 var prior_actionstep_coord: Vector2 # Update this at the end of every actionstep for every actor! This helps us understand what happened this actionstep for tiletype changes
 var claimed_tile: Vector2 = Vector2.ZERO
 
-var moving_style: int = movetypes.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
-enum movetypes { # WAYS of moving, for the purpose of things like determining ice slippy-ness.
-	NOT_MOVING,
-	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
-	BY_JUMP,
-	BY_WARP,
-	BY_SPECIAL_TRAVEL, # A cartwheel might be immune to slipping, for instance
-	MOVED_EXTERNALLY, # Similar to BY_TRAVEL but helps separate external forces from ourselves
-	DNU
-}
+var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
+
 
 signal on_shield_consumed(is_melee) # Shield consumed at all
 signal on_shield_broken_through(is_melee) # Shield depleted, and damage surpassed it
