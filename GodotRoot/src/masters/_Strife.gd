@@ -1,0 +1,125 @@
+extends Node
+
+# Owner of ALL COMBAT AND DISPUTES:
+	# The 'impact' of one actor on another
+		# Typically damage
+		# Can also be wind force, knockback force, conveyor physical motion, etc
+	# Damage types, and ensuring attacks 'have' core damage details
+		# Elemental eg. fire or normal
+		# Range eg. contact-range vs long-range (let's avoid saying 'melee or ranged' maybe?)
+		# Impact type eg. physical or abstract (useful for "counter phy attacks")
+		# Other optional tags like shield-piercing
+		# Who the source of damage is, if there is one
+	# Tile entry/exit effects
+	# Global checks for if a given actor is 'allowed' to move to a given tile
+
+# ---
+
+# TILE CROSSOVER EFFECTS AND IMPACTS -------------------------------------------
+
+# ---
+
+# If you START your turn on a tiletype -----------------------------------------
+
+func TILE_started_on_HOT(actor: Actor):
+	# Gain 1 AP
+	pass
+
+# The moment you ENTER a tiletype MID-turn -------------------------------------
+	# Also triggers if a tile is changed beneath your feet, whether your turn or not
+
+func TILE_entered_JAGGED(actor: Actor):
+	if is_affected_by_jagged(actor):
+		# 1 damage, 1 move debuff
+		pass
+	
+	if is_fixes_jagged_on_contact(actor):
+		# Then fix the tile
+		pass
+	pass
+
+func TILE_entered_ICE(actor: Actor):
+	if !is_affected_by_ice(actor): return
+	
+	# We need to know the direction-vector you entered from, and if it was a jump or 'walk' type of movement. Ignore if not walking!
+	
+	# Remove any existing queued 'this actor slips' ice-related actionstep - it's only ever the most RECENT ice slide that matters, and there can only be one ice actionstep per actor happening or about to happen at a time!
+	
+	# If we CANNOT keep sliding, give up
+	
+	# If we CAN slide, prepare to do so as the next actionstep for as many ice tiles in a row are happening!
+		# This replaces any upcoming 'this actor slips' ice-related actionstep. There can only be one ice actionstep per actor happening or about to happen at a time!
+	pass
+
+func TILE_entered_POISON(actor: Actor):
+	# Immediately take 1 damage
+	pass
+
+func TILE_entered_MUD(actor: Actor):
+	# Lose a movestep, unless lightweight (in which case it checks at end-of-turn instead)
+	pass
+
+func TILE_entered_WATER(actor: Actor):
+	# Lose a movestep, unless you're a swimmer
+	pass
+
+# If you REST on a tiletype MID-turn -------------------------------------------
+	# Resting is taking an action that does not contain/involve movement
+
+func TILE_rested_on_ANY(actor: Actor):
+	# Check for adjacent magnets! If multiple, do nothing. If there is only 1 (within your traversable rules), get dragged on to it.
+	pass
+
+# If you LEAVE a tiletype MID-turn (even mid-action) ---------------------------
+
+func TILE_exited_ICE(actor: Actor):
+	if !is_affected_by_ice(actor): return
+	
+	# Remove any 'slide on ice' actionsteps queued for this actor at the tile we're exiting (excepting the current-executing actionstep; let it clear itself). If a multi-ice slide is happening, it can just be multiple slide actions in a row. Careful not to remove ANOTHER coord's slide!
+	pass
+
+# If you END your turn on a tiletype -------------------------------------------
+
+func TILE_ended_on_HOT(actor: Actor):
+	# Take 1 damage unless immune
+	pass
+
+func TILE_ended_on_SAND(actor: Actor):
+	# Lose a movestep, unless lightweight
+	pass
+
+func is_affected_by_jagged(actor: Actor) -> bool:
+	if actor.is_immune_jagged: return false
+	if actor.weight == actor.weightclasses.HEAVY: return false
+	if actor.weight == actor.weightclasses.HOVER: return false
+	return true
+
+func is_fixes_jagged_on_contact(actor: Actor) -> bool:
+	if actor.weight == actor.weightclasses.HOVER: return false
+	return true
+
+func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback
+	if actor.is_unmovable: return false
+	if actor.weight == actor.weightclasses.HEAVY: return false
+	return true
+
+func is_affected_by_ice(actor: Actor) -> bool:
+	if actor.weight == actor.weightclasses.LIGHT: return false
+	if actor.is_unmovable: return false
+	if actor.is_immune_ice: return false
+	return true
+
+func is_affected_by_sinking(actor: Actor) -> bool:
+	if actor.weight == actor.weightclasses.LIGHT: return false
+	return true
+
+
+
+
+
+
+
+
+
+
+

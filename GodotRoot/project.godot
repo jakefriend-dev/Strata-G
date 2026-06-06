@@ -56,6 +56,7 @@ utils="*res://src/masters/_Utils.gd"
 act="*res://src/masters/_ActionLib.gd"
 batman="*res://src/masters/_BattleMgr.gd"
 player="*res://src/masters/_Player.gd"
+strife="*res://src/masters/_Strife.gd"
 
 [debug]
 

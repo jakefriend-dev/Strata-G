@@ -143,7 +143,7 @@ enum tiletypes {
 	
 	MUD,    	# The tile 'sinks' immediately and slow everyone down; lightweights treat as sand
 	
-	FLOOD,  	# The tile 'sinks' and slows non-swimmers. Lightweights do NOT have immunity
+	WATER,  	# The tile 'sinks' and slows non-swimmers. Lightweights do NOT have immunity
 	
 	MAGNET,		# Actors adjacent to this block who are not ALREADY on a magnet are pulled on to it
 					# Applied at the end of their turn?
