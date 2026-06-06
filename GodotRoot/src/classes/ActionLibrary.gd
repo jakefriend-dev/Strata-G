@@ -12,6 +12,9 @@ var lib_general # Common behaviour/actions anyone can use, like walking 1 tile o
 var lib_player  # Common players-only shared behaviour/actions
 var lib_enemy   # Common enemies-only shared behaviour/actions
 
+var tween: Tween
+var default_trans: int = Tween.TRANS_QUINT
+
 # Any UNIQUE actions should be given to that Actor's script, as you'd imagine
 
 # ---

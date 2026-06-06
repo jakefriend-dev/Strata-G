@@ -145,7 +145,7 @@ func ACT_charge_forward():
 	
 	# Perform a visual movement to the destination cell!
 	var dur: float = float(xdist)*0.1
-	act.hotmove(self, dest_coord, dur)
+	lib_general.hotmove(dest_coord, dur)
 	
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
@@ -165,7 +165,7 @@ func ACT_charge_back():
 	
 	# Perform a visual movement to the destination cell!
 	var dur: float = valid_xdist*0.1
-	act.hotmove(self, claimed_tile, dur)
+	lib_general.hotmove(claimed_tile, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	
@@ -213,7 +213,7 @@ func ACT_walk(motion: Vector2):
 	
 	var dur: float = 0.75
 	
-	act.hotmove(self, dest_coord, dur)
+	lib_general.hotmove(dest_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	

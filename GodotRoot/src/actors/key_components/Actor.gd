@@ -16,6 +16,7 @@ var lib_general: ActionLibrary # Common behaviour/actions anyone can use, like w
 var lib_player:  ActionLibrary # Common players-only shared behaviour/actions
 var lib_enemy:   ActionLibrary # Common enemies-only shared behaviour/actions
 
+var tween: Tween # Used by ALibs!
 
 enum initspeeds {
 	DOES_NOT_ACT, # Things like rocks
@@ -194,6 +195,8 @@ func perform_initial_data_setup():
 	pass
 
 func initialize_action_libraries():
+	tween = $Utils/Tween
+	
 	var libnames: Array = ["helper", "general", "player", "enemy"]
 	
 	for lib_name in libnames: if lib_name is String:
@@ -206,6 +209,7 @@ func initialize_action_libraries():
 		lib.set_script(loader.get(res_name))
 		lib.set("name", node_name)
 		lib.set("actor", self)
+		lib.set("tween", tween)
 	
 		$Utils.add_child(lib)
 		lib.set("owner", self)

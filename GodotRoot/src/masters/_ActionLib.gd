@@ -83,47 +83,6 @@ func is_tile_available(exact_coord: Vector2, exception_actor: Actor = null) -> b
 
 # MOVE (ORTHAGONAL/ADJACENT) -----------------------------------------------------------------------
 
-func hotmove(actor: Actor, to_coord: Vector2, dur: float):
-	tween.interpolate_property(actor, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_CIRC, Tween.EASE_IN_OUT)
-	tween.start()
-	pass
-
-func hotjump(actor: Actor, to_coord: Vector2, dur: float, height: float = 100.0):
-	tween.interpolate_property(actor, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	tween.interpolate_property(actor.vis_object, "position:y", null, -height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
-	tween.interpolate_property(actor.vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
-	tween.start()
-	pass
-
-
-# MUST be called when a move 'officially' changes our data position!
-#func update_actor_coord_data(actor: Actor, newpos: Vector2) -> bool:
-#	if !batman.grid_actors.has_cellv(newpos):
-#		print("ACT: ERROR, Invalid coord! update_actor_coord_data(",actor,", ",newpos,")")
-#		return false
-#
-#	var oldpos: Vector2 = actor.coord
-#	if batman.grid_actors.get_cellv(oldpos) != actor:
-#		print("ACT: ERROR, Actor not data-recognized at old coords! update_actor_coord_data(",actor,", ",newpos,")")
-#		return false
-#
-#	var occupant: Actor = batman.grid_actors.get_cellv(newpos)
-#	if occupant != null:
-#
-#		# Could be intentional for something like a missile collision - emit a signal, and if it IS valid, anyone hooked into it can do what needs doing and if either actor dies (the missile, again), it can retrigger this func manually after an actor is killed to clear space
-#		emit_signal("actor_collision_attempt", actor, occupant)
-#		print("ACT: ERROR (maybe?), there is already an Actor at dest coords! (",actor,", ",newpos,")")
-#		return false
-#
-#	actor.coord = newpos
-#	batman.grid_actors.set_cellv(oldpos, null)
-#	batman.grid_actors.set_cellv(newpos, actor)
-#
-#	return true
-#	pass
-
-# ATTACKS ------------------------------------------------------------------------------------------
-
 # TILE ADJUSTMENTS ---------------------------------------------------------------------------------
 
 func change_tiletype_single(coord: Vector2, to_tiletype: int, can_change_pits: bool = false): # Just a shorthand

@@ -15,7 +15,7 @@ func ACT_basic_move(dir: Vector2):
 	var exact_coord: Vector2 = actor.coord + dir
 	var dur: float = 0.125
 	
-	act.hotmove(actor, exact_coord, dur)
+	lib_general.hotmove(exact_coord, dur)
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_turn(actor): return
 	

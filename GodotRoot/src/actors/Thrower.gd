@@ -121,7 +121,7 @@ func ACT_walk(motion: Vector2):
 	
 	var dur: float = 0.75
 	
-	act.hotmove(self, dest_coord, dur)
+	lib_general.hotmove(dest_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	
