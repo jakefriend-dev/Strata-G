@@ -536,128 +536,62 @@ func monitor_position_as_coordinate():
 
 # ---
 
-func on_entered_new_tile(new_coord: Vector2, old_coord: Vector2):
-	var new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
-	var _old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
-	
-	match new_tiletype:
-		batman.tiletypes.POISON:
-			receive_damage(1, false) # Minimum damage value
-		batman.tiletypes.JAGGED:
-			receive_damage(4, false) # Full hit, then restore it
-			act.change_tiletype_single(new_coord, batman.tiletypes.NORMAL)
-		
-		batman.tiletypes.MUD:
-			sink_into_tile()
-		batman.tiletypes.WATER:
-			sink_into_tile()
-		batman.tiletypes.BOGROT:
-			sink_into_tile()
-	pass
-
-func on_exited_old_tile(new_coord: Vector2, old_coord: Vector2):
-	var _new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
-	var old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
-	
-	match old_tiletype:
-		batman.tiletypes.SAND:
-			spend(1)
-	pass
-
-func on_rested_whileon_tile():
-	var tiletype: int = batman.grid_tiles.get_cellv(coord)
-	
-	match tiletype:
-		batman.tiletypes.POISON:
-			receive_damage(1, false) # Minimum damage value
-		batman.tiletypes.SAND:
-			sink_into_tile()
-	pass
-
-func on_actionstep_ended_whileon_tile():
-	var tiletype: int = batman.grid_tiles.get_cellv(coord)
-	
-	match tiletype:
-		batman.tiletypes.ICE:
-			pass
-	pass
-
-func on_turn_ended_whileon_tile():
-	var tiletype: int = batman.grid_tiles.get_cellv(coord)
-	
-	match tiletype:
-		batman.tiletypes.HOT:
-			receive_damage(4, false) # Full damage at the END of your turn
-	pass
+#func on_entered_new_tile(new_coord: Vector2, old_coord: Vector2):
+#	var new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
+#	var _old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
+#
+#	match new_tiletype:
+#		batman.tiletypes.POISON:
+#			receive_damage(self, 1, false) # Minimum damage value
+#		batman.tiletypes.JAGGED:
+#			receive_damage(4, false) # Full hit, then restore it
+#			act.change_tiletype_single(new_coord, batman.tiletypes.NORMAL)
+#
+#		batman.tiletypes.MUD:
+#			sink_into_tile()
+#		batman.tiletypes.WATER:
+#			sink_into_tile()
+#		batman.tiletypes.BOGROT:
+#			sink_into_tile()
+#	pass
+#
+#func on_exited_old_tile(new_coord: Vector2, old_coord: Vector2):
+#	var _new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
+#	var old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
+#
+#	match old_tiletype:
+#		batman.tiletypes.SAND:
+#			spend(1)
+#	pass
+#
+#func on_rested_whileon_tile():
+#	var tiletype: int = batman.grid_tiles.get_cellv(coord)
+#
+#	match tiletype:
+#		batman.tiletypes.POISON:
+#			receive_damage(1, false) # Minimum damage value
+#		batman.tiletypes.SAND:
+#			sink_into_tile()
+#	pass
+#
+#func on_actionstep_ended_whileon_tile():
+#	var tiletype: int = batman.grid_tiles.get_cellv(coord)
+#
+#	match tiletype:
+#		batman.tiletypes.ICE:
+#			pass
+#	pass
+#
+#func on_turn_ended_whileon_tile():
+#	var tiletype: int = batman.grid_tiles.get_cellv(coord)
+#
+#	match tiletype:
+#		batman.tiletypes.HOT:
+#			receive_damage(4, false) # Full damage at the END of your turn
+#	pass
 
 
 # ---
-
-func receive_damage(damage: int, is_melee: bool):
-	if damage <= 0:
-#		print(name,": No damage to receive")
-		return
-	
-	var og_damage: int = damage
-	var og_shield: int = shield
-	var og_bonus_shield: int = bonus_shield
-	var desctext: String = " melee"
-	if !is_melee: desctext = " ranged"
-	
-	emit_signal("on_phys_combat_any_contact")
-	strife.quick_effect(self, "spark_burst")
-	
-	# Deduct damage and shield equally until either of them depletes fully
-	while (bonus_shield > 0 or shield > 0) and damage > 0:
-		damage -= 1
-		if bonus_shield > 0:
-			bonus_shield -= 1
-		else:
-			shield -= 1
-	
-	if (shield+bonus_shield) < (og_shield+og_bonus_shield):
-#		print("Some quantity of shield consumed!")
-		emit_signal("on_shield_consumed", is_melee)
-	
-	if (og_shield+og_bonus_shield) > 0 and shield == 0:
-#		print("Shield BROKEN!")
-		if damage > 0:
-			emit_signal("on_shield_broken_through", is_melee)
-			strife.quick_effect(self, "shield_broken")
-		else:
-			emit_signal("on_shield_broken_held", is_melee)
-			strife.quick_effect(self, "blocked")
-		emit_signal("on_shield_broken_any", is_melee)
-	
-	var shielded_damage: int = og_damage - damage
-	if damage <= 0:
-		batman.update_action_log(str(name,": Blocked ",shielded_damage,desctext," and took no damage"))
-		emit_signal("on_blocked_all_damage", is_melee)
-		update_bui()
-		return
-	
-	while health > 0 and damage > 0:
-		damage -= 1
-		health -= 1
-	
-	var unshielded_damage: int = og_damage - shielded_damage - damage
-	strife.quick_effect(self, "damage", unshielded_damage)
-	
-	if health > 0:
-		if shielded_damage == 0:
-			batman.update_action_log(str(name,": Took ",og_damage,desctext," damage"))
-		else:
-			batman.update_action_log(str(name,": Blocked ",shielded_damage," and took ",unshielded_damage,desctext," damage"))
-		update_bui()
-		return
-	else:
-		if shielded_damage == 0:
-			batman.update_action_log(str(name,": Died from taking ",unshielded_damage,desctext," damage"))
-		else:
-			batman.update_action_log(str(name,": Died from taking ",unshielded_damage,desctext," damage (blocked ",shielded_damage,")"))
-		batman.kill_actor(self)
-	
-	pass
 
 func sink_into_tile():
 	pass

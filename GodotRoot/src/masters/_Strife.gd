@@ -46,7 +46,73 @@ func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, i
 		if !friendly_fire:
 			return
 	
-	victim.receive_damage(damage, is_melee)
+	receive_damage(victim, damage, is_melee)
+	pass
+
+func receive_damage(actor: Actor, damage: int, is_melee: bool):
+	if damage <= 0:
+#		print(name,": No damage to receive")
+		return
+	
+	var og_damage: int = damage
+	var og_shield: int = actor.shield
+	var og_bonus_shield: int = actor.bonus_shield
+	var desctext: String = " melee"
+	if !is_melee: desctext = " ranged"
+	
+	actor.emit_signal("on_phys_combat_any_contact")
+	strife.quick_effect(actor, "spark_burst")
+	
+	# Deduct damage and shield equally until either of them depletes fully
+	while (actor.bonus_shield > 0 or actor.shield > 0) and damage > 0:
+		damage -= 1
+		if actor.bonus_shield > 0:
+			actor.bonus_shield -= 1
+		else:
+			actor.shield -= 1
+	
+	if (actor.shield+actor.bonus_shield) < (og_shield+og_bonus_shield):
+#		print("Some quantity of shield consumed!")
+		actor.emit_signal("on_shield_consumed", is_melee)
+	
+	if (og_shield+og_bonus_shield) > 0 and actor.shield == 0:
+#		print("Shield BROKEN!")
+		if damage > 0:
+			actor.emit_signal("on_shield_broken_through", is_melee)
+			strife.quick_effect(actor, "shield_broken")
+		else:
+			actor.emit_signal("on_shield_broken_held", is_melee)
+			strife.quick_effect(actor, "blocked")
+		actor.emit_signal("on_shield_broken_any", is_melee)
+	
+	var shielded_damage: int = og_damage - damage
+	if damage <= 0:
+		batman.update_action_log(str(actor.name,": Blocked ",shielded_damage,desctext," and took no damage"))
+		actor.emit_signal("on_blocked_all_damage", is_melee)
+		actor.update_bui()
+		return
+	
+	while actor.health > 0 and damage > 0:
+		damage -= 1
+		actor.health -= 1
+	
+	var unshielded_damage: int = og_damage - shielded_damage - damage
+	strife.quick_effect(actor, "damage", unshielded_damage)
+	
+	if actor.health > 0:
+		if shielded_damage == 0:
+			batman.update_action_log(str(actor,": Took ",og_damage,desctext," damage"))
+		else:
+			batman.update_action_log(str(actor,": Blocked ",shielded_damage," and took ",unshielded_damage,desctext," damage"))
+		actor.update_bui()
+		return
+	else:
+		if shielded_damage == 0:
+			batman.update_action_log(str(actor.name,": Died from taking ",unshielded_damage,desctext," damage"))
+		else:
+			batman.update_action_log(str(actor.name,": Died from taking ",unshielded_damage,desctext," damage (blocked ",shielded_damage,")"))
+		batman.kill_actor(actor)
+	
 	pass
 
 # ---
@@ -135,10 +201,14 @@ func TILE_started_on_HOT(_actor: Actor):
 func TILE_entered_JAGGED(actor: Actor):
 	if is_affected_by_jagged(actor):
 		# 1 damage, 1 move debuff
+		quick_effect(actor, "quick_bad")
+		receive_damage(actor, 4, false)
+		actor.spend(1)
 		pass
 	
 	if is_fixes_jagged_on_contact(actor):
 		# Then fix the tile
+		
 		pass
 	pass
 
@@ -159,6 +229,7 @@ func TILE_entered_POISON(actor: Actor):
 	if actor.is_immune_poison: return
 	
 	# Immediately take 1 damage
+	receive_damage(actor, 1, false)
 	pass
 
 func TILE_entered_MUD(actor: Actor):
@@ -195,6 +266,7 @@ func TILE_ended_on_HOT(actor: Actor):
 	if actor.is_immune_fire: return
 	
 	# Take 1 damage unless immune
+	receive_damage(actor, 4, false)
 	pass
 
 func TILE_ended_on_SAND(actor: Actor):
