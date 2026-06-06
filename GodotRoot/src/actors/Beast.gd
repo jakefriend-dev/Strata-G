@@ -328,6 +328,8 @@ func ACT_debuff():
 			strife.quick_effect(actor, "quick_bad")
 			actor.spend(1)
 	
+	
+	
 	end_action()
 	pass
 
