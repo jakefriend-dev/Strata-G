@@ -6,6 +6,10 @@ onready var hflipper: Node2D = $ArtMgr/HFlipper
 onready var shadow: ColorRect = $ArtMgr/Shadow
 onready var aniplayer: AnimationPlayer = $ArtMgr/AnimationPlayer
 
+#var res_lib_helper = preload("res://src/actors/action_libraries/ALib1_Helper.gd")
+#var res_lib_general = preload("res://src/actors/action_libraries/ALib2_General.gd")
+#var res_lib_player = preload("res://src/actors/action_libraries/ALib3_Player.gd")
+#var res_lib_enemy = preload("res://src/actors/action_libraries/ALib4_Enemy.gd")
 
 var lib_helper:  ActionLibrary # Baseline helper functions like "Find nearest PC in dir" or "get 3x3 coords"
 var lib_general: ActionLibrary # Common behaviour/actions anyone can use, like walking 1 tile or common buffs
@@ -198,6 +202,7 @@ func initialize_action_libraries():
 		var node_name: String = str("Lib",lib_name.capitalize())
 		
 		var lib: Node = Node.new()
+#		lib.set_script(get(res_name))
 		lib.set_script(loader.get(res_name))
 		lib.set("name", node_name)
 		lib.set("actor", self)

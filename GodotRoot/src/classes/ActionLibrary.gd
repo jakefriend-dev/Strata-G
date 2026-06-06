@@ -1,7 +1,7 @@
 extends Node
 class_name ActionLibrary
 
-var actor: Actor # Specifically the library instance's actor
+#var actor # Specifically the library instance's actor
 
 # All the common library varnames, including ourselves
 	# We'll populate these in the Actor script once each library has been initialized
