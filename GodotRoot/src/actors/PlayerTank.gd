@@ -1,4 +1,4 @@
-extends Actor
+extends ActorPlayer
 
 func _ready():
 #	print(name," connecting signals")

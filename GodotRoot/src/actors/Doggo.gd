@@ -1,4 +1,4 @@
-extends Actor
+extends ActorEnemy
 
 var last_movedir_y: int = 0
 

@@ -1,4 +1,4 @@
-extends Actor
+extends ActorEnemy
 
 #var targeted_locs: Array = []
 enum {NOT_SET, LUNGE, SHOOT, POST_LUNGE, POST_SHOOT}

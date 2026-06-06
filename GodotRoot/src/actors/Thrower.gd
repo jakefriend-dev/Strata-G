@@ -1,4 +1,4 @@
-extends Actor
+extends ActorEnemy
 
 #const COST_: int = 1
 #const COST_: int = 1
