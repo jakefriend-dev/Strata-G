@@ -21,8 +21,8 @@ extends Node
 
 # If you START your turn on a tiletype -----------------------------------------
 
-func TILE_started_on_HOT(actor: Actor):
-	# Gain 1 AP
+func TILE_started_on_HOT(_actor: Actor):
+	# Gain 1 AP - fire immunity doesn't matter here, you get the upside regardless
 	pass
 
 # The moment you ENTER a tiletype MID-turn -------------------------------------
@@ -52,21 +52,28 @@ func TILE_entered_ICE(actor: Actor):
 	pass
 
 func TILE_entered_POISON(actor: Actor):
+	if actor.is_immune_poison: return
+	
 	# Immediately take 1 damage
 	pass
 
 func TILE_entered_MUD(actor: Actor):
+	if actor.is_immune_mud: return
+	if !is_affected_by_sinking(actor): return
+	
 	# Lose a movestep, unless lightweight (in which case it checks at end-of-turn instead)
 	pass
 
 func TILE_entered_WATER(actor: Actor):
-	# Lose a movestep, unless you're a swimmer
+	if actor.is_immune_water: return
+	# Lose a movestep, unless you're a swimmer (lightweight doesn't matter here)
 	pass
 
 # If you REST on a tiletype MID-turn -------------------------------------------
 	# Resting is taking an action that does not contain/involve movement
 
 func TILE_rested_on_ANY(actor: Actor):
+	if actor.is_immune_magnet: return
 	# Check for adjacent magnets! If multiple, do nothing. If there is only 1 (within your traversable rules), get dragged on to it.
 	pass
 
@@ -81,12 +88,24 @@ func TILE_exited_ICE(actor: Actor):
 # If you END your turn on a tiletype -------------------------------------------
 
 func TILE_ended_on_HOT(actor: Actor):
+	if actor.is_immune_fire: return
+	
 	# Take 1 damage unless immune
 	pass
 
 func TILE_ended_on_SAND(actor: Actor):
-	# Lose a movestep, unless lightweight
+	if !is_affected_by_sinking(actor): return
+
+	# Lose a movestep, unless lightweight (you'll still lose 1 later for ending your turn there if that happens tho)
 	pass
+
+func TILE_ended_on_MUD(actor: Actor):
+	if is_affected_by_sinking(actor): return
+	
+	# Lightweight actors should sink now, since they didn't earlier (everyone else should already be sunk)
+	pass
+
+# ---
 
 func is_affected_by_jagged(actor: Actor) -> bool:
 	if actor.is_immune_jagged: return false
@@ -98,7 +117,7 @@ func is_fixes_jagged_on_contact(actor: Actor) -> bool:
 	if actor.weight == actor.weightclasses.HOVER: return false
 	return true
 
-func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback
+func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback; not ice sliding
 	if actor.is_unmovable: return false
 	if actor.weight == actor.weightclasses.HEAVY: return false
 	return true

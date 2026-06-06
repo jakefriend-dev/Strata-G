@@ -105,6 +105,7 @@ export var def_immune_jagged:		bool = false # Doesn't take damage or AP penaltie
 export var def_immune_fire:			bool = false # Not affected by ember floors
 export var def_immune_water:		bool = false # Not slowed by water tiles (even lightweights are)
 export var def_immune_sand:			bool = false # Doesn't sink or take penalty from sand
+export var def_immune_mud:			bool = false # Doesn't take penalty from mud
 export var def_immune_ice:			bool = false # Doesn't slide on ice
 export var def_immune_poison:		bool = false # Doesn't take poison damage
 export var def_immune_magnet:		bool = false # Not pulled by magnet tiles
@@ -119,6 +120,7 @@ var is_immune_jagged: bool
 var is_immune_fire: bool
 var is_immune_water: bool
 var is_immune_sand: bool
+var is_immune_mud: bool
 var is_immune_ice: bool
 var is_immune_poison: bool
 var is_immune_magnet: bool
@@ -200,7 +202,7 @@ func perform_initial_data_setup():
 	action_points = base_action_points
 	base_damage *= batman.BASE_HP_FACTOR
 	
-	for term in ["unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
+	for term in ["unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged", "immune_mud"]:
 #	for term in ["hovering", "lightweight", "heavyweight", "unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
 		set( str("is_"+term), get(str("def_",term)) )
 	weight = def_weight
