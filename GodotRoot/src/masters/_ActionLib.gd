@@ -5,10 +5,6 @@ var trans: int = Tween.TRANS_QUINT
 
 signal actor_collision_attempt(actor_attacking, actor_defending) # Can be used for things like missile collisions
 
-var field: Node2D # Owner of all battle stuff
-var actors: YSort
-var board: GridContainer # Owner of CELLS not everything
-
 # ---
 
 func _ready():
@@ -273,67 +269,6 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2, regardless_of_ghos
 
 # -
 
-# Note that this only clears the FIRST previous cell!
-func change_actor_coord(actor: Actor, new_coord: Vector2):
-	var occupant: Actor = batman.grid_actors.get_cellv(new_coord)
-	if occupant != null:
-		print("ACT: change_actor_coord(",actor,", ",new_coord,") when OCCUPIED already by ",occupant,"! Error, error, breakpoint!")
-		
-		pass
-	
-	var dataset: Array = batman.grid_actors.get_dataset_with_coords()
-	var old_coord: Vector2
-	for set in dataset:
-		if set[0] == actor:
-			old_coord = set[1]
-			if old_coord == new_coord:
-				print("ACT: ERROR, tried to change actor grid coord to the same as it was?")
-				return false
-			batman.grid_actors.set_cellv(old_coord, null)
-			batman.grid_actors.set_cellv(new_coord, actor)
-			return true
-	
-	if actor.just_exited_ghost_mode: # Allow a bypass if we are newly returning to the grid!
-		batman.grid_actors.set_cellv(new_coord, actor)
-		return true
-	
-	print("ACT: ERROR, tried to change actor grid coord for actor: ",actor," when it wasn't already on the grid and DIDN'T just exit ghost_mode? old: ",old_coord," and new: ",new_coord)
-	
-	return false
-	pass
-
-func remove_actor_from_actorgrid(actor):
-	if not actor is Actor: return
-	for set in batman.grid_actors.get_dataset_with_coords():
-		if set[0] == actor:
-			batman.grid_actors.set_cellv(set[1], null)
-	pass
-
-func release_all_claims():
-	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
-	for set in dataset:
-		batman.grid_claims.set_cellv(set[1], null)
-	pass
-
-func release_most_claims(): # Allows SOME actors to keep their claims
-	
-	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
-	for set in dataset:
-		var actor: Actor = set[0]
-		if actor.keep_claims_at_eot:
-			continue
-		batman.grid_claims.set_cellv(set[1], null)
-	pass
-
-func release_actor_claims(actor: Actor):
-	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
-	for set in dataset:
-		if set[0] == actor:
-			batman.grid_claims.set_cellv(set[1], null)
-	pass
-
-# -
-
 func can_see_PC_in_dir(og_coord: Vector2, dir: Vector2) -> bool:
 	return (find_nearest_PC_in_dir(og_coord, dir) != null)
 func can_see_ENEMY_in_dir(og_coord: Vector2, dir: Vector2) -> bool:
@@ -379,7 +314,7 @@ func get_vector_from_actor_a_to_b(first_actor: Actor, second_actor: Actor) -> Ve
 	pass
 
 func get_first_actor_by_name(nstring: String, must_be_alive: bool = true) -> Actor:
-	for a in actors.get_children(): if a is Actor:
+	for a in batman.actors.get_children(): if a is Actor:
 		if a.ofc_name == nstring:
 			if must_be_alive:
 				if a.health > 0:

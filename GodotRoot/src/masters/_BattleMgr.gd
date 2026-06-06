@@ -847,7 +847,7 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 	pass
 
 func flush_actionqueue(): # Run to wipe any stored-between-turns data
-	act.release_most_claims()
+	release_most_claims()
 	
 	action_queue.clear()
 	curr_action = []
@@ -878,6 +878,68 @@ func update_targeted_tiles():
 
 # ---
 
+
+# -
+
+# Note that this only clears the FIRST previous cell!
+func change_actor_coord(actor: Actor, new_coord: Vector2):
+	var occupant: Actor = batman.grid_actors.get_cellv(new_coord)
+	if occupant != null:
+		print("BATMAN: change_actor_coord(",actor,", ",new_coord,") when OCCUPIED already by ",occupant,"! Error, error, breakpoint!")
+		
+		pass
+	
+	var dataset: Array = batman.grid_actors.get_dataset_with_coords()
+	var old_coord: Vector2
+	for set in dataset:
+		if set[0] == actor:
+			old_coord = set[1]
+			if old_coord == new_coord:
+				print("BATMAN: ERROR, tried to change actor grid coord to the same as it was?")
+				return false
+			batman.grid_actors.set_cellv(old_coord, null)
+			batman.grid_actors.set_cellv(new_coord, actor)
+			return true
+	
+	if actor.just_exited_ghost_mode: # Allow a bypass if we are newly returning to the grid!
+		batman.grid_actors.set_cellv(new_coord, actor)
+		return true
+	
+	print("BATMAN: ERROR, tried to change actor grid coord for actor: ",actor," when it wasn't already on the grid and DIDN'T just exit ghost_mode? old: ",old_coord," and new: ",new_coord)
+	
+	return false
+	pass
+
+func remove_actor_from_actorgrid(actor):
+	if not actor is Actor: return
+	for set in batman.grid_actors.get_dataset_with_coords():
+		if set[0] == actor:
+			batman.grid_actors.set_cellv(set[1], null)
+	pass
+
+func release_all_claims():
+	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
+	for set in dataset:
+		batman.grid_claims.set_cellv(set[1], null)
+	pass
+
+func release_most_claims(): # Allows SOME actors to keep their claims
+	
+	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
+	for set in dataset:
+		var actor: Actor = set[0]
+		if actor.keep_claims_at_eot:
+			continue
+		batman.grid_claims.set_cellv(set[1], null)
+	pass
+
+func release_actor_claims(actor: Actor):
+	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
+	for set in dataset:
+		if set[0] == actor:
+			batman.grid_claims.set_cellv(set[1], null)
+	pass
+
 func kill_actor(actor: Actor):
 	# Prevent it from executing actions
 	actor.active = false
@@ -887,7 +949,7 @@ func kill_actor(actor: Actor):
 		actor.remove_from_group("live_actors")
 	
 	# Clear the actor from the board and all tracking lists
-	act.remove_actor_from_actorgrid(actor)
+	remove_actor_from_actorgrid(actor)
 	if ghost_actors.has(actor):
 		ghost_actors.erase(actor)
 	if living_actors.has(actor):
@@ -899,7 +961,7 @@ func kill_actor(actor: Actor):
 	field.update_turn_display()
 	
 	# Wipe its tile claims
-	act.release_actor_claims(actor)
+	release_actor_claims(actor)
 	
 	# Clear its targeting data
 	actor.release_targeted_tiles()

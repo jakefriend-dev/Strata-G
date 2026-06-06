@@ -399,7 +399,7 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 	# Becoming ghost
 	if to_ghost:
 		# Switch out of the actor grid
-		act.remove_actor_from_actorgrid(self)
+		batman.remove_actor_from_actorgrid(self)
 		if !batman.ghost_actors.has(self):
 			batman.ghost_actors.append(self)
 		is_ghost = true
@@ -419,7 +419,7 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 			batman.ghost_actors.erase(self)
 		is_ghost = false
 		just_exited_ghost_mode = true
-		act.change_actor_coord(self, coord) # Manually - otherwise the system won't recognize the 'change'!
+		batman.change_actor_coord(self, coord) # Manually - otherwise the system won't recognize the 'change'!
 		return true
 	pass
 
@@ -427,7 +427,7 @@ func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
 	if Vector2(-99, -99): claiming_coord = coord
 	
 	# Only one claim is ever allowed at a time!
-	act.release_actor_claims(self)
+	batman.release_actor_claims(self)
 	claimed_tile = Vector2.ZERO
 	
 	if act.is_tile_available(claiming_coord, self):
@@ -439,7 +439,7 @@ func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
 	pass
 
 func release_claims():
-	act.release_actor_claims(self)
+	batman.release_actor_claims(self)
 	pass
 
 func set_targeted_tiles(targetset: Array): # Also operates as an overwrite
@@ -491,7 +491,7 @@ func monitor_position_as_coordinate():
 	
 	# We always want to track our own coordinate personally, but don't want to manage the grid coord unless we're not a ghost
 	
-	act.change_actor_coord(self, coord)
+	batman.change_actor_coord(self, coord)
 	
 	pass
 

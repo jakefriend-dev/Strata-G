@@ -32,9 +32,6 @@ func _ready():
 	batman.field = self
 	batman.actors = actors
 	batman.board = board
-	act.field = self
-	act.actors = actors
-	act.board = board
 	
 	update_debuglog()
 	update_turn_display()
