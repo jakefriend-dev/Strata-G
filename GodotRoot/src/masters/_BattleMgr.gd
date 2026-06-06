@@ -690,18 +690,10 @@ func vet_action(action: Array) -> bool:
 		print("BATMAN: vet_action(",action,") failed: Method name is blank")
 		return false
 	
-	# Non-players need to have the action in their script OR common library
-	if actor.faction != factions.PLAYER:
-		if !actor.has_method(str("ACT_"+methodname)):
-			print("BATMAN: vet_action(",action,") failed: Actor does not have method in its script")
-			return false
-		
-	# Players specifically need to have the action in ONE OF their script, common library, or player library
-	else:
-		if !actor.has_method(str("ACT_"+methodname)):
-			if !actor.lib_player.has_method(str("ACT_"+methodname)):
-				print("BATMAN: vet_action(",action,") failed: Actor does not have method in its script OR player refs lib")
-				return false
+	# Actors need to have the action in their script OR class chain
+	if !actor.has_method(str("ACT_"+methodname)):
+		print("BATMAN: vet_action(",action,") failed: Actor does not have method in its script or class-chain")
+		return false
 	
 	if action.size() == 3:
 		if not action[2] is Array:
@@ -777,14 +769,9 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var paramset: Array = curr_action[2]
 	var caller: Object = actor
 	if !actor.has_method(methodname):
-		# Common library
-		if actor.faction == factions.PLAYER:
-#			print("Calling the PC's action via PCRefs")
-			caller = actor.lib_player
-		else:
-			print("MAJOR ERROR! A non-player character does not have the called method ",methodname,"()")
-			
-			pass
+		print("MAJOR ERROR! A non-player character does not have the called method ",methodname,"()")
+		
+		pass
 	
 	# Log the action BEFORE executing
 	var logline: String = str("[",actor.ofc_name,"] ",raw_methodname)

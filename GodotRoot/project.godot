@@ -9,15 +9,20 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Node",
-"class": "ActionLibrary",
-"language": "GDScript",
-"path": "res://src/classes/ActionLibrary.gd"
-}, {
 "base": "Node2D",
 "class": "Actor",
 "language": "GDScript",
 "path": "res://src/actors/key_components/Actor.gd"
+}, {
+"base": "Actor",
+"class": "ActorEnemy",
+"language": "GDScript",
+"path": "res://src/actors/key_components/ActorEnemy.gd"
+}, {
+"base": "Actor",
+"class": "ActorPlayer",
+"language": "GDScript",
+"path": "res://src/actors/key_components/ActorPlayer.gd"
 }, {
 "base": "Reference",
 "class": "Array2D",
@@ -35,8 +40,9 @@ _global_script_classes=[ {
 "path": "res://src/classes/YTimer.gd"
 } ]
 _global_script_class_icons={
-"ActionLibrary": "",
 "Actor": "",
+"ActorEnemy": "",
+"ActorPlayer": "",
 "Array2D": "",
 "YPing": "",
 "YTimer": ""
@@ -46,7 +52,7 @@ _global_script_class_icons={
 
 config/name="Strata-G"
 run/main_scene="res://combat/framing/BattleField.tscn"
-config/icon="res://icon.png"
+config/icon="res://art/_placeholder/fight_guy temp.png"
 
 [autoload]
 

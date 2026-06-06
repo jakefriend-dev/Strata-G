@@ -5,18 +5,7 @@ onready var sprite: Sprite = $ArtMgr/HFlipper/Sprite
 onready var hflipper: Node2D = $ArtMgr/HFlipper
 onready var shadow: ColorRect = $ArtMgr/Shadow
 onready var aniplayer: AnimationPlayer = $ArtMgr/AnimationPlayer
-
-#var res_lib_helper = preload("res://src/actors/action_libraries/ALib1_Helper.gd")
-#var res_lib_general = preload("res://src/actors/action_libraries/ALib2_General.gd")
-#var res_lib_player = preload("res://src/actors/action_libraries/ALib3_Player.gd")
-#var res_lib_enemy = preload("res://src/actors/action_libraries/ALib4_Enemy.gd")
-
-var lib_helper:  ActionLibrary # Baseline helper functions like "Find nearest PC in dir" or "get 3x3 coords"
-var lib_general: ActionLibrary # Common behaviour/actions anyone can use, like walking 1 tile or common buffs
-var lib_player:  ActionLibrary # Common players-only shared behaviour/actions
-var lib_enemy:   ActionLibrary # Common enemies-only shared behaviour/actions
-
-var tween: Tween # Used by ALibs!
+var tween: Tween
 
 enum initspeeds {
 	DOES_NOT_ACT, # Things like rocks
@@ -152,7 +141,6 @@ var claimed_tile: Vector2 = Vector2.ZERO
 
 var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
 
-
 signal on_shield_consumed(is_melee) # Shield consumed at all
 signal on_shield_broken_through(is_melee) # Shield depleted, and damage surpassed it
 signal on_shield_broken_held(is_melee) # Shield depleted exactly w/o damage
@@ -170,12 +158,22 @@ func _ready():
 	perform_initial_data_setup()
 	$ArtMgr/Shadow.recenter()
 	vis_object = $ArtMgr/HFlipper
-#	update_bui()
-	
-	initialize_action_libraries()
+	tween = $Utils/Tween
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
 	batman.connect("new_round_started", self, "master_pre_round_setup")
+	
+	match name:
+		"P1":
+			set("staple_attack", "basic_shot")
+			set("staple_cost", 2)
+		"P2":
+			set("staple_attack", "basic_melee")
+			set("staple_cost", 2)
+		"P3":
+			set("staple_attack", "basic_shot")
+			set("staple_cost", 1)
+	
 	pass
 
 func perform_initial_data_setup():
@@ -192,59 +190,6 @@ func perform_initial_data_setup():
 #	for term in ["hovering", "lightweight", "heavyweight", "unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
 		set( str("is_"+term), get(str("def_",term)) )
 	weight = def_weight
-	pass
-
-func initialize_action_libraries():
-	tween = $Utils/Tween
-	
-	var libnames: Array = ["helper", "general", "player", "enemy"]
-	
-	for lib_name in libnames: if lib_name is String:
-		var var_name: String = str("lib_",lib_name)
-		var res_name: String = str("res_lib_",lib_name)
-		var node_name: String = str("Lib",lib_name.capitalize())
-		
-		var lib: Node = Node.new()
-#		lib.set_script(get(res_name))
-		lib.set_script(loader.get(res_name))
-		lib.set("name", node_name)
-		lib.set("actor", self)
-		lib.set("tween", tween)
-	
-		$Utils.add_child(lib)
-		lib.set("owner", self)
-		set(var_name, lib)
-		
-		# Messy but we will have to fix at a later time
-		if lib_name == "player":
-			match name:
-				"P1":
-					lib.set("staple_attack", "basic_shot")
-					lib.set("staple_cost", 2)
-				"P2":
-					lib.set("staple_attack", "basic_melee")
-					lib.set("staple_cost", 2)
-				"P3":
-					lib.set("staple_attack", "basic_shot")
-					lib.set("staple_cost", 1)
-		pass
-	
-	# At this point, all libraries are set, and just need to be made aware of each other
-	for lib_name in libnames: if lib_name is String:
-#		var var_name: String = str("lib_",lib_name)
-		var node_name: String = str("Lib",lib_name.capitalize())
-		var lib: Node = $Utils.get_node(node_name)
-		
-		for otherlib_name in libnames: if otherlib_name is String:
-			if otherlib_name == lib_name: continue
-			
-			var othervar_name: String = str("lib_",otherlib_name)
-			var othernode_name: String = str("Lib",otherlib_name.capitalize())
-			var otherlib: Node = $Utils.get_node(othernode_name)
-			
-			lib.set(othervar_name, otherlib)
-		pass
-	# Done!
 	pass
 
 # ---
@@ -643,6 +588,21 @@ func update_outline(): # Should be called every time targeting changes
 	if use_outline:
 		sm.set_shader_param("outline_col", to_col)
 	sm.set_shader_param("outline_enabled", use_outline)
+	pass
+
+# -
+
+
+func hotmove(to_coord: Vector2, dur: float):
+	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_CIRC, Tween.EASE_IN_OUT)
+	tween.start()
+	pass
+
+func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
+	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	tween.interpolate_property(vis_object, "position:y", null, -height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	tween.interpolate_property(vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
+	tween.start()
 	pass
 
 # -

@@ -267,7 +267,7 @@ func ACT_lunge_forward():
 	
 	var dur: float = 0.5
 	
-	lib_general.hotjump(jump_dest_coord, dur)
+	hotjump(jump_dest_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	
@@ -298,7 +298,7 @@ func ACT_lunge_back():
 	if occupant_of_dest != null:
 		# Breakpoint!
 		pass
-	lib_general.hotjump(lunge_return_tile, dur)
+	hotjump(lunge_return_tile, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	
@@ -337,7 +337,7 @@ func ACT_repo_jump(exact_coord: Vector2):
 #	print("repo_jump")
 	var dur: float = 0.5
 	
-	lib_general.hotjump(exact_coord, dur)
+	hotjump(exact_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	
@@ -351,7 +351,7 @@ func ACT_walk(exact_coord: Vector2):
 #	print("walk")
 	var dur: float = 0.5
 	
-	lib_general.hotmove(exact_coord, dur)
+	hotmove(exact_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_turn(self): return
 	
