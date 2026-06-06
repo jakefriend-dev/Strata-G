@@ -3,9 +3,6 @@ extends Node
 # For input monitoring and the like!
 var multi_input_lock: bool = false # Prevent multiple actions being acecpted too closely together
 #signal valid_player_input(input_action_namestring)
-signal party_action_chosen() # Emitted after the player selects a valid action
-
-const COST_MOVE: int = 1
 
 enum istates {
 	CANNOT_ACT,
@@ -45,56 +42,30 @@ func monitor_inputs():
 		# Orthagonal movement
 		if Input.is_action_just_pressed("player_move_up"):
 			multi_input_lock = true
-			attempt_player_char_move(Vector2.UP)
+			actor.attempt_player_char_move(Vector2.UP)
 			return
 		if Input.is_action_just_pressed("player_move_down"):
 			multi_input_lock = true
-			attempt_player_char_move(Vector2.DOWN)
+			actor.attempt_player_char_move(Vector2.DOWN)
 			return
 		if Input.is_action_just_pressed("player_move_left"):
 			multi_input_lock = true
-			attempt_player_char_move(Vector2.LEFT)
+			actor.attempt_player_char_move(Vector2.LEFT)
 			return
 		if Input.is_action_just_pressed("player_move_right"):
 			multi_input_lock = true
-			attempt_player_char_move(Vector2.RIGHT)
+			actor.attempt_player_char_move(Vector2.RIGHT)
 			return
 		
 		if Input.is_action_just_pressed("player_basic_attack"):
 			multi_input_lock = true
-			attempt_player_char_basicattack()
+			actor.attempt_player_char_basicattack()
 			return
 		
 		if Input.is_action_just_pressed("player_complete"):
 			multi_input_lock = true
-			emit_signal("party_action_chosen")
+			actor.emit_signal("player_action_submitted")
 			return
-	pass
-
-func attempt_player_char_move(dir: Vector2):
-	var playerchar: Actor = batman.curr_actor
-	if !playerchar.can_afford(COST_MOVE): return
-	if !support.is_tile_traversable_relative(playerchar, dir): return
-	
-	# Should be valid, then!
-	playerchar.spend(COST_MOVE)
-	batman.append_action(playerchar, "basic_move", [dir])
-	submit_party_action()
-	pass
-
-func attempt_player_char_basicattack():
-	var playerchar: Actor = batman.curr_actor
-	var COST: int = playerchar.staple_cost
-	if !playerchar.can_afford(COST): return
-	
-	# Should be valid, then!
-	playerchar.spend(COST)
-	batman.append_action(playerchar, "staple_attack")
-	submit_party_action()
-	pass
-
-func submit_party_action():
-	emit_signal("party_action_chosen")
 	pass
 
 

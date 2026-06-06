@@ -19,7 +19,6 @@ const COST_LUNGE: int = 2
 const COST_SUPERDEBUFF: int = 3
 const COST_REPOJUMP: int = 2
 #const COST_ENRAGE: int = 2
-const COST_WALK: int = 1
 var next_telegraph_cost: int = 0
 
 var get_bonus_action_next_turn: bool = false

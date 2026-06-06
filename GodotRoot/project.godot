@@ -61,7 +61,7 @@ data="*res://src/masters/_Data.gd"
 utils="*res://src/masters/_Utils.gd"
 support="*res://src/masters/_SupportLib.gd"
 batman="*res://src/masters/_BattleMgr.gd"
-player="*res://src/masters/_Player.gd"
+controls="*res://src/masters/_Controls.gd"
 strife="*res://src/masters/_Strife.gd"
 
 [debug]

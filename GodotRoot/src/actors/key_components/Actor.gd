@@ -43,6 +43,8 @@ enum bui_tiers {FULL, JUST_PIPS, JUST_HEALTH, INVIS_UNTIL_HIT, NOTHING_EVER}
 export (bui_tiers) var bui_level: int = bui_tiers.FULL
 var bui: Node2D
 
+const COST_WALK: int = 1
+
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
 var bonus_actions: int = 0 # Can be added to in buffs and the like!
@@ -148,6 +150,8 @@ signal on_shield_broken_any(is_melee) # Shield depleted, any circumstance
 signal on_blocked_all_damage(is_melee) # Shield remains; health unaffected
 signal on_phys_combat_any_contact() # Happens no matter what, as long as it wasn't like, poison
 
+signal player_action_submitted() # Only pertinent to ActorPlayer subclasses but here nonetheless
+
 # ---
 
 func _ready():
@@ -216,9 +220,9 @@ func choose_action():
 	
 	# Players have a custom call
 	if faction == batman.factions.PLAYER:
-		player.inputstate = player.istates.READY_FOR_PLAYER_INPUT
+		controls.inputstate = controls.istates.READY_FOR_PLAYER_INPUT
 #		print("Ready for player char to act: ",name)
-		yield(player, "party_action_chosen")
+		yield(self, "player_action_submitted")
 		pass
 	
 	# Everyone/thing else

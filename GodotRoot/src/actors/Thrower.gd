@@ -6,7 +6,6 @@ const COST_AIM_ROCK: int = 1
 const COST_THROW: int = 2
 const COST_KICK: int = 2
 const COST_BOOST_SHIELD: int = 1
-const COST_WALK: int = 1
 
 enum {NO_ROCK, HELD_ROCK, DROPPED_ROCK}
 var rockstate: int = NO_ROCK

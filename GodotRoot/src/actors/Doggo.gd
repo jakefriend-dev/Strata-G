@@ -5,7 +5,6 @@ var last_movedir_y: int = 0
 const COST_CHARGE: int = 3
 const COST_BITE_NOCHARGE: int = 2
 const COST_ENRAGE: int = 2
-const COST_WALK: int = 1
 
 var victim: Actor
 
