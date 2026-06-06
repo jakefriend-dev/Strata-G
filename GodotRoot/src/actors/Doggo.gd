@@ -180,10 +180,10 @@ func ACT_bite():
 	var damage: int = base_damage
 	if check_effect("enrage"):
 		damage += batman.BASE_HP_FACTOR
-	act.damage_actor_at_coord(self, coord + Vector2.LEFT, damage, true)
+	strife.damage_actor_at_coord(self, coord + Vector2.LEFT, damage, true)
 	
 	clear_effect("enrage") # Whether it's active of not
-	act.end_effect_on_actor(self, "buff", true)
+	strife.end_effect_on_actor(self, "buff", true)
 	if !batman.is_my_turn(self): return
 	
 	end_action()
@@ -191,8 +191,8 @@ func ACT_bite():
 
 func ACT_enrage():
 	start_effect("enrage", 2)
-	act.quick_effect(self, "quick_good")
-	act.quick_effect(self, "buff")
+	strife.quick_effect(self, "quick_good")
+	strife.quick_effect(self, "buff")
 #	add_bonus_actions(1)
 	
 	yield(utils.yt(0.5, self), "timeout")

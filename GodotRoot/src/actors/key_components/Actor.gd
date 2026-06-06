@@ -560,7 +560,7 @@ func receive_damage(damage: int, is_melee: bool):
 	if !is_melee: desctext = " ranged"
 	
 	emit_signal("on_phys_combat_any_contact")
-	act.quick_effect(self, "spark_burst")
+	strife.quick_effect(self, "spark_burst")
 	
 	# Deduct damage and shield equally until either of them depletes fully
 	while (bonus_shield > 0 or shield > 0) and damage > 0:
@@ -578,10 +578,10 @@ func receive_damage(damage: int, is_melee: bool):
 #		print("Shield BROKEN!")
 		if damage > 0:
 			emit_signal("on_shield_broken_through", is_melee)
-			act.quick_effect(self, "shield_broken")
+			strife.quick_effect(self, "shield_broken")
 		else:
 			emit_signal("on_shield_broken_held", is_melee)
-			act.quick_effect(self, "blocked")
+			strife.quick_effect(self, "blocked")
 		emit_signal("on_shield_broken_any", is_melee)
 	
 	var shielded_damage: int = og_damage - damage
@@ -596,7 +596,7 @@ func receive_damage(damage: int, is_melee: bool):
 		health -= 1
 	
 	var unshielded_damage: int = og_damage - shielded_damage - damage
-	act.quick_effect(self, "damage", unshielded_damage)
+	strife.quick_effect(self, "damage", unshielded_damage)
 	
 	if health > 0:
 		if shielded_damage == 0:

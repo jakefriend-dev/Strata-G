@@ -3,8 +3,6 @@ extends Node
 var tween: Tween
 var trans: int = Tween.TRANS_QUINT
 
-signal actor_collision_attempt(actor_attacking, actor_defending) # Can be used for things like missile collisions
-
 # ---
 
 func _ready():
@@ -125,20 +123,6 @@ func hotjump(actor: Actor, to_coord: Vector2, dur: float, height: float = 100.0)
 #	pass
 
 # ATTACKS ------------------------------------------------------------------------------------------
-
-func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, is_melee: bool, friendly_fire: bool = true):
-	if !batman.grid_actors.has_cellv(exact_coord): return
-	
-	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
-	if victim == null:
-		return
-	
-	if victim.faction == attacker.faction:
-		if !friendly_fire:
-			return
-	
-	victim.receive_damage(damage, is_melee)
-	pass
 
 # TILE ADJUSTMENTS ---------------------------------------------------------------------------------
 
@@ -418,80 +402,6 @@ func get_all_tiles_by_faction(faction: int) -> Array:
 				results.append(entry[1])
 	return results
 	pass
-
-# ---
-
-func quick_effect(actor_or_coord, effect: String, variant = null):
-	match effect:
-		
-		"damage":
-			spawn_effect_on_actor(actor_or_coord, "damage", false, float(variant))
-		
-		"blocked":
-			spawn_effect_on_actor(actor_or_coord, "blocked", false)
-			pass
-		
-		"shield_broken":
-			spawn_effect_on_actor(actor_or_coord, "shield_broken", false)
-		
-		"quick_good":
-			spawn_effect_on_actor(actor_or_coord, "power_up", false)
-			pass
-		
-		"quick_bad":
-			spawn_effect_on_actor(actor_or_coord, "power_down", false)
-			pass
-		
-		"buff": # Implies somewhat persistent
-			spawn_effect_on_actor(actor_or_coord, "buff", true)
-		
-		"debuff": # Implies somewhat persistent
-			pass
-		
-		"dust":
-			spawn_effect_on_tile(actor_or_coord, "dust_cloud", false)
-	pass
-
-func spawn_effect_on_actor(actor: Actor, effect: String, persistent: bool, intensity: float = 1.0, misc: String = ""):
-	var pos: Vector2 = actor.position
-	var ep: Node2D = loader.res_effect_particle.instance()
-	ep.set("position", pos + Vector2.DOWN)
-	ep.set("actor", actor)
-	ep.set("effect_name", effect)
-	ep.set("persistent", persistent)
-	ep.set("intensity", intensity)
-	ep.set("misc", misc)
-	
-	batman.field.effects.add_child(ep)
-	# The EP begins itself via _ready()
-	pass
-
-func spawn_effect_on_tile(coord: Vector2, effect: String, intensity: float = 1.0, misc: String = ""):
-	var pos: Vector2 = batman.grid_gpos.get_cellv(coord)
-	var ep: Node2D = loader.res_effect_particle.instance()
-	ep.set("position", pos + Vector2.DOWN)
-#	ep.set("actor", actor)
-	ep.set("effect_name", effect)
-	ep.set("persistent", false)
-	ep.set("intensity", intensity)
-	ep.set("misc", misc)
-	
-	batman.field.effects.add_child(ep)
-	# The EP begins itself via _ready()
-	pass
-
-func end_effect_on_actor(actor: Actor, effect: String, immediate: bool = false):
-	for ep in batman.field.effects.get_children():
-		if ep.actor == actor:
-			if ep.effect_name == effect:
-				# Valid!
-				if immediate:
-					ep.quick_clear()
-				else:
-					ep.end_persistent()
-	pass
-
-
 
 
 

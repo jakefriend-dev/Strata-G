@@ -84,13 +84,13 @@ func ACT_drop_rock(): # Shield break!
 	if rockstate == HELD_ROCK:
 		rockstate = DROPPED_ROCK
 		sprite.frame = rockstate
-		act.damage_actor_at_coord(self, coord, base_damage, true)
+		strife.damage_actor_at_coord(self, coord, base_damage, true)
 	end_action()
 	pass
 
 func ACT_throw_rock():
 	var target: Vector2 = targeted_tiles[0] # Just in case of accidental multiple
-	act.damage_actor_at_coord(self, target, base_damage, false)
+	strife.damage_actor_at_coord(self, target, base_damage, false)
 	
 	rockstate = NO_ROCK
 	sprite.frame = rockstate
@@ -100,7 +100,7 @@ func ACT_throw_rock():
 func ACT_kick_rock():
 	var victim: Actor = act.find_nearest_actor_in_dir(coord, Vector2.LEFT)
 	if !victim == null:
-		act.damage_actor_at_coord(self, victim.coord, base_damage, false)
+		strife.damage_actor_at_coord(self, victim.coord, base_damage, false)
 	
 	rockstate = NO_ROCK
 	sprite.frame = rockstate

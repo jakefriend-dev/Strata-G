@@ -30,7 +30,7 @@ func ACT_basic_shot():
 	var victim: Actor = act.find_nearest_actor_in_dir(actor.coord, Vector2.RIGHT)
 	if victim == null: actor.end_action()
 	
-	act.damage_actor_at_coord(actor, victim.coord, actor.base_damage, false)
+	strife.damage_actor_at_coord(actor, victim.coord, actor.base_damage, false)
 	
 	actor.end_action()
 	pass
@@ -38,7 +38,7 @@ func ACT_basic_shot():
 func ACT_basic_melee():
 	var exact_coord: Vector2 = actor.coord + Vector2.RIGHT
 	
-	act.damage_actor_at_coord(actor, exact_coord, actor.base_damage, true)
+	strife.damage_actor_at_coord(actor, exact_coord, actor.base_damage, true)
 	
 	actor.end_action()
 	pass

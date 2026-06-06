@@ -232,7 +232,7 @@ func ACT_shoot():
 #	print("shoot")
 	
 	for target in targeted_tiles:
-		act.damage_actor_at_coord(self, target, base_damage, false)
+		strife.damage_actor_at_coord(self, target, base_damage, false)
 	
 	release_targeted_tiles()
 	end_action()
@@ -274,12 +274,12 @@ func ACT_lunge_forward():
 	# Damage impact! All adjacent cells take 1 base, our cell takes 2 base
 	for target in targeted_tiles:
 		if target == coord:
-			act.damage_actor_at_coord(self, target, base_damage, true)
-			act.quick_effect(target, "dust")
+			strife.damage_actor_at_coord(self, target, base_damage, true)
+			strife.quick_effect(target, "dust")
 			act.change_tiletype_single(target, batman.tiletypes.JAGGED)
 		else:
-			act.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR, false)
-			act.quick_effect(target, "dust")
+			strife.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR, false)
+			strife.quick_effect(target, "dust")
 	release_targeted_tiles()
 	
 	yield(utils.yt(post_jump_rumble_time, self), "timeout")
@@ -317,15 +317,15 @@ func ACT_debuff():
 	
 	for actor in batman.living_actors: if actor is Actor:
 		if actor == self:
-			act.quick_effect(self, "quick_good")
+			strife.quick_effect(self, "quick_good")
 			continue # We handle ourselves later!
 		
 		# Enemies gain 1AP, playerside loses 1AP
 		if actor.faction == batman.factions.ENEMY:
-			act.quick_effect(actor, "quick_good")
+			strife.quick_effect(actor, "quick_good")
 			actor.add_bonus_actions(1)
 		elif actor.faction == batman.factions.PLAYER:
-			act.quick_effect(actor, "quick_bad")
+			strife.quick_effect(actor, "quick_bad")
 			actor.spend(1)
 	
 	end_action()
