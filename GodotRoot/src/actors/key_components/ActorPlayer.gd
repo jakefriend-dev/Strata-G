@@ -25,7 +25,7 @@ func ACT_staple_attack():
 	pass
 
 func ACT_basic_shot():
-	var victim: Actor = act.find_nearest_actor_in_dir(coord, Vector2.RIGHT)
+	var victim: Actor = support.find_nearest_actor_in_dir(coord, Vector2.RIGHT)
 	if victim == null: end_action()
 	
 	strife.damage_actor_at_coord(self, victim.coord, base_damage, false)

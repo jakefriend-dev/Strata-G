@@ -74,7 +74,7 @@ func monitor_inputs():
 func attempt_player_char_move(dir: Vector2):
 	var playerchar: Actor = batman.curr_actor
 	if !playerchar.can_afford(COST_MOVE): return
-	if !act.is_tile_traversable_relative(playerchar, dir): return
+	if !support.is_tile_traversable_relative(playerchar, dir): return
 	
 	# Should be valid, then!
 	playerchar.spend(COST_MOVE)

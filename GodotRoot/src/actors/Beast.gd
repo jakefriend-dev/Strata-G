@@ -69,7 +69,7 @@ func prep_next_action():
 #				print("checking if we can lunge to exact jump_dest_coord ",jump_dest_coord)
 				ghost_mode(true)
 				allowed_over_faction_lines = true
-				if act.is_tile_traversable_exact(self, jump_dest_coord):
+				if support.is_tile_traversable_exact(self, jump_dest_coord):
 					ghost_mode(false)
 					allowed_over_faction_lines = false
 #					print("yep!")
@@ -131,7 +131,7 @@ func prep_next_action():
 		var walk_coord: Vector2
 		var walk_conditions_met: bool = false
 		if can_afford(COST_WALK):
-			walk_coord = act.get_rand_adj_tile_for_actormoving(coord, self)
+			walk_coord = support.get_rand_adj_tile_for_actormoving(coord, self)
 			if walk_coord != coord:
 				walk_conditions_met = true
 		
@@ -146,7 +146,7 @@ func prep_next_action():
 		var repo_normal_conditions_met: bool = false
 		var repo_emergency_conditions_met: bool = false
 		if can_afford(COST_REPOJUMP):
-			repo_coord = act.get_rand_faction_tile_for_actormoving(self, faction)
+			repo_coord = support.get_rand_faction_tile_for_actormoving(self, faction)
 			if repo_coord != coord:
 				repo_emergency_conditions_met = true
 				if can_afford(COST_REPOJUMP + next_telegraph_cost):
@@ -213,7 +213,7 @@ func ACT_pre_shoot():
 	players.shuffle()
 	picked_tiles.append(players[0].coord)
 	
-	var player_tiles: Array = act.get_all_tiles_by_faction(batman.factions.PLAYER)
+	var player_tiles: Array = support.get_all_tiles_by_faction(batman.factions.PLAYER)
 	player_tiles.erase(picked_tiles[0]) # No repeats!
 	player_tiles.shuffle()
 	picked_tiles.append(player_tiles.pop_front()) # Always a 2nd bullet
@@ -241,10 +241,10 @@ func ACT_shoot():
 func ACT_pre_lunge():
 #	print("pre_lunge")
 	
-	var picked_tiles: Array = act.get_adj_orthagonal_tiles(jump_dest_coord, true)
+	var picked_tiles: Array = support.get_adj_orthagonal_tiles(jump_dest_coord, true)
 	picked_tiles.append(jump_dest_coord)
 	set_targeted_tiles(picked_tiles)
-#	act.prep_tiletype_changes(self, [opposite], batman.tiletypes.JAGGED)
+#	support.prep_tiletype_changes(self, [opposite], batman.tiletypes.JAGGED)
 	
 	end_action()
 	pass
@@ -257,7 +257,7 @@ func ACT_lunge_forward():
 	
 	# Attempt to return to a random tile (BEFORE enabling ghost mode)
 	lunge_return_tile = claimed_tile
-	var rand_tile: Vector2 = act.get_rand_faction_tile_for_actormoving(self, faction, true)
+	var rand_tile: Vector2 = support.get_rand_faction_tile_for_actormoving(self, faction, true)
 	if rand_tile != coord:
 		print(name," ACT_lunge_forward() picked new tile whose occupant is ",batman.grid_actors.get_cellv(rand_tile))
 		lunge_return_tile = rand_tile
@@ -276,7 +276,7 @@ func ACT_lunge_forward():
 		if target == coord:
 			strife.damage_actor_at_coord(self, target, base_damage, true)
 			strife.quick_effect(target, "dust")
-			act.change_tiletype_single(target, batman.tiletypes.JAGGED)
+			support.change_tiletype_single(target, batman.tiletypes.JAGGED)
 		else:
 			strife.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR, false)
 			strife.quick_effect(target, "dust")
@@ -382,22 +382,22 @@ func ACT_walk(exact_coord: Vector2):
 #		SHOOT: do_shoot()
 #
 #	# Jump to a new position; OG position is fallback
-#	var new_dest: Vector2 = act.get_rand_faction_tile_for_actormoving(self, faction)
+#	var new_dest: Vector2 = support.get_rand_faction_tile_for_actormoving(self, faction)
 #	if new_dest != coord:
-#		act.prep_exact_move(self, new_dest)
-#	act.start_action_queue(self)
+#		support.prep_exact_move(self, new_dest)
+#	support.start_action_queue(self)
 #	set_up_next_turn()
 #	pass
 
 #func do_lunge():
 #	# Damage other side (no visual)
 #	var opposite: Vector2 = coord + lunge_delta_target
-#	act.prep_shaped_attack(self, targeted_locs, true)
-#	act.prep_tiletype_changes(self, [opposite], batman.tiletypes.JAGGED)
+#	support.prep_shaped_attack(self, targeted_locs, true)
+#	support.prep_tiletype_changes(self, [opposite], batman.tiletypes.JAGGED)
 #	pass
 #
 #func do_shoot():
-#	act.prep_shaped_attack(self, targeted_locs, false)
+#	support.prep_shaped_attack(self, targeted_locs, false)
 #	pass
 
 #func set_up_next_turn():
@@ -422,7 +422,7 @@ func ACT_walk(exact_coord: Vector2):
 #		return false
 #
 #	targeted_locs.append(opposite)
-#	targeted_locs.append_array(act.get_adj_orthagonal_tiles(opposite))
+#	targeted_locs.append_array(support.get_adj_orthagonal_tiles(opposite))
 #
 #	print(name," prepping Lunge! Targeting: ",targeted_locs)
 #

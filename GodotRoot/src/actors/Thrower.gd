@@ -98,7 +98,7 @@ func ACT_throw_rock():
 	pass
 
 func ACT_kick_rock():
-	var victim: Actor = act.find_nearest_actor_in_dir(coord, Vector2.LEFT)
+	var victim: Actor = support.find_nearest_actor_in_dir(coord, Vector2.LEFT)
 	if !victim == null:
 		strife.damage_actor_at_coord(self, victim.coord, base_damage, false)
 	

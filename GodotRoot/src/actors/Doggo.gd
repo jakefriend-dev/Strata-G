@@ -29,7 +29,7 @@ func pre_turn_setup():
 
 func prep_next_action(): # This func should END with setting up one or multiple actions!
 	
-	var can_charge_left: bool = act.is_tile_traversable_relative(self, Vector2.LEFT)
+	var can_charge_left: bool = support.is_tile_traversable_relative(self, Vector2.LEFT)
 #	print("doggo can charge left? ",can_charge_left)
 	
 	# Can we see a victim?
@@ -92,7 +92,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	
 	# Move up or down if able (prioritizing your last direction)
 	var movedir: Vector2 = Vector2(0, last_movedir_y)
-	if act.is_tile_traversable_relative(self, movedir):
+	if support.is_tile_traversable_relative(self, movedir):
 		spend(COST_WALK)
 		batman.append_action(self, "walk", [movedir])
 		return
@@ -100,13 +100,13 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# If you can't move your preferred way, flip!
 	last_movedir_y *= -1
 	movedir = Vector2(0, last_movedir_y)
-	if act.is_tile_traversable_relative(self, movedir):
+	if support.is_tile_traversable_relative(self, movedir):
 		spend(COST_WALK)
 		batman.append_action(self, "walk", [movedir])
 		return
 	
 	# If we can't vertmove, horzmove? This will be at random.
-	var moptions: Array = act.vet_actormove_optionset_relative(self, [Vector2.LEFT, Vector2.RIGHT])
+	var moptions: Array = support.vet_actormove_optionset_relative(self, [Vector2.LEFT, Vector2.RIGHT])
 	if !moptions.empty():
 		moptions.shuffle()
 		spend(COST_WALK)
@@ -117,7 +117,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	pass
 
 func can_see_victim() -> bool:
-	victim = act.find_nearest_actor_in_dir(coord, Vector2.LEFT)
+	victim = support.find_nearest_actor_in_dir(coord, Vector2.LEFT)
 #	print("victim: ",victim)
 	if victim != null:
 		if victim.faction == factions.PLAYER:
@@ -131,7 +131,7 @@ func can_see_victim() -> bool:
 func ACT_charge_forward():
 	# Claim everything to your left (that you can move to!
 	allowed_over_faction_lines = true
-	var chargies: Array = act.list_all_traversible_tiles_in_dir(Vector2.LEFT, self)
+	var chargies: Array = support.list_all_traversible_tiles_in_dir(Vector2.LEFT, self)
 #	print("chargies: ",chargies)
 	var xdist: int = chargies.size()
 	
@@ -207,7 +207,7 @@ func ACT_walk(motion: Vector2):
 	
 	var dest_coord: Vector2 = coord + motion
 	
-#	if !act.update_actor_coord_data(self, dest_coord):
+#	if !support.update_actor_coord_data(self, dest_coord):
 #		batman.skip_action()
 #		return
 	
