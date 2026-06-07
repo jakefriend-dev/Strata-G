@@ -34,6 +34,34 @@ enum moves { # WAYS of moving, for the purpose of things like determining ice sl
 
 # ---
 
+# Impact damage/motion can be blocked and countered as usual, and triggers animation responses.
+	# Impacts are 'standard' attacks or knockback. This is the norm!
+# Quiet damage/motion simply happens, as long as there's no relevant immunities. There should be nothing to 'counter' and visual responses like animations can be skipped.
+	# Damage example: Poison tiles
+	# Motion example: Wind currents
+	# We don't worry about ice or conveyor movement - those handle themselves.
+# If motion AND damage are needed in one attack, the attacker's function needs to have one call for each. Much simpler that way. Ideally, damage first.
+
+# Note that 'attacker' is *allowed* to be null, for instances of arena damage/effects.
+
+# Common flags:
+	# piercing: Shields are bypassed
+	# elem_ICE (or similar): Elemental immunities/weaknesses are applied
+	# no_friendly_fire: Typically FF is default-on; this would bypass that
+
+func do_impact_damage(attacker: Actor, defender: Actor, og_damage: int, flags: Array = []):
+	pass
+
+func do_quiet_damage():
+	pass
+
+func do_impact_motion():
+	pass
+
+func do_quiet_motion():
+	pass
+
+# Holdovers below, need updating!
 
 func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, is_melee: bool, friendly_fire: bool = true):
 	if !batman.grid_actors.has_cellv(exact_coord): return
@@ -188,6 +216,18 @@ func end_effect_on_actor(actor: Actor, effect: String, immediate: bool = false):
 	pass
 
 # TILE CROSSOVER EFFECTS AND IMPACTS -------------------------------------------
+
+# Precheck must be passed to bother engaging with anything else going on here
+func TILE_any_change_precheck(actor: Actor) -> bool:
+	if !utils.valid(actor): return false
+	
+	if !actor.alive_check(): return false
+	
+	if !actor.is_on_ground: return false
+	
+	if actor.weight == actor.weightclasses.HOVER: return false
+	
+	return true
 
 # If you START your turn on a tiletype -----------------------------------------
 

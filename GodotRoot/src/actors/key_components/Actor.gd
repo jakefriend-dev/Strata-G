@@ -141,6 +141,17 @@ var coord: Vector2
 var prior_actionstep_coord: Vector2 # Update this at the end of every actionstep for every actor! This helps us understand what happened this actionstep for tiletype changes
 var claimed_tile: Vector2 = Vector2.ZERO
 
+var z: int
+var prev_z: int
+var is_on_ground: bool = true # Always true unless jumping, essentially. Even hover-weight mobs are 'on ground'.
+enum airstates {FLAT, RISING, FALLING}
+var airstate: int = airstates.FLAT
+
+signal on_z_begin_rise()
+signal on_z_begin_fall()
+signal on_z_jumped() # Even a non-"jump" counts as long as it becomes airborne
+signal on_z_landed()
+
 var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
 
 signal on_shield_consumed(is_melee) # Shield consumed at all
@@ -466,8 +477,42 @@ func release_targeted_tiles():
 	pass
 
 func _process(_delta):
+	manage_z_height()
 	monitor_position_as_coordinate()
 	if just_exited_ghost_mode: just_exited_ghost_mode = false
+	pass
+
+func manage_z_height():
+	is_on_ground = (z <= 0)
+	
+	# going down
+	if z < prev_z:
+		if airstate != airstates.FALLING:
+			emit_signal("on_z_begin_fall")
+		airstate = airstates.FALLING
+		if prev_z > 0 and z <= 0:
+			emit_signal("on_z_landed")
+			print(name," landed!")
+	
+	# going up
+	elif z > prev_z:
+		if airstate != airstates.RISING:
+			emit_signal("on_z_begin_rise")
+		airstate = airstates.RISING
+		if prev_z <= 0 and z > 0:
+			emit_signal("on_z_jumped")
+			print(name," jumped!")
+	
+	# sustained position
+	else:
+		airstate = airstates.FLAT
+	
+	# Commit!
+	prev_z = z
+	
+	# Regardless, we want to update the visuals live
+	if vis_object.position.y != -z:
+		vis_object.position.y = -z
 	pass
 
 func monitor_position_as_coordinate():
@@ -604,8 +649,13 @@ func hotmove(to_coord: Vector2, dur: float):
 
 func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
 	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	tween.interpolate_property(vis_object, "position:y", null, -height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
-	tween.interpolate_property(vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
+	
+	tween.interpolate_property(self, "z", null, height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	tween.interpolate_property(self, "z", height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
+
+#	tween.interpolate_property(vis_object, "position:y", null, -height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
+#	tween.interpolate_property(vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
+
 	tween.start()
 	pass
 
@@ -624,6 +674,13 @@ func get_multifactored_actor_name() -> String:
 
 func is_targeted() -> bool:
 	return batman.targeted_tiles.has(coord)
+
+func x_facing() -> int: # Shortcut for the X-facing dir
+	if faction == factions.PLAYER:
+		return 1
+	if faction == factions.ENEMY:
+		return -1
+	return 0
 
 func _to_string() -> String:
 	if ofc_name != "--":
