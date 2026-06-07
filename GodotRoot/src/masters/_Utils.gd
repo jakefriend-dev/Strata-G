@@ -30,7 +30,7 @@ func yt(dur: float, caller, disrespect_pause: bool = false) -> YTimer:
 	ytimer.set("wait_time", dur)
 	ytimer.set("caller", caller)
 	ytimer.set("callername", caller.name)
-	add_child(ytimer)
+	caller.add_child(ytimer)
 
 	if disrespect_pause:
 		ytimer.pause_mode = Node.PAUSE_MODE_PROCESS

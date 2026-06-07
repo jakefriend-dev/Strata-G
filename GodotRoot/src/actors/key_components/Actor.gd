@@ -524,6 +524,10 @@ func monitor_position_as_coordinate():
 	coord = batman.field.actorpos_to_tilecoord(position)
 	
 	if coord == prev_tick_coord: return
+	
+	strife.TILE_event_exit(self, prev_tick_coord)
+	strife.TILE_event_entry(self, coord)
+	
 	if is_ghost: return
 	
 	# We always want to track our own coordinate personally, but don't want to manage the grid coord unless we're not a ghost

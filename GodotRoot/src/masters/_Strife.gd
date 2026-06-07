@@ -217,49 +217,74 @@ func end_effect_on_actor(actor: Actor, effect: String, immediate: bool = false):
 
 # TILE CROSSOVER EFFECTS AND IMPACTS -------------------------------------------
 
-func TILE_event_started_on(actor: Actor, start_coord: Vector2):
+func TILE_event_turn_started_on(actor: Actor, coord: Vector2):
 	if !TILE_any_event_precheck(actor): return
 	
 	# Self-explanatory, but only happens at the start of THAT actor's turn, not the start of overall combat
 	
-	var tiletype: int = batman.grid_tiles.get_cellv(start_coord)
+	var tiletype: int = batman.grid_tiles.get_cellv(coord)
 	var tilestring: String = get_tiletype_as_string(tiletype)
+	var segment: String = "started_on"
+	if has_method(str("TILE_",segment,"_",tilestring)):
+		call(str("TILE_",segment,"_",tilestring), actor, coord)
+	if has_method(str("TILE_",segment,"_ANY")):
+		call(str("TILE_",segment,"_ANY"), actor, coord)
 	pass
 
-func TILE_event_exit(actor: Actor, old_coord: Vector2):
+func TILE_event_exit(actor: Actor, coord: Vector2): # EXITED coord
 	if !TILE_any_event_precheck(actor): return
 	
 	# This means we have departed and left from one tile to another - should be called BEFORE entry, if we're doing both at once!
 	
-	var tiletype: int = batman.grid_tiles.get_cellv(old_coord)
+	var tiletype: int = batman.grid_tiles.get_cellv(coord)
 	var tilestring: String = get_tiletype_as_string(tiletype)
+	var segment: String = "exited"
+	if has_method(str("TILE_",segment,"_",tilestring)):
+		call(str("TILE_",segment,"_",tilestring), actor, coord)
+	if has_method(str("TILE_",segment,"_ANY")):
+		call(str("TILE_",segment,"_ANY"), actor, coord)
 	pass
 
-func TILE_event_entry(actor: Actor, new_coord: Vector2):
+func TILE_event_entry(actor: Actor, coord: Vector2):
 	if !TILE_any_event_precheck(actor): return
 	
 	# This could be from walking over, OR re-called upon landing (if we were in the air, we'd have been immune on initial check)
 	
-	var tiletype: int = batman.grid_tiles.get_cellv(new_coord)
+	var tiletype: int = batman.grid_tiles.get_cellv(coord)
 	var tilestring: String = get_tiletype_as_string(tiletype)
+	var segment: String = "entered"
+	if has_method(str("TILE_",segment,"_",tilestring)):
+		call(str("TILE_",segment,"_",tilestring), actor, coord)
+	if has_method(str("TILE_",segment,"_ANY")):
+		call(str("TILE_",segment,"_ANY"), actor, coord)
 	pass
 
-func TILE_event_rest(actor: Actor, rest_coord: Vector2):
+func TILE_event_rest(actor: Actor, coord: Vector2):
 	if !TILE_any_event_precheck(actor): return
 	
 	# Any time the actor performs an action that does NOT move it tiles or count as a movement in some way (a bit ambiguous, atm). Essentially 'you remained on this tile rather than left it'
 	
-	var tiletype: int = batman.grid_tiles.get_cellv(rest_coord)
+	var tiletype: int = batman.grid_tiles.get_cellv(coord)
 	var tilestring: String = get_tiletype_as_string(tiletype)
+	var segment: String = "rested_on"
+	if has_method(str("TILE_",segment,"_",tilestring)):
+		call(str("TILE_",segment,"_",tilestring), actor, coord)
+	if has_method(str("TILE_",segment,"_ANY")):
+		call(str("TILE_",segment,"_ANY"), actor, coord)
 	pass
 
-func TILE_event_ended_on(actor: Actor, end_coord: Vector2):
+func TILE_event_turn_ended_on(actor: Actor, coord: Vector2):
 	if !TILE_any_event_precheck(actor): return
 	
 	# Exclusively when the turn is normally called to end, *not* on interruption - if the actor is dead, why bother!
 	
-	var tiletype: int = batman.grid_tiles.get_cellv(end_coord)
+	var tiletype: int = batman.grid_tiles.get_cellv(coord)
 	var tilestring: String = get_tiletype_as_string(tiletype)
+	var segment: String = "ended_on"
+	if has_method(str("TILE_",segment,"_",tilestring)):
+		call(str("TILE_",segment,"_",tilestring), actor, coord)
+	if has_method(str("TILE_",segment,"_ANY")):
+		call(str("TILE_",segment,"_ANY"), actor, coord)
 	pass
 
 # Precheck must be passed to bother engaging with anything else going on here
@@ -291,14 +316,17 @@ func get_tilestring_as_int(tilestring: String) -> int:
 
 # If you START your turn on a tiletype -----------------------------------------
 
-func TILE_started_on_HOT(_actor: Actor):
+func TILE_started_on_HOT(actor: Actor, _coord: Vector2):
 	# Gain 1 AP - fire immunity doesn't matter here, you get the upside regardless
+	
+	strife.quick_effect(actor, "quick_good")
+	actor.add_bonus_actions(1)
 	pass
 
 # The moment you ENTER a tiletype MID-turn -------------------------------------
 	# Also triggers if a tile is changed beneath your feet, whether your turn or not
 
-func TILE_entered_JAGGED(actor: Actor):
+func TILE_entered_JAGGED(actor: Actor, coord: Vector2):
 	if is_affected_by_jagged(actor):
 		# 1 damage, 1 move debuff
 		quick_effect(actor, "quick_bad")
@@ -308,11 +336,11 @@ func TILE_entered_JAGGED(actor: Actor):
 	
 	if is_fixes_jagged_on_contact(actor):
 		# Then fix the tile
-		
+		support.change_tiletype_single(coord, batman.tiletypes.NORMAL)
 		pass
 	pass
 
-func TILE_entered_ICE(actor: Actor):
+func TILE_entered_ICE(actor: Actor, coord: Vector2):
 	if !is_affected_by_ice(actor): return
 	
 	# We need to know the direction-vector you entered from, and if it was a jump or 'walk' type of movement. Ignore if not walking!
@@ -325,21 +353,21 @@ func TILE_entered_ICE(actor: Actor):
 		# This replaces any upcoming 'this actor slips' ice-related actionstep. There can only be one ice actionstep per actor happening or about to happen at a time!
 	pass
 
-func TILE_entered_POISON(actor: Actor):
+func TILE_entered_POISON(actor: Actor, _coord: Vector2):
 	if actor.is_immune_poison: return
 	
 	# Immediately take 1 damage
 	receive_damage(actor, 1, false)
 	pass
 
-func TILE_entered_MUD(actor: Actor):
+func TILE_entered_MUD(actor: Actor, _coord: Vector2):
 	if actor.is_immune_mud: return
 	if !is_affected_by_sinking(actor): return
 	
 	# Lose a movestep, unless lightweight (in which case it checks at end-of-turn instead)
 	pass
 
-func TILE_entered_WATER(actor: Actor):
+func TILE_entered_WATER(actor: Actor, _coord: Vector2):
 	if actor.is_immune_water: return
 	# Lose a movestep, unless you're a swimmer (lightweight doesn't matter here)
 	pass
@@ -347,35 +375,37 @@ func TILE_entered_WATER(actor: Actor):
 # If you REST on a tiletype MID-turn -------------------------------------------
 	# Resting is taking an action that does not contain/involve movement
 
-func TILE_rested_on_ANY(actor: Actor):
+func TILE_rested_on_ANY(actor: Actor, coord: Vector2):
 	if actor.is_immune_magnet: return
-	# Check for adjacent magnets! If multiple, do nothing. If there is only 1 (within your traversable rules), get dragged on to it.
+	# Check for adjacent magnets! If multiple, do nothing. If there is only 1 *valid* magnet (within your traversable rules), get dragged on to it.
+	print(actor.name," rested on ANY!")
 	pass
 
 # If you LEAVE a tiletype MID-turn (even mid-action) ---------------------------
 
-func TILE_exited_ICE(actor: Actor):
+func TILE_exited_ICE(actor: Actor, coord: Vector2):
 	if !is_affected_by_ice(actor): return
 	
 	# Remove any 'slide on ice' actionsteps queued for this actor at the tile we're exiting (excepting the current-executing actionstep; let it clear itself). If a multi-ice slide is happening, it can just be multiple slide actions in a row. Careful not to remove ANOTHER coord's slide!
+	print("exited ICE!")
 	pass
 
 # If you END your turn on a tiletype -------------------------------------------
 
-func TILE_ended_on_HOT(actor: Actor):
+func TILE_ended_on_HOT(actor: Actor, _coord: Vector2):
 	if actor.is_immune_fire: return
 	
 	# Take 1 damage unless immune
 	receive_damage(actor, 4, false)
 	pass
 
-func TILE_ended_on_SAND(actor: Actor):
+func TILE_ended_on_SAND(actor: Actor, _coord: Vector2):
 	if !is_affected_by_sinking(actor): return
 
 	# Lose a movestep, unless lightweight (you'll still lose 1 later for ending your turn there if that happens tho)
 	pass
 
-func TILE_ended_on_MUD(actor: Actor):
+func TILE_ended_on_MUD(actor: Actor, _coord: Vector2):
 	if is_affected_by_sinking(actor): return
 	
 	# Lightweight actors should sink now, since they didn't earlier (everyone else should already be sunk)

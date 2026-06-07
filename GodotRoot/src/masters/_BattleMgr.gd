@@ -197,9 +197,10 @@ func test_new_combat(test: String):
 					[4, 1, "Rock"],
 				],
 				"tile_exceptions": {
-					Vector2(3, 3): 2,
-					Vector2(2, 1): 1,
-					Vector2(2, 0): 1,
+					Vector2(3, 3): tiletypes.STEEL,
+					Vector2(2, 1): tiletypes.HOT,
+					Vector2(4, 1): tiletypes.HOT,
+					Vector2(2, 4): tiletypes.ICE,
 				},
 			}):
 				print("TURN MGR: test_new_combat(",test,") failed!")
@@ -469,6 +470,7 @@ func cycle_to_next_turn():
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
 	combatstate = C_TURN
+	strife.TILE_event_turn_started_on(curr_actor, curr_actor.coord)
 	curr_actor.choose_action()
 	pass
 
@@ -480,7 +482,7 @@ func end_turn(): # Includes post-turn; assumes NO interruption
 	emit_signal("on_turn_ended_naturally")
 	
 	# Do post-turn effects here
-	# vvv
+	strife.TILE_event_turn_ended_on(curr_actor, curr_actor.coord)
 	
 	# ^^^
 	
@@ -930,6 +932,8 @@ func release_actor_claims(actor: Actor):
 	pass
 
 func kill_actor(actor: Actor):
+	var should_change_turns: bool = (actor == curr_actor)
+	
 	# Prevent it from executing actions
 	actor.active = false
 	if actor.is_in_group("actors"):
@@ -961,6 +965,10 @@ func kill_actor(actor: Actor):
 	else:
 		actor.visible = false
 		actor.queue_free()
+	
+	if should_change_turns:
+		yield(utils.yt(timeout_action_time, self), "timeout")
+		end_turn()
 	pass
 
 func get_all_current_players() -> Array:
