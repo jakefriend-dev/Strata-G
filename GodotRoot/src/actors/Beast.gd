@@ -231,7 +231,7 @@ func ACT_shoot():
 #	print("shoot")
 	
 	for target in targeted_tiles:
-		strife.damage_actor_at_coord(self, target, base_damage, false)
+		strife.damage_actor_at_coord(self, target, base_damage)
 	
 	release_targeted_tiles()
 	end_action()
@@ -273,11 +273,11 @@ func ACT_lunge_forward():
 	# Damage impact! All adjacent cells take 1 base, our cell takes 2 base
 	for target in targeted_tiles:
 		if target == coord:
-			strife.damage_actor_at_coord(self, target, base_damage, true)
+			strife.damage_actor_at_coord(self, target, base_damage)
 			strife.quick_effect(target, "dust")
 			support.change_tiletype_single(target, batman.tiletypes.JAGGED)
 		else:
-			strife.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR, false)
+			strife.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR)
 			strife.quick_effect(target, "dust")
 	release_targeted_tiles()
 	

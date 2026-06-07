@@ -179,7 +179,7 @@ func ACT_bite():
 	var damage: int = base_damage
 	if check_effect("enrage"):
 		damage += batman.BASE_HP_FACTOR
-	strife.damage_actor_at_coord(self, coord + Vector2.LEFT, damage, true)
+	strife.damage_actor_at_coord(self, coord + Vector2.LEFT, damage)
 	
 	clear_effect("enrage") # Whether it's active of not
 	strife.end_effect_on_actor(self, "buff", true)

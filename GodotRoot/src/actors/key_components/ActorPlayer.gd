@@ -52,9 +52,11 @@ func ACT_staple_attack():
 
 func ACT_basic_shot():
 	var victim: Actor = support.find_nearest_actor_in_dir(coord, Vector2.RIGHT)
-	if victim == null: end_action()
+	if victim == null:
+		end_action()
+		return
 	
-	strife.damage_actor_at_coord(self, victim.coord, base_damage, false)
+	strife.damage_actor_at_coord(self, victim.coord, base_damage)
 	
 	end_action()
 	pass
@@ -62,7 +64,7 @@ func ACT_basic_shot():
 func ACT_basic_melee():
 	var exact_coord: Vector2 = coord + Vector2.RIGHT
 	
-	strife.damage_actor_at_coord(self, exact_coord, base_damage, true)
+	strife.damage_actor_at_coord(self, exact_coord, base_damage)
 	
 	end_action()
 	pass
