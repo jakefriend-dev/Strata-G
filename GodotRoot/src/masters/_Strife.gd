@@ -387,7 +387,6 @@ func TILE_exited_ICE(actor: Actor, coord: Vector2):
 	if !is_affected_by_ice(actor): return
 	
 	# Remove any 'slide on ice' actionsteps queued for this actor at the tile we're exiting (excepting the current-executing actionstep; let it clear itself). If a multi-ice slide is happening, it can just be multiple slide actions in a row. Careful not to remove ANOTHER coord's slide!
-	print("exited ICE!")
 	pass
 
 # If you END your turn on a tiletype -------------------------------------------
