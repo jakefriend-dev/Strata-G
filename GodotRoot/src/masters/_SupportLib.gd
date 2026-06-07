@@ -234,7 +234,8 @@ func find_nearest_actor_in_dir(og_coord: Vector2, dir: Vector2, must_be_faction:
 	return null
 	pass
 
-func get_dist_between_actors(first_actor: Actor, second_actor: Actor) -> Vector2:
+# NOT a hypoteneuse, a difference in positions!
+func get_vecdist_between_actors(first_actor: Actor, second_actor: Actor) -> Vector2:
 	# We assume these are already validated!
 	var dist: Vector2 = second_actor.coord - first_actor.coord
 	return dist.abs()
@@ -244,6 +245,19 @@ func get_vector_from_actor_a_to_b(first_actor: Actor, second_actor: Actor) -> Ve
 	# We assume these are already validated!
 	var dist: Vector2 = second_actor.coord - first_actor.coord
 	return dist
+	pass
+
+func are_actors_adjacent(a: Actor, b: Actor) -> bool:
+	if !utils.valid(a) or !utils.valid(b): return false
+	
+	if a.coord == b.coord: return true
+	
+	if a.coord == b.coord + Vector2.LEFT:  return true
+	if a.coord == b.coord + Vector2.RIGHT: return true
+	if a.coord == b.coord + Vector2.UP:    return true
+	if a.coord == b.coord + Vector2.DOWN:  return true
+	
+	return false
 	pass
 
 func get_first_actor_by_name(nstring: String, must_be_alive: bool = true) -> Actor:

@@ -154,11 +154,22 @@ signal on_z_landed()
 
 var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
 
-signal on_shield_consumed(is_melee) # Shield consumed at all
+# Attacker combat signals
+signal on_hit_someones_shield(victim, is_melee) # Connected with a shield *at all*
+signal on_broke_someones_shield(victim, is_melee) # Broke a shield, whether doing damage or not
+signal on_broke_through_someones_shield(victim, is_melee) # Broke a shield AND did damage at once
+signal on_failed_to_wound_someone(victim, is_melee) # Any impact without damage (it got blocked)
+signal on_wounded_someone(victim, is_melee) # Any damage impacted
+signal on_killed_someone(victim, is_melee) # Wowee!!
+
+# Defender combat signals
+signal on_shield_consumed(is_melee) # Shield affected *at all*
+signal on_shield_held(is_melee) # Shield consumed but not depleted
 signal on_shield_broken_through(is_melee) # Shield depleted, and damage surpassed it
 signal on_shield_broken_held(is_melee) # Shield depleted exactly w/o damage
 signal on_shield_broken_any(is_melee) # Shield depleted, any circumstance
 signal on_blocked_all_damage(is_melee) # Shield remains; health unaffected
+# Any combat signals
 signal on_phys_combat_any_contact() # Happens no matter what, as long as it wasn't like, poison
 
 signal player_action_submitted() # Only pertinent to ActorPlayer subclasses but here nonetheless
@@ -492,6 +503,7 @@ func manage_z_height():
 		airstate = airstates.FALLING
 		if prev_z > 0 and z <= 0:
 			emit_signal("on_z_landed")
+			strife.TILE_event_entry(self, coord)
 			print(name," landed!")
 	
 	# going up
@@ -537,61 +549,6 @@ func monitor_position_as_coordinate():
 	pass
 
 # ---
-
-#func on_entered_new_tile(new_coord: Vector2, old_coord: Vector2):
-#	var new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
-#	var _old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
-#
-#	match new_tiletype:
-#		batman.tiletypes.POISON:
-#			receive_damage(self, 1, false) # Minimum damage value
-#		batman.tiletypes.JAGGED:
-#			receive_damage(4, false) # Full hit, then restore it
-#			support.change_tiletype_single(new_coord, batman.tiletypes.NORMAL)
-#
-#		batman.tiletypes.MUD:
-#			sink_into_tile()
-#		batman.tiletypes.WATER:
-#			sink_into_tile()
-#		batman.tiletypes.BOGROT:
-#			sink_into_tile()
-#	pass
-#
-#func on_exited_old_tile(new_coord: Vector2, old_coord: Vector2):
-#	var _new_tiletype: int = batman.grid_tiles.get_cellv(new_coord)
-#	var old_tiletype: int = batman.grid_tiles.get_cellv(old_coord)
-#
-#	match old_tiletype:
-#		batman.tiletypes.SAND:
-#			spend(1)
-#	pass
-#
-#func on_rested_whileon_tile():
-#	var tiletype: int = batman.grid_tiles.get_cellv(coord)
-#
-#	match tiletype:
-#		batman.tiletypes.POISON:
-#			receive_damage(1, false) # Minimum damage value
-#		batman.tiletypes.SAND:
-#			sink_into_tile()
-#	pass
-#
-#func on_actionstep_ended_whileon_tile():
-#	var tiletype: int = batman.grid_tiles.get_cellv(coord)
-#
-#	match tiletype:
-#		batman.tiletypes.ICE:
-#			pass
-#	pass
-#
-#func on_turn_ended_whileon_tile():
-#	var tiletype: int = batman.grid_tiles.get_cellv(coord)
-#
-#	match tiletype:
-#		batman.tiletypes.HOT:
-#			receive_damage(4, false) # Full damage at the END of your turn
-#	pass
-
 
 # ---
 
