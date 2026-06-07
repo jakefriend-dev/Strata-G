@@ -217,8 +217,53 @@ func end_effect_on_actor(actor: Actor, effect: String, immediate: bool = false):
 
 # TILE CROSSOVER EFFECTS AND IMPACTS -------------------------------------------
 
+func TILE_event_started_on(actor: Actor, start_coord: Vector2):
+	if !TILE_any_event_precheck(actor): return
+	
+	# Self-explanatory, but only happens at the start of THAT actor's turn, not the start of overall combat
+	
+	var tiletype: int = batman.grid_tiles.get_cellv(start_coord)
+	var tilestring: String = get_tiletype_as_string(tiletype)
+	pass
+
+func TILE_event_exit(actor: Actor, old_coord: Vector2):
+	if !TILE_any_event_precheck(actor): return
+	
+	# This means we have departed and left from one tile to another - should be called BEFORE entry, if we're doing both at once!
+	
+	var tiletype: int = batman.grid_tiles.get_cellv(old_coord)
+	var tilestring: String = get_tiletype_as_string(tiletype)
+	pass
+
+func TILE_event_entry(actor: Actor, new_coord: Vector2):
+	if !TILE_any_event_precheck(actor): return
+	
+	# This could be from walking over, OR re-called upon landing (if we were in the air, we'd have been immune on initial check)
+	
+	var tiletype: int = batman.grid_tiles.get_cellv(new_coord)
+	var tilestring: String = get_tiletype_as_string(tiletype)
+	pass
+
+func TILE_event_rest(actor: Actor, rest_coord: Vector2):
+	if !TILE_any_event_precheck(actor): return
+	
+	# Any time the actor performs an action that does NOT move it tiles or count as a movement in some way (a bit ambiguous, atm). Essentially 'you remained on this tile rather than left it'
+	
+	var tiletype: int = batman.grid_tiles.get_cellv(rest_coord)
+	var tilestring: String = get_tiletype_as_string(tiletype)
+	pass
+
+func TILE_event_ended_on(actor: Actor, end_coord: Vector2):
+	if !TILE_any_event_precheck(actor): return
+	
+	# Exclusively when the turn is normally called to end, *not* on interruption - if the actor is dead, why bother!
+	
+	var tiletype: int = batman.grid_tiles.get_cellv(end_coord)
+	var tilestring: String = get_tiletype_as_string(tiletype)
+	pass
+
 # Precheck must be passed to bother engaging with anything else going on here
-func TILE_any_change_precheck(actor: Actor) -> bool:
+func TILE_any_event_precheck(actor: Actor) -> bool:
 	if !utils.valid(actor): return false
 	
 	if !actor.alive_check(): return false
@@ -228,6 +273,21 @@ func TILE_any_change_precheck(actor: Actor) -> bool:
 	if actor.weight == actor.weightclasses.HOVER: return false
 	
 	return true
+
+func get_tiletype_as_string(tiletype: int) -> String:
+	return batman.tt_as_strings[tiletype]
+
+func get_tilestring_as_int(tilestring: String) -> int:
+	var index: int = -1
+	for e in batman.tt_as_strings:
+		index += 1 # Makes it 0-based
+		
+		if e == tilestring:
+			return index
+		
+	
+	return -1
+	pass
 
 # If you START your turn on a tiletype -----------------------------------------
 

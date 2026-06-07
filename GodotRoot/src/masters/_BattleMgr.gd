@@ -868,11 +868,11 @@ func update_targeted_tiles():
 
 # -
 
-# Note that this only clears the FIRST previous cell!
-func change_actor_coord(actor: Actor, new_coord: Vector2):
+# Note that this only clears the FIRST previous cell! Also, new_coord is already applied to actor.coord before this method is called
+func change_actor_grid_coord(actor: Actor, new_coord: Vector2):
 	var occupant: Actor = batman.grid_actors.get_cellv(new_coord)
 	if occupant != null:
-		print("BATMAN: change_actor_coord(",actor,", ",new_coord,") when OCCUPIED already by ",occupant,"! Error, error, breakpoint!")
+		print("BATMAN: change_actor_grid_coord(",actor,", ",new_coord,") when OCCUPIED already by ",occupant,"! Error, error, breakpoint!")
 		
 		pass
 	
@@ -884,6 +884,8 @@ func change_actor_coord(actor: Actor, new_coord: Vector2):
 			if old_coord == new_coord:
 				print("BATMAN: ERROR, tried to change actor grid coord to the same as it was?")
 				return false
+			
+			# This is the normal 'success' condition!
 			batman.grid_actors.set_cellv(old_coord, null)
 			batman.grid_actors.set_cellv(new_coord, actor)
 			return true

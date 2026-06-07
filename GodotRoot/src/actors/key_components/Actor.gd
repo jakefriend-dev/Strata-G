@@ -422,7 +422,7 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 			batman.ghost_actors.erase(self)
 		is_ghost = false
 		just_exited_ghost_mode = true
-		batman.change_actor_coord(self, coord) # Manually - otherwise the system won't recognize the 'change'!
+		batman.change_actor_grid_coord(self, coord) # Manually - otherwise the system won't recognize the 'change'!
 		return true
 	pass
 
@@ -519,16 +519,16 @@ func monitor_position_as_coordinate():
 	if last_pos == position: return
 	
 	last_pos = position
-	var last_tick_coord: Vector2 = coord
+	var prev_tick_coord: Vector2 = coord
 	
 	coord = batman.field.actorpos_to_tilecoord(position)
 	
-	if coord == last_tick_coord: return
+	if coord == prev_tick_coord: return
 	if is_ghost: return
 	
 	# We always want to track our own coordinate personally, but don't want to manage the grid coord unless we're not a ghost
 	
-	batman.change_actor_coord(self, coord)
+	batman.change_actor_grid_coord(self, coord)
 	
 	pass
 
