@@ -77,6 +77,10 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	# Apply any elemental modifiers here! Increase the damage for hitting a weakness eg.
 	#
 	
+	#
+	# Now begin the damage management
+	#
+	
 	var og_damage: int = damage
 	var og_shield: int = defender.shield
 	var og_bonus_shield: int = defender.bonus_shield
@@ -186,6 +190,21 @@ func do_quiet_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: A
 	pass
 
 func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array, is_quiet: bool):
+	if motion == Vector2.ZERO: return
+	if !utils.valid(defender): return # Attacker is allowed to be null, though!
+	if !defender.alive_check(): return # And dead!
+	
+	var friendly_fire: bool = true
+	if flags.has("skip_own_faction"): friendly_fire = false
+	if !friendly_fire:
+		if utils.valid(attacker):
+			if attacker.alive_check():
+				if attacker.faction == defender.faction:
+					return
+	
+	var is_melee: bool = support.are_actors_adjacent(attacker, defender)
+	
+	
 	pass
 
 # Holdovers below, need updating!
