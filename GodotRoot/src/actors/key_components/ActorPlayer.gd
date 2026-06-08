@@ -41,7 +41,7 @@ func ACT_basic_move(dir: Vector2):
 	
 	hotmove(exact_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass

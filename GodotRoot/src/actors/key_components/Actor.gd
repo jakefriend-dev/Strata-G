@@ -162,6 +162,9 @@ signal on_broke_through_someones_shield(victim, is_melee) # Broke a shield AND d
 signal on_failed_to_wound_someone(victim, is_melee) # Any impact without damage (it got blocked)
 signal on_wounded_someone(victim, is_melee) # Any damage impacted
 signal on_killed_someone(victim, is_melee) # Wowee!!
+signal moved_other_actor(victim, motion) # Motion only; knockback separate
+signal knockback_damaged_other_actor(victim, knockback) # Damage only; motion separate
+
 
 # Defender combat signals
 signal on_shield_consumed(is_melee) # Shield affected *at all*
@@ -172,6 +175,8 @@ signal on_shield_broken_any(is_melee) # Shield depleted, any circumstance
 signal on_blocked_all_damage(is_melee) # Shield remains; health unaffected
 # Any combat signals
 signal on_phys_combat_any_contact() # Happens no matter what, as long as it wasn't like, poison
+signal was_moved_by_external(motion) # Motion only; knockback separate
+signal was_knockback_damaged_by_external(knockback) # Damage only; motion separate
 
 signal player_action_submitted() # Only pertinent to ActorPlayer subclasses but here nonetheless
 
@@ -627,7 +632,7 @@ func ACT_walk(exact_coord: Vector2):
 	
 	hotmove(exact_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass
@@ -677,6 +682,8 @@ func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: 
 			attacker.emit_signal("moved_other_actor", self, motion)
 		emit_signal("was_moved_by_external", motion)
 	
+	print("ready to moved with motion ",motion," and KD ",knockback_damage," and dur1 ",dur1," and dur2 ",dur2)
+	
 	# For getting hurt, we want two tweens, actually! And apply damage on impact
 	if knockback_damage > 0:
 		tween.interpolate_property(self, "position", null, to_gpos + impact_overshoot,
@@ -684,31 +691,40 @@ func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: 
 		tween.interpolate_property(self, "position", to_gpos + impact_overshoot, to_gpos,
 			dur2, Tween.TRANS_QUINT, Tween.EASE_OUT, dur1)
 		tween.start()
+		print("a1")
 		
 		yield(utils.yt(dur1, self), "timeout")
-		if !batman.is_my_turn(self): return
+		if !batman.is_my_action(self): return
 		
+		print("a2")
 		if knockback_damage > 0: # 'is_quiet' doesn't matter here; we collided with something!
 			if attacker_is_real:
 				attacker.emit_signal("knockback_damaged_other_actor", self, knockback_damage)
 			emit_signal("was_knockback_damaged_by_external", knockback_damage)
 			strife.do_impact_damage(attacker, self, knockback_damage, flags)
+		print("a3")
 		
 		yield(utils.yt(dur2, self), "timeout")
-		if !batman.is_my_turn(self): return
+		if !batman.is_my_action(self): return
+		print("a4")
 		pass
 	
 	# For *not* getting hurt, well... it's less exciting but it works.
 	else:
 		tween.interpolate_property(self, "position", null, to_gpos, dur1, trans, easin)
 		tween.start()
+		print("b1")
 		
-		yield(utils.yt(total_dur, self), "timeout")
-		if !batman.is_my_turn(self): return
+		yield(utils.yt(dur1, self), "timeout")
+		if !batman.is_my_action(self): return
+		print("b2")
 		pass
+	
 	#
 	# EITHER WAY! At this point we've fully arrived, and knockback damage is behind us.
 	#
+	
+	print(name," external motioned has ended!")
 	
 	# We're done!
 	end_action()

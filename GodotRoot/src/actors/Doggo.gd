@@ -147,7 +147,7 @@ func ACT_charge_forward():
 	hotmove(dest_coord, dur)
 	
 	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass
@@ -166,7 +166,7 @@ func ACT_charge_back():
 	var dur: float = valid_xdist*0.1
 	hotmove(claimed_tile, dur)
 	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	allowed_over_faction_lines = false
 	end_action()
@@ -183,7 +183,7 @@ func ACT_bite():
 	
 	clear_effect("enrage") # Whether it's active of not
 	strife.end_effect_on_actor(self, "buff", true)
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass
@@ -195,7 +195,7 @@ func ACT_enrage():
 #	add_bonus_actions(1)
 	
 	yield(utils.yt(0.5, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass

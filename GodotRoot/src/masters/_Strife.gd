@@ -215,8 +215,6 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 			if attacker.faction == defender.faction:
 				return
 	
-#	var is_melee: bool = support.are_actors_adjacent(attacker, defender)
-	
 	#
 	# Check resistances!
 	#
@@ -256,6 +254,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	while !unspent_motion.is_equal_approx(Vector2.ZERO):
 		loops += 1
 		if loops > max_loops:
+			loops = max_loops
 			print("MAX LOOPS REACHED! Unspent motion: ",unspent_motion)
 			break
 		
@@ -288,7 +287,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 			continue
 		pass
 	
-	print("STRIFE: Worked out that master_do_motion(",attacker,", ",defender,", ",motion,", ",flags,") was able to push the defender ",loops," steps with spent_motion ",spent_motion," and ",tilemove_failures," step failures!")
+	print("STRIFE: Worked out that master_do_motion(",attacker,", ",defender,", ",motion,", ",flags,") was able to push the defender ",tilemove_successes," steps with spent_motion ",spent_motion," and ",tilemove_failures," step failures!")
 	
 	#
 	# At this point, we should now know our destination tile and how far we *couldn't* move
@@ -333,6 +332,17 @@ func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, f
 	master_do_damage(attacker, victim, damage, flags, is_quiet)
 	pass
 
+func extmotion_actor_at_coord(attacker: Actor, exact_coord: Vector2, motion: Vector2, flags: Array = []):
+	if !batman.grid_actors.has_cellv(exact_coord): return
+	
+	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
+	if !utils.valid(victim): return
+	if !victim.alive_check(): return
+	
+	var is_quiet: bool = flags.has("quiet")
+	
+	master_do_motion(attacker, victim, motion, flags, is_quiet)
+	pass
 
 
 # VISUAL EFFECTS (not STATUS effects mechanically, just VISUALS ----------------
@@ -617,7 +627,7 @@ func is_affected_by_jagged(actor: Actor) -> bool:
 
 func is_fixes_jagged_on_contact(actor: Actor) -> bool:
 	if !TILE_any_event_precheck(actor): return false
-	if actor.is_immune_jagged: return false
+	if actor.is_immune_jagged: return false # Long-term, this might not be desirable? Hotfix for Beast in June 2026
 	if actor.weight == actor.weightclasses.HOVER: return false
 	return true
 
@@ -630,14 +640,14 @@ func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback; not ice s
 	return true
 
 func is_affected_by_ice(actor: Actor) -> bool:
-	!TILE_any_event_precheck(actor)
+	if !TILE_any_event_precheck(actor): return false
 	if actor.weight == actor.weightclasses.LIGHT: return false
 	if actor.is_unmovable: return false
 	if actor.is_immune_ice: return false
 	return true
 
 func is_affected_by_sinking(actor: Actor) -> bool:
-	!TILE_any_event_precheck(actor)
+	if !TILE_any_event_precheck(actor): return false
 	if actor.weight == actor.weightclasses.LIGHT: return false
 	return true
 

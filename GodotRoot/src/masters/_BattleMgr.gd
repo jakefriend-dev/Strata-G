@@ -35,7 +35,8 @@ var combatstate: int = C_OOC
 #}
 #
 #var inputstate: int = istates.NPT
-var curr_actor: Actor = null # Whichever player OR enemy char is current
+var curr_actor: Actor = null # Whichever player OR enemy char whose turn it is
+var acting_actor: Actor = null # Whichever player OR enemy char whose ACTION STEP it currently is
 var curr_turndata: Dictionary = {} # The more complex packet that includes the actor itself, plus other references from initiative rolling
 var round_count: int = 0 # per entire cycle of turns
 var total_turns_taken: int = 0
@@ -192,8 +193,8 @@ func test_new_combat(test: String):
 			if !init_new_combat({
 				"npc_positions": [
 					[4, 3, "Beast"],
-					[6, 2, "Beast"],
-					[6, 4, "Beast"],
+#					[6, 2, "Beast"],
+#					[6, 4, "Beast"],
 					[4, 1, "Rock"],
 				],
 				"tile_exceptions": {
@@ -624,6 +625,7 @@ func remove_all_turns_of_actor(actor: Actor):
 	pass
 
 func is_my_turn(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
+	if !utils.valid(actor): return false
 	if curr_actor != actor: return false
 	if !actor.active: return false
 	if combatstate != C_TURN: return false
@@ -737,6 +739,7 @@ func insert_action(position: int, actor: Actor, methodname: String, paramset: Ar
 
 func progress_action_queue(): # Calls ONE next action, or if there is none, skips
 	last_execution_frame = get_tree().get_frame()
+	acting_actor = null
 	
 	if action_queue.empty(): # No actions queued when this was called! Time to move on
 		
@@ -769,7 +772,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var raw_methodname: String = curr_action[1]
 	var methodname: String = str("ACT_"+raw_methodname)
 	var paramset: Array = curr_action[2]
-	var caller: Object = actor
+	acting_actor = actor
 	if !actor.has_method(methodname):
 		print("MAJOR ERROR! A non-player character does not have the called method ",methodname,"()")
 		
@@ -781,10 +784,10 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	# Execute!
 	if paramset.empty():
-		caller.call(methodname)
+		actor.call(methodname)
 	else:
 		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
-		caller.callv(methodname, paramset)
+		actor.callv(methodname, paramset)
 	
 	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
 	pass
@@ -826,6 +829,8 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 #	print("Action processing time logged: ",action_processing_time)
 	
 	emit_signal("action_step_complete")
+	acting_actor = null
+	
 	if action_queue.empty():
 #		print("BATMAN: action_queue has emptied!")
 		emit_signal("all_action_steps_complete") # Will try and prompt NPCs to make another move
@@ -838,10 +843,21 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	release_most_claims()
 	
+	acting_actor = null
 	action_queue.clear()
 	curr_action = []
 	prev_action = []
 	last_execution_frame = -1
+	pass
+
+func is_my_action(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
+	
+	if !utils.valid(actor): return false
+	if !actor.alive_check(): return false
+	if acting_actor != actor: return false
+	if !actor.active: return false
+	if combatstate != C_TURN: return false
+	return true
 	pass
 
 

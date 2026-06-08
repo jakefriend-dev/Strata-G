@@ -268,7 +268,7 @@ func ACT_lunge_forward():
 	
 	hotjump(jump_dest_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	# Damage impact! All adjacent cells take 1 base, our cell takes 2 base
 	for target in targeted_tiles:
@@ -277,12 +277,15 @@ func ACT_lunge_forward():
 			strife.quick_effect(target, "dust")
 			support.change_tiletype_single(target, batman.tiletypes.JAGGED)
 		else:
-			strife.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR)
+			# For testing! Disables orthagonal damage, but instead pushes actors away!
+			var motion: Vector2 = target - coord
+			strife.extmotion_actor_at_coord(self, target, motion, ["travel_damage"])
+#			strife.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR)
 			strife.quick_effect(target, "dust")
 	release_targeted_tiles()
 	
 	yield(utils.yt(post_jump_rumble_time, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass
@@ -299,13 +302,13 @@ func ACT_lunge_back():
 		pass
 	hotjump(lunge_return_tile, dur)
 	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	ghost_mode(false)
 	allowed_over_faction_lines = false
 	
 	yield(utils.yt(post_jump_rumble_time, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass
@@ -327,8 +330,6 @@ func ACT_debuff():
 			strife.quick_effect(actor, "quick_bad")
 			actor.spend(1)
 	
-	
-	
 	end_action()
 	pass
 
@@ -338,10 +339,10 @@ func ACT_repo_jump(exact_coord: Vector2):
 	
 	hotjump(exact_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	yield(utils.yt(post_jump_rumble_time, self), "timeout")
-	if !batman.is_my_turn(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass
