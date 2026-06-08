@@ -620,6 +620,88 @@ func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
 	tween.start()
 	pass
 
+# This action is always auto-constructed by Strife; we do not manually call this
+func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: Actor, is_quiet: bool, flags: Array):
+	
+	# (Note, this action is only called if there IS motion - if there's ONLY knockback, it's bypassed entirely for immediate damage)
+	
+	# First, let's confirm attacker status
+	var attacker_is_real: bool = false
+	if utils.valid(attacker):
+		if attacker.alive_check():
+			attacker_is_real = true
+	
+	var major_impact: bool = (knockback_damage > 0 or !is_quiet)
+	
+	# Then let's trigger the motion!
+	var dur1: float
+	var dur2: float
+	var trans: int
+	var easin: int
+	if major_impact: # Big impact! We were forcibly knocked back, by eg. a punch!
+		dur1 = 0.05
+		dur1 += (dur1 * motion.length())
+#		trans = Tween.TRANS_QUINT
+		trans = Tween.TRANS_LINEAR
+		easin = Tween.EASE_OUT
+	else: # Steady impact! We're in wind, or something.
+		dur1 = (motion.length() * 0.375)
+		trans = Tween.TRANS_CIRC
+		easin = Tween.EASE_IN_OUT
+	
+	if knockback_damage > 0: # Only triggers in major_impact anyhow
+		dur1 += 0.05
+		dur2 = 0.10
+	
+	var total_dur = dur1 + dur2
+	var to_coord: Vector2 = coord + motion
+	var to_gpos: Vector2 = batman.grid_gpos.get_cellv(to_coord)
+	# Overshoot is 35% of 1 tile
+	var impact_overshoot: Vector2 = (motion.normalized() * batman.field.CELL_SIZE * 0.35)
+	
+	# Signal being moved just before you go, then go!
+	if !is_quiet:
+		if attacker_is_real:
+			attacker.emit_signal("moved_other_actor", self, motion)
+		emit_signal("was_moved_by_external", motion)
+	
+	# For getting hurt, we want two tweens, actually! And apply damage on impact
+	if knockback_damage > 0:
+		tween.interpolate_property(self, "position", null, to_gpos + impact_overshoot,
+			dur1, trans, easin)
+		tween.interpolate_property(self, "position", to_gpos + impact_overshoot, to_gpos,
+			dur2, Tween.TRANS_QUINT, Tween.EASE_OUT, dur1)
+		tween.start()
+		
+		yield(utils.yt(dur1, self), "timeout")
+		if !batman.is_my_turn(self): return
+		
+		if knockback_damage > 0: # 'is_quiet' doesn't matter here; we collided with something!
+			if attacker_is_real:
+				attacker.emit_signal("knockback_damaged_other_actor", self, knockback_damage)
+			emit_signal("was_knockback_damaged_by_external", knockback_damage)
+			strife.do_impact_damage(attacker, self, knockback_damage, flags)
+		
+		yield(utils.yt(dur2, self), "timeout")
+		if !batman.is_my_turn(self): return
+		pass
+	
+	# For *not* getting hurt, well... it's less exciting but it works.
+	else:
+		tween.interpolate_property(self, "position", null, to_gpos, dur1, trans, easin)
+		tween.start()
+		
+		yield(utils.yt(total_dur, self), "timeout")
+		if !batman.is_my_turn(self): return
+		pass
+	#
+	# EITHER WAY! At this point we've fully arrived, and knockback damage is behind us.
+	#
+	
+	# We're done!
+	end_action()
+	pass
+
 # -
 
 func get_multifactored_actor_name() -> String:

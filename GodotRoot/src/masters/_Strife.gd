@@ -192,7 +192,6 @@ func do_quiet_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: A
 # Common MOTION flags:
 	# travel_damage: For each cell the defender is *unable* to travel, deal 1 base damage
 	# skip_own_faction: Typically FF is default-on; this would bypass that
-	# impact:
 
 func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array, is_quiet: bool):
 	if motion == Vector2.ZERO: return
@@ -200,17 +199,21 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	if !defender.alive_check(): return # And dead!
 	
 	var og_motion: Vector2 = motion
-	if !support.is_motion_diagonal(motion):
-		motion = support.diagonalize_motion(motion)
-		print("STRIFE: Had to diagonalize incoming motion ",og_motion," into ",motion)
+	if !support.is_motion_a_line(motion): # Just a safety check, SHOULD never actually happen
+		motion = support.lineize_motion(motion)
+		print("STRIFE: Had to line-ize incoming motion ",og_motion," into ",motion)
+	
+	var attacker_is_real: bool = false
+	if utils.valid(attacker):
+		if attacker.alive_check():
+			attacker_is_real = true
 	
 	var friendly_fire: bool = true
 	if flags.has("skip_own_faction"): friendly_fire = false
 	if !friendly_fire:
-		if utils.valid(attacker):
-			if attacker.alive_check():
-				if attacker.faction == defender.faction:
-					return
+		if attacker_is_real:
+			if attacker.faction == defender.faction:
+				return
 	
 #	var is_melee: bool = support.are_actors_adjacent(attacker, defender)
 	
@@ -224,17 +227,96 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	
 	if is_affected_by_force(defender):
 		successful_motion = true
-	elif (on_ice and is_affected_by_ice(defender)):
-		successful_motion = true
+	elif (
+		on_ice and
+		is_affected_by_ice(defender) and
+		defender.is_on_ground and
+		defender.weight != defender.weightclasses.HOVER):
+			# Even a 'force-immune' enemy on the ground gets pushed while on ice!
+			successful_motion = true
 	
 	if !successful_motion: return
 	
 	#
-	# Work out if we can move, and if so how far
+	# Work out if we can move, and if so how far (and track it all!)
 	#
 	
-	var tile_successes: int = 0
-	var tile_failures: int = 0
+	var unspent_motion: Vector2 = motion
+	var spent_motion: Vector2 = Vector2.ZERO
+	
+	var tilemove_successes: int = 0
+	var tilemove_failures: int = 0
+	
+	var loops: int = 0 # 1-based, shortly
+	var max_loops: int = support.get_steps_in_vector_line_int(motion)
+	var step: Vector2 = motion.normalized().round()
+	var check_tile_rel: Vector2 = Vector2.ZERO
+#	var last_successful_final_coord: Vector2 = defender.coord
+	
+	while !unspent_motion.is_equal_approx(Vector2.ZERO):
+		loops += 1
+		if loops > max_loops:
+			print("MAX LOOPS REACHED! Unspent motion: ",unspent_motion)
+			break
+		
+		# If we've already failed, don't bother with check logic - the rest is necessarily also a fail, and we already know our final spent_motion.
+		if tilemove_failures > 0:
+			tilemove_failures += 1
+			continue
+		
+		# Otherwise, we're still in the game!
+		check_tile_rel += step
+		var check_tile_exact: Vector2 = defender.coord + check_tile_rel
+		if !batman.grid_tiles.has_cellv(check_tile_exact): # (Unless we're off the board)
+			tilemove_failures += 1
+			continue
+		# Okay, NOW we're still in the game!
+		
+		# (Ignore this ice stuff - it actually shouldn't matter, since this scenario (running out of motion but ending on an ice tile) would actually result in a natural slide on the arrived-to ice, so it doesn't actually matter.
+#		var check_tiletype: int = batman.grid_tiles.get_cellv(check_tile_exact)
+#		if check_tiletype == batman.tiletypes.ICE:
+#			# If we'd be on ice now
+		
+		# Finally, if we're ABLE to exist on that tile, spend the motion; otherwise continue
+		if support.is_tile_traversable_exact(defender, check_tile_exact):
+			tilemove_successes += 1
+			spent_motion += step
+			unspent_motion -= step
+			continue
+		else:
+			tilemove_failures += 1
+			continue
+		pass
+	
+	print("STRIFE: Worked out that master_do_motion(",attacker,", ",defender,", ",motion,", ",flags,") was able to push the defender ",loops," steps with spent_motion ",spent_motion," and ",tilemove_failures," step failures!")
+	
+	#
+	# At this point, we should now know our destination tile and how far we *couldn't* move
+	#
+	
+	var do_travel_damage: bool = flags.has("travel_damage")
+	var knockback_damage: int = 0
+	if do_travel_damage:
+		knockback_damage = (tilemove_failures * batman.BASE_HP_FACTOR)
+	
+	# No motion??
+	if spent_motion.is_equal_approx(Vector2.ZERO):
+		if knockback_damage == 0:
+			# We failed to move anyone or deal knockback damage - why react?
+			return
+		
+		# Otherwise, we have knockback and no motion - there's no need to wait for movement; trigger the impact and signals now then skip the reaction movement
+		if attacker_is_real:
+			attacker.emit_signal("knockback_damaged_other_actor", self, knockback_damage)
+		defender.emit_signal("was_knockback_damaged_by_external", knockback_damage)
+		strife.do_impact_damage(attacker, defender, knockback_damage, flags)
+		return
+	
+	# The is_quiet signalling actually needs to happen when the ACTION STEP begins, not the moment (mid-attacker's action step) this connects - and dealing damage needs to wait until the motion ends! So for now, just create the reaction and forward the details to there.
+	
+	batman.reaction(defender, "be_external_motioned", [
+		spent_motion, knockback_damage, attacker, is_quiet, flags
+		])
 	pass
 
 # Holdovers below, need updating!
@@ -524,28 +606,37 @@ func TILE_ended_on_MUD(actor: Actor, _coord: Vector2):
 
 # ---
 
+
+
 func is_affected_by_jagged(actor: Actor) -> bool:
+	if !TILE_any_event_precheck(actor): return false
 	if actor.is_immune_jagged: return false
 	if actor.weight == actor.weightclasses.HEAVY: return false
 	if actor.weight == actor.weightclasses.HOVER: return false
 	return true
 
 func is_fixes_jagged_on_contact(actor: Actor) -> bool:
+	if !TILE_any_event_precheck(actor): return false
 	if actor.weight == actor.weightclasses.HOVER: return false
 	return true
 
-func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback; not ice sliding
+func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback; not ice sliding - this is important because it DOESN'T fall privy to the is_on_ground or weightclasses.HOVER checks like the others!
+	if !utils.valid(actor): return false
+	if !actor.alive_check(): return false
+	
 	if actor.is_unmovable: return false
 	if actor.weight == actor.weightclasses.HEAVY: return false
 	return true
 
 func is_affected_by_ice(actor: Actor) -> bool:
+	!TILE_any_event_precheck(actor)
 	if actor.weight == actor.weightclasses.LIGHT: return false
 	if actor.is_unmovable: return false
 	if actor.is_immune_ice: return false
 	return true
 
 func is_affected_by_sinking(actor: Actor) -> bool:
+	!TILE_any_event_precheck(actor)
 	if actor.weight == actor.weightclasses.LIGHT: return false
 	return true
 

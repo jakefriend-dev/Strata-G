@@ -366,15 +366,70 @@ func get_all_tiles_by_faction(faction: int) -> Array:
 	return results
 	pass
 
-func is_motion_diagonal(motion: Vector2) -> bool:
+func is_motion_a_line(motion: Vector2) -> bool:
+	# Orthagonal cases
+	if is_zero_approx(motion.x): return true
+	if is_zero_approx(motion.y): return true
 	
-	return true
-
-func diagonalize_motion(motion: Vector2) -> Vector2:
+	# Diagonal cases
+	if is_equal_approx(abs(motion.x), abs(motion.y)): return true
 	
-	return motion
+	# Otherwise, one non-zero number is waaay different from the rest
+	return false
 
+func lineize_motion(motion: Vector2) -> Vector2:
+	
+	# This crunches to EIGHT directions in a straight grid line
+	# Basically, if either axis value is 0, it's an orthagonal line, and that counts
+	# Otherwise, diagonal is the lesser of both abs(values)
+	
+	# So motion of -3, 14 would be reduced to -3, 3 (rather than averaged out, so to speak)
+	
+	# Orthagonal cases
+	if is_zero_approx(motion.x): return motion
+	if is_zero_approx(motion.y): return motion
+	
+	var vecneg: Vector2 = Vector2(1, 1)
+	if motion.x < 0: vecneg.x = -1
+	if motion.y < 0: vecneg.y = -1
+	
+	motion = motion.abs()
+	var minval: int = int(round(min(motion.x, motion.y)))
+	var new_motion: Vector2 = Vector2(minval * vecneg.x, minval * vecneg.y)
+	
+	return new_motion
 
+func get_steps_in_vector_line_int(vector: Vector2) -> int:
+	# Line cases
+	if is_zero_approx(vector.x):
+		return int(round(abs(vector.y)))
+	if is_zero_approx(vector.y):
+		return int(round(abs(vector.x)))
+	
+	# Diagonal cases (assume we're only feeding line-ized vectors?)
+	return int(round(abs(vector.y))) # Y vs X doesn't matter if it's diagonal
+	pass
+
+# "Vector_int" is a vector that IS ints and also which steps by 1 int. Wordplay!
+func step_vector_int_towards_zero(vector: Vector2, step: int = 1) -> Vector2:
+	var new_vector: Vector2
+	
+	if vector.x < 0:
+		new_vector.x = vector.x + step
+	elif vector.x > 0:
+		new_vector.x = vector.x - step
+	
+	if vector.y < 0:
+		new_vector.x = vector.y + step
+	elif vector.y > 0:
+		new_vector.x = vector.y - step
+	
+	# Safeguard to ensure we don't have 0.00002
+	if abs(round(new_vector.x)) < step: new_vector.x = 0
+	if abs(round(new_vector.y)) < step: new_vector.y = 0
+	
+	return new_vector
+	pass
 
 
 
