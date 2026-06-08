@@ -32,24 +32,5 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# DEFAULT ELSE: Can't go anywhere, can't do nothin' :(
 	pass
 
-func ACT_walk(motion: Vector2):
-	# Move 1 tile within your faction bounds
-#	print("Moving ",motion," to seek a target (if vertmove, may still charge")
-	
-	var dest_coord: Vector2 = coord + motion
-	
-	var dur: float = 0.75
-	
-	hotmove(dest_coord, dur)
-	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
-	
-	end_action()
-	
-	pass
-
-
-
-
 
 

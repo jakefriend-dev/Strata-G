@@ -200,28 +200,6 @@ func ACT_enrage():
 	end_action()
 	pass
 
-func ACT_walk(motion: Vector2):
-	# Move 1 tile within your faction bounds
-#	print("Moving ",motion," to seek a target (if vertmove, may still charge")
-	
-	var dest_coord: Vector2 = coord + motion
-	
-#	if !support.update_actor_coord_data(self, dest_coord):
-#		batman.skip_action()
-#		return
-	
-	var dur: float = 0.75
-	
-	hotmove(dest_coord, dur)
-	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
-	
-	end_action()
-	
-	pass
-
-
-
 
 
 

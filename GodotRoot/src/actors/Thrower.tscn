@@ -64,6 +64,7 @@ max_shield = 2
 ofc_name = "Thrower"
 base_action_points = 3
 def_weight = 3
+tile_walk_speed = 0.25
 def_immune_poison = true
 
 [node name="ArtMgr" type="Node2D" parent="."]

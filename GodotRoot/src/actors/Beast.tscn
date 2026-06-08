@@ -61,6 +61,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 first_initiative = 2
 max_health = 8
+tile_walk_speed = 0.75
 base_action_points = 5
 base_damage = 2
 def_weight = 3

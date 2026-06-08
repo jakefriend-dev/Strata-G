@@ -43,8 +43,6 @@ enum bui_tiers {FULL, JUST_PIPS, JUST_HEALTH, INVIS_UNTIL_HIT, NOTHING_EVER}
 export (bui_tiers) var bui_level: int = bui_tiers.FULL
 var bui: Node2D
 
-const COST_WALK: int = 1
-
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
 var bonus_actions: int = 0 # Can be added to in buffs and the like!
@@ -96,6 +94,9 @@ enum weightclasses {
 
 # Defaults first; manually set
 export (weightclasses) var def_weight: int = weightclasses.NORMAL
+
+const COST_WALK: int = 1
+export var tile_walk_speed: float = 0.125
 
 #export var def_hovering:			bool = false # Not affected by ground type or pits at all
 #export var def_lightweight:			bool = false # Not affected by tiles that you sink in, like mud
@@ -618,6 +619,17 @@ func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
 #	tween.interpolate_property(vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
 
 	tween.start()
+	pass
+
+func ACT_walk(exact_coord: Vector2):
+#	print("walk")
+	var dur: float = tile_walk_speed
+	
+	hotmove(exact_coord, dur)
+	yield(utils.yt(dur, self), "timeout")
+	if !batman.is_my_turn(self): return
+	
+	end_action()
 	pass
 
 # This action is always auto-constructed by Strife; we do not manually call this

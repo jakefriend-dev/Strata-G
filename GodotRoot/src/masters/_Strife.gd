@@ -617,6 +617,7 @@ func is_affected_by_jagged(actor: Actor) -> bool:
 
 func is_fixes_jagged_on_contact(actor: Actor) -> bool:
 	if !TILE_any_event_precheck(actor): return false
+	if actor.is_immune_jagged: return false
 	if actor.weight == actor.weightclasses.HOVER: return false
 	return true
 

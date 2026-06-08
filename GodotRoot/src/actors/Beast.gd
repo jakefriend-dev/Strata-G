@@ -346,16 +346,6 @@ func ACT_repo_jump(exact_coord: Vector2):
 	end_action()
 	pass
 
-func ACT_walk(exact_coord: Vector2):
-#	print("walk")
-	var dur: float = 0.5
-	
-	hotmove(exact_coord, dur)
-	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_turn(self): return
-	
-	end_action()
-	pass
 
 
 
@@ -363,66 +353,3 @@ func ACT_walk(exact_coord: Vector2):
 
 
 
-
-
-
-
-
-
-
-
-
-#func begin_turn():
-#	var _start_position: Vector2 = coord
-#
-#	match telegraphed_move:
-#		LUNGE: do_lunge()
-#
-#		SHOOT: do_shoot()
-#
-#	# Jump to a new position; OG position is fallback
-#	var new_dest: Vector2 = support.get_rand_faction_tile_for_actormoving(self, faction)
-#	if new_dest != coord:
-#		support.prep_exact_move(self, new_dest)
-#	support.start_action_queue(self)
-#	set_up_next_turn()
-#	pass
-
-#func do_lunge():
-#	# Damage other side (no visual)
-#	var opposite: Vector2 = coord + lunge_delta_target
-#	support.prep_shaped_attack(self, targeted_locs, true)
-#	support.prep_tiletype_changes(self, [opposite], batman.tiletypes.JAGGED)
-#	pass
-#
-#func do_shoot():
-#	support.prep_shaped_attack(self, targeted_locs, false)
-#	pass
-
-#func set_up_next_turn():
-#	targeted_locs.clear()
-#	telegraphed_move = NOT_SET
-#
-#	if rand_range(0.0, 1.0) <= 0.35:
-#		telegraphed_move = LUNGE
-#		if !lunge_viability_check(): # This actually sets up the lunge attack (if valid)
-#			telegraphed_move = SHOOT
-#	else:
-#		telegraphed_move = SHOOT
-#
-#	if telegraphed_move != SHOOT: return
-#
-#
-#	pass
-
-#func lunge_viability_check() -> bool:
-#	var opposite: Vector2 = coord + lunge_delta_target
-#	if batman.grid_tiles.get_cellv(opposite) == batman.tiletypes.PIT:
-#		return false
-#
-#	targeted_locs.append(opposite)
-#	targeted_locs.append_array(support.get_adj_orthagonal_tiles(opposite))
-#
-#	print(name," prepping Lunge! Targeting: ",targeted_locs)
-#
-#	return true
