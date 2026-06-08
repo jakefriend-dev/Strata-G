@@ -192,6 +192,7 @@ func do_quiet_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: A
 # Common MOTION flags:
 	# travel_damage: For each cell the defender is *unable* to travel, deal 1 base damage
 	# skip_own_faction: Typically FF is default-on; this would bypass that
+	# impact:
 
 func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array, is_quiet: bool):
 	if motion == Vector2.ZERO: return
