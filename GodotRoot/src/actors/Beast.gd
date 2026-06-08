@@ -270,22 +270,30 @@ func ACT_lunge_forward():
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_action(self): return
 	
+	var moved_actor_count: int = 0 # We want to SKIP our delay if we cause someone else's impact
+	
 	# Damage impact! All adjacent cells take 1 base, our cell takes 2 base
 	for target in targeted_tiles:
-		if target == coord:
+		if target == coord: # Center tile
 			strife.damage_actor_at_coord(self, target, base_damage)
 			strife.quick_effect(target, "dust")
 			support.change_tiletype_single(target, batman.tiletypes.JAGGED)
-		else:
+		else: # Adjacent tiles
 			# For testing! Disables orthagonal damage, but instead pushes actors away!
 			var motion: Vector2 = target - coord
+			var victim: Actor = batman.grid_actors.get_cellv(target)
+			if utils.valid(victim): if victim.alive_check():
+				if !support.is_tile_traversable_relative(victim, motion):
+					moved_actor_count += 1
+			
 			strife.extmotion_actor_at_coord(self, target, motion, ["travel_damage"])
 #			strife.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR)
 			strife.quick_effect(target, "dust")
 	release_targeted_tiles()
 	
-	yield(utils.yt(post_jump_rumble_time, self), "timeout")
-	if !batman.is_my_action(self): return
+	if moved_actor_count == 0:
+		yield(utils.yt(post_jump_rumble_time, self), "timeout")
+		if !batman.is_my_action(self): return
 	
 	end_action()
 	pass
