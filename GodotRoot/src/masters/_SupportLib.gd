@@ -366,7 +366,13 @@ func get_all_tiles_by_faction(faction: int) -> Array:
 	return results
 	pass
 
+func is_motion_diagonal(motion: Vector2) -> bool:
+	
+	return true
 
+func diagonalize_motion(motion: Vector2) -> Vector2:
+	
+	return motion
 
 
 

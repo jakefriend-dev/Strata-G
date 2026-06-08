@@ -46,17 +46,16 @@ enum moves { # WAYS of moving, for the purpose of things like determining ice sl
 
 # Note that 'attacker' is *allowed* to be null, for instances of arena damage/effects.
 
-# Common flags:
-	# piercing: Shields are bypassed
-	# elem_ICE (or similar): Elemental immunities/weaknesses are applied
-	# skip_own_faction: Typically FF is default-on; this would bypass that
-
 func do_impact_damage(attacker: Actor, defender: Actor, damage: int, flags: Array = []):
 	master_do_damage(attacker, defender, damage, flags, false)
-
 func do_quiet_damage(attacker: Actor, defender: Actor, damage: int, flags: Array = []):
 	master_do_damage(attacker, defender, damage, flags, true)
 	pass
+
+# Common DAMAGE flags:
+	# piercing: Shields are bypassed
+	# elem_ICE (or similar): Elemental immunities/weaknesses are applied
+	# skip_own_faction: Typically FF is default-on; this would bypass that
 
 func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Array, is_quiet: bool):
 	if damage <= 0: return
@@ -181,18 +180,28 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			attacker.emit_signal("on_killed_someone", defender, is_melee)
 	pass
 
+# -
+
 func do_impact_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array = []):
 	master_do_motion(attacker, defender, motion, flags, false)
 	pass
-
 func do_quiet_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array = []):
 	master_do_motion(attacker, defender, motion, flags, true)
 	pass
+
+# Common MOTION flags:
+	# travel_damage: For each cell the defender is *unable* to travel, deal 1 base damage
+	# skip_own_faction: Typically FF is default-on; this would bypass that
 
 func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array, is_quiet: bool):
 	if motion == Vector2.ZERO: return
 	if !utils.valid(defender): return # Attacker is allowed to be null, though!
 	if !defender.alive_check(): return # And dead!
+	
+	var og_motion: Vector2 = motion
+	if !support.is_motion_diagonal(motion):
+		motion = support.diagonalize_motion(motion)
+		print("STRIFE: Had to diagonalize incoming motion ",og_motion," into ",motion)
 	
 	var friendly_fire: bool = true
 	if flags.has("skip_own_faction"): friendly_fire = false
@@ -202,9 +211,29 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 				if attacker.faction == defender.faction:
 					return
 	
-	var is_melee: bool = support.are_actors_adjacent(attacker, defender)
+#	var is_melee: bool = support.are_actors_adjacent(attacker, defender)
 	
+	#
+	# Check resistances!
+	#
 	
+	var successful_motion: bool = false
+	var on_ice: bool = bool(
+		batman.grid_tiles.get_cellv(defender.coord) == batman.tiletypes.ICE)
+	
+	if is_affected_by_force(defender):
+		successful_motion = true
+	elif (on_ice and is_affected_by_ice(defender)):
+		successful_motion = true
+	
+	if !successful_motion: return
+	
+	#
+	# Work out if we can move, and if so how far
+	#
+	
+	var tile_successes: int = 0
+	var tile_failures: int = 0
 	pass
 
 # Holdovers below, need updating!
