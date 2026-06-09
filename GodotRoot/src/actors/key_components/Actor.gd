@@ -26,6 +26,15 @@ export (initspeeds) var third_initiative: int = initspeeds.DOES_NOT_ACT
 	# An actor can optionally have up to 3 turns, for a boss; matching the party
 var variance_initiative: float  = -1.0 # Cued by batman at start of combat; percentage from 0-99%
 
+var APD: ActionPreviewData
+enum acols {  # TOP TO BOTTOM
+	BAD,     # Negative effect, like a debuff OR just plain damage
+	GOOD,    # Positive effect, like a buff
+	NEUTRAL, # Repositioning
+	PASS,    # Shooting through an empty tile
+	ERROR    # When an actor blocks a movement from playing out, eg
+}
+
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
 export var max_health: int = 4
@@ -219,6 +228,10 @@ func _ready():
 	pass
 
 func perform_initial_data_setup():
+	APD = ActionPreviewData.new()
+	APD.initialize()
+	APD.actor = self
+	
 	max_health *= batman.BASE_HP_FACTOR
 	health = max_health
 	

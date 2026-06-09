@@ -383,6 +383,10 @@ func get_all_tiles_by_faction(faction: int) -> Array:
 	return results
 	pass
 
+func is_arrow_a_line(start: Vector2, end: Vector2) -> bool:
+	var motion: Vector2 = end - start
+	return is_motion_a_line(motion)
+
 func is_motion_a_line(motion: Vector2) -> bool:
 	# Orthagonal cases
 	if is_zero_approx(motion.x): return true

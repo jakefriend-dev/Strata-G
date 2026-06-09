@@ -65,6 +65,11 @@ func yping(type: String, caller, disrespect_pause: bool = false) -> YPing:
 	return yping
 	pass
 
+func actorpass(who: Actor) -> bool:
+	if !valid(who): return false
+	if !who.alive_check(): return false
+	return true
+
 func valid(who: Node) -> bool:
 	if who == null:
 		return false

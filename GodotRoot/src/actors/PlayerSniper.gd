@@ -59,22 +59,30 @@ func ACT_longshot():
 	end_action()
 	pass
 
-func PREVIEW_yank(option: int) -> Dictionary: # Options are 0, 1, 2
-	var preview: Dictionary = template_action_preview.duplicate(true)
-	
-	preview["unaffected"] = support.list_all_unoccupied_tiles_in_dir(coord, my_facing)
+func PREVIEW_yank(option: int): # Options are 0, 1, 2
+	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(coord, my_facing)
+	if !unoccupieds.empty():
+		APD.add_arrow(coord, unoccupieds.back(), acols.PASS)
 	
 	var victim: Actor = support.find_nearest_actor_in_dir(coord, my_facing)
-	if utils.valid(victim):
-		preview["occupied"].append(victim.coord)
-		var check_vector: Vector2 = their_facing
-		if option == 1: check_vector += Vector2.UP
-		if option == 2: check_vector += Vector2.DOWN
-		var check_coord: Vector2 = victim.coord + check_vector
-		if support.is_tile_traversable_exact(victim, check_coord):
-			preview["occupied"].append(check_coord)
-		else:
-			preview["cancelled"].append(check_coord)
+	if !utils.actorpass(victim): return
 	
-	return preview
+	APD.add_actor(victim, acols.NEUTRAL)
+	
+	var check_vector: Vector2 = their_facing
+	if option == 1: check_vector += Vector2.UP
+	if option == 2: check_vector += Vector2.DOWN
+	var check_coord: Vector2 = victim.coord + check_vector
+	
+	if support.is_tile_traversable_exact(victim, check_coord):
+		APD.add_arrow(victim.coord, check_coord, acols.NEUTRAL)
+		APD.passfail = true
+	else:
+		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
+	
+	pass
+
+func ACT_yank():
+	# We KNOW there' a victim, because if there wasn't, we couldn't have passed the preview check
+	var victim: Actor = APD.get_actor_by_type(acols.NEUTRAL)
 	pass

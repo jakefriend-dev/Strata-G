@@ -62,13 +62,17 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	if !utils.valid(defender): return # Attacker is allowed to be null, though!
 	if !defender.alive_check(): return # And dead!
 	
+	var attacker_is_real: bool = false
+	if utils.valid(attacker):
+		if attacker.alive_check():
+			attacker_is_real = true
+	
 	var friendly_fire: bool = true
 	if flags.has("skip_own_faction"): friendly_fire = false
 	if !friendly_fire:
-		if utils.valid(attacker):
-			if attacker.alive_check():
-				if attacker.faction == defender.faction:
-					return
+		if attacker_is_real:
+			if attacker.faction == defender.faction:
+				return
 	
 	var is_melee: bool = support.are_actors_adjacent(attacker, defender)
 	
@@ -115,7 +119,8 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 		if total_shield_left < og_total_shield:
 	#		print("Some quantity of shield consumed!")
 			defender.emit_signal("on_shield_consumed", is_melee)
-			attacker.emit_signal("on_hit_someones_shield", defender, is_melee)
+			if attacker_is_real:
+				attacker.emit_signal("on_hit_someones_shield", defender, is_melee)
 		
 		if total_shield_left > 0: # The shield held!
 			defender.emit_signal("on_shield_held", is_melee)
@@ -123,16 +128,19 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 		if og_total_shield > 0 and total_shield_left == 0:
 	#		print("Shield BROKEN!")
 			# Either way, shield broke
-			attacker.emit_signal("on_broke_someones_shield", defender, is_melee)
+			if attacker_is_real:
+				attacker.emit_signal("on_broke_someones_shield", defender, is_melee)
 			defender.emit_signal("on_shield_broken_any", is_melee)
 			if damage > 0:
 				# Shield broke and damage pushed through
 				defender.emit_signal("on_shield_broken_through", is_melee)
-				attacker.emit_signal("on_broke_through_someones_shield", defender, is_melee)
+				if attacker_is_real:
+					attacker.emit_signal("on_broke_through_someones_shield", defender, is_melee)
 				strife.quick_effect(defender, "shield_broken")
 			else:
 				# Shield broken but held
-				attacker.emit_signal("on_shield_broken_held", is_melee)
+				if attacker_is_real:
+					attacker.emit_signal("on_shield_broken_held", is_melee)
 				strife.quick_effect(defender, "blocked")
 			pass
 	# Unless things are quiet, in which case... nope!
@@ -142,7 +150,8 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 		batman.update_action_log(str(defender.name,": Blocked ",shielded_damage,desctext," and took no damage"))
 		if !is_quiet:
 			defender.emit_signal("on_blocked_all_damage", is_melee)
-			attacker.emit_signal("on_failed_to_wound_someone", defender, is_melee)
+			if attacker_is_real:
+				attacker.emit_signal("on_failed_to_wound_someone", defender, is_melee)
 		defender.update_bui()
 		return
 	
@@ -158,7 +167,8 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	if !is_quiet:
 		strife.quick_effect(defender, "damage", impacted_damage)
-		attacker.emit_signal("on_wounded_someone", defender, is_melee)
+		if attacker_is_real:
+			attacker.emit_signal("on_wounded_someone", defender, is_melee)
 	
 	# The defender lives!
 	if defender.health > 0:
@@ -177,7 +187,8 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			batman.update_action_log(str(defender.name,": Died from taking ",impacted_damage,desctext," damage (blocked ",shielded_damage,")"))
 		batman.kill_actor(defender)
 		if !is_quiet:
-			attacker.emit_signal("on_killed_someone", defender, is_melee)
+			if attacker_is_real:
+				attacker.emit_signal("on_killed_someone", defender, is_melee)
 	pass
 
 # -
@@ -544,6 +555,7 @@ func TILE_entered_JAGGED(actor: Actor, coord: Vector2):
 		pass
 	pass
 
+# warning-ignore:unused_argument
 func TILE_entered_ICE(actor: Actor, coord: Vector2):
 	if !is_affected_by_ice(actor): return
 	
@@ -579,14 +591,44 @@ func TILE_entered_WATER(actor: Actor, _coord: Vector2):
 # If you REST on a tiletype MID-turn -------------------------------------------
 	# Resting is taking an action that does not contain/involve movement
 
-func TILE_rested_on_ANY(actor: Actor, coord: Vector2):
-	if actor.is_immune_magnet: return
-	# Check for adjacent magnets! If multiple, do nothing. If there is only 1 *valid* magnet (within your traversable rules), get dragged on to it.
+# warning-ignore:unused_argument
+func TILE_rested_on_ANY(actor: Actor, _coord: Vector2):
+	
+	# MAGNET CHECK
+	TILE_magnet_check(actor)
+	
+		
+	
 	print(actor.name," rested on ANY!")
+	pass
+
+func TILE_magnet_check(actor: Actor) -> bool:
+	if actor.is_immune_magnet: return false
+	if !is_affected_by_force(actor): return false
+	
+	if batman.grid_tiles.get_cellv(actor.coord) == batman.tiletypes.MAGNET:
+		# We're already on a magnet, so don't bother
+		return false
+	
+	# Check for adjacent magnets! If multiple, do nothing. If there is only 1 *valid* magnet (within your traversable rules), get dragged on to it.
+	var adj_valid_magnets: Array = []
+	for adjcoord in support.get_adj_orthagonal_tiles(actor.coord):
+		if batman.grid_tiles.get_cellv(adjcoord) == batman.tiletypes.MAGNET:
+			if support.is_tile_traversable_exact(actor, adjcoord):
+				adj_valid_magnets.append(adjcoord)
+	
+	if adj_valid_magnets.size() != 1:
+		return false
+	
+	# Only 1 magnet + validations passed -> WE MOVE!
+	var motion: Vector2 = adj_valid_magnets[0] - actor.coord
+	do_quiet_motion(null, actor, motion)
+	return true
 	pass
 
 # If you LEAVE a tiletype MID-turn (even mid-action) ---------------------------
 
+# warning-ignore:unused_argument
 func TILE_exited_ICE(actor: Actor, coord: Vector2):
 	if !is_affected_by_ice(actor): return
 	
