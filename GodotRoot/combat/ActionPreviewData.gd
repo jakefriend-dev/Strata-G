@@ -194,7 +194,7 @@ func add_priority_cell(coord: Vector2, type: int):
 # ---
 
 # Returns the FIRST Actor - only helpful if you expect there to only be one, for convenience
-func get_actor_by_type(type: int) -> Actor:
+func get_actor_by_type(type: int) -> Object:
 	var actor_array: Array = sets.get_cell(COLS.ACTOR_ARRAY, type)
 	if actor_array.empty(): return null
 	return actor_array[0]
