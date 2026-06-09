@@ -57,7 +57,7 @@ func monitor_inputs():
 			actor.attempt_player_char_move(Vector2.RIGHT)
 			return
 		
-		if Input.is_action_just_pressed("player_basic_attack"):
+		if Input.is_action_just_pressed("player_select"):
 			multi_input_lock = true
 			actor.attempt_player_char_basicattack()
 			return
