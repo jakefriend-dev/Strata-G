@@ -32,5 +32,9 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# DEFAULT ELSE: Can't go anywhere, can't do nothin' :(
 	pass
 
+func ACT_longshot():
+	# Shoot a target in your line-of-sight; higher damage per tile travelled
+	
+	pass
 
 

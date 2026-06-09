@@ -984,7 +984,7 @@ func kill_actor(actor: Actor):
 	
 	if should_change_turns:
 		yield(utils.yt(timeout_action_time, self), "timeout")
-		end_turn()
+		exit_turn()
 	pass
 
 func get_all_current_players() -> Array:

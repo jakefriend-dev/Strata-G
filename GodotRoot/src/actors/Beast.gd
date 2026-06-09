@@ -127,11 +127,12 @@ func prep_next_action():
 	if executed_main_attack:
 		
 		# The walk check
-		var walk_coord: Vector2
+		var walk_vector: Vector2
 		var walk_conditions_met: bool = false
 		if can_afford(COST_WALK):
-			walk_coord = support.get_rand_adj_tile_for_actormoving(coord, self)
-			if walk_coord != coord:
+			var walk_coord: Vector2 = support.get_rand_adj_tile_for_actormoving(coord, self)
+			walk_vector = walk_coord - coord
+			if walk_vector != Vector2.ZERO:
 				walk_conditions_met = true
 		
 		# In the condition we have TONS of action points, do a superdebuff!
@@ -157,7 +158,7 @@ func prep_next_action():
 				var walkpref: bool = (rand_range(0.0, 3.0) <= 2.0)
 				if walkpref:
 					spend(COST_WALK)
-					batman.append_action(self, "walk", [walk_coord])
+					batman.append_action(self, "walk", [walk_vector])
 					return
 				else:
 					spend(COST_REPOJUMP)
@@ -165,7 +166,7 @@ func prep_next_action():
 					return
 			# Otherwise, just default to walking
 			spend(COST_WALK)
-			batman.append_action(self, "walk", [walk_coord])
+			batman.append_action(self, "walk", [walk_vector])
 			return
 		
 		# If we can't random-walk (we're stuck), repojump if you can

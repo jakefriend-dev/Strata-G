@@ -35,7 +35,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	if can_see_victim():
 		
 		# If so, can we bite WITHOUT needing to charge?
-		if victim.coord == (coord + Vector2.LEFT):
+		if victim.coord == (coord + my_facing):
 			if can_afford(COST_BITE_NOCHARGE):
 				spend(COST_BITE_NOCHARGE)
 				batman.append_action(self, "bite")
@@ -116,7 +116,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	pass
 
 func can_see_victim() -> bool:
-	victim = support.find_nearest_actor_in_dir(coord, Vector2.LEFT)
+	victim = support.find_nearest_actor_in_dir(coord, my_facing)
 #	print("victim: ",victim)
 	if victim != null:
 		if victim.faction == factions.PLAYER:
@@ -130,7 +130,7 @@ func can_see_victim() -> bool:
 func ACT_charge_forward():
 	# Claim everything to your left (that you can move to!
 	allowed_over_faction_lines = true
-	var chargies: Array = support.list_all_traversible_tiles_in_dir(Vector2.LEFT, self)
+	var chargies: Array = support.list_all_traversible_tiles_in_dir(my_facing, self)
 #	print("chargies: ",chargies)
 	var xdist: int = chargies.size()
 	

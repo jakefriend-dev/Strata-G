@@ -62,6 +62,7 @@ enum factions { # Local copy of TurnMgr, must be an exact duplicate!
 }
 export (factions) var faction: int = factions.ENEMY # Enemy if not manually set
 var is_facing_left: bool = true # Default true for enemies; false for party
+var my_facing: Vector2 = Vector2.ZERO # either LEFT or RIGHT
 
 # A list of effects for tracking and live usage
 var ongoing_turn_effects: Dictionary = {
@@ -572,6 +573,9 @@ func alive_check() -> bool:
 func update_bui():
 	if faction == batman.factions.PLAYER:
 		is_facing_left = false
+		my_facing = Vector2.RIGHT
+	elif faction == batman.factions.ENEMY:
+		my_facing = Vector2.LEFT
 	
 	if !is_facing_left:
 		$ArtMgr/HFlipper.scale.x = -1.0
@@ -626,10 +630,11 @@ func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
 	tween.start()
 	pass
 
-func ACT_walk(exact_coord: Vector2):
+func ACT_walk(motion: Vector2):
 #	print("walk")
 	var dur: float = tile_walk_speed
 	
+	var exact_coord: Vector2 = coord + motion
 	hotmove(exact_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_action(self): return
