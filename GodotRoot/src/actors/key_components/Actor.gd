@@ -63,6 +63,7 @@ enum factions { # Local copy of TurnMgr, must be an exact duplicate!
 export (factions) var faction: int = factions.ENEMY # Enemy if not manually set
 var is_facing_left: bool = true # Default true for enemies; false for party
 var my_facing: Vector2 = Vector2.ZERO # either LEFT or RIGHT
+var their_facing: Vector2 = Vector2.ZERO # either RIGHT or LEFT
 
 # A list of effects for tracking and live usage
 var ongoing_turn_effects: Dictionary = {
@@ -91,6 +92,7 @@ var template_action_preview: Dictionary = {
 	"occupied":   [], # YELLOW! Any cells where occupation will change - this could be where you yank someone else to, or who you swap spots with, or a space for stepsword
 	"buffed":     [], # LIGHT GREEN? Any cells that will receive an 'effect', good or bad
 	"unaffected": [], # DARK TURQUOISE? For line-of-travel, such as all the tiles between you and the enemy for "shoot first enemy in sight and explode in a 3x3 around them"
+	"cancelled":  [], # GREY? For things that don't work, like trying to reposition an actor to a cell it can't exist in
 }
 
 enum weightclasses {
@@ -581,8 +583,10 @@ func update_bui():
 	if faction == batman.factions.PLAYER:
 		is_facing_left = false
 		my_facing = Vector2.RIGHT
+		their_facing = Vector2.LEFT
 	elif faction == batman.factions.ENEMY:
 		my_facing = Vector2.LEFT
+		their_facing = Vector2.RIGHT
 	
 	if !is_facing_left:
 		$ArtMgr/HFlipper.scale.x = -1.0
@@ -682,7 +686,7 @@ func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: 
 		dur1 += 0.05
 		dur2 = 0.10
 	
-	var total_dur = dur1 + dur2
+	var _total_dur = dur1 + dur2
 	var to_coord: Vector2 = coord + motion
 	var to_gpos: Vector2 = batman.grid_gpos.get_cellv(to_coord)
 	# Overshoot is 35% of 1 tile
@@ -703,33 +707,27 @@ func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: 
 		tween.interpolate_property(self, "position", to_gpos + impact_overshoot, to_gpos,
 			dur2, Tween.TRANS_QUINT, Tween.EASE_OUT, dur1)
 		tween.start()
-		print("a1")
 		
 		yield(utils.yt(dur1, self), "timeout")
 		if !batman.is_my_action(self): return
 		
-		print("a2")
 		if knockback_damage > 0: # 'is_quiet' doesn't matter here; we collided with something!
 			if attacker_is_real:
 				attacker.emit_signal("knockback_damaged_other_actor", self, knockback_damage)
 			emit_signal("was_knockback_damaged_by_external", knockback_damage)
 			strife.do_impact_damage(attacker, self, knockback_damage, flags)
-		print("a3")
 		
 		yield(utils.yt(dur2, self), "timeout")
 		if !batman.is_my_action(self): return
-		print("a4")
 		pass
 	
 	# For *not* getting hurt, well... it's less exciting but it works.
 	else:
 		tween.interpolate_property(self, "position", null, to_gpos, dur1, trans, easin)
 		tween.start()
-		print("b1")
 		
 		yield(utils.yt(dur1, self), "timeout")
 		if !batman.is_my_action(self): return
-		print("b2")
 		pass
 	
 	#
