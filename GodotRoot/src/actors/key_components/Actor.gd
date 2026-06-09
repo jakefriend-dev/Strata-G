@@ -86,6 +86,13 @@ var concluded_effects: Dictionary = {
 	# 5: ["enrage"],
 }
 
+var template_action_preview: Dictionary = {
+	"damaged":    [], # RED! Any cells where damage will occur
+	"occupied":   [], # YELLOW! Any cells where occupation will change - this could be where you yank someone else to, or who you swap spots with, or a space for stepsword
+	"buffed":     [], # LIGHT GREEN? Any cells that will receive an 'effect', good or bad
+	"unaffected": [], # DARK TURQUOISE? For line-of-travel, such as all the tiles between you and the enemy for "shoot first enemy in sight and explode in a 3x3 around them"
+}
+
 enum weightclasses {
 	HOVER,  # Flying; not affects by the ground beneath it at ALL. Allowed to enter pit tiles!
 	LIGHT,  # Doesn't sink into certain tiles; immediately moved by wind; doesn't break lilypads?

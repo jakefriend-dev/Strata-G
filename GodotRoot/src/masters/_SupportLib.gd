@@ -25,6 +25,23 @@ func get_all_tiles_in_dir(og_cell: Vector2, dir: Vector2) -> Array:
 	return coords_in_dir
 	pass
 
+func list_all_unoccupied_tiles_in_dir(og_cell: Vector2, dir: Vector2) -> Array:
+	if dir == Vector2.ZERO: return []
+	
+	var coords_in_dir: Array = []
+	var check_cell: Vector2 = og_cell
+	
+	while true:
+		check_cell += dir
+		if batman.grid_tiles.has_cellv(check_cell):
+			if !utils.valid(batman.grid_actors.get_cellv(check_cell)):
+				coords_in_dir.append(check_cell)
+				continue
+		break
+	
+	return coords_in_dir
+	pass
+
 func list_all_traversible_tiles_in_dir(dir: Vector2, actor: Actor) -> Array:
 	var og_cell: Vector2 = actor.coord
 	var all_cells_in_dur: Array = get_all_tiles_in_dir(og_cell, dir)

@@ -32,9 +32,31 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# DEFAULT ELSE: Can't go anywhere, can't do nothin' :(
 	pass
 
+func PREVIEW_longshot() -> Dictionary:
+	var preview: Dictionary = template_action_preview.duplicate(true)
+	
+	preview["unaffected"] = support.list_all_unoccupied_tiles_in_dir(coord, my_facing)
+	
+	var victim: Actor = support.find_nearest_actor_in_dir(coord, my_facing)
+	if utils.valid(victim):
+		preview["damaged"] = [victim.coord]
+	
+	return preview
+	pass
+
 func ACT_longshot():
 	# Shoot a target in your line-of-sight; higher damage per tile travelled
+	var victim: Actor = support.find_nearest_actor_in_dir(coord, my_facing)
+	if !utils.valid(victim):
+		return
 	
+	var dist: int = support.get_vecdist_between_actors(self, victim).length()
+	var dmg: int = dist - 1 # Should mean 0 damage for adjacent, or 4 for opposite side of a 6x3 arena
+	if dmg < 0: dmg = 0
+	dmg *= batman.BASE_HP_FACTOR
+	
+	strife.damage_actor_at_coord(self, victim.coord, dmg)
+	end_action()
 	pass
 
 
