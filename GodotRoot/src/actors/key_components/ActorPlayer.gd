@@ -53,6 +53,7 @@ func prep_options_from_optionstring():
 
 func prep_moveset_on_battle_start():
 	var moveset_ref: Dictionary = get("moveset")
+	
 	for key in moveset_ref.keys():
 		moveset_ref[key]["current_turn_uses"] = 0
 		moveset_ref[key]["current_battle_uses"] = 0
@@ -63,13 +64,14 @@ func prep_moveset_on_battle_start():
 
 func prep_moveset_on_turn_start():
 	var moveset_ref: Dictionary = get("moveset")
-	print("moveset ref prepped: ",moveset_ref)
+	
 	for key in moveset_ref.keys():
 		var cooldown: int = moveset_ref[key]["current_cooldown"]
 		if cooldown > 0:
 			cooldown -= 1
 			print("Cooldown ticked down for ",key,", now ",cooldown)
 			moveset_ref[key]["current_cooldown"] = cooldown
+	
 	set("moveset", moveset_ref)
 	pass
 
