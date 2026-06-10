@@ -15,6 +15,7 @@ func _ready():
 
 func clear_action_preview():
 	APD = ActionPreviewData.new()
+	end_drawing()
 	pass
 
 func begin_drawing():
@@ -53,20 +54,35 @@ func draw_all_arrows():
 		for arrow_rect in arrow_array: if arrow_rect is Rect2:
 			var start: Vector2 = arrow_rect.position
 			var end: Vector2 = arrow_rect.size
-			draw_arrow(start, end, col, 4, false)
+			draw_arrow(start, end, col, y)
 	pass
 
 func draw_arrow(
-	origin: Vector2,
-	target: Vector2,
+	start: Vector2,
+	end: Vector2,
 	color: Color,
-	width: float = -1,
+	y: int,
+#	width: float = -1,
 	filled: bool = false,
-	head_length: float = 2.5,
+	head_length: float = 0.25,
 	head_angle: float = PI / 4.0
 	):
+		var width: float = 4.0
+		if y == APD.ROWS.PASS:
+			width = 2.0
 		
-		draw_line(origin, target, color, width)
+		var dir: Vector2 = end - start
+		dir = dir.normalized()
+		var cell_len: Vector2 = dir * batman.field.CELL_SIZE
+		var adjust: float = 0.25
+		
+		start = start + (cell_len * adjust)
+		if y == APD.ROWS.PASS:
+			end = end + (cell_len * adjust)
+		elif y == APD.ROWS.ERROR:
+			end = end - (cell_len * adjust)
+		
+		draw_line(start, end, color, width)
 		
 #		target -= origin * 2
 #		var head: Vector2 = -target.normalized() * head_length
@@ -81,4 +97,4 @@ func draw_arrow(
 #		else:
 #			draw_line(origin, target , color, width)
 #			draw_polyline([head_right, target , head_left], color, width)
-		pass
+#		pass
