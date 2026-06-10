@@ -14,6 +14,7 @@ func _ready():
 #	batman.connect("pre_turn_setup", self, "check_for_action_options")
 	prep_options_from_optionstring()
 	batman.connect("action_option_view_changed", self, "run_actop_preview")
+	batman.connect("action_step_complete", self, "run_actop_preview")
 	pass
 
 func prep_options_from_optionstring():
@@ -57,9 +58,14 @@ func run_actop_preview():
 	var pstring: String = str("PREVIEW_",batman.loaded_move_name)
 	print(pstring)
 	if has_method(pstring):
-		call(pstring, batman.highlighted_sub_actop)
+		if batman.loaded_move_ref["options"] == 0:
+			call(pstring)
+		else:
+			call(pstring, batman.highlighted_sub_actop)
 		
 		APD.generate_cell_highlights()
+	
+	batman.emit_signal("new_action_preview_data_readied", APD)
 	pass
 
 #func check_for_action_options(who: Actor):

@@ -9,7 +9,6 @@ func _ready():
 	add_child(tween)
 	pass
 
-
 func does_file_exist(path):
 	var directory = Directory.new()
 	var tf = directory.file_exists(path)

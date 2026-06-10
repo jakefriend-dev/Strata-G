@@ -50,6 +50,7 @@ var loaded_move_name: String = "" # Just the *name* of the chosen move
 var highlighted_actop: int = 0 # The actually selected ability
 var highlighted_sub_actop: int = 0 # If there are variants for the ability, cycles through them
 signal action_option_view_changed()
+signal new_action_preview_data_readied(APD)
 
 const BASE_HP_FACTOR: int = 4
 
@@ -106,6 +107,7 @@ var curr_action: Array = []
 var prev_action: Array = []
 var timeout_action_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
 var timeout_turn_time: float = (12.0/60.0) # How long between ended turns if time has not passed
+signal any_actionstep_initiated()
 signal action_step_complete() # Should fire any time we do an individual action
 signal all_action_steps_complete() # Should fire whenever ALL steps are done
 var actions_are_processing: bool = false
@@ -864,6 +866,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	# Log the action BEFORE executing
 	var logline: String = str("[",actor.ofc_name,"] ",raw_methodname)
 	update_action_log(logline)
+	emit_signal("any_actionstep_initiated")
 	
 	# Execute!
 	if paramset.empty():

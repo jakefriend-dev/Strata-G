@@ -144,7 +144,11 @@ func add_arrow(start_coord: Vector2, end_coord: Vector2, type: int, enforce_line
 	if dupe: return
 	
 	# Size - Position = travel vector (motion) for the arrow!
-	var new_arrow: Rect2 = Rect2(start_coord, end_coord)
+#	var new_arrow: Rect2 = Rect2(start_coord, end_coord)
+	var new_arrow: Rect2 = Rect2(
+		batman.grid_gpos.get_cellv(start_coord),
+		batman.grid_gpos.get_cellv(end_coord)
+		)
 	arrow_array.append(new_arrow)
 	
 	# Then we add each cell within the arrow to our cell arrays!
