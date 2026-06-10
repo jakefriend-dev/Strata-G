@@ -1,8 +1,8 @@
 extends NinePatchRect
 
 var colset: Dictionary = {
-	batman.factions.PLAYER:  ["5392df"],
-	batman.factions.ENEMY:   ["df538e"],
+	batman.factions.PLAYER:  ["5e96dd"],
+	batman.factions.ENEMY:   ["bd1f3f"],
 }
 
 var targetcol: Color = Color("ff9696")
