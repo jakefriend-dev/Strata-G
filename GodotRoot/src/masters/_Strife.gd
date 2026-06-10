@@ -380,7 +380,10 @@ func quick_effect(actor_or_coord, effect: String, variant = null):
 			pass
 		
 		"spark_burst":
-			spawn_effect_on_actor(actor_or_coord, "spark_burst", false)
+			if actor_or_coord is Vector2:
+				spawn_effect_on_tile(actor_or_coord, "spark_burst")
+			elif actor_or_coord is Actor:
+				spawn_effect_on_actor(actor_or_coord, "spark_burst", false)
 			pass
 		
 		"dust": # This one needs to be a tile coord

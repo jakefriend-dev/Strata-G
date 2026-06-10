@@ -58,7 +58,7 @@ const moveset: Dictionary = {
 	"longshot": {
 		"display_name": "Longshot",
 		"display_desc": "Shoot the first unit in your line of sight. Deals more damage the further away the target is.",
-		"options": 0, # Typically 0 but could be an infinite number
+		"options": 2, # Typically 0 but could be an infinite number
 		"cost": 2,
 		"on_use_cooldown": 0, # 0 = no cooldown; 1 = after using, you cannot use it the next 1 turns
 		"initial_cooldown": 0, # Turns required until ability is first usable
@@ -97,30 +97,57 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# DEFAULT ELSE: Can't go anywhere, can't do nothin' :(
 	pass
 
-func PREVIEW_longshot() -> Dictionary:
-	var preview: Dictionary = template_action_preview.duplicate(true)
+func PREVIEW_longshot(option: int):
 	
-	preview["unaffected"] = support.list_all_unoccupied_tiles_in_dir(coord, my_facing)
+	var check_vector: Vector2 = my_facing
+	if option == 1: check_vector += Vector2.UP
+	if option == 2: check_vector += Vector2.DOWN
 	
-	var victim: Actor = support.find_nearest_actor_in_dir(coord, my_facing)
-	if utils.valid(victim):
-		preview["damaged"] = [victim.coord]
+	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(coord, check_vector)
+	if !unoccupieds.empty():
+		APD.add_arrow(coord, unoccupieds.back(), acols.PASS)
 	
-	return preview
+	var victim: Actor = support.find_nearest_actor_in_dir(coord, check_vector)
+	if !utils.actorpass(victim): return
+	
+	APD.add_actor(victim, acols.BAD)
+	APD.passfail = true
 	pass
 
-func ACT_longshot():
+func ACT_longshot(option: int):
 	# Shoot a target in your line-of-sight; higher damage per tile travelled
-	var victim: Actor = support.find_nearest_actor_in_dir(coord, my_facing)
-	if !utils.valid(victim):
-		return
+	var victim: Actor = APD.get_actor_by_type(acols.BAD)
+	var dmg: int = 0
+	var dist: int = 0
 	
-	var dist: int = support.get_vecdist_between_actors(self, victim).length()
-	var dmg: int = dist - 1 # Should mean 0 damage for adjacent, or 4 for opposite side of a 6x3 arena
+	var coord_path: Array = []
+	if utils.actorpass(victim):
+		
+		var check_vector: Vector2 = my_facing
+		if option == 1: check_vector += Vector2.UP
+		if option == 2: check_vector += Vector2.DOWN
+		var check_cell: Vector2 = coord
+		while check_cell != victim.coord:
+			check_cell += check_vector
+			if !batman.grid_actors.has_cellv(check_cell):
+				dist = 0
+				break
+			coord_path.append(check_cell)
+			dist += 1
+		pass
+	
+	# Distance is based off damage; adjacent to us is 0 damage and +1 per gap of space
+	if dist > 0: dmg = (dist - 1)
 	if dmg < 0: dmg = 0
+	print("longshot dist ",dist," so base dmg ",dmg)
 	dmg *= batman.BASE_HP_FACTOR
 	
-	strife.damage_actor_at_coord(self, victim.coord, dmg)
+	for cell in coord_path:
+		strife.quick_effect(cell, "spark_burst")
+	if utils.actorpass(victim):
+		strife.damage_actor_at_coord(self, victim.coord, dmg)
+		strife.quick_effect(victim, "spark_burstdamage")
+	
 	end_action()
 	pass
 
