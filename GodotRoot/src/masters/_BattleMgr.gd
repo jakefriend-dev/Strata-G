@@ -468,6 +468,7 @@ func cycle_to_next_turn():
 		if curr_actor.has_method("pre_turn_setup"):
 			curr_actor.call("pre_turn_setup")
 	
+	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
 	combatstate = C_TURN

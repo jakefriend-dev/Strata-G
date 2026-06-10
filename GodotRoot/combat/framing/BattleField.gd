@@ -250,6 +250,9 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 
 # -
 
+func populate_action_selector():
+	pass
+
 func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:
 	actorpos -= board_offset # Adjust it to board-local coordinates
 	

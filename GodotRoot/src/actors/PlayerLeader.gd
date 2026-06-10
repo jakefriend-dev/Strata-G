@@ -7,6 +7,33 @@ extends ActorPlayer
 #const COST_: int = 1
 #const COST_: int = 1
 
+const moveset: Dictionary = {
+	
+#	# TEMPLATE
+#	"move_key": {
+#		"display_name": "Move Name",
+#		"display_desc": "Do this set of actions when you pick this move.",
+#		"options": 0, # Typically 0 but could be an infinite number
+#		"cost": 1,
+#		"cooldown": 0, # 0 = no cooldown; 1 = after using, you cannot use it the next 1 turns
+#		"initial_cooldown": 0, # Turns required until ability is first usable
+#		"uses_per_turn": 0, # 0 = infinite; any positive int = limited
+#		"uses_per_battle": 0, # As above, but in total all fight
+#	},
+	
+	"basic_attack": {
+		"display_name": "Simple Shot",
+		"display_desc": "Shoot the first unit in your line of sight.",
+		"options": 0, # Typically 0 but could be an infinite number
+		"cost": 2,
+		"cooldown": 0, # 0 = no cooldown; 1 = after using, you cannot use it the next 1 turns
+		"initial_cooldown": 0, # Turns required until ability is first usable
+		"uses_per_turn": 0, # 0 = infinite; any positive int = limited
+		"uses_per_battle": 0, # As above, but in total all fight
+	},
+
+}
+
 # ---
 
 func _ready():

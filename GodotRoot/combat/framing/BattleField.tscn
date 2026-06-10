@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://combat/framing/BattleCell.tscn" type="PackedScene" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
@@ -668,6 +668,8 @@ shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
 shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
 shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
 
+[sub_resource type="StyleBoxEmpty" id=32]
+
 [node name="BattleField" type="Node2D"]
 script = ExtResource( 2 )
 path_board = NodePath("Control/MC/VB/HB/Board")
@@ -1057,6 +1059,66 @@ Beast
 P2
 P3"
 align = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionSelect" type="Node2D" parent="."]
+position = Vector2( 4, 356 )
+
+[node name="VB" type="VBoxContainer" parent="ActionSelect"]
+margin_top = -352.0
+margin_right = 640.0
+rect_min_size = Vector2( 632, 352 )
+custom_constants/separation = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Panel" type="Panel" parent="ActionSelect/VB"]
+margin_right = 640.0
+margin_bottom = 199.0
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 32 )
+
+[node name="Prev" type="Label" parent="ActionSelect/VB"]
+margin_top = 202.0
+margin_right = 640.0
+margin_bottom = 267.0
+custom_colors/font_color = Color( 0.576471, 0.6, 0.733333, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 4 )
+text = "P1
+Beast
+P2
+P3"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Curr" type="Label" parent="ActionSelect/VB"]
+margin_top = 270.0
+margin_right = 640.0
+margin_bottom = 284.0
+custom_colors/font_color = Color( 0.870588, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 4 )
+text = "Test!!!"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Next" type="Label" parent="ActionSelect/VB"]
+margin_top = 287.0
+margin_right = 640.0
+margin_bottom = 352.0
+custom_colors/font_color = Color( 0.576471, 0.6, 0.733333, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 4 )
+text = "P1
+Beast
+P2
+P3"
 __meta__ = {
 "_edit_use_anchors_": false
 }
