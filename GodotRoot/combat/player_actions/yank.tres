@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://combat/player_actions/masters/PlayerAction.gd" type="Script" id=1]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource( 1 )
+display_name = "Yank-Back"
+display_desc = "Grab the nearest unit in your line of sight, and yank it towards you (and maybe to the side). Won't affect Heavy units."
+options = 2
+option_desc = "Change angle of unit yanking"
+cost = 1
+on_use_cooldown = 0
+initial_cooldown = 0
+misc = ""
+uses_per_turn = 1
+uses_per_battle = 0
+req_successful_preview = true

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://combat/player_actions/masters/PlayerAction.gd" type="Script" id=1]
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource( 1 )
+display_name = "Longshot"
+display_desc = "Shoot the first unit in your line of sight. Deals more damage the further away the target is."
+options = 2
+option_desc = "Changes the aim angle."
+cost = 2
+on_use_cooldown = 1
+initial_cooldown = 0
+misc = ""
+uses_per_turn = 0
+uses_per_battle = 0
+req_successful_preview = false

@@ -97,60 +97,6 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# DEFAULT ELSE: Can't go anywhere, can't do nothin' :(
 	pass
 
-func PREVIEW_longshot(option: int):
-	
-	var check_vector: Vector2 = my_facing
-	if option == 1: check_vector += Vector2.UP
-	if option == 2: check_vector += Vector2.DOWN
-	
-	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(coord, check_vector)
-	if !unoccupieds.empty():
-		APD.add_arrow(coord, unoccupieds.back(), acols.PASS)
-	
-	var victim: Actor = support.find_nearest_actor_in_dir(coord, check_vector)
-	if !utils.actorpass(victim): return
-	
-	APD.add_actor(victim, acols.BAD)
-	APD.passfail = true
-	pass
-
-func ACT_longshot(option: int):
-	# Shoot a target in your line-of-sight; higher damage per tile travelled
-	var victim: Actor = APD.get_actor_by_type(acols.BAD)
-	var dmg: int = 0
-	var dist: int = 0
-	
-	var coord_path: Array = []
-	if utils.actorpass(victim):
-		
-		var check_vector: Vector2 = my_facing
-		if option == 1: check_vector += Vector2.UP
-		if option == 2: check_vector += Vector2.DOWN
-		var check_cell: Vector2 = coord
-		while check_cell != victim.coord:
-			check_cell += check_vector
-			if !batman.grid_actors.has_cellv(check_cell):
-				dist = 0
-				break
-			coord_path.append(check_cell)
-			dist += 1
-		pass
-	
-	# Distance is based off damage; adjacent to us is 0 damage and +1 per gap of space
-	if dist > 0: dmg = (dist - 1)
-	if dmg < 0: dmg = 0
-	print("longshot dist ",dist," so base dmg ",dmg)
-	dmg *= batman.BASE_HP_FACTOR
-	
-	for cell in coord_path:
-		strife.quick_effect(cell, "spark_burst")
-	if utils.actorpass(victim):
-		strife.damage_actor_at_coord(self, victim.coord, dmg)
-		strife.quick_effect(victim, "spark_burstdamage")
-	
-	end_action()
-	pass
-
 func PREVIEW_yank(option: int): # Options are 0, 1, 2
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(coord, my_facing)
 	if !unoccupieds.empty():
@@ -207,3 +153,63 @@ func ACT_yank(option: int):
 	
 	end_action()
 	pass
+
+func PREVIEW_longshot(option: int):
+	
+	var check_vector: Vector2 = my_facing
+	if option == 1: check_vector += Vector2.UP
+	if option == 2: check_vector += Vector2.DOWN
+	
+	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(coord, check_vector)
+	if !unoccupieds.empty():
+		APD.add_arrow(coord, unoccupieds.back(), acols.PASS)
+	
+	var victim: Actor = support.find_nearest_actor_in_dir(coord, check_vector)
+	if !utils.actorpass(victim): return
+	
+	APD.add_actor(victim, acols.BAD)
+	APD.passfail = true
+	pass
+
+func ACT_longshot(option: int):
+	# Shoot a target in your line-of-sight; higher damage per tile travelled
+	var victim: Actor = APD.get_actor_by_type(acols.BAD)
+	var dmg: int = 0
+	var dist: int = 0
+	
+	var coord_path: Array = []
+	if utils.actorpass(victim):
+		
+		var check_vector: Vector2 = my_facing
+		if option == 1: check_vector += Vector2.UP
+		if option == 2: check_vector += Vector2.DOWN
+		var check_cell: Vector2 = coord
+		while check_cell != victim.coord:
+			check_cell += check_vector
+			if !batman.grid_actors.has_cellv(check_cell):
+				dist = 0
+				break
+			coord_path.append(check_cell)
+			dist += 1
+		pass
+	
+	# Distance is based off damage; adjacent to us is 0 damage and +1 per gap of space
+	if dist > 0: dmg = (dist - 1)
+	if dmg < 0: dmg = 0
+	print("longshot dist ",dist," so base dmg ",dmg)
+	dmg *= batman.BASE_HP_FACTOR
+	
+	for cell in coord_path:
+		strife.quick_effect(cell, "spark_burst")
+	if utils.actorpass(victim):
+		strife.damage_actor_at_coord(self, victim.coord, dmg)
+		strife.quick_effect(victim, "spark_burstdamage")
+	
+	end_action()
+	pass
+
+
+
+
+
+
