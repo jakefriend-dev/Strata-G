@@ -47,7 +47,7 @@ func monitor_inputs():
 		var actor: Actor = batman.curr_actor
 		if !utils.valid(actor): return
 		if !actor.alive_check(): return
-		if actor.faction != batman.factions.PLAYER: return
+		if not actor is ActorPlayer: return
 		
 		# Orthagonal movement
 		if Input.is_action_just_pressed("player_move_up"):
@@ -67,11 +67,31 @@ func monitor_inputs():
 			actor.attempt_player_char_move(Vector2.RIGHT)
 			return
 		
+		# Use the currently selected attack (and option)
 		if Input.is_action_just_pressed("player_select"):
 			multi_input_lock = true
 			actor.attempt_player_char_basicattack()
 			return
 		
+		# Select a new move/option
+		if Input.is_action_just_pressed("player_cycle_next"):
+			multi_input_lock = true
+			batman.cycle_player_actops_forward()
+			return
+		if Input.is_action_just_pressed("player_cycle_prev"):
+			multi_input_lock = true
+			batman.cycle_player_actops_backward()
+			return
+		if Input.is_action_just_pressed("player_subcycle_next"):
+			multi_input_lock = true
+			batman.cycle_player_actop_subops_forward()
+			return
+		if Input.is_action_just_pressed("player_subcycle_prev"):
+			multi_input_lock = true
+			batman.cycle_player_actop_subops_backward()
+			return
+		
+		# End turn
 		if Input.is_action_just_pressed("player_complete"):
 			multi_input_lock = true
 			actor.emit_signal("player_action_submitted")

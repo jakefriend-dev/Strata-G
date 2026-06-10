@@ -678,6 +678,7 @@ path_effects = NodePath("FieldObjects/Effects")
 path_misc = NodePath("FieldObjects/Misc")
 path_debuglog_par = NodePath("DebugLog/VB")
 path_turndisplay_par = NodePath("TurnDisplay/VB")
+path_actionsel_par = NodePath("ActionSelect/VB")
 
 [node name="Control" type="Control" parent="."]
 margin_right = 40.0

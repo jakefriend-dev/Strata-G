@@ -6,12 +6,14 @@ export var path_effects: NodePath
 export var path_misc: NodePath
 export var path_debuglog_par: NodePath
 export var path_turndisplay_par: NodePath
+export var path_actionsel_par: NodePath
 var board: GridContainer
 var actors: YSort
 var effects: YSort
 var misc: YSort
 var debuglog_par: VBoxContainer
 var turndisplay_par: VBoxContainer
+var actionsel_par: VBoxContainer
 
 var board_offset: Vector2
 
@@ -28,6 +30,7 @@ func _ready():
 	misc = get_node(path_misc)
 	debuglog_par = get_node(path_debuglog_par)
 	turndisplay_par = get_node(path_turndisplay_par)
+	actionsel_par = get_node(path_actionsel_par)
 	
 	batman.field = self
 	batman.actors = actors
@@ -252,6 +255,63 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 # -
 
 func update_action_selector():
+	if not batman.curr_actor is ActorPlayer:
+		push_action_selector_changes()
+		return
+	
+	var pre_list: Array = []
+	var current: String = ""
+	var post_list: Array = []
+	
+	var index: int = -1
+	for key in batman.loaded_actops:
+		index += 1 # Zero-based
+		
+		if index == batman.highlighted_actop:
+			current = str("* ",key)
+			continue
+		
+		if current == "":
+			pre_list.append(key)
+		else:
+			post_list.append(key)
+		
+		pass
+	
+	# Now we should have all our strings!
+	var p: String = ""
+	var n: String = ""
+	
+	for line in pre_list:
+		p += "  "
+		p += line
+		if line != pre_list.back():
+			p += "\n"
+	
+	for line in post_list:
+		n += "  "
+		n += line
+		if line != post_list.back():
+			n += "\n"
+	
+	push_action_selector_changes(p, current, n)
+	pass
+
+func push_action_selector_changes(p: String = "", c: String = "", n: String = ""):
+	var prev: Label = actionsel_par.get_node("Prev")
+	var curr: Label = actionsel_par.get_node("Curr")
+	var next: Label = actionsel_par.get_node("Next")
+	
+	if prev.text != p: prev.text = p
+	if curr.text != c: curr.text = c
+	if next.text != n: next.text = n
+	
+	if prev.visible != (p != ""):
+		prev.visible = (p != "")
+	if curr.visible != (c != ""):
+		curr.visible = (c != "")
+	if next.visible != (n != ""):
+		next.visible = (n != "")
 	pass
 
 func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:

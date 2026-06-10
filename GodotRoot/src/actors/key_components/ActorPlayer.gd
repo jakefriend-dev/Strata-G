@@ -37,6 +37,9 @@ func prep_options_from_optionstring():
 				badflag = true
 				break
 			if badflag: continue
+		if valid_action_options.has(opt):
+			print(name,": MAJOR error; ",opt," is already in our keys list! No dupes!")
+			continue
 		
 		valid_action_options.append(opt)
 	

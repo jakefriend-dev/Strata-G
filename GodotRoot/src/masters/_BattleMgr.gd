@@ -483,7 +483,10 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		loaded_actops = curr_actor.get("moveset").keys()
 		if !loaded_actops.empty():
 			loaded_moveset_ref = curr_actor.get("moveset").duplicate(true)
-			loaded_move_ref = loaded_move_ref[loaded_actops[highlighted_actop]].duplicate(true)
+			print(loaded_moveset_ref)
+			var first_move: String = loaded_actops[highlighted_actop]
+			print("first move ",first_move)
+			loaded_move_ref = loaded_moveset_ref[first_move].duplicate(true)
 	emit_signal("update_action_selector")
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
@@ -681,30 +684,43 @@ func get_printable_turntaker_name(turndata: Dictionary) -> String:
 
 ### Action management
 
+func player_input_validation_checks() -> bool:
+	if loaded_actops.empty(): return false
+	if not curr_actor is ActorPlayer: return false
+	if combatstate != C_TURN: return false
+	if !action_queue.empty(): return false
+	return true
+
 func cycle_player_actops_forward():
-	if loaded_actops.empty(): return
+	if !player_input_validation_checks(): return
 	
 	highlighted_actop += 1
 	if highlighted_actop >= loaded_actops.size():
 		highlighted_actop = 0
 	highlighted_sub_actop = 0
 	
+	var this_movekey: String = loaded_actops[highlighted_actop]
+	loaded_move_ref = loaded_moveset_ref[this_movekey].duplicate(true)
+	
 	emit_signal("update_action_selector")
 	pass
 
 func cycle_player_actops_backward():
-	if loaded_actops.empty(): return
+	if !player_input_validation_checks(): return
 	
 	highlighted_actop -= 1
 	if highlighted_actop < 0:
 		highlighted_actop = loaded_actops.size()-1
 	highlighted_sub_actop = 0
 	
+	var this_movekey: String = loaded_actops[highlighted_actop]
+	loaded_move_ref = loaded_moveset_ref[this_movekey].duplicate(true)
+	
 	emit_signal("update_action_selector")
 	pass
 
 func cycle_player_actop_subops_forward():
-	if loaded_actops.empty(): return
+	if !player_input_validation_checks(): return
 	
 	highlighted_sub_actop += 1
 	if highlighted_sub_actop > loaded_move_ref["options"]:
@@ -714,7 +730,7 @@ func cycle_player_actop_subops_forward():
 	pass
 
 func cycle_player_actop_subops_backward():
-	if loaded_actops.empty(): return
+	if !player_input_validation_checks(): return
 	
 	highlighted_sub_actop -= 1
 	if highlighted_sub_actop < 0:
@@ -914,6 +930,7 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	loaded_move_ref = {}
 	highlighted_actop = 0
 	highlighted_sub_actop = 0
+	emit_signal("update_action_selector")
 	pass
 
 func is_my_action(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
