@@ -13,6 +13,7 @@ var valid_action_options: Array = []
 func _ready():
 #	batman.connect("pre_turn_setup", self, "check_for_action_options")
 	prep_options_from_optionstring()
+	prep_moveset_on_battle_start()
 	batman.connect("action_option_view_changed", self, "run_actop_preview")
 	batman.connect("action_step_complete", self, "run_actop_preview")
 	pass
@@ -55,16 +56,21 @@ func prep_moveset_on_battle_start():
 	for key in moveset_ref.keys():
 		moveset_ref[key]["current_turn_uses"] = 0
 		moveset_ref[key]["current_battle_uses"] = 0
-		moveset_ref[key]["current_cooldown"] = moveset_ref[key]["initial_cooldown"]
+		moveset_ref[key]["current_cooldown"] = 0+moveset_ref[key]["initial_cooldown"]
+	
+	set("moveset", moveset_ref)
 	pass
 
 func prep_moveset_on_turn_start():
 	var moveset_ref: Dictionary = get("moveset")
+	print("moveset ref prepped: ",moveset_ref)
 	for key in moveset_ref.keys():
 		var cooldown: int = moveset_ref[key]["current_cooldown"]
 		if cooldown > 0:
 			cooldown -= 1
+			print("Cooldown ticked down for ",key,", now ",cooldown)
 			moveset_ref[key]["current_cooldown"] = cooldown
+	set("moveset", moveset_ref)
 	pass
 
 func run_actop_preview():
@@ -84,7 +90,7 @@ func run_actop_preview():
 		APD.generate_cell_highlights()
 		pass
 	
-	APD.ready_to_use = is_player_action_usable()
+	APD.ready_to_use = is_player_action_usable(false)
 	
 	batman.emit_signal("new_action_preview_data_readied", APD)
 	pass
@@ -99,30 +105,30 @@ func run_actop_preview():
 
 # ---
 
-func is_player_action_usable() -> bool:
+func is_player_action_usable(do_print: bool = true) -> bool:
 	if !batman.player_input_validation_checks(): return false
 	if batman.curr_actor != self: return false
 	
-	var moveref: Dictionary = batman.loaded_move_ref # Not duplicating, so FYI linked!
+	var moveref: Dictionary = get_current_moveref() # Not duplicating, so FYI linked!
 	
 	var COST: int = moveref["cost"]
 	if !can_afford(COST):
-		print(name," can't afford ",COST,"-AP for ",moveref["keyref"])
+		if do_print: print(name," can't afford ",COST,"-AP for ",moveref["keyref"])
 		return false
 	
 	if moveref["current_cooldown"] > 0:
-		print(name," still on cooldown for ",moveref["current_cooldown"]," turns: ",moveref["keyref"])
+		if do_print: print(name," still on cooldown for ",moveref["current_cooldown"]," turns: ",moveref["keyref"])
 		return false
 	if moveref["req_APDpass"] and !APD.passfail:
-		print(name," needs APD pass for ",moveref["keyref"])
+		if do_print: print(name," needs APD pass for ",moveref["keyref"])
 		return false
 	if moveref["uses_per_turn"] > 0:
 		if moveref["current_turn_uses"] >= moveref["uses_per_turn"]:
-			print(name," already maxed per-turn uses of ",moveref["keyref"])
+			if do_print: print(name," already maxed per-turn uses of ",moveref["keyref"])
 			return false
 	if moveref["uses_per_battle"] > 0:
 		if moveref["current_battle_uses"] >= moveref["uses_per_battle"]:
-			print(name," already maxed per-battle uses of ",moveref["keyref"])
+			if do_print: print(name," already maxed per-battle uses of ",moveref["keyref"])
 			return false
 	
 	return true
@@ -144,11 +150,13 @@ func attempt_player_char_action():
 	if !is_player_action_usable(): return
 	
 	# Should be valid, then! Adjust our stats/values first
-	var moveref: Dictionary = batman.loaded_move_ref # Not duplicating, so FYI linked!
+	var moveref: Dictionary = get_current_moveref() # Not duplicating, so FYI linked!
 	spend(moveref["cost"])
-	moveref["current_cooldown"] = 0+moveref["on_use_cooldown"]
+	if moveref["on_use_cooldown"] > 0:
+		moveref["current_cooldown"] = 1+moveref["on_use_cooldown"] # +1 to neutralize rest of turn!
 	moveref["current_turn_uses"] = 1+moveref["current_turn_uses"]
 	moveref["current_battle_uses"] = 1+moveref["current_battle_uses"]
+	update_current_moveref(moveref)
 	
 	# Now execute!
 	if moveref["options"] == 0:
@@ -161,6 +169,15 @@ func attempt_player_char_action():
 
 func submit_player_action():
 	emit_signal("player_action_submitted")
+	pass
+
+func get_current_moveref() -> Dictionary:
+	return get("moveset")[batman.loaded_move_name]
+
+func update_current_moveref(moveref: Dictionary):
+	var temp_moveset: Dictionary = get("moveset")
+	temp_moveset[batman.loaded_move_name] = moveref
+	set("moveset", temp_moveset)
 	pass
 
 # ---

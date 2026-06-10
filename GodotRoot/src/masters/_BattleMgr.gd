@@ -354,9 +354,6 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	
 #	print("TURN: GPos data is:",grid_gpos)
 	
-	
-	
-		
 	return true
 	pass
 
@@ -490,6 +487,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 			loaded_move_name = loaded_actops[highlighted_actop]
 #			print("first move ",loaded_move_name)
 			loaded_move_ref = loaded_moveset_ref[loaded_move_name].duplicate(true)
+		curr_actor.prep_moveset_on_turn_start()
 	emit_signal("action_option_view_changed")
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
