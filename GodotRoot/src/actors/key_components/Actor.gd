@@ -673,9 +673,8 @@ func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: 
 	
 	# First, let's confirm attacker status
 	var attacker_is_real: bool = false
-	if utils.valid(attacker):
-		if attacker.alive_check():
-			attacker_is_real = true
+	if utils.actorpass(attacker):
+		attacker_is_real = true
 	
 	var major_impact: bool = (knockback_damage > 0 or !is_quiet)
 	

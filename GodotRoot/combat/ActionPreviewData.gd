@@ -78,8 +78,9 @@ func generate_cell_highlights():
 		y += 1
 		pass
 	
-	if !unique_cells.has(actor.coord):
-		unique_cells.append(actor.coord)
+	if utils.actorpass(actor):
+		if !unique_cells.has(actor.coord):
+			unique_cells.append(actor.coord)
 	
 	# Second, loop through in a specific priority order (first to last) and map each cell to a 'final' colour
 	var bads:   Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.BAD)
@@ -109,8 +110,7 @@ func generate_cell_highlights():
 
 func add_actor(new_actor, type: int):
 	if type >= ROWS.size() or type < 0: return
-	if !utils.valid(new_actor): return
-	if !new_actor.alive_check(): return
+	if !utils.actorpass(new_actor): return
 	###
 	
 	var cell_array: Array = sets.get_cell(COLS.CELL_ARRAY, type)

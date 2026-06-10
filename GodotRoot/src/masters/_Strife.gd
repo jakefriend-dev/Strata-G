@@ -59,13 +59,11 @@ func do_quiet_damage(attacker: Actor, defender: Actor, damage: int, flags: Array
 
 func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Array, is_quiet: bool):
 	if damage <= 0: return
-	if !utils.valid(defender): return # Attacker is allowed to be null, though!
-	if !defender.alive_check(): return # And dead!
+	if !utils.actorpass(defender): return # Attacker is allowed to be null, though!
 	
 	var attacker_is_real: bool = false
-	if utils.valid(attacker):
-		if attacker.alive_check():
-			attacker_is_real = true
+	if utils.actorpass(attacker):
+		attacker_is_real = true
 	
 	var friendly_fire: bool = true
 	if flags.has("skip_own_faction"): friendly_fire = false
@@ -206,8 +204,7 @@ func do_quiet_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: A
 
 func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array, is_quiet: bool):
 	if motion == Vector2.ZERO: return
-	if !utils.valid(defender): return # Attacker is allowed to be null, though!
-	if !defender.alive_check(): return # And dead!
+	if !utils.actorpass(defender): return # Attacker is allowed to be null, though!
 	
 	var og_motion: Vector2 = motion
 	if !support.is_motion_a_line(motion): # Just a safety check, SHOULD never actually happen
@@ -215,9 +212,8 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 		print("STRIFE: Had to line-ize incoming motion ",og_motion," into ",motion)
 	
 	var attacker_is_real: bool = false
-	if utils.valid(attacker):
-		if attacker.alive_check():
-			attacker_is_real = true
+	if utils.actorpass(attacker):
+		attacker_is_real = true
 	
 	var friendly_fire: bool = true
 	if flags.has("skip_own_faction"): friendly_fire = false
@@ -335,8 +331,7 @@ func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, f
 	if !batman.grid_actors.has_cellv(exact_coord): return
 	
 	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
-	if !utils.valid(victim): return
-	if !victim.alive_check(): return
+	if !utils.actorpass(victim): return
 	
 	var is_quiet: bool = flags.has("quiet")
 	
@@ -347,8 +342,7 @@ func extmotion_actor_at_coord(attacker: Actor, exact_coord: Vector2, motion: Vec
 	if !batman.grid_actors.has_cellv(exact_coord): return
 	
 	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
-	if !utils.valid(victim): return
-	if !victim.alive_check(): return
+	if !utils.actorpass(victim): return
 	
 	var is_quiet: bool = flags.has("quiet")
 	
@@ -504,9 +498,7 @@ func TILE_event_turn_ended_on(actor: Actor, coord: Vector2):
 
 # Precheck must be passed to bother engaging with anything else going on here
 func TILE_any_event_precheck(actor: Actor) -> bool:
-	if !utils.valid(actor): return false
-	
-	if !actor.alive_check(): return false
+	if !utils.actorpass(actor): return false
 	
 	if !actor.is_on_ground: return false
 	
@@ -674,8 +666,7 @@ func is_fixes_jagged_on_contact(actor: Actor) -> bool:
 	return true
 
 func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback; not ice sliding - this is important because it DOESN'T fall privy to the is_on_ground or weightclasses.HOVER checks like the others!
-	if !utils.valid(actor): return false
-	if !actor.alive_check(): return false
+	if !utils.actorpass(actor): return false
 	
 	if actor.is_unmovable: return false
 	if actor.weight == actor.weightclasses.HEAVY: return false

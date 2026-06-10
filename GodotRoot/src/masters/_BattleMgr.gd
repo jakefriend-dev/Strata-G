@@ -891,10 +891,9 @@ func monitor_action_processing_time(delta: float):
 
 func prompt_next_turntaker_action():
 	if combatstate == C_TURN:
-		if utils.valid(curr_actor):
-			if curr_actor.alive_check():
-				curr_actor.choose_action()
-				return
+		if utils.actorpass(curr_actor):
+			curr_actor.choose_action()
+			return
 		# Branch where current actor is no longer valid; most likely because it died mid-turn
 		end_turn()
 	pass
@@ -943,8 +942,7 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 
 func is_my_action(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
 	
-	if !utils.valid(actor): return false
-	if !actor.alive_check(): return false
+	if !utils.actorpass(actor): return false
 	if acting_actor != actor: return false
 	if !actor.active: return false
 	if combatstate != C_TURN: return false

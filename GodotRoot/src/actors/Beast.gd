@@ -283,7 +283,7 @@ func ACT_lunge_forward():
 			# For testing! Disables orthagonal damage, but instead pushes actors away!
 			var motion: Vector2 = target - coord
 			var victim: Actor = batman.grid_actors.get_cellv(target)
-			if utils.valid(victim): if victim.alive_check():
+			if utils.actorpass(victim):
 				if !support.is_tile_traversable_relative(victim, motion):
 					moved_actor_count += 1
 			

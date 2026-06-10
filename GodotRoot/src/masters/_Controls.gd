@@ -31,22 +31,21 @@ func monitor_inputs():
 		return
 	
 	# Misc dev things
-	if Input.is_action_just_pressed("dev_3"):
-		multi_input_lock = true
-		var actor: Actor = support.get_first_actor_by_name("Sniper")
-		if utils.valid(actor): if actor.alive_check():
-			actor.APD.clear()
-			actor.PREVIEW_yank(0)
-			print(actor.name," APD: ",actor.APD.sets)
-		return
+#	if Input.is_action_just_pressed("dev_3"):
+#		multi_input_lock = true
+#		var actor: Actor = support.get_first_actor_by_name("Sniper")
+#		if utils.actorpass(actor):
+#			actor.APD.clear()
+#			actor.PREVIEW_yank(0)
+#			print(actor.name," APD: ",actor.APD.sets)
+#		return
 	
 	# Mid-turn 'live' behaviour
 	if batman.combatstate == batman.C_TURN:
 		if inputstate != istates.READY_FOR_PLAYER_INPUT: return
 		
 		var actor: Actor = batman.curr_actor
-		if !utils.valid(actor): return
-		if !actor.alive_check(): return
+		if !utils.actorpass(actor): return
 		if not actor is ActorPlayer: return
 		
 		# Orthagonal movement
