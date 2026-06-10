@@ -20,7 +20,7 @@ func _ready():
 func prep_options_from_optionstring():
 	var moveset_ref: Dictionary = get("moveset") # Lives downstream at the local script level
 	
-	for opt in action_options: if opt is String: if opt != "":
+	for opt in moveset_ref.keys(): if opt is String: if opt != "":
 		var pstring: String = str("PREVIEW_",opt)
 		var astring: String = str("ACT_",opt)
 		
@@ -32,21 +32,39 @@ func prep_options_from_optionstring():
 		if !moveset_ref.has(opt):
 			print(name,": MAJOR error; ",opt," is not in our moveset!")
 			continue
-		for key in ["display_name", "display_desc", "options", "cost", "cooldown", "initial_cooldown", "uses_per_turn", "uses_per_battle"]:
+		for key in ["display_name", "display_desc", "options", "cost", "on_use_cooldown", "initial_cooldown", "uses_per_turn", "uses_per_battle", "req_APDpass", "current_cooldown", "current_turn_uses", "current_battle_uses"]:
 			var badflag: bool = false
 			if !moveset_ref[opt].has(key):
 				print(name,": MAJOR error; ",opt," is set up incorrectly in our moveset; missing key ",key)
 				badflag = true
 				break
 			if badflag: continue
+			
 		if valid_action_options.has(opt):
 			print(name,": MAJOR error; ",opt," is already in our keys list! No dupes!")
 			continue
 		
-		valid_action_options.append(opt)
 		moveset_ref[opt]["keyref"] = opt # Cyclic reference, so that WITHIN the dictionary you also have its key
+		valid_action_options.append(opt)
 	
-	print(name," has validated options: ",valid_action_options)
+#	print(name," has validated options: ",valid_action_options)
+	pass
+
+func prep_moveset_on_battle_start():
+	var moveset_ref: Dictionary = get("moveset")
+	for key in moveset_ref.keys():
+		moveset_ref[key]["current_turn_uses"] = 0
+		moveset_ref[key]["current_battle_uses"] = 0
+		moveset_ref[key]["current_cooldown"] = moveset_ref[key]["initial_cooldown"]
+	pass
+
+func prep_moveset_on_turn_start():
+	var moveset_ref: Dictionary = get("moveset")
+	for key in moveset_ref.keys():
+		var cooldown: int = moveset_ref[key]["current_cooldown"]
+		if cooldown > 0:
+			cooldown -= 1
+			moveset_ref[key]["current_cooldown"] = cooldown
 	pass
 
 func run_actop_preview():
@@ -64,6 +82,9 @@ func run_actop_preview():
 			call(pstring, batman.highlighted_sub_actop)
 		
 		APD.generate_cell_highlights()
+		pass
+	
+	APD.ready_to_use = is_player_action_usable()
 	
 	batman.emit_signal("new_action_preview_data_readied", APD)
 	pass
@@ -78,6 +99,35 @@ func run_actop_preview():
 
 # ---
 
+func is_player_action_usable() -> bool:
+	if !batman.player_input_validation_checks(): return false
+	if batman.curr_actor != self: return false
+	
+	var moveref: Dictionary = batman.loaded_move_ref # Not duplicating, so FYI linked!
+	
+	var COST: int = moveref["cost"]
+	if !can_afford(COST):
+		print(name," can't afford ",COST,"-AP for ",moveref["keyref"])
+		return false
+	
+	if moveref["current_cooldown"] > 0:
+		print(name," still on cooldown for ",moveref["current_cooldown"]," turns: ",moveref["keyref"])
+		return false
+	if moveref["req_APDpass"] and !APD.passfail:
+		print(name," needs APD pass for ",moveref["keyref"])
+		return false
+	if moveref["uses_per_turn"] > 0:
+		if moveref["current_turn_uses"] >= moveref["uses_per_turn"]:
+			print(name," already maxed per-turn uses of ",moveref["keyref"])
+			return false
+	if moveref["uses_per_battle"] > 0:
+		if moveref["current_battle_uses"] >= moveref["uses_per_battle"]:
+			print(name," already maxed per-battle uses of ",moveref["keyref"])
+			return false
+	
+	return true
+	pass
+
 func attempt_player_char_move(motion: Vector2):
 	if !can_afford(COST_WALK): return
 	if !support.is_tile_traversable_relative(self, motion): return
@@ -91,12 +141,16 @@ func attempt_player_char_move(motion: Vector2):
 	pass
 
 func attempt_player_char_action():
-	var moveref: Dictionary = batman.loaded_move_ref # Not duplicating, so FYI linked!
-	var COST: int = moveref["cost"]
-	if !can_afford(COST): return
+	if !is_player_action_usable(): return
 	
-	# Should be valid, then!
-	spend(COST)
+	# Should be valid, then! Adjust our stats/values first
+	var moveref: Dictionary = batman.loaded_move_ref # Not duplicating, so FYI linked!
+	spend(moveref["cost"])
+	moveref["current_cooldown"] = 0+moveref["on_use_cooldown"]
+	moveref["current_turn_uses"] = 1+moveref["current_turn_uses"]
+	moveref["current_battle_uses"] = 1+moveref["current_battle_uses"]
+	
+	# Now execute!
 	if moveref["options"] == 0:
 			batman.append_action(self, batman.loaded_move_name)
 	else:

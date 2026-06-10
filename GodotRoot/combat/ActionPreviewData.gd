@@ -38,6 +38,7 @@ enum COLS { # LEFT TO RIGHT
 var affected_actors: Array = [] # All of em! Just for reference.
 var unique_cells: Array = []
 var passfail: bool = false # Default false; only mark it true when, you know, true
+var ready_to_use: bool = false # Default false; only mark it true when it is VALID TO PICK AND USE
 
 # ---
 
@@ -49,6 +50,7 @@ func initialize():
 
 func clear():
 	passfail = false
+	ready_to_use = false
 	unique_cells.clear()
 	affected_actors.clear()
 	
