@@ -30,7 +30,7 @@ const moveset: Dictionary = {
 		"display_desc": "Shoot the first unit in your line of sight. Weak, but convenient.",
 		"options": 0, # Typically 0 but could be an infinite number
 		"cost": 1,
-		"on_use_cooldown": 2, # 0 = no cooldown; 1 = after using, you cannot use it the next 1 turns
+		"on_use_cooldown": 0, # 0 = no cooldown; 1 = after using, you cannot use it the next 1 turns
 		"initial_cooldown": 0, # Turns required until ability is first usable
 		"uses_per_turn": 0, # 0 = infinite; any positive int = limited
 		"uses_per_battle": 0, # As above, but in total all fight
@@ -42,7 +42,7 @@ const moveset: Dictionary = {
 	
 	"yank": {
 		"display_name": "Yank-Back",
-		"display_desc": "Grab the nearest unit in your line of sight, and yank it towards you (and maybe to the side).",
+		"display_desc": "Grab the nearest unit in your line of sight, and yank it towards you (and maybe to the side) Won't yank Heavy units.",
 		"options": 2, # Typically 0 but could be an infinite number
 		"cost": 1,
 		"on_use_cooldown": 0, # 0 = no cooldown; 1 = after using, you cannot use it the next 1 turns
@@ -139,11 +139,17 @@ func PREVIEW_yank(option: int): # Options are 0, 1, 2
 	if option == 2: check_vector += Vector2.DOWN
 	var check_coord: Vector2 = victim.coord + check_vector
 	
-	if support.is_tile_traversable_exact(victim, check_coord): # Success case!
-		APD.add_arrow(victim.coord, check_coord, acols.NEUTRAL)
-		APD.passfail = true
-	else:
+	if !support.is_tile_traversable_exact(victim, check_coord):
 		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
+		return
+	
+	if !strife.is_affected_by_force(victim):
+		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
+		return
+	
+	# Success case!
+	APD.add_arrow(victim.coord, check_coord, acols.NEUTRAL)
+	APD.passfail = true
 	pass
 
 func ACT_yank(option: int):
