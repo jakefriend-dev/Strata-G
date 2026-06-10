@@ -76,19 +76,17 @@ func monitor_inputs():
 		# Select a new move/option
 		if Input.is_action_just_pressed("player_cycle_next"):
 			multi_input_lock = true
-			batman.cycle_player_actops_forward()
+			if Input.is_action_pressed("player_modifier_skills"):
+				batman.cycle_player_actop_subops_forward()
+			else:
+				batman.cycle_player_actops_forward()
 			return
 		if Input.is_action_just_pressed("player_cycle_prev"):
 			multi_input_lock = true
-			batman.cycle_player_actops_backward()
-			return
-		if Input.is_action_just_pressed("player_subcycle_next"):
-			multi_input_lock = true
-			batman.cycle_player_actop_subops_forward()
-			return
-		if Input.is_action_just_pressed("player_subcycle_prev"):
-			multi_input_lock = true
-			batman.cycle_player_actop_subops_backward()
+			if Input.is_action_pressed("player_modifier_skills"):
+				batman.cycle_player_actop_subops_backward()
+			else:
+				batman.cycle_player_actops_backward()
 			return
 		
 		# End turn

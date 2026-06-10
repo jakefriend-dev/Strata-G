@@ -44,11 +44,12 @@ var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rocket
 
 # For player actors only!
 var loaded_actops: Array = []
-var loaded_moveset_ref: Dictionary = {}
-var loaded_move_ref: Dictionary = {}
+var loaded_moveset_ref: Dictionary = {} # The entire moveset
+var loaded_move_ref: Dictionary = {} # Just the details of the chosen move
+var loaded_move_name: String = "" # Just the *name* of the chosen move
 var highlighted_actop: int = 0 # The actually selected ability
 var highlighted_sub_actop: int = 0 # If there are variants for the ability, cycles through them
-signal update_action_selector()
+signal action_option_view_changed()
 
 const BASE_HP_FACTOR: int = 4
 
@@ -483,11 +484,11 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		loaded_actops = curr_actor.get("moveset").keys()
 		if !loaded_actops.empty():
 			loaded_moveset_ref = curr_actor.get("moveset").duplicate(true)
-			print(loaded_moveset_ref)
-			var first_move: String = loaded_actops[highlighted_actop]
-			print("first move ",first_move)
-			loaded_move_ref = loaded_moveset_ref[first_move].duplicate(true)
-	emit_signal("update_action_selector")
+#			print(loaded_moveset_ref)
+			loaded_move_name = loaded_actops[highlighted_actop]
+#			print("first move ",loaded_move_name)
+			loaded_move_ref = loaded_moveset_ref[loaded_move_name].duplicate(true)
+	emit_signal("action_option_view_changed")
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
@@ -699,10 +700,10 @@ func cycle_player_actops_forward():
 		highlighted_actop = 0
 	highlighted_sub_actop = 0
 	
-	var this_movekey: String = loaded_actops[highlighted_actop]
-	loaded_move_ref = loaded_moveset_ref[this_movekey].duplicate(true)
+	loaded_move_name = loaded_actops[highlighted_actop]
+	loaded_move_ref = loaded_moveset_ref[loaded_move_name].duplicate(true)
 	
-	emit_signal("update_action_selector")
+	emit_signal("action_option_view_changed")
 	pass
 
 func cycle_player_actops_backward():
@@ -713,10 +714,10 @@ func cycle_player_actops_backward():
 		highlighted_actop = loaded_actops.size()-1
 	highlighted_sub_actop = 0
 	
-	var this_movekey: String = loaded_actops[highlighted_actop]
-	loaded_move_ref = loaded_moveset_ref[this_movekey].duplicate(true)
+	loaded_move_name = loaded_actops[highlighted_actop]
+	loaded_move_ref = loaded_moveset_ref[loaded_move_name].duplicate(true)
 	
-	emit_signal("update_action_selector")
+	emit_signal("action_option_view_changed")
 	pass
 
 func cycle_player_actop_subops_forward():
@@ -726,7 +727,10 @@ func cycle_player_actop_subops_forward():
 	if highlighted_sub_actop > loaded_move_ref["options"]:
 		highlighted_sub_actop = 0
 	
-	emit_signal("update_action_selector")
+	if loaded_move_ref["options"] > 0:
+		print("suboption ",highlighted_sub_actop," chosen")
+	
+	emit_signal("action_option_view_changed")
 	pass
 
 func cycle_player_actop_subops_backward():
@@ -736,7 +740,10 @@ func cycle_player_actop_subops_backward():
 	if highlighted_sub_actop < 0:
 		highlighted_sub_actop = loaded_move_ref["options"] # "options" is zero-based fwiw
 	
-	emit_signal("update_action_selector")
+	if loaded_move_ref["options"] > 0:
+		print("suboption ",highlighted_sub_actop," chosen")
+	
+	emit_signal("action_option_view_changed")
 	pass
 
 func vet_action(action: Array) -> bool:
@@ -928,9 +935,10 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	loaded_actops = []
 	loaded_moveset_ref = {}
 	loaded_move_ref = {}
+	loaded_move_name = ""
 	highlighted_actop = 0
 	highlighted_sub_actop = 0
-	emit_signal("update_action_selector")
+	emit_signal("action_option_view_changed")
 	pass
 
 func is_my_action(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!

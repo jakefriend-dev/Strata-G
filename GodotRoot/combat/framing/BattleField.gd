@@ -47,7 +47,7 @@ func _ready():
 	batman.connect("set_up_board", self, "set_up_board")
 	batman.connect("populate_gpos_data", self, "populate_gpos_data")
 	batman.connect("populate_actors", self, "populate_actors")
-	batman.connect("update_action_selector", self, "update_action_selector")
+	batman.connect("action_option_view_changed", self, "update_action_selector")
 	pass
 
 func set_up_board():

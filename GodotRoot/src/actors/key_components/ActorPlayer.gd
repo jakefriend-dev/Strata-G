@@ -13,6 +13,7 @@ var valid_action_options: Array = []
 func _ready():
 #	batman.connect("pre_turn_setup", self, "check_for_action_options")
 	prep_options_from_optionstring()
+	batman.connect("action_option_view_changed", self, "run_actop_preview")
 	pass
 
 func prep_options_from_optionstring():
@@ -42,8 +43,23 @@ func prep_options_from_optionstring():
 			continue
 		
 		valid_action_options.append(opt)
+		moveset_ref[opt]["keyref"] = opt # Cyclic reference, so that WITHIN the dictionary you also have its key
 	
 	print(name," has validated options: ",valid_action_options)
+	pass
+
+func run_actop_preview():
+	if batman.curr_actor != self: return
+	if !batman.player_input_validation_checks(): return
+	
+	APD.clear()
+	
+	var pstring: String = str("PREVIEW_",batman.loaded_move_name)
+	print(pstring)
+	if has_method(pstring):
+		call(pstring, batman.highlighted_sub_actop)
+		
+		APD.generate_cell_highlights()
 	pass
 
 #func check_for_action_options(who: Actor):

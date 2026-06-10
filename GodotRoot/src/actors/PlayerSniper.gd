@@ -109,6 +109,7 @@ func ACT_longshot():
 	pass
 
 func PREVIEW_yank(option: int): # Options are 0, 1, 2
+	print("Preview yank!")
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(coord, my_facing)
 	if !unoccupieds.empty():
 		APD.add_arrow(coord, unoccupieds.back(), acols.PASS)
@@ -129,6 +130,7 @@ func PREVIEW_yank(option: int): # Options are 0, 1, 2
 	else:
 		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
 	
+	print(APD.sets)
 	pass
 
 func ACT_yank():
