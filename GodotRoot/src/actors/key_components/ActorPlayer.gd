@@ -90,13 +90,18 @@ func attempt_player_char_move(motion: Vector2):
 	submit_player_action()
 	pass
 
-func attempt_player_char_basicattack():
-	var COST: int = staple_cost
+func attempt_player_char_action():
+	var moveref: Dictionary = batman.loaded_move_ref # Not duplicating, so FYI linked!
+	var COST: int = moveref["cost"]
 	if !can_afford(COST): return
 	
 	# Should be valid, then!
 	spend(COST)
-	batman.append_action(self, "staple_attack")
+	if moveref["options"] == 0:
+			batman.append_action(self, batman.loaded_move_name)
+	else:
+		batman.append_action(self, batman.loaded_move_name, [batman.highlighted_sub_actop])
+	
 	submit_player_action()
 	pass
 

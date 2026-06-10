@@ -47,55 +47,58 @@ func monitor_inputs():
 		var actor: Actor = batman.curr_actor
 		if !utils.actorpass(actor): return
 		if not actor is ActorPlayer: return
+		inputcheck_player_combat_turn(actor)
+		return
 		
-		# Orthagonal movement
-		if Input.is_action_just_pressed("player_move_up"):
-			multi_input_lock = true
-			actor.attempt_player_char_move(Vector2.UP)
-			return
-		if Input.is_action_just_pressed("player_move_down"):
-			multi_input_lock = true
-			actor.attempt_player_char_move(Vector2.DOWN)
-			return
-		if Input.is_action_just_pressed("player_move_left"):
-			multi_input_lock = true
-			actor.attempt_player_char_move(Vector2.LEFT)
-			return
-		if Input.is_action_just_pressed("player_move_right"):
-			multi_input_lock = true
-			actor.attempt_player_char_move(Vector2.RIGHT)
-			return
-		
-		# Use the currently selected attack (and option)
-		if Input.is_action_just_pressed("player_select"):
-			multi_input_lock = true
-			actor.attempt_player_char_basicattack()
-			return
-		
-		# Select a new move/option
-		if Input.is_action_just_pressed("player_cycle_next"):
-			multi_input_lock = true
-			if Input.is_action_pressed("player_modifier_skills"):
-				batman.cycle_player_actop_subops_forward()
-			else:
-				batman.cycle_player_actops_forward()
-			return
-		if Input.is_action_just_pressed("player_cycle_prev"):
-			multi_input_lock = true
-			if Input.is_action_pressed("player_modifier_skills"):
-				batman.cycle_player_actop_subops_backward()
-			else:
-				batman.cycle_player_actops_backward()
-			return
-		
-		# End turn
-		if Input.is_action_just_pressed("player_complete"):
-			multi_input_lock = true
-			actor.emit_signal("player_action_submitted")
-			return
 	pass
 
-
+func inputcheck_player_combat_turn(actor: ActorPlayer):
+	# Orthagonal movement
+	if Input.is_action_just_pressed("player_move_up"):
+		multi_input_lock = true
+		actor.attempt_player_char_move(Vector2.UP)
+		return
+	if Input.is_action_just_pressed("player_move_down"):
+		multi_input_lock = true
+		actor.attempt_player_char_move(Vector2.DOWN)
+		return
+	if Input.is_action_just_pressed("player_move_left"):
+		multi_input_lock = true
+		actor.attempt_player_char_move(Vector2.LEFT)
+		return
+	if Input.is_action_just_pressed("player_move_right"):
+		multi_input_lock = true
+		actor.attempt_player_char_move(Vector2.RIGHT)
+		return
+	
+	# Use the currently selected attack (and option)
+	if Input.is_action_just_pressed("player_select"):
+		multi_input_lock = true
+		actor.attempt_player_char_action()
+		return
+	
+	# Select a new move/option
+	if Input.is_action_just_pressed("player_cycle_next"):
+		multi_input_lock = true
+		if Input.is_action_pressed("player_modifier_skills"):
+			batman.cycle_player_actop_subops_forward()
+		else:
+			batman.cycle_player_actops_forward()
+		return
+	if Input.is_action_just_pressed("player_cycle_prev"):
+		multi_input_lock = true
+		if Input.is_action_pressed("player_modifier_skills"):
+			batman.cycle_player_actop_subops_backward()
+		else:
+			batman.cycle_player_actops_backward()
+		return
+	
+	# End turn
+	if Input.is_action_just_pressed("player_complete"):
+		multi_input_lock = true
+		actor.emit_signal("player_action_submitted")
+		return
+	pass
 
 
 

@@ -21,7 +21,7 @@ const moveset: Dictionary = {
 #		"uses_per_battle": 0, # As above, but in total all fight
 #	},
 	
-	"basic_attack": {
+	"basic_shot": {
 		"display_name": "Weak Shot",
 		"display_desc": "Shoot the first unit in your line of sight. Weak, but convenient.",
 		"options": 0, # Typically 0 but could be an infinite number
@@ -123,15 +123,38 @@ func PREVIEW_yank(option: int): # Options are 0, 1, 2
 	if option == 2: check_vector += Vector2.DOWN
 	var check_coord: Vector2 = victim.coord + check_vector
 	
-	if support.is_tile_traversable_exact(victim, check_coord):
+	if support.is_tile_traversable_exact(victim, check_coord): # Success case!
 		APD.add_arrow(victim.coord, check_coord, acols.NEUTRAL)
 		APD.passfail = true
 	else:
 		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
-	
 	pass
 
-func ACT_yank():
+func ACT_yank(option: int):
 	# We KNOW there' a victim, because if there wasn't, we couldn't have passed the preview check
 	var victim: Actor = APD.get_actor_by_type(acols.NEUTRAL)
+	
+	# Data setup!
+	var motion: Vector2 = their_facing
+	if option == 1: motion += Vector2.UP
+	if option == 2: motion += Vector2.DOWN
+	
+	var dest_coord: Vector2 = victim.coord + motion
+	if !support.is_tile_traversable_exact(victim, dest_coord):
+		dest_coord = victim.coord
+	
+	# Visuals!
+	strife.quick_effect(victim, "spark_burst")
+	
+	yield(utils.yt(0.25, self), "timeout")
+	if !batman.is_my_action(self): return
+	
+	strife.quick_effect(victim, "dust")
+	if dest_coord != victim.coord:
+		victim.ACT_be_external_motioned(motion, 0, self, false)
+	
+	yield(utils.yt(0.375, self), "timeout")
+	if !batman.is_my_action(self): return
+	
+	end_action()
 	pass

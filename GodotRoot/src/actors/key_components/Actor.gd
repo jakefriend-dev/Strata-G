@@ -667,7 +667,7 @@ func ACT_walk(motion: Vector2):
 	pass
 
 # This action is always auto-constructed by Strife; we do not manually call this
-func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: Actor, is_quiet: bool, flags: Array):
+func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: Actor, is_quiet: bool, flags: Array = []):
 	
 	# (Note, this action is only called if there IS motion - if there's ONLY knockback, it's bypassed entirely for immediate damage)
 	
@@ -710,7 +710,7 @@ func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: 
 			attacker.emit_signal("moved_other_actor", self, motion)
 		emit_signal("was_moved_by_external", motion)
 	
-	print("ready to moved with motion ",motion," and KD ",knockback_damage," and dur1 ",dur1," and dur2 ",dur2)
+#	print("ready to moved with motion ",motion," and KD ",knockback_damage," and dur1 ",dur1," and dur2 ",dur2)
 	
 	# For getting hurt, we want two tweens, actually! And apply damage on impact
 	if knockback_damage > 0:

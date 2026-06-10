@@ -21,7 +21,7 @@ const moveset: Dictionary = {
 #		"uses_per_battle": 0, # As above, but in total all fight
 #	},
 	
-	"basic_attack": {
+	"basic_shot": {
 		"display_name": "Simple Shot",
 		"display_desc": "Shoot the first unit in your line of sight.",
 		"options": 0, # Typically 0 but could be an infinite number

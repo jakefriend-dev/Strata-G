@@ -93,7 +93,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	if !is_quiet:
 		defender.emit_signal("on_phys_combat_any_contact")
-		strife.quick_effect(defender, "spark_burst")
+		quick_effect(defender, "spark_burst")
 	
 	# Check for shield bypass
 	var piercing: bool = flags.has("piercing")
@@ -134,12 +134,12 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 				defender.emit_signal("on_shield_broken_through", is_melee)
 				if attacker_is_real:
 					attacker.emit_signal("on_broke_through_someones_shield", defender, is_melee)
-				strife.quick_effect(defender, "shield_broken")
+				quick_effect(defender, "shield_broken")
 			else:
 				# Shield broken but held
 				if attacker_is_real:
 					attacker.emit_signal("on_shield_broken_held", is_melee)
-				strife.quick_effect(defender, "blocked")
+				quick_effect(defender, "blocked")
 			pass
 	# Unless things are quiet, in which case... nope!
 	
@@ -164,7 +164,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 		impacted_damage += 1
 	
 	if !is_quiet:
-		strife.quick_effect(defender, "damage", impacted_damage)
+		quick_effect(defender, "damage", impacted_damage)
 		if attacker_is_real:
 			attacker.emit_signal("on_wounded_someone", defender, is_melee)
 	
@@ -315,7 +315,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 		if attacker_is_real:
 			attacker.emit_signal("knockback_damaged_other_actor", self, knockback_damage)
 		defender.emit_signal("was_knockback_damaged_by_external", knockback_damage)
-		strife.do_impact_damage(attacker, defender, knockback_damage, flags)
+		do_impact_damage(attacker, defender, knockback_damage, flags)
 		return
 	
 	# The is_quiet signalling actually needs to happen when the ACTION STEP begins, not the moment (mid-attacker's action step) this connects - and dealing damage needs to wait until the motion ends! So for now, just create the reaction and forward the details to there.
@@ -379,7 +379,12 @@ func quick_effect(actor_or_coord, effect: String, variant = null):
 		"debuff": # Implies somewhat persistent
 			pass
 		
-		"dust":
+		"spark_burst":
+			spawn_effect_on_actor(actor_or_coord, "spark_burst", false)
+			pass
+		
+		"dust": # This one needs to be a tile coord
+			if actor_or_coord is Actor: actor_or_coord = actor_or_coord.coord
 			spawn_effect_on_tile(actor_or_coord, "dust_cloud", false)
 	pass
 
@@ -526,7 +531,7 @@ func get_tilestring_as_int(tilestring: String) -> int:
 func TILE_started_on_HOT(actor: Actor, _coord: Vector2):
 	# Gain 1 AP - fire immunity doesn't matter here, you get the upside regardless
 	
-	strife.quick_effect(actor, "quick_good")
+	quick_effect(actor, "quick_good")
 	actor.add_bonus_actions(1)
 	pass
 
