@@ -42,6 +42,14 @@ var round_count: int = 0 # per entire cycle of turns
 var total_turns_taken: int = 0
 var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rockets, then they all die, the next one would be Rocket_4 forever, and the turnqueue would still know Rocket_2 died
 
+# For player actors only!
+var loaded_actops: Array = []
+var loaded_moveset_ref: Dictionary = {}
+var loaded_move_ref: Dictionary = {}
+var highlighted_actop: int = 0 # The actually selected ability
+var highlighted_sub_actop: int = 0 # If there are variants for the ability, cycles through them
+signal update_action_selector()
+
 const BASE_HP_FACTOR: int = 4
 
 var turncount: int = 0 # Starts at 1 for first turn and cycles upwards until resetting
@@ -457,7 +465,10 @@ func cycle_to_next_turn():
 	# Final setup! We've cleared validations!
 	
 #	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
-	
+	pre_prep_new_turn()
+	pass
+
+func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	field.update_targeting()
 	flush_actionqueue()
 	field.update_turn_display()
@@ -468,6 +479,12 @@ func cycle_to_next_turn():
 		if curr_actor.has_method("pre_turn_setup"):
 			curr_actor.call("pre_turn_setup")
 	
+	if curr_actor is ActorPlayer:
+		loaded_actops = curr_actor.get("moveset").keys()
+		if !loaded_actops.empty():
+			loaded_moveset_ref = curr_actor.get("moveset").duplicate(true)
+			loaded_move_ref = loaded_move_ref[loaded_actops[highlighted_actop]].duplicate(true)
+	emit_signal("update_action_selector")
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
@@ -664,6 +681,48 @@ func get_printable_turntaker_name(turndata: Dictionary) -> String:
 
 ### Action management
 
+func cycle_player_actops_forward():
+	if loaded_actops.empty(): return
+	
+	highlighted_actop += 1
+	if highlighted_actop >= loaded_actops.size():
+		highlighted_actop = 0
+	highlighted_sub_actop = 0
+	
+	emit_signal("update_action_selector")
+	pass
+
+func cycle_player_actops_backward():
+	if loaded_actops.empty(): return
+	
+	highlighted_actop -= 1
+	if highlighted_actop < 0:
+		highlighted_actop = loaded_actops.size()-1
+	highlighted_sub_actop = 0
+	
+	emit_signal("update_action_selector")
+	pass
+
+func cycle_player_actop_subops_forward():
+	if loaded_actops.empty(): return
+	
+	highlighted_sub_actop += 1
+	if highlighted_sub_actop > loaded_move_ref["options"]:
+		highlighted_sub_actop = 0
+	
+	emit_signal("update_action_selector")
+	pass
+
+func cycle_player_actop_subops_backward():
+	if loaded_actops.empty(): return
+	
+	highlighted_sub_actop -= 1
+	if highlighted_sub_actop < 0:
+		highlighted_sub_actop = loaded_move_ref["options"] # "options" is zero-based fwiw
+	
+	emit_signal("update_action_selector")
+	pass
+
 func vet_action(action: Array) -> bool:
 	# We expect 2-3 values: A valid actor, a valid method in that actor's script, and *optionally*, an array of param data for the method. The array is allowed to be missing or empty, and can have whatever in it. HOWEVER, in any situation where no paramset is sent, we add an empty array for consistency. A validated action DOES have 3 params.
 	
@@ -849,6 +908,12 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	curr_action = []
 	prev_action = []
 	last_execution_frame = -1
+	
+	loaded_actops = []
+	loaded_moveset_ref = {}
+	loaded_move_ref = {}
+	highlighted_actop = 0
+	highlighted_sub_actop = 0
 	pass
 
 func is_my_action(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!

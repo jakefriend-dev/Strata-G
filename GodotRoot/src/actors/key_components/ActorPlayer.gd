@@ -8,19 +8,16 @@ export (Array, String) var action_options: Array = ["staple_attack"]
 export (Dictionary) var test2: Dictionary
 var valid_action_options: Array = []
 
-
-
-var highlighted_actop: int = 0 # The actually selected ability
-var highlighted_sub_actop: int = 0 # If there are variants for the ability, cycles through them
-
 # ---
 
 func _ready():
-	batman.connect("pre_turn_setup", self, "check_for_action_options")
+#	batman.connect("pre_turn_setup", self, "check_for_action_options")
 	prep_options_from_optionstring()
 	pass
 
 func prep_options_from_optionstring():
+	var moveset_ref: Dictionary = get("moveset") # Lives downstream at the local script level
+	
 	for opt in action_options: if opt is String: if opt != "":
 		var pstring: String = str("PREVIEW_",opt)
 		var astring: String = str("ACT_",opt)
@@ -30,19 +27,29 @@ func prep_options_from_optionstring():
 		if !has_method(astring):
 			print(name,": MAJOR error; does not have ",astring," method, action is ineligible!")
 			continue
+		if !moveset_ref.has(opt):
+			print(name,": MAJOR error; ",opt," is not in our moveset!")
+			continue
+		for key in ["display_name", "display_desc", "options", "cost", "cooldown", "initial_cooldown", "uses_per_turn", "uses_per_battle"]:
+			var badflag: bool = false
+			if !moveset_ref[opt].has(key):
+				print(name,": MAJOR error; ",opt," is set up incorrectly in our moveset; missing key ",key)
+				badflag = true
+				break
+			if badflag: continue
 		
 		valid_action_options.append(opt)
 	
 	print(name," has validated options: ",valid_action_options)
 	pass
 
-func check_for_action_options(who: Actor):
-	if who != self: return
-	if batman.curr_actor != self: return # Redundant, but why not
-	
-	# We are the actor! Prep our things
-	
-	pass
+#func check_for_action_options(who: Actor):
+#	if who != self: return
+#	if batman.curr_actor != self: return # Redundant, but why not
+#
+#	# We are the actor! Prep our things
+#
+#	pass
 
 # ---
 

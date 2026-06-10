@@ -44,6 +44,7 @@ func _ready():
 	batman.connect("set_up_board", self, "set_up_board")
 	batman.connect("populate_gpos_data", self, "populate_gpos_data")
 	batman.connect("populate_actors", self, "populate_actors")
+	batman.connect("update_action_selector", self, "update_action_selector")
 	pass
 
 func set_up_board():
@@ -250,7 +251,7 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 
 # -
 
-func populate_action_selector():
+func update_action_selector():
 	pass
 
 func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:
