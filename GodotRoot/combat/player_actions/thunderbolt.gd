@@ -1,6 +1,6 @@
 extends PlayerAction
 
-func PREVIEW(option: int):
+func PREVIEW():
 	
 	var check_vector: Vector2 = actor.my_facing
 	if option == 1: check_vector += Vector2.UP
@@ -17,7 +17,7 @@ func PREVIEW(option: int):
 	APD.passfail = true
 	pass
 
-func ACT(option: int):
+func ACT():
 	# Shoot a target in your line-of-sight; higher damage per tile travelled
 	var victim: Actor = APD.get_actor_by_type(acols.BAD)
 	var dmg: int = 0

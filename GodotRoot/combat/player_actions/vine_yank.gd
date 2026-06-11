@@ -1,6 +1,6 @@
 extends PlayerAction
 
-func PREVIEW(option: int): # Options are 0, 1, 2
+func PREVIEW(): # Options are 0, 1, 2
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, actor.my_facing)
 	if !unoccupieds.empty():
 		APD.add_arrow(actor.coord, unoccupieds.back(), acols.PASS)
@@ -28,7 +28,7 @@ func PREVIEW(option: int): # Options are 0, 1, 2
 	APD.passfail = true
 	pass
 
-func ACT(option: int):
+func ACT():
 	# We KNOW there' a victim, because if there wasn't, we couldn't have passed the preview check
 	var victim: Actor = APD.get_actor_by_type(acols.NEUTRAL)
 	

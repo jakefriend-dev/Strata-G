@@ -266,7 +266,7 @@ func update_action_selector():
 	var index: int = -1
 	for key in batman.loaded_actops:
 		index += 1 # Zero-based
-		var formal: String = batman.loaded_moveset_ref[key]["display_name"]
+		var formal: String = batman.loaded_move.display_name
 		if index == batman.highlighted_actop:
 			current = str("* ",formal)
 			continue

@@ -40,6 +40,8 @@ enum acols {  # TOP TO BOTTOM
 	ERROR    # When an actor blocks a movement from playing out, eg
 }
 
+var option: int # Shortcut that gets updated against batman.highlighted_subactop
+
 # ---
 
 func _init():
@@ -49,18 +51,23 @@ func _init():
 	pass
 
 func log_use():
-	current_battle_uses += 1
-	current_turn_uses += 1
+	actor.spend(cost)
+	
 	if on_use_cooldown > 0:
 		current_cooldown = (on_use_cooldown + 1) # Adds 1 to account for current turn
+	
+	current_battle_uses += 1
+	current_turn_uses += 1
 	pass
 
 func end_action():
 	actor.end_action()
 	pass
 
+var pref: String = "["
+var suff: String = "]"
 func _to_string() -> String:
 	if resource_name != "":
-		return resource_name
-	return utils.get_resource_name(self)
+		return str(pref,resource_name,suff)
+	return str(pref,utils.get_resource_name(self),suff)
 	pass
