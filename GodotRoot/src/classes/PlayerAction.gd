@@ -1,5 +1,5 @@
 extends Resource
-class_name PlayerAction
+class_name PlayerAction # Change this to StandaloneAction? or similar...?
 
 # Make sure all TRES files extending this script is set as local to scene, so it can be used by multiple actors!
 
@@ -29,11 +29,23 @@ var current_battle_uses: int = 0
 
 export var req_successful_preview: bool = false
 
-var actor: Actor # Just a handy quickref
+# Quickrefs!
+var actor: Actor
+var APD: ActionPreviewData
+enum acols {  # TOP TO BOTTOM
+	BAD,     # Negative effect, like a debuff OR just plain damage
+	GOOD,    # Positive effect, like a buff
+	NEUTRAL, # Repositioning
+	PASS,    # Shooting through an empty tile
+	ERROR    # When an actor blocks a movement from playing out, eg
+}
 
 # ---
 
-func _ready():
+func _init():
+#	if resource_name == "":
+#		resource_name = utils.get_resource_name(self)
+#	print(resource_name)
 	pass
 
 func log_use():
@@ -41,4 +53,14 @@ func log_use():
 	current_turn_uses += 1
 	if on_use_cooldown > 0:
 		current_cooldown = (on_use_cooldown + 1) # Adds 1 to account for current turn
+	pass
+
+func end_action():
+	actor.end_action()
+	pass
+
+func _to_string() -> String:
+	if resource_name != "":
+		return resource_name
+	return utils.get_resource_name(self)
 	pass

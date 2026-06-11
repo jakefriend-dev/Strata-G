@@ -1,0 +1,17 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://combat/player_actions/thunderbolt.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+display_name = "Thunderbolt"
+display_desc = "Zap the first unit in your line of sight. Deals more damage the further away the target is (1 damage per EMPTY tile crossed), minimum 0 if target is adjacent."
+options = 2
+option_desc = "Changes angle of attack."
+cost = 2
+on_use_cooldown = 1
+initial_cooldown = 0
+misc = ""
+uses_per_turn = 0
+uses_per_battle = 0
+req_successful_preview = false

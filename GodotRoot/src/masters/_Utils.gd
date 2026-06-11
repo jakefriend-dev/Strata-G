@@ -23,6 +23,22 @@ func does_file_exist(path):
 		
 	return tf
 
+func get_resource_name(r: Resource) -> String:
+	if r.resource_name != "":
+		return r.resource_name
+	
+	var path: String = r.resource_path
+#	print(path)
+	for seg in path.split("/"): if seg is String:
+		if seg.find(".tres") != -1:
+			seg = seg.replace(".tres","")
+#			r.resource_name = seg.to_lower() # Does nothing because it doesn't save!
+			
+			return seg.to_upper()
+	
+	return "ERROR"
+	pass
+
 func yt(dur: float, caller, disrespect_pause: bool = false) -> YTimer:
 
 	var ytimer = YTimer.new()

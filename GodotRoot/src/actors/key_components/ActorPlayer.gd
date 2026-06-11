@@ -1,78 +1,115 @@
 extends Actor
 class_name ActorPlayer
 
-var staple_attack: String
-var staple_cost: int = 1
-
-export (Array, String) var action_options: Array = ["staple_attack"]
-export (Array, Resource) var test3: Array
-var valid_action_options: Array = []
+var moveset: Dictionary = {} # Post-validation
+export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null, null]
 
 # ---
 
 func _ready():
 #	batman.connect("pre_turn_setup", self, "check_for_action_options")
-	prep_options_from_optionstring()
+	load_moves()
+#	prep_options_from_optionstring()
 	prep_moveset_on_battle_start()
 	batman.connect("action_option_view_changed", self, "run_actop_preview")
 	batman.connect("action_step_complete", self, "run_actop_preview")
 	pass
 
+func load_moves():
+	for move in loaded_moves: if move != null: if move is PlayerAction:
+		# Basic setup first!
+		if move.resource_name == "":
+			move.resource_name = utils.get_resource_name(move)
+		move.set_local_to_scene(true)
+		move.actor = self
+		move.APD = APD
+		
+		if !move.has_method("PREVIEW"):
+			print(name," can't find PREVIEW() method for move ",move,"! Soft error")
+#			continue
+		if !move.has_method("ACT"):
+			print(name," can't load move ",move,", no ACT() method!")
+			continue
+		if moveset.has(move.resource_name):
+			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
+			continue
+		
+		moveset[move.resource_name] = move
+		pass
+	
+	print("ALL loaded moves in moveset are: ",moveset)
+	pass
+
 func prep_options_from_optionstring():
-	var moveset_ref: Dictionary = get("moveset") # Lives downstream at the local script level
-	
-	for opt in moveset_ref.keys(): if opt is String: if opt != "":
-		var pstring: String = str("PREVIEW_",opt)
-		var astring: String = str("ACT_",opt)
-		
-		if !has_method(pstring):
-			print(name,": Minor error; does not have ",pstring," method, preview will show nothing!")
-		if !has_method(astring):
-			print(name,": MAJOR error; does not have ",astring," method, action is ineligible!")
-			continue
-		if !moveset_ref.has(opt):
-			print(name,": MAJOR error; ",opt," is not in our moveset!")
-			continue
-		for key in ["display_name", "display_desc", "options", "cost", "on_use_cooldown", "initial_cooldown", "uses_per_turn", "uses_per_battle", "req_APDpass", "current_cooldown", "current_turn_uses", "current_battle_uses"]:
-			var badflag: bool = false
-			if !moveset_ref[opt].has(key):
-				print(name,": MAJOR error; ",opt," is set up incorrectly in our moveset; missing key ",key)
-				badflag = true
-				break
-			if badflag: continue
-			
-		if valid_action_options.has(opt):
-			print(name,": MAJOR error; ",opt," is already in our keys list! No dupes!")
-			continue
-		
-		moveset_ref[opt]["keyref"] = opt # Cyclic reference, so that WITHIN the dictionary you also have its key
-		valid_action_options.append(opt)
-	
-#	print(name," has validated options: ",valid_action_options)
+#	var moveset_ref: Dictionary = get("moveset") # Lives downstream at the local script level
+#
+#	for opt in moveset_ref.keys(): if opt is String: if opt != "":
+#		var pstring: String = str("PREVIEW_",opt)
+#		var astring: String = str("ACT_",opt)
+#
+##		if !has_method(pstring):
+##			print(name,": Minor error; does not have ",pstring," method, preview will show nothing!")
+##		if !has_method(astring):
+##			print(name,": MAJOR error; does not have ",astring," method, action is ineligible!")
+##			continue
+##		if !moveset_ref.has(opt):
+##			print(name,": MAJOR error; ",opt," is not in our moveset!")
+##			continue
+#		for key in ["display_name", "display_desc", "options", "cost", "on_use_cooldown", "initial_cooldown", "uses_per_turn", "uses_per_battle", "req_APDpass", "current_cooldown", "current_turn_uses", "current_battle_uses"]:
+#			var badflag: bool = false
+#			if !moveset_ref[opt].has(key):
+#				print(name,": MAJOR error; ",opt," is set up incorrectly in our moveset; missing key ",key)
+#				badflag = true
+#				break
+#			if badflag: continue
+#
+#		if valid_action_options.has(opt):
+#			print(name,": MAJOR error; ",opt," is already in our keys list! No dupes!")
+#			continue
+#
+#		moveset_ref[opt]["keyref"] = opt # Cyclic reference, so that WITHIN the dictionary you also have its key
+#		valid_action_options.append(opt)
+#
+##	print(name," has validated options: ",valid_action_options)
 	pass
 
 func prep_moveset_on_battle_start():
-	var moveset_ref: Dictionary = get("moveset")
+	for move in moveset: if move is PlayerAction:
+		move.current_turn_uses = 0
+		move.current_battle_uses = 0
+		if move.initial_cooldown > 0:
+			move.current_cooldown = 1 + move.initial_cooldown # +1 to offset start of 1st turn
+		else:
+			move.current_cooldown = 0
+		pass
 	
-	for key in moveset_ref.keys():
-		moveset_ref[key]["current_turn_uses"] = 0
-		moveset_ref[key]["current_battle_uses"] = 0
-		moveset_ref[key]["current_cooldown"] = 0+moveset_ref[key]["initial_cooldown"]
-	
-	set("moveset", moveset_ref)
+#	var moveset_ref: Dictionary = get("moveset")
+#
+#	for key in moveset_ref.keys():
+#		moveset_ref[key]["current_turn_uses"] = 0
+#		moveset_ref[key]["current_battle_uses"] = 0
+#		moveset_ref[key]["current_cooldown"] = 0+moveset_ref[key]["initial_cooldown"]
+#
+#	set("moveset", moveset_ref)
 	pass
 
 func prep_moveset_on_turn_start():
-	var moveset_ref: Dictionary = get("moveset")
+	for move in moveset: if move is PlayerAction:
+		if move.current_cooldown > 0:
+			move.current_cooldown -= 0
+			print("Cooldown ticked down for ",move,": now ",move.current_cooldown)
+		pass
 	
-	for key in moveset_ref.keys():
-		var cooldown: int = moveset_ref[key]["current_cooldown"]
-		if cooldown > 0:
-			cooldown -= 1
-			print("Cooldown ticked down for ",key,", now ",cooldown)
-			moveset_ref[key]["current_cooldown"] = cooldown
-	
-	set("moveset", moveset_ref)
+#	var moveset_ref: Dictionary = get("moveset")
+#
+#	for key in moveset_ref.keys():
+#		var cooldown: int = moveset_ref[key]["current_cooldown"]
+#		if cooldown > 0:
+#			cooldown -= 1
+#			print("Cooldown ticked down for ",key,", now ",cooldown)
+#			moveset_ref[key]["current_cooldown"] = cooldown
+#
+#	set("moveset", moveset_ref)
 	pass
 
 func run_actop_preview():
@@ -188,27 +225,3 @@ func update_current_moveref(moveref: Dictionary):
 	pass
 
 # ---
-
-func ACT_staple_attack():
-	call(str("ACT_"+staple_attack))
-	pass
-
-func ACT_basic_shot():
-	var victim = support.find_nearest_actor_in_dir(coord, Vector2.RIGHT)
-	if victim == null:
-		end_action()
-		return
-	
-	strife.damage_actor_at_coord(self, victim.coord, base_damage)
-	
-	end_action()
-	pass
-
-func ACT_basic_melee():
-	var exact_coord: Vector2 = coord + Vector2.RIGHT
-	
-	strife.damage_actor_at_coord(self, exact_coord, base_damage)
-	
-	end_action()
-	pass
-
