@@ -5,7 +5,7 @@ var staple_attack: String
 var staple_cost: int = 1
 
 export (Array, String) var action_options: Array = ["staple_attack"]
-export (Dictionary) var test2: Dictionary
+export (Array, Resource) var test3: Array
 var valid_action_options: Array = []
 
 # ---
@@ -153,7 +153,12 @@ func attempt_player_char_action():
 	
 	# Should be valid, then! Adjust our stats/values first
 	var moveref: Dictionary = get_current_moveref() # Not duplicating, so FYI linked!
-	spend(moveref["cost"])
+	var COST: int = moveref["cost"]
+#	if !can_afford(COST): return
+	
+#	print("going to spend ",COST,"-AP when ",action_points,"-AP remain")
+	
+	spend(COST)
 	if moveref["on_use_cooldown"] > 0:
 		moveref["current_cooldown"] = 1+moveref["on_use_cooldown"] # +1 to neutralize rest of turn!
 	moveref["current_turn_uses"] = 1+moveref["current_turn_uses"]
@@ -183,20 +188,6 @@ func update_current_moveref(moveref: Dictionary):
 	pass
 
 # ---
-
-#func ACT_basic_move(dir: Vector2):
-##	var actor: Actor = get_actor()
-##	print(actor.name,": executing basic move")
-#
-#	var exact_coord: Vector2 = coord + dir
-#	var dur: float = 0.125
-#
-#	hotmove(exact_coord, dur)
-#	yield(utils.yt(dur, self), "timeout")
-#	if !batman.is_my_action(self): return
-#
-#	end_action()
-#	pass
 
 func ACT_staple_attack():
 	call(str("ACT_"+staple_attack))

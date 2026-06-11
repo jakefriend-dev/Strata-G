@@ -37,7 +37,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "PlayerAction",
 "language": "GDScript",
-"path": "res://combat/player_actions/masters/PlayerAction.gd"
+"path": "res://src/classes/PlayerAction.gd"
 }, {
 "base": "Node",
 "class": "YPing",
