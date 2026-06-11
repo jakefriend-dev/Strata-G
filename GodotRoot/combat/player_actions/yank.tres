@@ -5,10 +5,10 @@
 [resource]
 resource_local_to_scene = true
 script = ExtResource( 1 )
-display_name = "Yank-Back"
-display_desc = "Grab the nearest unit in your line of sight, and yank it towards you (and maybe to the side). Won't affect Heavy units."
+display_name = "Vine Yank"
+display_desc = "Grab the nearest unit in your line of sight, and yank it closer. Won't affect Heavy units."
 options = 2
-option_desc = "Change angle of unit yanking"
+option_desc = "Changes the yank-back angle."
 cost = 1
 on_use_cooldown = 0
 initial_cooldown = 0

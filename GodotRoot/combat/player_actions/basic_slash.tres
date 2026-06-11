@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource( 1 )
-display_name = "Simple Shot"
-display_desc = "Shoot the first unit in your line of sight for 2 damage. Pierces shields."
-options = 0
-option_desc = ""
+display_name = "Slash"
+display_desc = "Make a strong attack against a melee-range target for 3 damage."
+options = 3
+option_desc = "Changes angle of attack."
 cost = 2
 on_use_cooldown = 0
 initial_cooldown = 0

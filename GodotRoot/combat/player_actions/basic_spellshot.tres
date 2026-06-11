@@ -5,10 +5,10 @@
 [resource]
 resource_local_to_scene = true
 script = ExtResource( 1 )
-display_name = "Basic Snipe"
+display_name = "Magic Dart"
 display_desc = "Shoot the first unit in your line of sight for 1 damage. Weak, but convenient."
 options = 2
-option_desc = "Changes angle of aim."
+option_desc = "Changes angle of attack."
 cost = 1
 on_use_cooldown = 0
 initial_cooldown = 0

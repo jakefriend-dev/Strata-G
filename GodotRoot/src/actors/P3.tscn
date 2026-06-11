@@ -4,7 +4,7 @@
 [ext_resource path="res://art/actors/artificer.png" type="Texture" id=2]
 [ext_resource path="res://src/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
-[ext_resource path="res://combat/player_actions/basic_snipe.tres" type="Resource" id=5]
+[ext_resource path="res://combat/player_actions/basic_spellshot.tres" type="Resource" id=5]
 [ext_resource path="res://combat/player_actions/longshot.tres" type="Resource" id=6]
 [ext_resource path="res://combat/player_actions/yank.tres" type="Resource" id=7]
 
@@ -117,7 +117,7 @@ ofc_name = "Sniper"
 faction = 1
 def_weight = 1
 action_options = [ "staple_attack", "longshot", "yank" ]
-test3 = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), null, null ]
+test3 = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), null, null, null, null, null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
