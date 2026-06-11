@@ -491,11 +491,11 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		else:
 			print("player char ",curr_actor.name," has literally no set moveset!")
 		curr_actor.prep_moveset_on_turn_start()
-	emit_signal("action_option_view_changed")
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
 	combatstate = C_TURN
+	emit_signal("action_option_view_changed")
 	strife.TILE_event_turn_started_on(curr_actor, curr_actor.coord)
 	curr_actor.choose_action()
 	pass
@@ -781,9 +781,19 @@ func vet_action(action: Array) -> bool:
 		return false
 	
 	# Actors need to have the action in their script OR class chain
-	if !actor.has_method(str("ACT_"+methodname)):
-		print("BATMAN: vet_action(",action,") failed: Actor does not have method in its script or class-chain")
-		return false
+	var player_move_flag: bool = (actor is ActorPlayer && methodname != "walk")
+	if player_move_flag:
+		if !actor.moveset.has(methodname):
+			print("BATMAN: vet_action(",action,") failed: ActorPlayer does not have a move called ",methodname," in its moveset!")
+			return false
+		var move: PlayerAction = actor.moveset[methodname]
+		if !move.has_method("ACT"):
+			print("BATMAN: vet_action(",action,") failed: ActorPlayer's move ",move," does not have ACT() method!")
+			return false
+	else: # Player walking, or any enemy action
+		if !actor.has_method(str("ACT_"+methodname)):
+			print("BATMAN: vet_action(",action,") failed: Actor does not have method in its script or class-chain")
+			return false
 	
 	if action.size() == 3:
 		if not action[2] is Array:
@@ -838,6 +848,8 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	# Final checks on if the actor is STILL valid, given some delays since vet_action()
 	var unvalidated_action: Array = action_queue.pop_front()
 	var actor: Actor = unvalidated_action[0]
+	
+	# We're actually NOT calling utils.actorpass() here, because it might be useful to let actors do a final "on death" action!
 	if !utils.valid(actor):
 		end_action()
 		return
@@ -855,28 +867,44 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	actions_are_processing = true
 	
 	# Gather data...
+	var player_flag: bool = (curr_actor is ActorPlayer)
+	
 	var raw_methodname: String = curr_action[1]
 	var methodname: String = str("ACT_"+raw_methodname)
+	var logname: String = raw_methodname
 	var paramset: Array = curr_action[2]
-	acting_actor = actor
-	if !actor.has_method(methodname):
-		print("MAJOR ERROR! A non-player character does not have the called method ",methodname,"()")
+	
+	# Check that there's a method that can be called!
+	var caller = curr_actor
+	if player_flag:
+		if raw_methodname != "walk":
+			methodname = "ACT"
+			caller = loaded_move
+			logname = loaded_move.display_name
+	if !caller.has_method(methodname):
+		print("MAJOR ERROR! ",curr_actor.ofc_name," (or its move) does not have the called method ",methodname,"()")
 		
 		pass
 	
+	# Validation cleared!
+	acting_actor = actor # For async ref
+	
 	# Log the action BEFORE executing
-	var logline: String = str("[",actor.ofc_name,"] ",raw_methodname)
+	var logline: String = str("[",actor.ofc_name,"] --> ",logname)
 	update_action_log(logline)
 	emit_signal("any_actionstep_initiated")
 	
 	# Execute!
 	if paramset.empty():
-		actor.call(methodname)
+		caller.call(methodname)
 	else:
 		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
-		actor.callv(methodname, paramset)
+		caller.callv(methodname, paramset)
 	
 	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
+	pass
+
+func get_actionstep_method_name():
 	pass
 
 func update_action_log(new_logline: String):

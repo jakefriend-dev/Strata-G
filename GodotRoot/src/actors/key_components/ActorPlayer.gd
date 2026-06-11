@@ -135,10 +135,11 @@ func attempt_player_char_action():
 	move.log_use()
 	
 	# Now execute!
-	if move.options == 0:
-		batman.append_action(self, str(move))
-	else:
-		batman.append_action(self, str(move), [batman.highlighted_sub_actop])
+	batman.append_action(self, move.resource_name)
+#	if move.options == 0:
+#		batman.append_action(self, move.resource_name)
+#	else:
+#		batman.append_action(self, move.resource_name, [batman.highlighted_sub_actop])
 	
 	submit_player_action()
 	pass
