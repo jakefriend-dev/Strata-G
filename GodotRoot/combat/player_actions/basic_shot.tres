@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource( 1 )
 display_name = "Simple Shot"
-display_desc = "Shoot the first unit in your line of sight for 2 damage."
+display_desc = "Shoot the first unit in your line of sight for 2 damage. Pierces shields."
 options = 0
 option_desc = ""
 cost = 2

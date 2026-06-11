@@ -194,7 +194,7 @@ func ACT_staple_attack():
 	pass
 
 func ACT_basic_shot():
-	var victim: Actor = support.find_nearest_actor_in_dir(coord, Vector2.RIGHT)
+	var victim = support.find_nearest_actor_in_dir(coord, Vector2.RIGHT)
 	if victim == null:
 		end_action()
 		return
