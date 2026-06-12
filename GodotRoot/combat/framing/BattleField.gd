@@ -19,8 +19,6 @@ var board_offset: Vector2
 
 const CELL_SIZE: Vector2 = Vector2(72, 48)
 
-enum {} # put hover, fire, etc states here - one value per current state AND default of that state
-
 # ---
 
 func _ready():
