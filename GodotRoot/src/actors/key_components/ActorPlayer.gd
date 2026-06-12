@@ -94,7 +94,7 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 		if do_print: print(name," can't afford ",move.cost,"-AP for ",move)
 		return false
 	if move.current_cooldown > 0:
-		if do_print: print(name," still on cooldown for ",move.current_cooldown," turns: ",move)
+		if do_print: print(name," still on cooldown for ",move.current_cooldown-1," turns: ",move) # -1 because it resets on start of 0th turn
 		return false
 	if move.req_successful_preview and !move.passfail:
 		if do_print: print(name," needs preview pass for ",move)
