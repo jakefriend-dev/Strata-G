@@ -115,8 +115,6 @@ func attempt_player_char_move(motion: Vector2):
 	if !can_afford(COST_WALK): return
 	if !support.is_tile_traversable_relative(self, motion): return
 	
-#	var exact_coord: Vector2 = coord + motion
-	
 	# Should be valid, then!
 	spend(COST_WALK)
 	batman.append_action(self, "walk", [motion])
@@ -136,10 +134,6 @@ func attempt_player_char_action():
 	
 	# Now execute!
 	batman.append_action(self, move.resource_name)
-#	if move.options == 0:
-#		batman.append_action(self, move.resource_name)
-#	else:
-#		batman.append_action(self, move.resource_name, [batman.highlighted_sub_actop])
 	
 	submit_player_action()
 	pass

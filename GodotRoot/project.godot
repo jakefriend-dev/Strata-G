@@ -37,7 +37,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "MoveAction",
 "language": "GDScript",
-"path": "res://src/classes/_PlayerAction.gd"
+"path": "res://src/classes/_MoveAction.gd"
 }, {
 "base": "Node",
 "class": "YPing",
