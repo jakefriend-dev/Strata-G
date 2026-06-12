@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://combat/move_actions/MS_big_slash.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+display_name = "Wide Slash"
+display_desc = "Make a strong attack against 3 nearby targets for 3 damage each."
+options = 3
+option_desc = "Changes angle of slash."
+cost = 3
+action_type = 0
+on_use_cooldown = 0
+initial_cooldown = 0
+misc = ""
+uses_per_turn = 0
+uses_per_battle = 0
+req_successful_preview = false

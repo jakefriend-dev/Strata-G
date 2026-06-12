@@ -18,7 +18,8 @@ var faction: int = -1
 
 func _ready():
 	batman.connect("update_all_tiletypes", self, "update_tiletype")
-	batman.connect("targeted_tiles_updated", self, "update_targeting")
+#	batman.connect("targeted_tiles_updated", self, "update_targeting")
+	batman.connect("new_action_preview_data_readied", self, "update_cell_highlighting_temp")
 	pass
 
 func update_tiletype(): # Visual only; data is already handled
@@ -36,6 +37,25 @@ func update_targeting():
 	
 	if self_modulate != to_smod:
 		self_modulate = to_smod
+	pass
+
+func update_cell_highlighting_temp(move: MoveAction):
+	var to_col: Color
+	
+	if !move.unique_cells.has(coord):
+		to_col = Color.gray
+		to_col.a = 0.75
+	else:
+		var index: int = -1
+		for ea in move.ROWS.size():
+			index += 1 # 0-based
+			var list: Array = move.sets.get_cell(move.COLS.DISPLAY_CELLS, index)
+			if list.has(coord):
+				to_col = move.colors[index]
+				break
+		to_col.a = 0.5
+	
+	self_modulate = to_col
 	pass
 
 func set_depth_tint(max_row: int):

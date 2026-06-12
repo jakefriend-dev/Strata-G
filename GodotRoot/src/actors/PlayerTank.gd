@@ -1,5 +1,11 @@
 extends ActorPlayer
 
+
+# Note to self, reaction slash is broken & maybe should be rebuilt
+
+
+
+
 # ---
 
 func _ready():

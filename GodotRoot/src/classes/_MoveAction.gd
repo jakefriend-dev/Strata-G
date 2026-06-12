@@ -294,7 +294,6 @@ func get_first_cell_by_MPD_type(type: int, use_arrowcells = false) -> Vector2:
 	if cells.empty(): return Vector2.ZERO # Should never happen - you only add cells to this AFTER validating, and if you have no cells to work with in the preview you shouldn't be allowed to get further.
 	return cells.front()
 	pass
-		
 
 func get_all_cells_by_MPD_type(type: int, use_arrowcells = false) -> Array:
 	if use_arrowcells:
