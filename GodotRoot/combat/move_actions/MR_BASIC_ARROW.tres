@@ -2,7 +2,6 @@
 
 [ext_resource path="res://combat/move_actions/MS_basic_arrow.gd" type="Script" id=1]
 
-
 [resource]
 script = ExtResource( 1 )
 display_name = "Bowshot"

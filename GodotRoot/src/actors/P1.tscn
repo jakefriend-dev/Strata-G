@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/actors/PlayerLeader.gd" type="Script" id=1]
-[ext_resource path="res://art/actors/blue.png" type="Texture" id=2]
+[ext_resource path="res://art/actors/bird char mockups3.png" type="Texture" id=2]
 [ext_resource path="res://src/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
 [ext_resource path="res://combat/move_actions/MR_BASIC_ARROW.tres" type="Resource" id=5]
@@ -61,7 +61,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="P1" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 7
-ofc_name = "Wilder"
+ofc_name = "Brigand"
 base_action_points = 5
 base_damage = 2
 faction = 1
@@ -78,7 +78,8 @@ margin_right = 13.0
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )
-position = Vector2( 0, -28 )
+position = Vector2( -1, -24 )
+scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ArtMgr"]
