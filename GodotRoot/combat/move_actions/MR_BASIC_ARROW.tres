@@ -6,7 +6,7 @@
 script = ExtResource( 1 )
 display_name = "Bowshot"
 display_desc = "Shoot the first unit in your line of sight for 2 damage. Pierces shields."
-options = 2
+options = 3
 option_desc = "Changes angle of attack."
 cost = 2
 action_type = 0

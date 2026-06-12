@@ -3,8 +3,8 @@ extends MoveAction
 func PREVIEW():
 	
 	var check_vector: Vector2 = actor.my_facing
-	if variant == 1: check_vector += Vector2.UP
-	if variant == 2: check_vector += Vector2.DOWN
+	if variant == 2: check_vector += Vector2.UP
+	if variant == 3: check_vector += Vector2.DOWN
 	
 	var sighted: Array = support.get_all_tiles_in_dir(actor.coord, check_vector)
 	if !sighted.empty():
@@ -16,11 +16,6 @@ func PREVIEW():
 		if !utils.actorpass(victim): continue
 		add_actor(victim, ROWS.BAD)
 	
-#	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, check_vector)
-#	if !utils.actorpass(victim): return
-#
-#	add_actor(victim, ROWS.BAD)
-#	passfail = true
 	pass
 
 func ACT():

@@ -15,4 +15,4 @@ initial_cooldown = 0
 misc = ""
 uses_per_turn = 0
 uses_per_battle = 0
-req_successful_preview = false
+req_successful_preview = true

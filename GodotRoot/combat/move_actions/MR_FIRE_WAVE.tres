@@ -6,7 +6,7 @@
 script = ExtResource( 1 )
 display_name = "Fire Wave"
 display_desc = "Deals 1 fire damage to ALL units in a straight line, ignoring cover and piercing shields."
-options = 2
+options = 3
 option_desc = "Changes angle of attack."
 cost = 2
 action_type = 0

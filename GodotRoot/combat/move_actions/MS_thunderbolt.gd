@@ -3,8 +3,8 @@ extends MoveAction
 func PREVIEW():
 	
 	var check_vector: Vector2 = actor.my_facing
-	if variant == 1: check_vector += Vector2.UP
-	if variant == 2: check_vector += Vector2.DOWN
+	if variant == 2: check_vector += Vector2.UP
+	if variant == 3: check_vector += Vector2.DOWN
 	
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
 	if !unoccupieds.empty():

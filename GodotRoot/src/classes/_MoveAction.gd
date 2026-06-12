@@ -7,7 +7,7 @@ export var display_name: String
 export (String, MULTILINE) var display_desc: String
 var key: String # For "Yank-Shot" it's "yank" - whatever the resource name is. Just a convenient reference point; almost certainly a redundancy.
 
-export (int, 0, 8) var options: int = 0
+export (int, 1, 8) var options: int = 1
 export (String, MULTILINE) var option_desc: String
 
 export (int, 0, 8) var cost: int = 1
@@ -61,8 +61,9 @@ enum COLS { # LEFT TO RIGHT
 #	COLOR, # REMOVED; cheaper data-wise to reference a const rather than set it manually
 	ACTOR_ARRAY, # An array of Actors. Adding an Actor MUST add its cell. Only for later quick reference, though.
 	ARROW_ARRAY, # An array of Rect2s representing Line2Ds. The line travel data is stored as "size - position". Adding an arrow MUST add cells to the cell arrays.
-	CELL_ARRAY, # An array of Vector2s showing cells affeted by each colourtype. Can be added manually, via actor, or via arrow.
-	PRIORITY_CELLS, # An array of cells AFTER the priority function has been run, which will ensure that ALL listed cells in ALL cell arrays are unique and do not recur across the entire dataset
+	ALLCELL_ARRAY, # Cells determined by the arrows AND manual cells; kept separate just for easy processing of move actions keeping "legit" cells relevant; combined into display cells
+	CELL_ARRAY, # An array of Vector2s showing cells affeted by each colourtype. Can be added manually or via actor.
+	DISPLAY_CELLS, # An array of cells AFTER the priority function has been run, which will ensure that ALL listed cells in ALL cell arrays are unique and do not recur across the entire dataset
 }
 
 # You can either manually feed in a celldirectly, or manually feed in an actor (whose coord will auto-feed-in as a cell)
@@ -133,7 +134,7 @@ func generate_cell_highlights():
 	
 	var y: int = 0
 	for row in ROWS.size():
-		var cell_array: Array = sets.get_cell(COLS.CELL_ARRAY, y)
+		var cell_array: Array = sets.get_cell(COLS.ALLCELL_ARRAY, y)
 		for cell in cell_array:
 			if !unique_cells.has(cell):
 				unique_cells.append(cell)
@@ -145,11 +146,11 @@ func generate_cell_highlights():
 			unique_cells.append(actor.coord)
 	
 	# Second, loop through in a specific priority order (first to last) and map each cell to a 'final' colour
-	var bads:   Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.BAD)
-	var goods:  Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.GOOD)
-	var neuts:  Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.NEUTRAL)
-	var passes: Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.PASS)
-	var errs:   Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.ERROR)
+	var bads:   Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.BAD)
+	var goods:  Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.GOOD)
+	var neuts:  Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.NEUTRAL)
+	var passes: Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.PASS)
+	var errs:   Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.ERROR)
 	
 	# No duplicates, AND a fallbak case - we're covered!
 	for cell in unique_cells:
@@ -178,6 +179,10 @@ func add_actor(new_actor, type: int):
 	var cell_array: Array = sets.get_cell(COLS.CELL_ARRAY, type)
 	if !cell_array.has(new_actor.coord):
 		cell_array.append(new_actor.coord)
+	
+	var allcell_array: Array = sets.get_cell(COLS.ALLCELL_ARRAY, type)
+	if !allcell_array.has(new_actor.coord):
+		allcell_array.append(new_actor.coord)
 	
 	var actor_array: Array = sets.get_cell(COLS.ACTOR_ARRAY, type)
 	if !actor_array.has(new_actor):
@@ -218,19 +223,28 @@ func add_arrow(start_coord: Vector2, end_coord: Vector2, type: int, enforce_line
 	var step: Vector2 = motion.normalized()
 	var step_coord: Vector2 = start_coord
 	while !step_coord.is_equal_approx(end_coord):
-		add_cell(step_coord, type)
+		add_cell(step_coord.round(), type, true)
 		step_coord += step
 		if !batman.grid_tiles.has_cellv(step_coord): break
 	pass
 
-func add_cell(coord: Vector2, type: int):
+func add_cell(coord: Vector2, type: int, from_arrow: bool = false):
 	if type >= ROWS.size() or type < 0: return
 	if !batman.grid_tiles.has_cellv(coord): return
 	###
 	
-	var cell_array: Array = sets.get_cell(COLS.CELL_ARRAY, type)
+#	print("adding cell for ",actor)
+	
+	var cell_array: Array
+	if !from_arrow:
+		cell_array = sets.get_cell(COLS.CELL_ARRAY, type)
+	else:
+		cell_array = sets.get_cell(COLS.ALLCELL_ARRAY, type) # Keep arrow-based data separate
+	
 	if !cell_array.has(coord):
 		cell_array.append(coord)
+		if !from_arrow:
+			print("cell_array appending ",coord)
 	pass
 
 func add_cellset(coords: Array, type: int):
@@ -252,7 +266,7 @@ func add_priority_cell(coord: Vector2, type: int):
 	if !batman.grid_tiles.has_cellv(coord): return
 	###
 	
-	var cell_array: Array = sets.get_cell(COLS.PRIORITY_CELLS, type)
+	var cell_array: Array = sets.get_cell(COLS.DISPLAY_CELLS, type)
 	if !cell_array.has(coord):
 		cell_array.append(coord)
 	pass
@@ -270,3 +284,24 @@ func get_all_actors_by_MPD_type(type: int) -> Array:
 	var actor_array: Array = sets.get_cell(COLS.ACTOR_ARRAY, type)
 	return actor_array
 	pass
+
+func get_first_cell_by_MPD_type(type: int, use_arrowcells = false) -> Vector2:
+	var cells: Array
+	if use_arrowcells:
+		cells = sets.get_cell(COLS.ALLCELL_ARRAY, type)
+	else:
+		cells = sets.get_cell(COLS.CELL_ARRAY, type)
+	if cells.empty(): return Vector2.ZERO # Should never happen - you only add cells to this AFTER validating, and if you have no cells to work with in the preview you shouldn't be allowed to get further.
+	return cells.front()
+	pass
+		
+
+func get_all_cells_by_MPD_type(type: int, use_arrowcells = false) -> Array:
+	if use_arrowcells:
+		return sets.get_cell(COLS.ALLCELL_ARRAY, type)
+	return sets.get_cell(COLS.CELL_ARRAY, type)
+
+
+
+
+

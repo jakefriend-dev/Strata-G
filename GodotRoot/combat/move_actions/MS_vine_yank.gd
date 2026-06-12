@@ -17,8 +17,8 @@ func PREVIEW(): # Options are 0, 1, 2
 	add_actor(victim, ROWS.NEUTRAL)
 	
 	var check_vector: Vector2 = actor.their_facing
-	if variant == 1: check_vector += Vector2.UP
-	if variant == 2: check_vector += Vector2.DOWN
+	if variant == 2: check_vector += Vector2.UP
+	if variant == 3: check_vector += Vector2.DOWN
 	var check_coord: Vector2 = victim.coord + check_vector
 	
 	if !support.is_tile_traversable_exact(victim, check_coord):
@@ -43,8 +43,8 @@ func ACT():
 	
 	# Data setup!
 	var motion: Vector2 = actor.their_facing
-	if variant == 1: motion += Vector2.UP
-	if variant == 2: motion += Vector2.DOWN
+	if variant == 2: motion += Vector2.UP
+	if variant == 3: motion += Vector2.DOWN
 	
 	var dest_coord: Vector2 = victim.coord + motion
 	if !support.is_tile_traversable_exact(victim, dest_coord):

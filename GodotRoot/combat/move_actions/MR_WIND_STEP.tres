@@ -6,8 +6,8 @@
 script = ExtResource( 1 )
 display_name = "Wind Step"
 display_desc = "Move 1 tile diagonally. Allows user to conveniently move around an obstacle or hazard."
-options = 0
-option_desc = ""
+options = 4
+option_desc = "Changes angle of movement."
 cost = 2
 action_type = 1
 on_use_cooldown = 0
@@ -15,4 +15,4 @@ initial_cooldown = 0
 misc = ""
 uses_per_turn = 0
 uses_per_battle = 0
-req_successful_preview = false
+req_successful_preview = true

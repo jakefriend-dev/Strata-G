@@ -45,7 +45,7 @@ var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rocket
 var loaded_moveset: Array = []
 var loaded_move: MoveAction = null
 var loaded_m_index: int = 0 # The position we're "at" within the moveset list
-var loaded_m_variant: int = 0 # If there are variants for the ability, cycles through them
+var loaded_m_variant: int = 1 # If there are variants for the ability, cycles through them
 signal action_option_view_changed()
 signal new_action_preview_data_readied(MPD)
 
@@ -697,7 +697,7 @@ func cycle_player_actops_forward():
 	loaded_m_index += 1
 	if loaded_m_index >= loaded_moveset.size():
 		loaded_m_index = 0
-	loaded_m_variant = 0
+	loaded_m_variant = 1
 	
 	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
@@ -711,7 +711,7 @@ func cycle_player_actops_backward():
 	loaded_m_index -= 1
 	if loaded_m_index < 0:
 		loaded_m_index = loaded_moveset.size()-1
-	loaded_m_variant = 0
+	loaded_m_variant = 1
 	
 	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
@@ -724,9 +724,9 @@ func cycle_player_actop_subops_forward():
 	
 	loaded_m_variant += 1
 	if loaded_m_variant > loaded_move.options:
-		loaded_m_variant = 0
+		loaded_m_variant = 1
 	
-	if loaded_move.options > 0:
+	if loaded_move.options > 1:
 		print("suboption ",loaded_m_variant," chosen")
 	
 	emit_signal("action_option_view_changed")
@@ -736,10 +736,10 @@ func cycle_player_actop_subops_backward():
 	if !player_input_validation_checks(): return
 	
 	loaded_m_variant -= 1
-	if loaded_m_variant < 0:
-		loaded_m_variant = loaded_move.options # "options" is zero-based fwiw
+	if loaded_m_variant < 1:
+		loaded_m_variant = loaded_move.options
 	
-	if loaded_move.options > 0:
+	if loaded_move.options > 1:
 		print("suboption ",loaded_m_variant," chosen")
 	
 	emit_signal("action_option_view_changed")
@@ -962,7 +962,7 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	loaded_moveset = []
 	loaded_move = null
 	loaded_m_index = 0
-	loaded_m_variant = 0
+	loaded_m_variant = 1
 	emit_signal("action_option_view_changed")
 	pass
 

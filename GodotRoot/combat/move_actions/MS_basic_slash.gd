@@ -3,12 +3,8 @@ extends MoveAction
 func PREVIEW():
 	
 	var check_vector: Vector2 = actor.my_facing
-	if variant == 1: check_vector += Vector2.UP
-	if variant == 2: check_vector += Vector2.DOWN
-	
-#	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
-#	if !unoccupieds.empty():
-#		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
+	if variant == 2: check_vector += Vector2.UP
+	if variant == 3: check_vector += Vector2.DOWN
 	
 	var exact_coord: Vector2 = actor.coord + check_vector
 	if !batman.grid_actors.has_cellv(exact_coord):
