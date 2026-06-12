@@ -19,7 +19,7 @@ func PREVIEW():
 
 func ACT():
 	# Shoot a target in your line-of-sight; higher damage per tile travelled
-	var victim: Actor = get_actor_by_MPD_type(ROWS.BAD)
+	var victim: Actor = get_first_actor_by_MPD_type(ROWS.BAD)
 	var dmg: int = 0
 	var dist: int = 0
 	
@@ -42,13 +42,13 @@ func ACT():
 	# Distance is based off damage; adjacent to us is 0 damage and +1 per gap of space
 	if dist > 0: dmg = (dist - 1)
 	if dmg < 0: dmg = 0
-	print("longshot dist ",dist," so base dmg ",dmg)
+#	print("longshot dist ",dist," so base dmg ",dmg)
 	dmg *= batman.BASE_HP_FACTOR
 	
 	for cell in coord_path:
 		strife.quick_effect(cell, "spark_burst")
 	if utils.actorpass(victim):
-		strife.damage_actor_at_coord(actor, victim.coord, dmg)
+		strife.damage_actor_at_coord(actor, victim.coord, dmg, ["elem_ELEC"])
 		strife.quick_effect(victim, "spark_burstdamage")
 	
 	end_action()

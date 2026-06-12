@@ -12,6 +12,9 @@ export (String, MULTILINE) var option_desc: String
 
 export (int, 0, 8) var cost: int = 1
 
+enum restchecks {REST, MOVEMENT}
+export (restchecks) var action_type: int = restchecks.REST
+
 export (int, 0, 8) var on_use_cooldown: int = 0
 export (int, 0, 8) var initial_cooldown: int = 0
 var current_cooldown: int = 0
@@ -257,8 +260,13 @@ func add_priority_cell(coord: Vector2, type: int):
 # ---
 
 # Returns the FIRST Actor - only helpful if you expect there to only be one, for convenience
-func get_actor_by_MPD_type(type: int) -> Object:
+func get_first_actor_by_MPD_type(type: int) -> Object:
 	var actor_array: Array = sets.get_cell(COLS.ACTOR_ARRAY, type)
 	if actor_array.empty(): return null
 	return actor_array[0]
+	pass
+
+func get_all_actors_by_MPD_type(type: int) -> Array:
+	var actor_array: Array = sets.get_cell(COLS.ACTOR_ARRAY, type)
+	return actor_array
 	pass

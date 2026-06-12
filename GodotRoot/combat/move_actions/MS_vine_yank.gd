@@ -39,7 +39,7 @@ func PREVIEW(): # Options are 0, 1, 2
 
 func ACT():
 	# We KNOW there' a victim, because if there wasn't, we couldn't have passed the preview check
-	var victim: Actor = get_actor_by_MPD_type(ROWS.NEUTRAL)
+	var victim: Actor = get_first_actor_by_MPD_type(ROWS.NEUTRAL)
 	
 	# Data setup!
 	var motion: Vector2 = actor.their_facing

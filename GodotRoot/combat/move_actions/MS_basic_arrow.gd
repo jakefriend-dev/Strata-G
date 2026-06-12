@@ -19,7 +19,7 @@ func PREVIEW():
 
 func ACT():
 	# Shoot a target in your line-of-sight; higher damage per tile travelled
-	var victim: Actor = get_actor_by_MPD_type(ROWS.BAD)
+	var victim: Actor = get_first_actor_by_MPD_type(ROWS.BAD)
 	
 	if utils.actorpass(victim):
 		strife.damage_actor_at_coord(actor, victim.coord, 2*batman.BASE_HP_FACTOR, ["piercing"])

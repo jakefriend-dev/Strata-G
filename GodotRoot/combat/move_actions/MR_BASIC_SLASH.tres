@@ -9,6 +9,7 @@ display_desc = "Make a strong attack against a melee-range target for 3 damage."
 options = 2
 option_desc = "Changes angle of attack."
 cost = 2
+action_type = 0
 on_use_cooldown = 0
 initial_cooldown = 0
 misc = ""

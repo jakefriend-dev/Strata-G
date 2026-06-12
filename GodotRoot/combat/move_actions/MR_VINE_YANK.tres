@@ -10,6 +10,7 @@ display_desc = "Grab the nearest unit within 3 tiles and yank it closer. Won't a
 options = 2
 option_desc = "Changes angle of yank-back."
 cost = 1
+action_type = 0
 on_use_cooldown = 0
 initial_cooldown = 0
 misc = ""

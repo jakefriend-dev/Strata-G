@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://src/actors/PlayerSniper.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/bird char mockups1.png" type="Texture" id=2]
@@ -7,6 +7,10 @@
 [ext_resource path="res://combat/move_actions/MR_BASIC_SPELLSHOT.tres" type="Resource" id=5]
 [ext_resource path="res://combat/move_actions/MR_VINE_YANK.tres" type="Resource" id=6]
 [ext_resource path="res://combat/move_actions/MR_THUNDERBOLT.tres" type="Resource" id=7]
+[ext_resource path="res://combat/move_actions/MR_FIRE_WAVE.tres" type="Resource" id=8]
+[ext_resource path="res://combat/move_actions/MR_POISON_SPRAY.tres" type="Resource" id=9]
+[ext_resource path="res://combat/move_actions/MR_WATER_LOB.tres" type="Resource" id=10]
+[ext_resource path="res://combat/move_actions/MR_WIND_STEP.tres" type="Resource" id=11]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -116,7 +120,7 @@ max_health = 3
 ofc_name = "Mage"
 faction = 1
 def_weight = 1
-loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), null, null, null, null, null ]
+loaded_moves = [ ExtResource( 5 ), ExtResource( 11 ), ExtResource( 6 ), ExtResource( 10 ), ExtResource( 9 ), ExtResource( 7 ), ExtResource( 8 ), null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

@@ -1,14 +1,14 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://combat/move_actions/MS_basic_arrow.gd" type="Script" id=1]
+[ext_resource path="res://combat/move_actions/MS_water_lob.gd" type="Script" id=1]
 
 [resource]
 script = ExtResource( 1 )
-display_name = "Bowshot"
-display_desc = "Shoot the first unit in your line of sight for 2 damage. Pierces shields."
-options = 2
+display_name = "Water Lob (minor)"
+display_desc = "Throw a sphere of water in an arc at the target 3 tiles in front of you. Deals 1 water damage on impact."
+options = 1
 option_desc = "Changes angle of attack."
-cost = 2
+cost = 1
 action_type = 0
 on_use_cooldown = 0
 initial_cooldown = 0

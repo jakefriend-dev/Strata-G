@@ -1,6 +1,5 @@
 extends Node
 
-
 var default_halfboard_size: Vector2 = Vector2(3, 5)
 const DETERMINISTIC: bool = false # When true, randomness is not initiated
 

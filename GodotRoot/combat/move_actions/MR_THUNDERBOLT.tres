@@ -5,10 +5,11 @@
 [resource]
 script = ExtResource( 1 )
 display_name = "Thunderbolt"
-display_desc = "Zap the first unit in your line of sight. Deals more damage the further away the target is (1 damage per EMPTY tile crossed), minimum 0 if target is adjacent."
+display_desc = "Zap the first unit in your line of sight. Deals more elec damage the further away the target is (1 elec damage per EMPTY tile crossed), minimum 0 if target is adjacent."
 options = 2
 option_desc = "Changes angle of attack."
 cost = 2
+action_type = 0
 on_use_cooldown = 1
 initial_cooldown = 0
 misc = ""
