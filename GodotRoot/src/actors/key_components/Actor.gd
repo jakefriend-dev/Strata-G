@@ -26,6 +26,8 @@ export (initspeeds) var third_initiative: int = initspeeds.DOES_NOT_ACT
 	# An actor can optionally have up to 3 turns, for a boss; matching the party
 var variance_initiative: float  = -1.0 # Cued by batman at start of combat; percentage from 0-99%
 
+const global_moves: Array = ["walk", "be_external_motioned"]
+
 var APD: ActionPreviewData
 enum acols {  # TOP TO BOTTOM
 	BAD,     # Negative effect, like a debuff OR just plain damage
