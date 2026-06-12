@@ -322,9 +322,6 @@ func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:
 	tpos = tpos.floor()
 	tpos += Vector2(1, 1) # Always one-based!
 	
-#	var tile_position = world_position/override_grid_size
-#	tile_position = tile_position.floor()
-#	return tile_position
 	return tpos
 	pass
 
