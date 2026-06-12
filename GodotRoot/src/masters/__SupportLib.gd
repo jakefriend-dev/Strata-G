@@ -25,17 +25,20 @@ func get_all_tiles_in_dir(og_cell: Vector2, dir: Vector2) -> Array:
 	return coords_in_dir
 	pass
 
-func list_all_unoccupied_tiles_in_dir(og_cell: Vector2, dir: Vector2) -> Array:
+func list_all_unoccupied_tiles_in_dir(og_cell: Vector2, dir: Vector2, tile_limit: int = -1) -> Array:
 	if dir == Vector2.ZERO: return []
 	
 	var coords_in_dir: Array = []
 	var check_cell: Vector2 = og_cell
 	
+	var count: int = 0
 	while true:
 		check_cell += dir
 		if batman.grid_tiles.has_cellv(check_cell):
 			if !utils.valid(batman.grid_actors.get_cellv(check_cell)):
 				coords_in_dir.append(check_cell)
+				count += 1
+				if tile_limit > 0 and count == tile_limit: break
 				continue
 		break
 	
@@ -223,14 +226,18 @@ func can_see_PC_in_dir(og_coord: Vector2, dir: Vector2) -> bool:
 	return (find_nearest_PC_in_dir(og_coord, dir) != null)
 func can_see_ENEMY_in_dir(og_coord: Vector2, dir: Vector2) -> bool:
 	return (find_nearest_ENEMY_in_dir(og_coord, dir) != null)
-func find_nearest_PC_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
-	return find_nearest_actor_in_dir(og_coord, dir, batman.factions.PLAYER)
-func find_nearest_ENEMY_in_dir(og_coord: Vector2, dir: Vector2) -> Actor:
-	return find_nearest_actor_in_dir(og_coord, dir, batman.factions.ENEMY)
-func find_nearest_actor_in_dir(og_coord: Vector2, dir: Vector2, must_be_faction: int = -1) -> Actor:
-	var check_coord: Vector2 = og_coord
+func find_nearest_PC_in_dir(og_coord: Vector2, dir: Vector2, tile_limit: int = -1) -> Actor:
+	return find_nearest_actor_in_dir(og_coord, dir, tile_limit, batman.factions.PLAYER)
+func find_nearest_ENEMY_in_dir(og_coord: Vector2, dir: Vector2, tile_limit: int = -1) -> Actor:
+	return find_nearest_actor_in_dir(og_coord, dir, tile_limit, batman.factions.ENEMY)
+func find_nearest_actor_in_dir(og_coord: Vector2, dir: Vector2, tile_limit: int = -1, must_be_faction: int = -1) -> Actor:
 	
+	var check_coord: Vector2 = og_coord
+	var count: int = -1
 	while true:
+		count += 1 # Makes it 0-based
+		if tile_limit > 0 and count >= tile_limit: break
+		
 		check_coord += dir
 		if !batman.grid_actors.has_cellv(check_coord):
 			# Give up when we're OFF the grid as a failsafe

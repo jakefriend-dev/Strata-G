@@ -1,14 +1,18 @@
 extends MoveAction
 
+var DIST: int = 3
+
 func PREVIEW(): # Options are 0, 1, 2
-	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, actor.my_facing)
+	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, actor.my_facing, DIST)
 	if !unoccupieds.empty():
 		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
 	
-	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, actor.my_facing)
+	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, actor.my_facing, DIST)
 	if !utils.actorpass(victim):
 #		print("Yank preview fail; no victim")
 		return
+	
+	# If victim is within 3 tiles...
 	
 	add_actor(victim, ROWS.NEUTRAL)
 	
