@@ -40,7 +40,7 @@ enum acols {  # TOP TO BOTTOM
 	ERROR    # When an actor blocks a movement from playing out, eg
 }
 
-var option: int # Shortcut that gets updated against batman.highlighted_subactop
+var variant: int # Shortcut that gets updated against batman.highlighted_subactop
 
 # ---
 

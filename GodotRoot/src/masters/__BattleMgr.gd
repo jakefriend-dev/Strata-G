@@ -43,15 +43,10 @@ var total_turns_taken: int = 0
 var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rockets, then they all die, the next one would be Rocket_4 forever, and the turnqueue would still know Rocket_2 died
 
 # For player actors only!
-var loaded_actops: Array = []
+var loaded_moveset: Array = []
 var loaded_move: MoveAction = null
-#var loaded_moveset: Dictionary = {} # Not 100% sure we need this ref actually
-
-#var DEP_loaded_moveset_ref: Dictionary = {} # The entire moveset
-#var DEP_loaded_move_ref: Dictionary = {} # Just the details of the chosen move
-#var DEP_loaded_move_name: String = "" # Just the *name* of the chosen move
-var highlighted_actop: int = 0 # The actually selected ability
-var highlighted_sub_actop: int = 0 # If there are variants for the ability, cycles through them
+var loaded_m_index: int = 0 # The position we're "at" within the moveset list
+var loaded_m_variant: int = 0 # If there are variants for the ability, cycles through them
 signal action_option_view_changed()
 signal new_action_preview_data_readied(APD)
 
@@ -483,9 +478,9 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 			curr_actor.call("pre_turn_setup")
 	
 	if curr_actor is ActorPlayer:
-		loaded_actops = curr_actor.moveset.keys()
-		if !loaded_actops.empty():
-			var movename: String = loaded_actops[highlighted_actop]
+		loaded_moveset = curr_actor.moveset.keys()
+		if !loaded_moveset.empty():
+			var movename: String = loaded_moveset[loaded_m_index]
 			loaded_move = curr_actor.moveset[movename]
 			print("first move ",loaded_move)
 		else:
@@ -689,7 +684,7 @@ func get_printable_turntaker_name(turndata: Dictionary) -> String:
 ### Action management
 
 func player_input_validation_checks() -> bool:
-	if loaded_actops.empty(): return false
+	if loaded_moveset.empty(): return false
 	if not curr_actor is ActorPlayer: return false
 	if combatstate != C_TURN: return false
 	if !action_queue.empty(): return false
@@ -698,12 +693,12 @@ func player_input_validation_checks() -> bool:
 func cycle_player_actops_forward():
 	if !player_input_validation_checks(): return
 	
-	highlighted_actop += 1
-	if highlighted_actop >= loaded_actops.size():
-		highlighted_actop = 0
-	highlighted_sub_actop = 0
+	loaded_m_index += 1
+	if loaded_m_index >= loaded_moveset.size():
+		loaded_m_index = 0
+	loaded_m_variant = 0
 	
-	var movename: String = loaded_actops[highlighted_actop]
+	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
 	
 	emit_signal("action_option_view_changed")
@@ -712,12 +707,12 @@ func cycle_player_actops_forward():
 func cycle_player_actops_backward():
 	if !player_input_validation_checks(): return
 	
-	highlighted_actop -= 1
-	if highlighted_actop < 0:
-		highlighted_actop = loaded_actops.size()-1
-	highlighted_sub_actop = 0
+	loaded_m_index -= 1
+	if loaded_m_index < 0:
+		loaded_m_index = loaded_moveset.size()-1
+	loaded_m_variant = 0
 	
-	var movename: String = loaded_actops[highlighted_actop]
+	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
 	
 	emit_signal("action_option_view_changed")
@@ -726,12 +721,12 @@ func cycle_player_actops_backward():
 func cycle_player_actop_subops_forward():
 	if !player_input_validation_checks(): return
 	
-	highlighted_sub_actop += 1
-	if highlighted_sub_actop > loaded_move.options:
-		highlighted_sub_actop = 0
+	loaded_m_variant += 1
+	if loaded_m_variant > loaded_move.options:
+		loaded_m_variant = 0
 	
 	if loaded_move.options > 0:
-		print("suboption ",highlighted_sub_actop," chosen")
+		print("suboption ",loaded_m_variant," chosen")
 	
 	emit_signal("action_option_view_changed")
 	pass
@@ -739,12 +734,12 @@ func cycle_player_actop_subops_forward():
 func cycle_player_actop_subops_backward():
 	if !player_input_validation_checks(): return
 	
-	highlighted_sub_actop -= 1
-	if highlighted_sub_actop < 0:
-		highlighted_sub_actop = loaded_move.options # "options" is zero-based fwiw
+	loaded_m_variant -= 1
+	if loaded_m_variant < 0:
+		loaded_m_variant = loaded_move.options # "options" is zero-based fwiw
 	
 	if loaded_move.options > 0:
-		print("suboption ",highlighted_sub_actop," chosen")
+		print("suboption ",loaded_m_variant," chosen")
 	
 	emit_signal("action_option_view_changed")
 	pass
@@ -963,10 +958,10 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	prev_action = []
 	last_execution_frame = -1
 	
-	loaded_actops = []
+	loaded_moveset = []
 	loaded_move = null
-	highlighted_actop = 0
-	highlighted_sub_actop = 0
+	loaded_m_index = 0
+	loaded_m_variant = 0
 	emit_signal("action_option_view_changed")
 	pass
 
