@@ -32,22 +32,22 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Array2D",
 "language": "GDScript",
-"path": "res://src/classes/Array2D.gd"
+"path": "res://src/classes/_Array2D.gd"
 }, {
 "base": "Resource",
 "class": "PlayerAction",
 "language": "GDScript",
-"path": "res://src/classes/PlayerAction.gd"
+"path": "res://src/classes/_PlayerAction.gd"
 }, {
 "base": "Node",
 "class": "YPing",
 "language": "GDScript",
-"path": "res://src/classes/YPing.gd"
+"path": "res://src/classes/_YPing.gd"
 }, {
 "base": "Timer",
 "class": "YTimer",
 "language": "GDScript",
-"path": "res://src/classes/YTimer.gd"
+"path": "res://src/classes/_YTimer.gd"
 } ]
 _global_script_class_icons={
 "ActionPreviewData": "",
@@ -69,13 +69,13 @@ config/icon="res://art/_placeholder/fight_guy temp.png"
 
 [autoload]
 
-loader="*res://src/masters/_Loader.gd"
-data="*res://src/masters/_Data.gd"
-utils="*res://src/masters/_Utils.gd"
-support="*res://src/masters/_SupportLib.gd"
-batman="*res://src/masters/_BattleMgr.gd"
-controls="*res://src/masters/_Controls.gd"
-strife="*res://src/masters/_Strife.gd"
+loader="*res://src/masters/__Loader.gd"
+data="*res://src/masters/__Data.gd"
+utils="*res://src/masters/__Utils.gd"
+support="*res://src/masters/__SupportLib.gd"
+batman="*res://src/masters/__BattleMgr.gd"
+controls="*res://src/masters/__Controls.gd"
+strife="*res://src/masters/__Strife.gd"
 
 [debug]
 
@@ -93,6 +93,10 @@ window/size/height=360
 window/size/resizable=false
 window/stretch/mode="viewport"
 window/stretch/aspect="keep"
+
+[editor]
+
+search_in_file_extensions=PoolStringArray( "gd", "gdshader", "tscn" )
 
 [importer_defaults]
 
