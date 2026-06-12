@@ -61,7 +61,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="P1" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 7
-ofc_name = "Brigand"
+ofc_name = "Bard"
 base_action_points = 5
 base_damage = 2
 faction = 1
