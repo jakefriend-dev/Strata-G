@@ -18,7 +18,7 @@ var faction: int = -1
 
 func _ready():
 	batman.connect("update_all_tiletypes", self, "update_tiletype")
-#	batman.connect("targeted_tiles_updated", self, "update_targeting")
+	batman.connect("targeted_tiles_updated", self, "update_targeting")
 	batman.connect("new_action_preview_data_readied", self, "update_cell_highlighting_temp")
 	pass
 
@@ -41,21 +41,38 @@ func update_targeting():
 
 func update_cell_highlighting_temp(move: MoveAction):
 	var to_col: Color
+	var hname: String = ""
+	var hcol: Color
 	
 	if !move.unique_cells.has(coord):
 		to_col = Color.gray
 		to_col.a = 0.75
 	else:
+		to_col = Color.white
+		
+		# Now the highlights
 		var index: int = -1
 		for ea in move.ROWS.size():
 			index += 1 # 0-based
 			var list: Array = move.sets.get_cell(move.COLS.DISPLAY_CELLS, index)
 			if list.has(coord):
-				to_col = move.colors[index]
+				hcol = move.colors[index]
+				match index:
+					0: hname = "Big"
+					1: hname = "Big"
+					2: hname = "Medium"
+					3: hname = "Pass"
+					4: hname = "Big"
+					5: hname = "Small"
 				break
-		to_col.a = 0.5
+#		to_col.a = 0.5
 	
 	self_modulate = to_col
+	for h in $Highlights.get_children():
+		if h.visible != (hname == h.name):
+			h.visible = (hname == h.name)
+		if h.visible and h.modulate != hcol:
+			h.modulate = hcol
 	pass
 
 func set_depth_tint(max_row: int):
