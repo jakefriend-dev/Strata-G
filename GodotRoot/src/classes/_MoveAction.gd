@@ -134,7 +134,7 @@ func generate_cell_highlights():
 	
 	var y: int = 0
 	for row in ROWS.size():
-		var cell_array: Array = sets.get_cell(COLS.ALLCELL_ARRAY, y)
+		var cell_array: Array = sets.get_cell(COLS.CELL_ARRAY, y)
 		for cell in cell_array:
 			if !unique_cells.has(cell):
 				unique_cells.append(cell)
@@ -146,11 +146,11 @@ func generate_cell_highlights():
 			unique_cells.append(actor.coord)
 	
 	# Second, loop through in a specific priority order (first to last) and map each cell to a 'final' colour
-	var bads:   Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.BAD)
-	var goods:  Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.GOOD)
-	var neuts:  Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.NEUTRAL)
-	var passes: Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.PASS)
-	var errs:   Array = sets.get_cell(COLS.ALLCELL_ARRAY, ROWS.ERROR)
+	var bads:   Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.BAD)
+	var goods:  Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.GOOD)
+	var neuts:  Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.NEUTRAL)
+	var passes: Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.PASS)
+	var errs:   Array = sets.get_cell(COLS.CELL_ARRAY, ROWS.ERROR)
 	
 	# No duplicates, AND a fallbak case - we're covered!
 	for cell in unique_cells:
