@@ -73,6 +73,7 @@ shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
 shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
 
 [node name="BattleCell" type="NinePatchRect"]
+self_modulate = Color( 0.866667, 0.866667, 0.866667, 1 )
 material = SubResource( 1 )
 margin_right = 72.0
 margin_bottom = 48.0
@@ -90,6 +91,7 @@ __meta__ = {
 }
 
 [node name="Highlights" type="Node2D" parent="."]
+modulate = Color( 1, 1, 1, 0.521569 )
 
 [node name="Big" type="NinePatchRect" parent="Highlights"]
 visible = false

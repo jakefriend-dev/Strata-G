@@ -4,6 +4,7 @@ var DIST: int = 3
 
 func PREVIEW():
 	var target: Vector2 = actor.coord + (actor.my_facing*DIST)
+#	target = target.round()
 	if !batman.grid_actors.has_cellv(target):
 		return
 	add_cell(target, ROWS.BAD)

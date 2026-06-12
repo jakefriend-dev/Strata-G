@@ -45,8 +45,8 @@ func update_cell_highlighting_temp(move: MoveAction):
 	var hcol: Color
 	
 	if !move.unique_cells.has(coord):
-		to_col = Color.gray
-		to_col.a = 0.75
+		to_col = Color("cdcdcd")
+#		to_col.a = 1.0
 	else:
 		to_col = Color.white
 		
