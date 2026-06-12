@@ -1,4 +1,4 @@
-extends PlayerAction
+extends MoveAction
 
 func PREVIEW(): # Options are 0, 1, 2
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, actor.my_facing)

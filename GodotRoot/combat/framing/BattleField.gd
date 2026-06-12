@@ -267,7 +267,7 @@ func update_action_selector():
 	for key in batman.loaded_actops:
 		index += 1 # Zero-based
 		var movename: String = batman.loaded_actops[index]
-		var move: PlayerAction = batman.curr_actor.moveset[movename]
+		var move: MoveAction = batman.curr_actor.moveset[movename]
 		
 		var formal: String = move.display_name
 		if index == batman.highlighted_actop:

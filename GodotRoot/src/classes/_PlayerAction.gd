@@ -1,5 +1,5 @@
 extends Resource
-class_name PlayerAction # Change this to StandaloneAction? or similar...?
+class_name MoveAction # Change this to StandaloneAction? or similar...?
 
 # Make sure all TRES files extending this script is set as local to scene, so it can be used by multiple actors!
 

@@ -44,7 +44,7 @@ var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rocket
 
 # For player actors only!
 var loaded_actops: Array = []
-var loaded_move: PlayerAction = null
+var loaded_move: MoveAction = null
 #var loaded_moveset: Dictionary = {} # Not 100% sure we need this ref actually
 
 #var DEP_loaded_moveset_ref: Dictionary = {} # The entire moveset
@@ -786,7 +786,7 @@ func vet_action(action: Array) -> bool:
 		if !actor.moveset.has(methodname):
 			print("BATMAN: vet_action(",action,") failed: ActorPlayer does not have a move called ",methodname," in its moveset!")
 			return false
-		var move: PlayerAction = actor.moveset[methodname]
+		var move: MoveAction = actor.moveset[methodname]
 		if !move.has_method("ACT"):
 			print("BATMAN: vet_action(",action,") failed: ActorPlayer's move ",move," does not have ACT() method!")
 			return false

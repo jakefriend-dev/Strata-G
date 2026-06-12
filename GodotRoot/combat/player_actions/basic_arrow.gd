@@ -1,2 +1,2 @@
-extends PlayerAction
+extends MoveAction
 

@@ -17,7 +17,7 @@ func _ready():
 	pass
 
 func load_moves():
-	for move in loaded_moves: if move != null: if move is PlayerAction:
+	for move in loaded_moves: if move != null: if move is MoveAction:
 		# Basic setup first!
 		if move.resource_name == "":
 			move.resource_name = utils.get_resource_name(move)
@@ -42,7 +42,7 @@ func load_moves():
 	pass
 
 func prep_moveset_on_battle_start():
-	for move in moveset: if move is PlayerAction:
+	for move in moveset: if move is MoveAction:
 		move.current_turn_uses = 0
 		move.current_battle_uses = 0
 		if move.initial_cooldown > 0:
@@ -54,7 +54,7 @@ func prep_moveset_on_battle_start():
 	pass
 
 func prep_moveset_on_turn_start():
-	for move in moveset: if move is PlayerAction:
+	for move in moveset: if move is MoveAction:
 		if move.current_cooldown > 0:
 			move.current_cooldown -= 0
 			print("Cooldown ticked down for ",move," to: ",move.current_cooldown)
@@ -68,7 +68,7 @@ func run_actop_preview():
 	
 	APD.clear()
 	
-	var move: PlayerAction = batman.loaded_move
+	var move: MoveAction = batman.loaded_move
 	move.option = batman.highlighted_sub_actop
 	
 	if move.has_method(pstring):
@@ -88,7 +88,7 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 	if !batman.player_input_validation_checks(): return false
 	if batman.curr_actor != self: return false
 	
-	var move: PlayerAction = batman.loaded_move
+	var move: MoveAction = batman.loaded_move
 	
 	if !can_afford(move.cost):
 		if do_print: print(name," can't afford ",move.cost,"-AP for ",move)
@@ -127,7 +127,7 @@ func attempt_player_char_action():
 	if !is_player_action_usable(): return
 	
 	# Should be valid, then! Adjust our stats/values first
-	var move: PlayerAction = batman.loaded_move
+	var move: MoveAction = batman.loaded_move
 	move.option = batman.highlighted_sub_actop
 	
 #	print("going to spend ",move.cost,"-AP when ",action_points,"-AP remain")

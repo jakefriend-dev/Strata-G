@@ -1,4 +1,4 @@
-extends PlayerAction
+extends MoveAction
 
 func PREVIEW():
 	

@@ -35,7 +35,7 @@ _global_script_classes=[ {
 "path": "res://src/classes/_Array2D.gd"
 }, {
 "base": "Resource",
-"class": "PlayerAction",
+"class": "MoveAction",
 "language": "GDScript",
 "path": "res://src/classes/_PlayerAction.gd"
 }, {
@@ -55,7 +55,7 @@ _global_script_class_icons={
 "ActorEnemy": "",
 "ActorPlayer": "",
 "Array2D": "",
-"PlayerAction": "",
+"MoveAction": "",
 "YPing": "",
 "YTimer": ""
 }
