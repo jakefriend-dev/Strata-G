@@ -42,11 +42,13 @@ func load_moves():
 	pass
 
 func prep_moveset_on_battle_start():
-	for move in moveset: if move is MoveAction:
+#	print(name," battle start")
+	for key in moveset:
+		var move: MoveAction = moveset[key]
 		move.current_turn_uses = 0
 		move.current_battle_uses = 0
 		if move.initial_cooldown > 0:
-			move.current_cooldown = 1 + move.initial_cooldown # +1 to offset start of 1st turn
+			move.current_cooldown = move.initial_cooldown
 		else:
 			move.current_cooldown = 0
 		pass
@@ -54,13 +56,24 @@ func prep_moveset_on_battle_start():
 	pass
 
 func prep_moveset_on_turn_start():
-	for move in moveset: if move is MoveAction:
+#	print(name," turn start")
+	for key in moveset:
+		var move: MoveAction = moveset[key]
+		if move.current_turn_uses > 0 and move.uses_per_turn > 0:
+			print(move," unlocked as per-turn uses resets")
+		move.current_turn_uses = 0
+#		print("reset ",move," current_turn_uses")
+		pass
+	
+	pass
+
+func prep_moveset_on_turn_end():
+#	print(name," turn end")
+	for key in moveset:
+		var move: MoveAction = moveset[key]
 		if move.current_cooldown > 0:
 			move.current_cooldown -= 0
 			print("Cooldown ticked down for ",move," to: ",move.current_cooldown)
-		move.current_turn_uses = 0
-		pass
-	
 	pass
 
 func run_actop_preview():
@@ -94,16 +107,16 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 		if do_print: print(name," can't afford ",move.cost,"-AP for ",move)
 		return false
 	if move.current_cooldown > 0:
-		if do_print: print(name," still on cooldown for ",move.current_cooldown-1," turns: ",move) # -1 because it resets on start of 0th turn
+		if do_print: print(name," still on cooldown for ",move.current_cooldown," turns: ",move)
 		return false
 	if move.req_successful_preview and !move.passfail:
 		if do_print: print(name," needs preview pass for ",move)
 		return false
-	if move.uses_per_turn > 0:
+	if move.uses_per_turn > 0: # Ignore if unlimited
 		if move.current_turn_uses >= move.uses_per_turn:
 			if do_print: print(name," already maxed per-turn uses of ",move)
 			return false
-	if move.uses_per_battle > 0:
+	if move.uses_per_battle > 0: # Ignore if unlimited
 		if move.current_battle_uses >= move.uses_per_battle:
 			if do_print: print(name," already maxed per-battle uses of ",move)
 			return false

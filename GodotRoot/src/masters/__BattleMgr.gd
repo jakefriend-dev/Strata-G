@@ -482,7 +482,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		if !loaded_moveset.empty():
 			var movename: String = loaded_moveset[loaded_m_index]
 			loaded_move = curr_actor.moveset[movename]
-			print("first move ",loaded_move)
+#			print("first move ",loaded_move)
 		else:
 			print("player char ",curr_actor.name," has literally no set moveset!")
 		curr_actor.prep_moveset_on_turn_start()
@@ -528,6 +528,8 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 		curr_actor.master_post_turn_teardown()
 		if curr_actor.has_method("post_turn_teardown"):
 			curr_actor.call("post_turn_teardown")
+		if curr_actor is ActorPlayer:
+			curr_actor.prep_moveset_on_turn_end()
 	
 	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
