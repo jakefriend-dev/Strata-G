@@ -1,12 +1,12 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://combat/player_actions/MOVE_basic_slash.gd" type="Script" id=1]
+[ext_resource path="res://combat/move_actions/MS_basic_arrow.gd" type="Script" id=1]
 
 
 [resource]
 script = ExtResource( 1 )
-display_name = "Slash"
-display_desc = "Make a strong attack against a melee-range target for 3 damage."
+display_name = "Bowshot"
+display_desc = "Shoot the first unit in your line of sight for 2 damage. Pierces shields."
 options = 2
 option_desc = "Changes angle of attack."
 cost = 2

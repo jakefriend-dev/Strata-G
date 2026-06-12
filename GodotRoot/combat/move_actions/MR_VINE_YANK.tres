@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=2 format=2]
 
-[ext_resource path="res://combat/player_actions/MOVE_vine_yank.gd" type="Script" id=1]
+[ext_resource path="res://combat/move_actions/MS_vine_yank.gd" type="Script" id=1]
 
 [resource]
 resource_local_to_scene = true

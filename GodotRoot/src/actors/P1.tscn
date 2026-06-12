@@ -4,7 +4,7 @@
 [ext_resource path="res://art/actors/blue.png" type="Texture" id=2]
 [ext_resource path="res://src/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
-[ext_resource path="res://combat/player_actions/BASIC_ARROW.tres" type="Resource" id=5]
+[ext_resource path="res://combat/move_actions/MR_BASIC_ARROW.tres" type="Resource" id=5]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
