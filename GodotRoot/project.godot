@@ -9,11 +9,6 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Resource",
-"class": "ActionPreviewData",
-"language": "GDScript",
-"path": "res://combat/battle_ui/ActionPreviewData.gd"
-}, {
 "base": "Node2D",
 "class": "Actor",
 "language": "GDScript",
@@ -50,7 +45,6 @@ _global_script_classes=[ {
 "path": "res://src/classes/_YTimer.gd"
 } ]
 _global_script_class_icons={
-"ActionPreviewData": "",
 "Actor": "",
 "ActorEnemy": "",
 "ActorPlayer": "",
