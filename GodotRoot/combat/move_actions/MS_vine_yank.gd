@@ -3,14 +3,14 @@ extends MoveAction
 func PREVIEW(): # Options are 0, 1, 2
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, actor.my_facing)
 	if !unoccupieds.empty():
-		APD.add_arrow(actor.coord, unoccupieds.back(), acols.PASS)
+		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
 	
 	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, actor.my_facing)
 	if !utils.actorpass(victim):
 #		print("Yank preview fail; no victim")
 		return
 	
-	APD.add_actor(victim, acols.NEUTRAL)
+	add_actor(victim, ROWS.NEUTRAL)
 	
 	var check_vector: Vector2 = actor.their_facing
 	if variant == 1: check_vector += Vector2.UP
@@ -18,24 +18,24 @@ func PREVIEW(): # Options are 0, 1, 2
 	var check_coord: Vector2 = victim.coord + check_vector
 	
 	if !support.is_tile_traversable_exact(victim, check_coord):
-		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
+		add_arrow(victim.coord, check_coord, ROWS.ERROR)
 #		print("Yank preview fail; victim can't traverse destination tile")
 		return
 	
 	if !strife.is_affected_by_force(victim):
-		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
+		add_arrow(victim.coord, check_coord, ROWS.ERROR)
 #		print("Yank preview fail; victim is not affected by force")
 		return
 	
 	# Success case!
-	APD.add_arrow(victim.coord, check_coord, acols.NEUTRAL)
+	add_arrow(victim.coord, check_coord, ROWS.NEUTRAL)
 #	print("successsss")
-	APD.passfail = true
+	passfail = true
 	pass
 
 func ACT():
 	# We KNOW there' a victim, because if there wasn't, we couldn't have passed the preview check
-	var victim: Actor = APD.get_actor_by_type(acols.NEUTRAL)
+	var victim: Actor = get_actor_by_type(ROWS.NEUTRAL)
 	
 	# Data setup!
 	var motion: Vector2 = actor.their_facing

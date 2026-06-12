@@ -23,7 +23,7 @@ func load_moves():
 			move.resource_name = utils.get_resource_name(move)
 		move.set_local_to_scene(true)
 		move.actor = self
-		move.APD = APD
+		move.initialize()
 		
 		if !move.has_method(pstring):
 			print(name," can't find PREVIEW() method for move ",move,"! Soft error")
@@ -58,6 +58,7 @@ func prep_moveset_on_turn_start():
 		if move.current_cooldown > 0:
 			move.current_cooldown -= 0
 			print("Cooldown ticked down for ",move," to: ",move.current_cooldown)
+		move.current_turn_uses = 0
 		pass
 	
 	pass
@@ -66,20 +67,19 @@ func run_actop_preview():
 	if batman.curr_actor != self: return
 	if !batman.player_input_validation_checks(): return
 	
-	APD.clear()
-	
 	var move: MoveAction = batman.loaded_move
+	move.clear()
 	move.variant = batman.loaded_m_variant
 	
 	if move.has_method(pstring):
 		move.call(pstring)
 		
-		APD.generate_cell_highlights()
+		move.generate_cell_highlights()
 		pass
 	
-	APD.ready_to_use = is_player_action_usable(false)
+	move.ready_to_use = is_player_action_usable(false)
 	
-	batman.emit_signal("new_action_preview_data_readied", APD)
+	batman.emit_signal("new_action_preview_data_readied", move)
 	pass
 
 # ---
@@ -96,8 +96,8 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 	if move.current_cooldown > 0:
 		if do_print: print(name," still on cooldown for ",move.current_cooldown," turns: ",move)
 		return false
-	if move.req_successful_preview and !APD.passfail:
-		if do_print: print(name," needs APD pass for ",move)
+	if move.req_successful_preview and !move.passfail:
+		if do_print: print(name," needs preview pass for ",move)
 		return false
 	if move.uses_per_turn > 0:
 		if move.current_turn_uses >= move.uses_per_turn:

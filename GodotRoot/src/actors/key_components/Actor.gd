@@ -28,15 +28,6 @@ var variance_initiative: float  = -1.0 # Cued by batman at start of combat; perc
 
 const global_moves: Array = ["walk", "be_external_motioned"]
 
-var APD: ActionPreviewData
-enum acols {  # TOP TO BOTTOM
-	BAD,     # Negative effect, like a debuff OR just plain damage
-	GOOD,    # Positive effect, like a buff
-	NEUTRAL, # Repositioning
-	PASS,    # Shooting through an empty tile
-	ERROR    # When an actor blocks a movement from playing out, eg
-}
-
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
 export var max_health: int = 4
@@ -230,9 +221,6 @@ func _ready():
 	pass
 
 func perform_initial_data_setup():
-	APD = ActionPreviewData.new()
-	APD.initialize()
-	APD.actor = self
 	
 	max_health *= batman.BASE_HP_FACTOR
 	health = max_health
@@ -244,7 +232,6 @@ func perform_initial_data_setup():
 	base_damage *= batman.BASE_HP_FACTOR
 	
 	for term in ["unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged", "immune_mud"]:
-#	for term in ["hovering", "lightweight", "heavyweight", "unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged"]:
 		set( str("is_"+term), get(str("def_",term)) )
 	weight = def_weight
 	pass

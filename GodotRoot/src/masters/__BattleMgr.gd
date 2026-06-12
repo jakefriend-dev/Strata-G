@@ -48,7 +48,7 @@ var loaded_move: MoveAction = null
 var loaded_m_index: int = 0 # The position we're "at" within the moveset list
 var loaded_m_variant: int = 0 # If there are variants for the ability, cycles through them
 signal action_option_view_changed()
-signal new_action_preview_data_readied(APD)
+signal new_action_preview_data_readied(MPD)
 
 const BASE_HP_FACTOR: int = 4
 

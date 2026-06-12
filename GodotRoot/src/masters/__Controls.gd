@@ -31,14 +31,7 @@ func monitor_inputs():
 		return
 	
 	# Misc dev things
-#	if Input.is_action_just_pressed("dev_3"):
-#		multi_input_lock = true
-#		var actor: Actor = support.get_first_actor_by_name("Sniper")
-#		if utils.actorpass(actor):
-#			actor.APD.clear()
-#			actor.PREVIEW_yank(0)
-#			print(actor.name," APD: ",actor.APD.sets)
-#		return
+	pass
 	
 	# Mid-turn 'live' behaviour
 	if batman.combatstate == batman.C_TURN:

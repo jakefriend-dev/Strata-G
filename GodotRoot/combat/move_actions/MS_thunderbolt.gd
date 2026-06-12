@@ -8,18 +8,18 @@ func PREVIEW():
 	
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
 	if !unoccupieds.empty():
-		APD.add_arrow(actor.coord, unoccupieds.back(), acols.PASS)
+		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
 	
 	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, check_vector)
 	if !utils.actorpass(victim): return
 	
-	APD.add_actor(victim, acols.BAD)
-	APD.passfail = true
+	add_actor(victim, ROWS.BAD)
+	passfail = true
 	pass
 
 func ACT():
 	# Shoot a target in your line-of-sight; higher damage per tile travelled
-	var victim: Actor = APD.get_actor_by_type(acols.BAD)
+	var victim: Actor = get_actor_by_type(ROWS.BAD)
 	var dmg: int = 0
 	var dist: int = 0
 	

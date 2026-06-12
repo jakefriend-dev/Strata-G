@@ -1,21 +1,19 @@
 extends Node2D
 
-var APD: ActionPreviewData # We never WIPE from this script though, since it might be linked
+var MPD: MoveAction
 var drawing: bool = false
 
 var prio_order: Array = [
-	ActionPreviewData.ROWS.PASS,
-	ActionPreviewData.ROWS.ERROR,
-	ActionPreviewData.ROWS.FALLBACK,
-	ActionPreviewData.ROWS.NEUTRAL,
-	ActionPreviewData.ROWS.BAD,
-	ActionPreviewData.ROWS.GOOD
+	MoveAction.ROWS.PASS,
+	MoveAction.ROWS.ERROR,
+	MoveAction.ROWS.FALLBACK,
+	MoveAction.ROWS.NEUTRAL,
+	MoveAction.ROWS.BAD,
+	MoveAction.ROWS.GOOD
 ]
 
 func _ready():
 	batman.connect("new_action_preview_data_readied", self, "draw_action_preview")
-#	batman.connect("action_step_complete", self, "begin_drawing")
-		# We don't want this ^ We want the actor to use this signal to redraw!
 	
 	batman.connect("any_actionstep_initiated", self, "end_drawing")
 	batman.connect("on_turn_ended_naturally", self, "end_drawing")
@@ -23,7 +21,7 @@ func _ready():
 	pass
 
 func clear_action_preview():
-	APD = ActionPreviewData.new()
+	MPD = null
 	end_drawing()
 	pass
 
@@ -37,15 +35,15 @@ func end_drawing():
 	update()
 	pass
 
-func draw_action_preview(new_APD: ActionPreviewData):
-	APD = new_APD # We never WIPE from this script though, since it might be linked
+func draw_action_preview(new_MPD: MoveAction):
+	MPD = new_MPD # We never WIPE from this script though, since it might be linked
 	begin_drawing()
 	
 	pass
 
 func _draw():
 	if !drawing: return
-	if APD == null: return
+	if MPD == null: return
 	draw_all_arrows(true)
 	draw_all_arrows(false)
 	pass
@@ -55,14 +53,14 @@ func draw_all_arrows(is_outline: bool):
 	
 	# First, GATHER all the data!
 	var y: int = -1
-	for row in APD.ROWS.size():
+	for row in MPD.ROWS.size():
 		y += 1 # 0-based
 		
 		var index: int = prio_order[y]
-		var arrow_array: Array = APD.sets.get_cell(APD.COLS.ARROW_ARRAY, index)
-		var col: Color = APD.colors[index]
+		var arrow_array: Array = MPD.sets.get_cell(MPD.COLS.ARROW_ARRAY, index)
+		var col: Color = MPD.colors[index]
 		var width: float = 4.0
-		if index == APD.ROWS.PASS or index == APD.ROWS.ERROR:
+		if index == MPD.ROWS.PASS or index == MPD.ROWS.ERROR:
 			width = 2.0
 			if is_outline:
 				continue
@@ -100,9 +98,9 @@ func draw_arrow(
 		var adjust: float = 0.25
 		
 		start = start + (cell_len * adjust)
-		if index == APD.ROWS.PASS:
+		if index == MPD.ROWS.PASS:
 			end = end + (cell_len * adjust)
-		elif index == APD.ROWS.ERROR:
+		elif index == MPD.ROWS.ERROR:
 			end = end - (cell_len * adjust)
 		
 		# Main line
