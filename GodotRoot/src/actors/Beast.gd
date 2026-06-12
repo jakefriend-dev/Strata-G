@@ -47,12 +47,7 @@ func pre_turn_setup():
 	allowed_over_faction_lines = false
 	executed_main_attack = false
 	
-#	print("NOT_SET: ",NOT_SET)
-#	print("LUNGE: ",LUNGE)
-#	print("SHOOT: ",SHOOT)
-#	print("POST_LUNGE: ",POST_LUNGE)
-#	print("POST_SHOOT: ",POST_SHOOT)
-	print("starting our turn when our telegraphed move is ",telegraphed_move)
+#	print("starting our turn when our telegraphed move is ",telegraphed_move)
 	pass
 
 func prep_next_action():

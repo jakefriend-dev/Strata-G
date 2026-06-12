@@ -781,7 +781,7 @@ func vet_action(action: Array) -> bool:
 		return false
 	
 	# Actors need to have the action in their script OR class chain
-	var player_move_flag: bool = (actor is ActorPlayer && methodname != "walk")
+	var player_move_flag: bool = (actor is ActorPlayer && !Actor.global_moves.has(methodname))
 	if player_move_flag:
 		if !actor.moveset.has(methodname):
 			print("BATMAN: vet_action(",action,") failed: ActorPlayer does not have a move called ",methodname," in its moveset!")
@@ -867,7 +867,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	actions_are_processing = true
 	
 	# Gather data...
-	var player_flag: bool = (curr_actor is ActorPlayer)
+	var player_flag: bool = (actor is ActorPlayer)
 	
 	var raw_methodname: String = curr_action[1]
 	var methodname: String = str("ACT_"+raw_methodname)
@@ -875,14 +875,14 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var paramset: Array = curr_action[2]
 	
 	# Check that there's a method that can be called!
-	var caller = curr_actor
+	var caller = actor
 	if player_flag:
-		if raw_methodname != "walk":
+		if !Actor.global_moves.has(raw_methodname):
 			methodname = "ACT"
 			caller = loaded_move
 			logname = loaded_move.display_name
 	if !caller.has_method(methodname):
-		print("MAJOR ERROR! ",curr_actor.ofc_name," (or its move) does not have the called method ",methodname,"()")
+		print("MAJOR ERROR! ",actor.ofc_name," (or its move) does not have the called method ",methodname,"()")
 		
 		pass
 	

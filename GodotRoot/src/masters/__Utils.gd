@@ -32,6 +32,7 @@ func get_resource_name(r: Resource) -> String:
 	for seg in path.split("/"): if seg is String:
 		if seg.find(".tres") != -1:
 			seg = seg.replace(".tres","")
+			seg = seg.replace("MR_","")
 #			r.resource_name = seg.to_lower() # Does nothing because it doesn't save!
 			
 			return seg.to_upper()

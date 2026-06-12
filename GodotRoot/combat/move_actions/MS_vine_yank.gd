@@ -7,7 +7,7 @@ func PREVIEW(): # Options are 0, 1, 2
 	
 	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, actor.my_facing)
 	if !utils.actorpass(victim):
-		print("Yank preview fail; no victim")
+#		print("Yank preview fail; no victim")
 		return
 	
 	APD.add_actor(victim, acols.NEUTRAL)
@@ -19,12 +19,12 @@ func PREVIEW(): # Options are 0, 1, 2
 	
 	if !support.is_tile_traversable_exact(victim, check_coord):
 		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
-		print("Yank preview fail; victim can't traverse destination tile")
+#		print("Yank preview fail; victim can't traverse destination tile")
 		return
 	
 	if !strife.is_affected_by_force(victim):
 		APD.add_arrow(victim.coord, check_coord, acols.ERROR)
-		print("Yank preview fail; victim is not affected by force")
+#		print("Yank preview fail; victim is not affected by force")
 		return
 	
 	# Success case!

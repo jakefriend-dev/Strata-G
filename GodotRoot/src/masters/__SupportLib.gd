@@ -148,7 +148,7 @@ func change_tiletype_mass(coordset: Array, to_tiletype: int, restrictions_overri
 	for coord in impact_dict.keys():
 		batman.grid_tiles.set_cellv(coord, impact_dict[coord])
 	
-	print("Preparing tilechanges:\n",impact_dict)
+#	print("Preparing tilechanges:\n",impact_dict)
 	batman.emit_signal("update_all_tiletypes")
 	pass
 
