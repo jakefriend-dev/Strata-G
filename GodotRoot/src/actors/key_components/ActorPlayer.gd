@@ -23,7 +23,7 @@ func load_moves():
 			move.resource_name = utils.get_resource_name(move)
 		move.set_local_to_scene(true)
 		move.actor = self
-		move.initialize()
+		move.initialize_MPD()
 		
 		if !move.has_method(pstring):
 			print(name," can't find PREVIEW() method for move ",move,"! Soft error")
@@ -68,7 +68,7 @@ func run_actop_preview():
 	if !batman.player_input_validation_checks(): return
 	
 	var move: MoveAction = batman.loaded_move
-	move.clear()
+	move.clear_MPD()
 	move.variant = batman.loaded_m_variant
 	
 	if move.has_method(pstring):
@@ -130,7 +130,7 @@ func attempt_player_char_action():
 	
 #	print("going to spend ",move.cost,"-AP when ",action_points,"-AP remain")
 	
-	move.log_use()
+	move.log_move_use()
 	
 	# Now execute!
 	batman.append_action(self, move.resource_name)

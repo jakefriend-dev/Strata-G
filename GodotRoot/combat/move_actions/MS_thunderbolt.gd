@@ -19,7 +19,7 @@ func PREVIEW():
 
 func ACT():
 	# Shoot a target in your line-of-sight; higher damage per tile travelled
-	var victim: Actor = get_actor_by_type(ROWS.BAD)
+	var victim: Actor = get_actor_by_MPD_type(ROWS.BAD)
 	var dmg: int = 0
 	var dist: int = 0
 	

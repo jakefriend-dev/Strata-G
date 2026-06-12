@@ -75,7 +75,7 @@ var ready_to_use: bool = false # Default false; only mark it true when it is VAL
 
 # ------------------------------------------------------------------------------
 
-func log_use():
+func log_move_use():
 	actor.spend(cost)
 	
 	if on_use_cooldown > 0:
@@ -99,13 +99,13 @@ func _to_string() -> String:
 
 # ActionPreviewData method dump! -----------------------------------------------
 
-func initialize():
+func initialize_MPD():
 	sets = Array2D.new()
 	sets.resize(COLS.size(), ROWS.size())
-	clear() # Also sets up arrays
+	clear_MPD() # Also sets up arrays
 	pass
 
-func clear():
+func clear_MPD():
 	passfail = false
 	ready_to_use = false
 	unique_cells.clear()
@@ -257,7 +257,7 @@ func add_priority_cell(coord: Vector2, type: int):
 # ---
 
 # Returns the FIRST Actor - only helpful if you expect there to only be one, for convenience
-func get_actor_by_type(type: int) -> Object:
+func get_actor_by_MPD_type(type: int) -> Object:
 	var actor_array: Array = sets.get_cell(COLS.ACTOR_ARRAY, type)
 	if actor_array.empty(): return null
 	return actor_array[0]
