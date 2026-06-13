@@ -1,5 +1,7 @@
 extends MoveAction
 
+var dest: Vector2 = Vector2.ZERO
+
 func PREVIEW():
 	var all_rels: Array = [
 		Vector2( 1,  1),
@@ -22,15 +24,16 @@ func PREVIEW():
 	
 	add_arrow(actor.coord, target, ROWS.NEUTRAL)
 	add_cell(target, ROWS.NEUTRAL)
+	dest = target
 	passfail = true
 	pass
 
 func ACT():
 	var dur: float = actor.tile_walk_speed
-	var target: Vector2 = get_first_cell_by_MPD_type(ROWS.NEUTRAL)
-	print("target: ",target)
+#	var target: Vector2 = get_first_cell_by_MPD_type(ROWS.NEUTRAL)
+#	print("target: ",target)
 	
-	actor.hotmove(target, dur)
+	actor.hotmove(dest, dur)
 	
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return

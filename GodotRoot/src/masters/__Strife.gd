@@ -477,10 +477,12 @@ func TILE_event_entry(actor: Actor, coord: Vector2):
 	pass
 
 func TILE_event_rest(actor: Actor, coord: Vector2):
+	print("rest aaa")
 	if !TILE_any_event_precheck(actor): return
 	
 	# Any time the actor performs an action that does NOT move it tiles or count as a movement in some way (a bit ambiguous, atm). Essentially 'you remained on this tile rather than left it'
 	
+	print("rest bbb")
 	var tiletype: int = batman.grid_tiles.get_cellv(coord)
 	var tilestring: String = get_tiletype_as_string(tiletype)
 	var segment: String = "rested_on"

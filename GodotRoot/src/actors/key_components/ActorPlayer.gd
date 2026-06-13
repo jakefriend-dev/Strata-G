@@ -132,7 +132,7 @@ func attempt_player_char_move(motion: Vector2):
 	# Should be valid, then!
 	spend(COST_WALK)
 	batman.append_action(self, "walk", [motion])
-	submit_player_action()
+	submit_player_action(false)
 	pass
 
 func attempt_player_char_action():
@@ -149,11 +149,17 @@ func attempt_player_char_action():
 	# Now execute!
 	batman.append_action(self, move.resource_name)
 	
-	submit_player_action()
+	submit_player_action(move.action_type == move.restchecks.REST)
 	pass
 
-func submit_player_action():
+func submit_player_action(is_rest: bool):
 	emit_signal("player_action_submitted")
+	
+	if is_rest:
+		yield(batman, "action_step_complete")
+		if !batman.is_my_action(self): return
+		
+		strife.TILE_event_rest(self, coord)
 	pass
 
 # ---
