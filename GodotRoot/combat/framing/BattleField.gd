@@ -106,7 +106,7 @@ func populate_actors():
 	# Time to populate the board!
 	var actorset: Array = batman.grid_actors.get_dataset_with_coords()
 	
-	var path: String = "res://src/actors/"
+	var path: String = "res://combat/actors/"
 	
 	for set in actorset: if set is Array:
 		var actor_scenename: String = set[0]

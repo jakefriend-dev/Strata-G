@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://src/actors/Beast.gd" type="Script" id=1]
-[ext_resource path="res://art/actors/ruins beast.png" type="Texture" id=2]
-[ext_resource path="res://src/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
-[ext_resource path="res://src/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
+[ext_resource path="res://combat/actors/PlayerTank.gd" type="Script" id=1]
+[ext_resource path="res://art/actors/bird char mockups2.png" type="Texture" id=2]
+[ext_resource path="res://combat/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
+[ext_resource path="res://combat/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
+[ext_resource path="res://combat/move_actions/MR_BASIC_SLASH.tres" type="Resource" id=5]
+[ext_resource path="res://combat/move_actions/MR_BIG_SLASH.tres" type="Resource" id=6]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -57,30 +59,29 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="Beast" type="Node2D"]
+[node name="P2" type="Node2D"]
 script = ExtResource( 1 )
-first_initiative = 2
-max_health = 8
-tile_walk_speed = 0.75
-base_action_points = 5
+first_initiative = 3
+max_shield = 1
+ofc_name = "Knight"
 base_damage = 2
+faction = 1
 def_weight = 3
-def_immune_jagged = true
-def_immune_poison = true
+loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), null, null, null, null, null, null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
 [node name="Shadow" parent="ArtMgr" instance=ExtResource( 3 )]
-margin_left = -38.0
-margin_top = -13.0
-margin_right = 41.0
-margin_bottom = 13.0
+margin_left = -13.0
+margin_top = -4.0
+margin_right = 12.0
 
 [node name="HFlipper" type="Node2D" parent="ArtMgr"]
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )
-position = Vector2( -7, -60 )
+position = Vector2( 0, -25 )
+scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ArtMgr"]
