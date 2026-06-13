@@ -209,7 +209,7 @@ func test_new_combat(test: String):
 					Vector2(3, 3): tiletypes.STEEL,
 					Vector2(2, 1): tiletypes.HOT,
 					Vector2(4, 1): tiletypes.HOT,
-					Vector2(2, 4): tiletypes.ICE,
+					Vector2(2, 4): tiletypes.POISON,
 				},
 			}):
 				print("TURN MGR: test_new_combat(",test,") failed!")

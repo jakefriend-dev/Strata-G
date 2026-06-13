@@ -477,15 +477,14 @@ func TILE_event_entry(actor: Actor, coord: Vector2):
 	pass
 
 func TILE_event_rest(actor: Actor, coord: Vector2):
-	print("rest aaa")
 	if !TILE_any_event_precheck(actor): return
 	
 	# Any time the actor performs an action that does NOT move it tiles or count as a movement in some way (a bit ambiguous, atm). Essentially 'you remained on this tile rather than left it'
 	
-	print("rest bbb")
 	var tiletype: int = batman.grid_tiles.get_cellv(coord)
 	var tilestring: String = get_tiletype_as_string(tiletype)
 	var segment: String = "rested_on"
+	print(str("TILE_",segment,"_",tilestring))
 	if has_method(str("TILE_",segment,"_",tilestring)):
 		call(str("TILE_",segment,"_",tilestring), actor, coord)
 	if has_method(str("TILE_",segment,"_ANY")):
@@ -602,6 +601,13 @@ func TILE_rested_on_ANY(actor: Actor, _coord: Vector2):
 		
 	
 	print(actor.name," rested on ANY!")
+	pass
+
+func TILE_rested_on_POISON(actor: Actor, _coord: Vector2):
+	if actor.is_immune_poison: return
+	
+	# Immediately take 1 damage
+	do_quiet_damage(null, actor, 1, ["piercing"])
 	pass
 
 func TILE_magnet_check(actor: Actor) -> bool:
