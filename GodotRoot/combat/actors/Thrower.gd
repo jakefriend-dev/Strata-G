@@ -12,7 +12,7 @@ var rockstate: int = NO_ROCK
 # ---
 
 func _ready():
-	connect("on_shield_broken_any", self, "on_shield_broken")
+	connect("on_shield_broken_through", self, "on_shield_broken")
 	pass
 
 func pre_combat_setup():
@@ -56,7 +56,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# DEFAULT ELSE: Can't go anywhere, can't do nothin' :(
 	pass
 
-func on_shield_broken(_is_melee):
+func on_shield_broken(_combat_package: Dictionary):
 	batman.reaction(self, "drop_rock")
 	pass
 

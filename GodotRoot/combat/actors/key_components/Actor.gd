@@ -170,28 +170,40 @@ signal on_z_landed()
 var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
 
 # Attacker combat signals
-signal on_hit_someones_shield(victim, is_melee) # Connected with a shield *at all*
-signal on_broke_someones_shield(victim, is_melee) # Broke a shield, whether doing damage or not
-signal on_broke_through_someones_shield(victim, is_melee) # Broke a shield AND did damage at once
-signal on_failed_to_wound_someone(victim, is_melee) # Any impact without damage (it got blocked)
-signal on_wounded_someone(victim, is_melee) # Any damage impacted
-signal on_killed_someone(victim, is_melee) # Wowee!!
-signal moved_other_actor(victim, motion) # Motion only; knockback separate
+signal on_blocked_by_shield_any(combat_package) # Connected with a shield *at all*
+signal on_blocked_by_shield_total(combat_package) # Completely blocked by shield
+signal on_broke_someones_shield_any(combat_package) # Broke a shield, REGARDLESS of how much is left
+signal on_broke_someones_shield_total(combat_package) # Broke a shield completely, and the victim has none left (regardless of damage received this attack)
+signal on_broke_someones_shield_partial(combat_package) # Broke a shield partially, but the victim has some left
+signal on_pierced_someones_shield(combat_package) # Bypassed a shield (does not count if they had none)
+#
+signal on_failed_to_wound_someone(combat_package) # Any impact without damage (it got blocked)
+signal on_wounded_someone(combat_package) # Any damage impacted
+signal on_killed_someone(combat_package) # Wowee!!
+#
+signal moved_other_actor(combat_package) # Motion only; knockback separate
 signal knockback_damaged_other_actor(victim, knockback) # Damage only; motion separate
 
 
 # Defender combat signals
-signal on_shield_consumed(is_melee) # Shield affected *at all*
-signal on_shield_held(is_melee) # Shield consumed but not depleted
-signal on_shield_broken_through(is_melee) # Shield depleted, and damage surpassed it
-signal on_shield_broken_held(is_melee) # Shield depleted exactly w/o damage
-signal on_shield_broken_any(is_melee) # Shield depleted, any circumstance
-signal on_blocked_all_damage(is_melee) # Shield remains; health unaffected
-# Any combat signals
-signal on_phys_combat_any_contact() # Happens no matter what, as long as it wasn't like, poison
+signal on_blocked_damage_any(combat_package) # Incoming damage was affected by shields in any partial-or-full capacity
+signal on_blocked_damage_total(combat_package) # Incoming damage was *completely* blocked by shields
+signal on_shield_broken_any(combat_package) # Shield depleted, REGARDLESS of all/partial
+signal on_shield_broken_through(combat_package) # Shield depleted, fully
+signal on_shield_broken_held(combat_package) # Shield depleted, but not fully (whether or not damage penetrates past)
+signal on_shield_pierced(combat_package) # Shield bypassed
+#
+signal on_wounded(combat_package) # Any damage received
+signal on_not_wounded(combat_package) # Zero damage received (all of it blocked)
+signal on_killed(combat_package) # Who killed me, and how???
+#
 signal was_moved_by_external(motion) # Motion only; knockback separate
 signal was_knockback_damaged_by_external(knockback) # Damage only; motion separate
 
+# Any combat signals
+signal on_phys_combat_any_contact(combat_package) # Happens no matter what, as long as it wasn't "quiet" combat like poison damage.
+
+# Other
 signal player_action_submitted() # Only pertinent to ActorPlayer subclasses but here nonetheless
 
 # ---

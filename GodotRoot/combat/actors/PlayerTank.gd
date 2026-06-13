@@ -10,12 +10,12 @@ extends ActorPlayer
 
 func _ready():
 #	print(name," connecting signals")
-	connect("on_shield_consumed", self, "prep_melee_counter")
+#	connect("on_blocked_by_shield_total", self, "prep_melee_counter")
 	pass
 
-func prep_melee_counter(is_melee: bool):
+func prep_melee_counter(combat_package: Dictionary):
 #	print(name," reacting to melee damage!")
-	if !is_melee: return
+#	if !is_melee: return
 	
 #	print(name," reacting to melee damage!")
 	batman.reaction(self, "basic_melee")
