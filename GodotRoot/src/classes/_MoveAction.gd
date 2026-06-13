@@ -192,6 +192,42 @@ func add_actor(new_actor, type: int):
 		affected_actors.append(new_actor)
 	pass
 
+func add_cell(coord: Vector2, type: int, from_arrow: bool = false):
+	if type >= ROWS.size() or type < 0: return
+	if !batman.grid_tiles.has_cellv(coord): return
+	###
+	
+#	print("adding cell for ",actor)
+	
+	var cell_array: Array
+	if !from_arrow:
+		cell_array = sets.get_cell(COLS.PURECELL_ARRAY, type)
+	cell_array = sets.get_cell(COLS.ALLCELL_ARRAY, type) # Keep arrow-based data separate
+	
+	if !cell_array.has(coord):
+		cell_array.append(coord)
+		if !from_arrow:
+#			print("cell_array appending ",coord)
+			pass
+		else:
+#			print("cell_array ARROW-appending ",coord)
+			pass
+	pass
+
+func add_cellset(coords: Array, type: int):
+	if type >= ROWS.size() or type < 0: return
+	###
+	
+	var cell_array: Array = sets.get_cell(COLS.PURECELL_ARRAY, type)
+	for coord in coords: if coord is Vector2:
+		if !batman.grid_tiles.has_cellv(coord): continue
+		###
+		if !cell_array.has(coord):
+			cell_array.append(coord)
+		pass
+	
+	pass
+
 func add_arrow(start_coord: Vector2, end_coord: Vector2, type: int, enforce_line: bool = true):
 	if type >= ROWS.size() or type < 0: return
 	if start_coord == end_coord: return
@@ -231,42 +267,6 @@ func add_arrow(start_coord: Vector2, end_coord: Vector2, type: int, enforce_line
 		if thislen > maxlen: break
 		if !batman.grid_tiles.has_cellv(step_coord): break
 	add_cell(end_coord, type, true)
-	pass
-
-func add_cell(coord: Vector2, type: int, from_arrow: bool = false):
-	if type >= ROWS.size() or type < 0: return
-	if !batman.grid_tiles.has_cellv(coord): return
-	###
-	
-#	print("adding cell for ",actor)
-	
-	var cell_array: Array
-	if !from_arrow:
-		cell_array = sets.get_cell(COLS.PURECELL_ARRAY, type)
-	cell_array = sets.get_cell(COLS.ALLCELL_ARRAY, type) # Keep arrow-based data separate
-	
-	if !cell_array.has(coord):
-		cell_array.append(coord)
-		if !from_arrow:
-#			print("cell_array appending ",coord)
-			pass
-		else:
-#			print("cell_array ARROW-appending ",coord)
-			pass
-	pass
-
-func add_cellset(coords: Array, type: int):
-	if type >= ROWS.size() or type < 0: return
-	###
-	
-	var cell_array: Array = sets.get_cell(COLS.PURECELL_ARRAY, type)
-	for coord in coords: if coord is Vector2:
-		if !batman.grid_tiles.has_cellv(coord): continue
-		###
-		if !cell_array.has(coord):
-			cell_array.append(coord)
-		pass
-	
 	pass
 
 func add_priority_cell(coord: Vector2, type: int):

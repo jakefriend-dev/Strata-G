@@ -27,8 +27,8 @@ func ACT():
 	if utils.actorpass(victim):
 		
 		var check_vector: Vector2 = actor.my_facing
-		if variant == 1: check_vector += Vector2.UP
-		if variant == 2: check_vector += Vector2.DOWN
+		if variant == 2: check_vector += Vector2.UP
+		if variant == 3: check_vector += Vector2.DOWN
 		var check_cell: Vector2 = actor.coord
 		while check_cell != victim.coord:
 			check_cell += check_vector
