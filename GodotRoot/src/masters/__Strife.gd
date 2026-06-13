@@ -95,8 +95,9 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 		defender.emit_signal("on_phys_combat_any_contact")
 		quick_effect(defender, "spark_burst")
 	
-	# Check for shield bypass
+	# Check for shield bypass / piercing immunity
 	var piercing: bool = flags.has("piercing")
+	if defender.is_immune_piercing: piercing = false # Override!
 	if !piercing:
 		# Deduct damage and shield equally until either of them depletes fully
 		while (defender.bonus_shield > 0 or defender.shield > 0) and damage > 0:

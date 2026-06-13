@@ -60,16 +60,20 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="Rock" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 0
-max_health = 6
+max_health = 8
+max_shield = 2
 ofc_name = "Rock"
 bui_level = 3
 base_action_points = 0
+faction = 0
 def_weight = 3
+tile_walk_speed = 0.6
 def_unmovable = true
 def_immune_fire = true
 def_immune_poison = true
 def_immune_magnet = true
 def_immune_elec = true
+def_immune_piercing = true
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

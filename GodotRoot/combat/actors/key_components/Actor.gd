@@ -123,6 +123,7 @@ export var def_immune_ice:			bool = false # Doesn't slide on ice
 export var def_immune_poison:		bool = false # Doesn't take poison damage
 export var def_immune_magnet:		bool = false # Not pulled by magnet tiles
 export var def_immune_elec:			bool = false # Doesn't take elec damage on static traps
+export var def_immune_piercing:		bool = false # Not affected by the 'piercing' tag
 
 var weight: int
 #var is_hovering: bool
@@ -138,6 +139,7 @@ var is_immune_ice: bool
 var is_immune_poison: bool
 var is_immune_magnet: bool
 var is_immune_elec: bool
+var is_immune_piercing: bool
 
 var is_ghost: bool = false # When true, allowed to break many rules. You almost ALWAYS turn this off at the end of a turn; meant as a temporary thing for like a charge-through attack.
 var just_exited_ghost_mode: bool = false # Helps us bypass some errors
@@ -231,7 +233,7 @@ func perform_initial_data_setup():
 	action_points = base_action_points
 	base_damage *= batman.BASE_HP_FACTOR
 	
-	for term in ["unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged", "immune_mud"]:
+	for term in ["unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged", "immune_mud", "immune_piercing"]:
 		set( str("is_"+term), get(str("def_",term)) )
 	weight = def_weight
 	pass
