@@ -236,17 +236,33 @@ func test_new_combat(test: String):
 
 func set_up_random_combat():
 	var new_battle_details: Dictionary
+	if !DETERMINISTIC: randomize()
+	
+	
 	
 	# Determine a random halfboard size
-	var boardsizes: Array = [3, 4, 5, 6]
-	boardsizes.shuffle()
-	var size_x: int = boardsizes[0]
-	if size_x == 3 or size_x == 6:
-		# Get rid of any extreme so we don't have 3x3 or 6x6
-		var discarded: int = boardsizes.pop_front()
-	boardsizes.shuffle()
-	var size_y: int = boardsizes[0]
-	new_battle_details["halfboard_size"] = Vector2(size_x, size_y)
+	var boardwidth: Array = [3, 4]
+	var boardheight: Array = [3, 4, 5, 6]
+	boardwidth.shuffle()
+	var size_x: int = boardwidth[0]
+	if size_x == 3: boardheight.erase(3)
+#	if size_x == 5: boardheight.erase(6)
+	boardheight.shuffle()
+	var size_y: int = boardheight[0]
+	var halfboard: Vector2 = Vector2(size_x, size_y)
+	new_battle_details["halfboard_size"] = halfboard
+	
+	
+	# Set up temp-board Array2Ds for the purpose of non-overlapping placement
+	var tb_players: Array2D = Array2D.new()
+	tb_players.resize(size_x, size_y)
+	tb_players.onebased = true
+	var tb_enemies: Array2D = Array2D.new()
+	tb_enemies.resize(size_x, size_y)
+	tb_enemies.onebased = true
+	var tb_overall: Array2D = Array2D.new()
+	tb_overall.resize(size_x*2, size_y)
+	tb_overall.onebased = true
 	
 	# Randomly place PCs
 	var pc_array: Array = []
@@ -272,19 +288,71 @@ func set_up_random_combat():
 		mage_options.erase(tank_y)
 	mage_options.shuffle()
 	var mage_y: int = mage_options[0]
-	# Then append (may need to reconsider this format)
-	pc_array.append([bard_x, bard_y, "Bard"])
-	pc_array.append([tank_x, tank_y, "Tank"])
-	pc_array.append([mage_x, mage_y, "Mage"])
-	new_battle_details["pc_positions"] = pc_array
+	# Then set (may need to reconsider this format)
+	pc_array.append([bard_x, bard_y, "P1"])
+	pc_array.append([tank_x, tank_y, "P2"])
+	pc_array.append([mage_x, mage_y, "P3"])
+	tb_players.set_cell(bard_x, bard_y, "P1")
+	tb_players.set_cell(tank_x, tank_y, "P2")
+	tb_players.set_cell(mage_x, mage_y, "P3")
+	tb_overall.set_cell(bard_x, bard_y, "P1")
+	tb_overall.set_cell(tank_x, tank_y, "P2")
+	tb_overall.set_cell(mage_x, mage_y, "P3")
+	
+	
+	# Determine a 'spending cost' for this board's level of challenge
+	var budget: int = size_x * size_y # Anywhere from 12 to 30
+	# This is allowed to drop below 0; we'll just stop being able to 'buy' things then
+	var npc_positions: Array = []
+	
 	
 	# Now generate enemies
+	var enemy_min: int = 2
+	var enemy_max: int = int(budget/3)
+	var enemy_upper_limit: int = 6
+	if enemy_max > enemy_upper_limit:
+		enemy_max = enemy_upper_limit
+	var enemy_quota: int = utils.randi_bw(enemy_min, enemy_max)
+	
+	var unplaced_enemies: Array = []
+	var enemy_values: Dictionary = {
+		"Thrower": 2,
+		"Doggo": 3,
+		"Beast": 4,
+	}
+	var enemy_options: Array = enemy_values.keys()
+	while enemy_quota > 0:
+		enemy_options.shuffle()
+		var enemy_name: String = enemy_options[0]
+		budget -= enemy_values[enemy_name]
+		unplaced_enemies.append(enemy_name)
+		enemy_quota -= 1
+	while !unplaced_enemies.empty():
+		var x: int = utils.randi_bw(1, size_x)
+		var y: int = utils.randi_bw(1, size_y)
+		if tb_enemies.get_cell(x, y) != null: continue
+		var this_enemy_name: String = unplaced_enemies.pop_front()
+		tb_enemies.set_cell(x, y, this_enemy_name)
+		tb_overall.set_cell(x+size_x, y, this_enemy_name)
+		npc_positions.append([x+size_x, y, this_enemy_name])
+	
 	
 	# Now place obstacles
+	# Add a few rocks at random
+	while budget > 5:
+		if utils.coin_flip(): break
+		budget -= 2
+		var x: int = utils.randi_bw(1, size_x*2)
+		var y: int = utils.randi_bw(1, size_y)
+		if tb_overall.get_cell(x, y) != null: continue
+		npc_positions.append([x, y, "Rock"])
+	
 	
 	# Now place tiletypes (avoiding detrimental ones directly underneath anyone not immune to that type)
 	
 	# Okay, think we're good!
+	new_battle_details["pc_positions"] = pc_array
+	new_battle_details["npc_positions"] = npc_positions
 	init_new_combat(new_battle_details)
 	pass
 
@@ -293,7 +361,10 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	if !DETERMINISTIC: randomize()
 	
 	# Validations!
-	if !new_battle_details.has("npc_positions"): return false
+	if !new_battle_details.has("npc_positions"):
+#		return false
+		print("BATMAN: fyi, init_new_combat() has no NPCs")
+		new_battle_details["npc_positions"] = []
 	
 	print("---\nTURN MGR: Initializing new combat!")
 	curr_actor = null
@@ -362,7 +433,9 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	# IF battle details involve custom party starting positions, use those. Otherwise, use defaults.
 	var use_custom_pc_positions: bool = false
 	if battle_details.has("pc_positions"):
+		print("a")
 		if battle_details["pc_positions"].size() == 3:
+			print("b")
 			use_custom_pc_positions = true
 			var pc_count: int = 0
 			for set in battle_details["pc_positions"]: if set is Array: # It's an array of three-value arrays: [X, Y, name]

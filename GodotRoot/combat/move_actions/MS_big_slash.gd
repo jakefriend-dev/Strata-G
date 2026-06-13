@@ -21,6 +21,7 @@ func PREVIEW():
 	if variant == 3: check_cells.append(actor.coord + check_vector + actor.my_facing)
 	
 	for target in check_cells:
+		if !batman.grid_actors.has_cellv(target): continue
 		add_cell(target, ROWS.BAD)
 		
 		var victim: Actor = batman.grid_actors.get_cellv(target)

@@ -67,7 +67,7 @@ func update_cell_highlighting_temp(move: MoveAction):
 				break
 #		to_col.a = 0.5
 	
-	self_modulate = to_col
+	modulate = to_col
 	for h in $Highlights.get_children():
 		if h.visible != (hname == h.name):
 			h.visible = (hname == h.name)

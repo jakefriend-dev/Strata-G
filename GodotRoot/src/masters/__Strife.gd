@@ -130,7 +130,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	if !piercing:
 		# Deduct damage and shield equally until either of them depletes fully
-		while (defender.bonus_shield > 0 or defender.shield > 0) and damage > 0:
+		while (defender.bonus_shield > 0 or unbroken_shield > 0) and damage > 0:
 			damage -= 1
 			if defender.bonus_shield > 0:
 				defender.bonus_shield -= 1
