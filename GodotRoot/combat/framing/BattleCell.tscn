@@ -91,15 +91,14 @@ __meta__ = {
 }
 
 [node name="Highlights" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0.521569 )
 
 [node name="Big" type="NinePatchRect" parent="Highlights"]
 visible = false
 material = SubResource( 2 )
-margin_left = 4.0
-margin_top = 4.0
-margin_right = 68.0
-margin_bottom = 44.0
+margin_left = 6.0
+margin_top = 6.0
+margin_right = 66.0
+margin_bottom = 42.0
 texture = ExtResource( 1 )
 patch_margin_left = 4
 patch_margin_top = 4
@@ -110,6 +109,7 @@ __meta__ = {
 }
 
 [node name="Med" type="NinePatchRect" parent="Highlights"]
+visible = false
 material = SubResource( 2 )
 margin_left = 12.0
 margin_top = 8.0

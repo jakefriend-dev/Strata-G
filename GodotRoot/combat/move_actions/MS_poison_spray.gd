@@ -45,7 +45,8 @@ func PREVIEW():
 	pass
 
 func ACT():
-	for target in get_all_cells_by_MPD_type(ROWS.BAD):
+	for target in get_all_cells_by_MPD_type(ROWS.BAD, true):
+		print("poison at target ",target)
 		strife.damage_actor_at_coord(actor, target, 1*batman.BASE_HP_FACTOR, ["piercing", "elem_POISON"])
 	
 	end_action()

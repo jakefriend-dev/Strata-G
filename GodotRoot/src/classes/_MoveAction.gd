@@ -40,12 +40,12 @@ var variant: int # Shortcut that gets updated against batman.highlighted_subacto
 
 # Colours needed: 5 (bad, good, neutral, passthrough/pass, error)
 var colors: Dictionary = {
-	ROWS.BAD:      Color("e9148a"),
-	ROWS.GOOD:     Color("00c84c"),
-	ROWS.NEUTRAL:  Color("f4dd30"),
-	ROWS.PASS:     Color("488a75"),
-	ROWS.ERROR:    Color("595565"),
-	ROWS.FALLBACK: Color("f3fcf0"),
+	ROWS.BAD:      Color("e9148a"), # 0
+	ROWS.GOOD:     Color("00c84c"), # 1
+	ROWS.NEUTRAL:  Color("f4dd30"), # 2
+	ROWS.PASS:     Color("488a75"), # 3
+	ROWS.ERROR:    Color("595565"), # 4
+	ROWS.FALLBACK: Color("f3fcf0"), # 5
 }
 var sets: Array2D
 
@@ -62,7 +62,7 @@ enum COLS { # LEFT TO RIGHT
 	ACTOR_ARRAY, # An array of Actors. Adding an Actor MUST add its cell. Only for later quick reference, though.
 	ARROW_ARRAY, # An array of Rect2s representing Line2Ds. The line travel data is stored as "size - position". Adding an arrow MUST add cells to the cell arrays.
 	ALLCELL_ARRAY, # Cells determined by the arrows AND manual cells; kept separate just for easy processing of move actions keeping "legit" cells relevant; combined into display cells
-	CELL_ARRAY, # An array of Vector2s showing cells affeted by each colourtype. Can be added manually or via actor.
+	PURECELL_ARRAY, # An array of Vector2s showing cells affeted by each colourtype, ONLY set by add_actor() or add_cell(), NOT add_arrow()!
 	DISPLAY_CELLS, # An array of cells AFTER the priority function has been run, which will ensure that ALL listed cells in ALL cell arrays are unique and do not recur across the entire dataset
 }
 
@@ -176,7 +176,7 @@ func add_actor(new_actor, type: int):
 	if !utils.actorpass(new_actor): return
 	###
 	
-	var cell_array: Array = sets.get_cell(COLS.CELL_ARRAY, type)
+	var cell_array: Array = sets.get_cell(COLS.PURECELL_ARRAY, type)
 	if !cell_array.has(new_actor.coord):
 		cell_array.append(new_actor.coord)
 	
@@ -242,8 +242,7 @@ func add_cell(coord: Vector2, type: int, from_arrow: bool = false):
 	
 	var cell_array: Array
 	if !from_arrow:
-		cell_array = sets.get_cell(COLS.CELL_ARRAY, type)
-#	else:
+		cell_array = sets.get_cell(COLS.PURECELL_ARRAY, type)
 	cell_array = sets.get_cell(COLS.ALLCELL_ARRAY, type) # Keep arrow-based data separate
 	
 	if !cell_array.has(coord):
@@ -260,7 +259,7 @@ func add_cellset(coords: Array, type: int):
 	if type >= ROWS.size() or type < 0: return
 	###
 	
-	var cell_array: Array = sets.get_cell(COLS.CELL_ARRAY, type)
+	var cell_array: Array = sets.get_cell(COLS.PURECELL_ARRAY, type)
 	for coord in coords: if coord is Vector2:
 		if !batman.grid_tiles.has_cellv(coord): continue
 		###
@@ -299,7 +298,7 @@ func get_first_cell_by_MPD_type(type: int, use_arrowcells = false) -> Vector2:
 	if use_arrowcells:
 		cells = sets.get_cell(COLS.ALLCELL_ARRAY, type)
 	else:
-		cells = sets.get_cell(COLS.CELL_ARRAY, type)
+		cells = sets.get_cell(COLS.PURECELL_ARRAY, type)
 	if cells.empty(): return Vector2.ZERO # Should never happen - you only add cells to this AFTER validating, and if you have no cells to work with in the preview you shouldn't be allowed to get further.
 	return cells.front()
 	pass
@@ -307,7 +306,7 @@ func get_first_cell_by_MPD_type(type: int, use_arrowcells = false) -> Vector2:
 func get_all_cells_by_MPD_type(type: int, use_arrowcells = false) -> Array:
 	if use_arrowcells:
 		return sets.get_cell(COLS.ALLCELL_ARRAY, type)
-	return sets.get_cell(COLS.CELL_ARRAY, type)
+	return sets.get_cell(COLS.PURECELL_ARRAY, type)
 
 
 

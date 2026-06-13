@@ -60,7 +60,7 @@ func update_cell_highlighting_temp(move: MoveAction):
 				match index:
 					0: hname = "Big"
 					1: hname = "Big"
-					2: hname = "Medium"
+					2: hname = "Med"
 					3: hname = "Pass"
 					4: hname = "Big"
 					5: hname = "Small"
