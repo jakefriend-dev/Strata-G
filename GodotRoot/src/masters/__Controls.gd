@@ -28,6 +28,10 @@ func monitor_inputs():
 			multi_input_lock = true
 			batman.test_new_combat("2")
 			return
+		if Input.is_action_just_pressed("dev_3"):
+			multi_input_lock = true
+			batman.test_new_combat("3")
+			return
 		return
 	
 	# Misc dev things

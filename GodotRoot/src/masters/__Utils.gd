@@ -1,6 +1,7 @@
 extends Node
 
 var tween: Tween
+var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 # ---
 
@@ -96,6 +97,29 @@ func valid(who: Node) -> bool:
 	
 	return true
 	pass
+
+func array_from_intmin_to_intmax(mini: int, maxi: int) -> Array:
+	if mini == maxi: return [mini]
+	
+	var real_mini: int = mini
+	var real_maxi: int = maxi
+	if mini > maxi:
+		real_mini = maxi
+		real_maxi = mini
+	
+	var results: Array = []
+	var steps: int = (real_maxi - real_mini) + 1
+	var counter: int = 0
+	for n in steps:
+		results.append(real_mini+counter)
+		counter += 1
+	
+	return results
+	pass
+
+func randi_bw(mini: int, maxi: int):
+	rng.randomize()
+	return rng.randi_range(mini, maxi)
 
 func coin_flip() -> bool:
 	return rand_range(0.00, 0.99) < 0.5

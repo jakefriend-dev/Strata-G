@@ -197,7 +197,8 @@ func _process(delta):
 
 func test_new_combat(test: String):
 	match test:
-		"1":
+		
+		"1": # Manual battle 1
 			if !init_new_combat({
 				"npc_positions": [
 					[4, 3, "Beast"],
@@ -214,7 +215,8 @@ func test_new_combat(test: String):
 			}):
 				print("TURN MGR: test_new_combat(",test,") failed!")
 				return
-		"2":
+		
+		"2": # Manual battle 2
 			if !init_new_combat({
 				"halfboard_size": Vector2(4, 4),
 				"npc_positions": [
@@ -225,7 +227,65 @@ func test_new_combat(test: String):
 				],
 			}):
 				return
-	print("TURN MGR: test_new_combat(",test,") succeeded!")
+		
+		"3": # Randomizer!
+			set_up_random_combat()
+	
+#	print("TURN MGR: test_new_combat(",test,") succeeded!")
+	pass
+
+func set_up_random_combat():
+	var new_battle_details: Dictionary
+	
+	# Determine a random halfboard size
+	var boardsizes: Array = [3, 4, 5, 6]
+	boardsizes.shuffle()
+	var size_x: int = boardsizes[0]
+	if size_x == 3 or size_x == 6:
+		# Get rid of any extreme so we don't have 3x3 or 6x6
+		var discarded: int = boardsizes.pop_front()
+	boardsizes.shuffle()
+	var size_y: int = boardsizes[0]
+	new_battle_details["halfboard_size"] = Vector2(size_x, size_y)
+	
+	# Randomly place PCs
+	var pc_array: Array = []
+	# X positions for all first
+	var bard_x: int = utils.randi_bw(1, size_x)
+	var tank_options: Array = [size_x, size_x - 1]
+	tank_options.shuffle()
+	var tank_x: int = tank_options[0]
+	var mage_options: Array = [1, 2]
+	mage_options.shuffle()
+	var mage_x: int = mage_options[0]
+	# Then Y positions
+	var bard_y: int = utils.randi_bw(1, size_y)
+	tank_options = utils.array_from_intmin_to_intmax(1, size_y)
+	if tank_x == bard_x: if tank_options.has(bard_y): # Tank must consider bard...
+		tank_options.erase(bard_y)
+	tank_options.shuffle()
+	var tank_y: int = tank_options[0]
+	mage_options = utils.array_from_intmin_to_intmax(1, size_y)
+	if mage_x == bard_x: if mage_options.has(bard_y): # Mage must consider bard...
+		mage_options.erase(bard_y)
+	if mage_x == tank_x: if mage_options.has(tank_y): # ...AND tank...
+		mage_options.erase(tank_y)
+	mage_options.shuffle()
+	var mage_y: int = mage_options[0]
+	# Then append (may need to reconsider this format)
+	pc_array.append([bard_x, bard_y, "Bard"])
+	pc_array.append([tank_x, tank_y, "Tank"])
+	pc_array.append([mage_x, mage_y, "Mage"])
+	new_battle_details["pc_positions"] = pc_array
+	
+	# Now generate enemies
+	
+	# Now place obstacles
+	
+	# Now place tiletypes (avoiding detrimental ones directly underneath anyone not immune to that type)
+	
+	# Okay, think we're good!
+	init_new_combat(new_battle_details)
 	pass
 
 func init_new_combat(new_battle_details: Dictionary) -> bool:
@@ -305,13 +365,14 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 		if battle_details["pc_positions"].size() == 3:
 			use_custom_pc_positions = true
 			var pc_count: int = 0
-			for set in battle_details["pc_positions"]: if set is Array: # It's an array of two-value arrays, X and Y
+			for set in battle_details["pc_positions"]: if set is Array: # It's an array of three-value arrays: [X, Y, name]
+				var pc: String = set[2]
 				if !grid_actors.has_cell(set[0], set[1]):
-					print("TURN MGR: Failed to place PC ",default_party[pc_count]," because cell ",set[0],", ",set[1]," does not exist")
+					print("TURN MGR: Failed to place PC ",pc," because cell ",set[0],", ",set[1]," does not exist")
 				if grid_actors.get_cell(set[0], set[1]) == null:
-					grid_actors.set_cell(set[0], set[1], default_party[pc_count])
+					grid_actors.set_cell(set[0], set[1], pc)
 				else:
-					print("TURN MGR: Failed to place PC ",default_party[pc_count]," because cell ",set[0],", ",set[1]," was already occupied")
+					print("TURN MGR: Failed to place PC ",pc," because cell ",set[0],", ",set[1]," was already occupied")
 				pc_count += 1
 			print("TURN MGR: Total of ",pc_count," PCs custom-placed")
 	
