@@ -10,10 +10,93 @@ enum istates {
 }
 var inputstate: int = istates.CANNOT_ACT
 
+const deadzone: float = 0.8
+var stick_left_active: bool = false
+var stick_left_vangle: Vector2
+var stick_left_gangle: Vector2
+var stick_right_active: bool = false
+var stick_right_vangle: Vector2
+var stick_right_gangle: Vector2
+
 # ---
 
-func _process(_d): monitor_inputs()
-func _physics_process(_delta): multi_input_lock = false
+func _process(_d):
+	monitor_gamepad_sticks()
+	monitor_inputs()
+func _physics_process(_delta):
+	multi_input_lock = false
+	if stick_left_active:
+		stick_left_active = false
+#		if Input.is_action_pressed("player_cycle_next"):
+#			Input.action_release("player_cycle_next")
+#		if Input.is_action_pressed("player_cycle_prev"):
+#			Input.action_release("player_cycle_prev")
+	stick_right_active = false
+
+# -
+
+func monitor_gamepad_sticks():
+	if multi_input_lock: return
+	
+	stick_left_vangle = Vector2.ZERO
+	
+	var left_h: float = Input.get_joy_axis(0, JOY_AXIS_0)
+	if abs(left_h) > deadzone:
+		if left_h < 0:
+			stick_left_gangle.x = -1
+			if !Input.is_action_pressed("player_cycle_prev"):
+				Input.action_press("player_cycle_prev")
+		else:
+			stick_left_gangle.x = 1
+			if !Input.is_action_pressed("player_cycle_next"):
+				Input.action_press("player_cycle_next")
+		stick_left_vangle.x = left_h
+		stick_left_active = true
+	else:
+		if Input.is_action_pressed("player_cycle_prev"):
+			Input.action_release("player_cycle_prev")
+		if Input.is_action_pressed("player_cycle_next"):
+			Input.action_release("player_cycle_next")
+		stick_left_vangle.x = 0
+		stick_left_gangle.x = 0
+	
+	var left_v: float = Input.get_joy_axis(0, JOY_AXIS_1)
+	if abs(left_v) > deadzone:
+		if left_v < 0:
+			stick_left_gangle.y = -1
+		else:
+			stick_left_gangle.y = 1
+		stick_left_vangle.y = left_v
+		stick_left_active = true
+	
+	stick_right_vangle = Vector2.ZERO
+	var right_h: float = Input.get_joy_axis(0, JOY_AXIS_2)
+	if abs(right_h) > deadzone:
+		if right_h < 0:
+			stick_right_gangle.x = -1
+		else:
+			stick_right_gangle.x = 1
+		stick_right_vangle.x = right_h
+		stick_right_active = true
+	var right_v: float = Input.get_joy_axis(0, JOY_AXIS_3)
+	if abs(right_v) > deadzone:
+		if right_v < 0:
+			stick_right_gangle.y = -1
+		else:
+			stick_right_gangle.y = 1
+		stick_right_vangle.y = right_v
+		stick_right_active = true
+	pass
+
+# JOY_AXIS_0 = 0
+#Gamepad left stick horizontal axis.
+#● JOY_AXIS_1 = 1
+#Gamepad left stick vertical axis.
+#● JOY_AXIS_2 = 2
+#Gamepad right stick horizontal axis.
+#● JOY_AXIS_3 = 3
+#Gamepad right stick vertical axis.
+
 
 func monitor_inputs():
 	if multi_input_lock: return
