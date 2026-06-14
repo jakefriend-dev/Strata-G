@@ -4,10 +4,10 @@
 
 [resource]
 script = ExtResource( 1 )
-display_name = "Wide Slash"
-display_desc = "Make a strong attack against 3 nearby targets for 3 damage each."
+display_name = "Double Strike"
+display_desc = "Slash and then stab, hitting the center tile with both swings. Each hit deals 2 damage."
 options = 3
-option_desc = "Changes angle of slash."
+option_desc = "Changes angle of attacks."
 cost = 3
 action_type = 0
 on_use_cooldown = 0

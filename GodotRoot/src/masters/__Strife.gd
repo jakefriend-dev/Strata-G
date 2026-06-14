@@ -14,11 +14,18 @@ extends Node
 	# Global checks for if a given actor is 'allowed' to move to a given tile
 
 # Made up a few on the fly here, probably no harm
-enum elements {NORMAL, FIRE, WATER, ELEC, MAGIC, POISON, ROCK, AIR, ICE, SHADOW}
+enum elements {NORMAL, FIRE, WATER, ELEC, MAGIC, POISON, ROCK, AIR}
+# STANDARD ELEMENTS:
+	# Water -> Fire -> Grass -> Rock/Metal -> Elec -> Water?
+	# If we go in a linear pattern, at least
+	# Normal is moreso the default; an 'absence' of elemental factor. No resistances or vulnurabilities.
+# NONSTANDARD:
+	# Poison == "shadow" or "dark"
+# Water == Ice for "simplicity" (hang the lampshade anywhere)
 
-enum hitrange {CONTACT, DISTANT}
+enum hitrange {CONTACT, DISTANT} # Not used anywhere atm
 
-enum impacts {PHYSICAL, ABSTRACT}
+enum impacts {PHYSICAL, ABSTRACT} # Not use anywhere atm
 
 # For actors, to help handle things like ice or conveyor effect motion
 enum moves { # WAYS of moving, for the purpose of things like determining ice slippy-ness.

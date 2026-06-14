@@ -36,6 +36,7 @@ var actor: Actor # Quickref!
 
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop
 
+
 # Preview data's storage -------------------------------------------------------
 
 # Colours needed: 5 (bad, good, neutral, passthrough/pass, error)
@@ -218,12 +219,15 @@ func add_cellset(coords: Array, type: int):
 	if type >= ROWS.size() or type < 0: return
 	###
 	
-	var cell_array: Array = sets.get_cell(COLS.PURECELL_ARRAY, type)
+	var purecell_array: Array = sets.get_cell(COLS.PURECELL_ARRAY, type)
+	var allcell_array: Array = sets.get_cell(COLS.ALLCELL_ARRAY, type)
 	for coord in coords: if coord is Vector2:
 		if !batman.grid_tiles.has_cellv(coord): continue
 		###
-		if !cell_array.has(coord):
-			cell_array.append(coord)
+		if !purecell_array.has(coord):
+			purecell_array.append(coord)
+		if !allcell_array.has(coord):
+			allcell_array.append(coord)
 		pass
 	
 	pass

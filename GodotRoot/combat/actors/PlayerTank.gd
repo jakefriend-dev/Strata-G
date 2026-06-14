@@ -13,7 +13,7 @@ func _ready():
 #	connect("on_blocked_by_shield_total", self, "prep_melee_counter")
 	pass
 
-func prep_melee_counter(combat_package: Dictionary):
+func prep_melee_counter(_combat_package: Dictionary):
 #	print(name," reacting to melee damage!")
 #	if !is_melee: return
 	
