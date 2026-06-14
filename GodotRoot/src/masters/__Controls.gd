@@ -11,7 +11,8 @@ enum istates {
 var inputstate: int = istates.CANNOT_ACT
 
 const deadzone: float = 0.8
-var stick_left_active: bool = false
+var stick_LX_active: bool = false
+var stick_LY_active: bool = false
 var stick_left_vangle: Vector2
 var stick_left_gangle: Vector2
 var stick_right_active: bool = false
@@ -25,76 +26,15 @@ func _process(_d):
 	monitor_inputs()
 func _physics_process(_delta):
 	multi_input_lock = false
-#	if stick_left_active:
-#		stick_left_active = false
-##		if Input.is_action_pressed("player_cycle_next"):
-##			Input.action_release("player_cycle_next")
-##		if Input.is_action_pressed("player_cycle_prev"):
-##			Input.action_release("player_cycle_prev")
-#	if stick_right_active:
-#		stick_right_active = false
 
 # -
 
 func monitor_gamepad_sticks():
 	if multi_input_lock: return
 	
-	stick_left_vangle = Vector2.ZERO
+	monitor_L_stick(JOY_AXIS_1, "player_cycle_prev", "player_cycle_next")
+	monitor_L_stick(JOY_AXIS_0, "player_subcycle_prev", "player_subcycle_next")
 	
-	var left_h: float = Input.get_joy_axis(0, JOY_AXIS_0)
-	if abs(left_h) > deadzone:
-		if left_h < 0:
-			stick_left_gangle.x = -1
-			if !Input.is_action_pressed("player_cycle_prev"):
-				Input.action_press("player_cycle_prev")
-		else:
-			stick_left_gangle.x = 1
-			if !Input.is_action_pressed("player_cycle_next"):
-				Input.action_press("player_cycle_next")
-		stick_left_vangle.x = left_h
-		stick_left_active = true
-	elif stick_left_active:
-		stick_left_active = false
-		if Input.is_action_pressed("player_cycle_prev"):
-			Input.action_release("player_cycle_prev")
-		if Input.is_action_pressed("player_cycle_next"):
-			Input.action_release("player_cycle_next")
-		stick_left_vangle.x = 0
-		stick_left_gangle.x = 0
-	
-#	var left_v: float = Input.get_joy_axis(0, JOY_AXIS_1)
-#	if abs(left_v) > deadzone:
-#		if left_v < 0:
-#			stick_left_gangle.y = -1
-#		else:
-#			stick_left_gangle.y = 1
-#		stick_left_vangle.y = left_v
-#		stick_left_active = true
-#
-#	#
-#	#
-#	#
-#
-#	stick_right_vangle = Vector2.ZERO
-#
-#	var right_h: float = Input.get_joy_axis(0, JOY_AXIS_2)
-#	if abs(right_h) > deadzone:
-#		if right_h < 0:
-#			stick_right_gangle.x = -1
-#		else:
-#			stick_right_gangle.x = 1
-#		stick_right_vangle.x = right_h
-#		stick_right_active = true
-#	var right_v: float = Input.get_joy_axis(0, JOY_AXIS_3)
-#	if abs(right_v) > deadzone:
-#		if right_v < 0:
-#			stick_right_gangle.y = -1
-#		else:
-#			stick_right_gangle.y = 1
-#		stick_right_vangle.y = right_v
-#		stick_right_active = true
-	pass
-
 # JOY_AXIS_0 = 0
 #Gamepad left stick horizontal axis.
 #● JOY_AXIS_1 = 1
@@ -103,7 +43,50 @@ func monitor_gamepad_sticks():
 #Gamepad right stick horizontal axis.
 #● JOY_AXIS_3 = 3
 #Gamepad right stick vertical axis.
+	
+	pass
 
+func monitor_L_stick(joy_axis: int, dec_action: String, inc_action: String):
+	var h_not_v: bool = (joy_axis == JOY_AXIS_0 or joy_axis == JOY_AXIS_2)
+	
+	var vecstep: int = 0
+	var tilt: float = Input.get_joy_axis(0, joy_axis)
+	var stick_active: bool = false
+	if h_not_v:
+		stick_active = stick_LX_active
+	else:
+		stick_active = stick_LY_active
+	
+	if abs(tilt) > deadzone:
+		if tilt < 0:
+			vecstep = -1
+			if !Input.is_action_pressed(dec_action):
+				Input.action_press(dec_action)
+		else:
+			vecstep = 1
+			if !Input.is_action_pressed(inc_action):
+				Input.action_press(inc_action)
+		stick_active = true
+		
+	else: # Tilt doesn't exceed deadzone
+		if stick_active:
+			stick_active = false
+			if Input.is_action_pressed(dec_action):
+				Input.action_release(dec_action)
+			if Input.is_action_pressed(inc_action):
+				Input.action_release(inc_action)
+		vecstep = 0
+		tilt = 0.0
+	
+	if h_not_v:
+		stick_LX_active = stick_active
+		stick_left_vangle.x = vecstep
+		stick_left_gangle.x = tilt
+	else:
+		stick_LY_active = stick_active
+		stick_left_vangle.y = vecstep
+		stick_left_gangle.y = tilt
+	pass
 
 func monitor_inputs():
 	if multi_input_lock: return
@@ -167,17 +150,19 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 	# Select a new move/option
 	if Input.is_action_just_pressed("player_cycle_next"):
 		multi_input_lock = true
-		if Input.is_action_pressed("player_modifier_skills"):
-			batman.cycle_player_actop_subops_forward()
-		else:
-			batman.cycle_player_actops_forward()
+		batman.cycle_player_actops_forward()
 		return
 	if Input.is_action_just_pressed("player_cycle_prev"):
 		multi_input_lock = true
-		if Input.is_action_pressed("player_modifier_skills"):
-			batman.cycle_player_actop_subops_backward()
-		else:
-			batman.cycle_player_actops_backward()
+		batman.cycle_player_actops_backward()
+		return
+	if Input.is_action_just_pressed("player_subcycle_next"):
+		multi_input_lock = true
+		batman.cycle_player_actop_subops_forward()
+		return
+	if Input.is_action_just_pressed("player_subcycle_prev"):
+		multi_input_lock = true
+		batman.cycle_player_actop_subops_backward()
 		return
 	
 	# End turn
