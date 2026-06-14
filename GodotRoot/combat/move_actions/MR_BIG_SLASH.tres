@@ -1,6 +1,7 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://combat/move_actions/MS_big_slash.gd" type="Script" id=1]
+[ext_resource path="res://art/_placeholder/3x3 test grid 8.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
@@ -9,6 +10,7 @@ display_desc = "Slash and then stab, hitting the center tile with both swings. E
 options = 3
 option_desc = "Changes angle of attacks."
 cost = 3
+option_image = ExtResource( 2 )
 action_type = 0
 on_use_cooldown = 0
 initial_cooldown = 0

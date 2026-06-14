@@ -12,6 +12,10 @@ export (String, MULTILINE) var option_desc: String
 
 export (int, 0, 8) var cost: int = 1
 
+export var option_image: Texture
+
+
+
 enum restchecks {REST, MOVEMENT}
 export (restchecks) var action_type: int = restchecks.REST
 
@@ -26,14 +30,9 @@ export (int, 0, 8) var uses_per_battle: int = 0
 var current_turn_uses: int = 0
 var current_battle_uses: int = 0
 
-# Nah, the ability script can do this on its own
-#export var damage_tags: String = "" # Tags IF damage is called
-#export var motion_tags: String = "" # Tags IF external motion is called
-
 export var req_successful_preview: bool = false
 
 var actor: Actor # Quickref!
-
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop
 
 
