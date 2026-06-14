@@ -14,12 +14,28 @@ var coord: Vector2 = Vector2(-1, -1)
 var type: int = -1
 var faction: int = -1
 
+var max_row: int # Just stored as a shortcut
+var threat: YSort
+
 # ---
 
 func _ready():
 	batman.connect("update_all_tiletypes", self, "update_tiletype")
 	batman.connect("targeted_tiles_updated", self, "update_targeting")
 	batman.connect("new_action_preview_data_readied", self, "update_cell_highlighting_temp")
+	batman.connect("any_actionstep_initiated", self, "reset_cell_highlighting_temp")
+	batman.connect("on_turn_ended_naturally", self, "reset_cell_highlighting_temp")
+	batman.connect("on_turn_ended_via_interruption", self, "reset_cell_highlighting_temp")
+	
+	pass
+
+func detach_battle_threat():
+	threat = $BattleThreat
+	threat.cell = self
+	threat.get_parent().remove_child(threat)
+	batman.field.get_node("FieldObjects/Threats").add_child(threat)
+	yield(VisualServer, "frame_post_draw")
+	threat.position = rect_global_position
 	pass
 
 func update_tiletype(): # Visual only; data is already handled
@@ -31,26 +47,31 @@ func update_tiletype(): # Visual only; data is already handled
 	pass
 
 func update_targeting():
-	var to_smod: Color = Color.white
-	if batman.targeted_tiles.has(coord):
-		to_smod = targetcol
-	
-	if self_modulate != to_smod:
-		self_modulate = to_smod
+	var to_visible: bool = batman.targeted_tiles.has(coord)
+	if $Threat.visible != to_visible:
+		$Threat.visible = to_visible
+	if threat.visible != to_visible:
+		threat.visible = to_visible
+	pass
+
+func reset_cell_highlighting_temp():
+	var to_col: Color = Color.white
+	$Highlights.modulate = to_col
+	for h in $Highlights.get_children():
+		if h.visible:
+			h.visible = false
+	set_depth_tint(max_row)
 	pass
 
 func update_cell_highlighting_temp(move: MoveAction):
-	var to_col: Color
+	var to_col: Color = Color.white
 	var hname: String = ""
 	var hcol: Color
 	
-	if !move.unique_cells.has(coord):
-		to_col = Color("cdcdcd")
-#		to_col.a = 1.0
-	else:
-		to_col = Color.white
+	if move.unique_cells.has(coord):
+		set_depth_tint(max_row) # White if non-darkened
 		
-		# Now the highlights
+		# The highlights!
 		var index: int = -1
 		for ea in move.ROWS.size():
 			index += 1 # 0-based
@@ -65,9 +86,10 @@ func update_cell_highlighting_temp(move: MoveAction):
 					4: hname = "Big"
 					5: hname = "Small"
 				break
-#		to_col.a = 0.5
+	else:
+		set_depth_tint(max_row, Color.gray)
 	
-	modulate = to_col
+	$Highlights.modulate = to_col
 	for h in $Highlights.get_children():
 		if h.visible != (hname == h.name):
 			h.visible = (hname == h.name)
@@ -75,15 +97,18 @@ func update_cell_highlighting_temp(move: MoveAction):
 			h.modulate = hcol
 	pass
 
-func set_depth_tint(max_row: int):
+func set_depth_tint(in_max_row: int, in_color: Color = Color.white):
+	
+	max_row = in_max_row
 	var depth: float = abs(row - max_row)-1.0 # Bottom row is 0
-	var shade_delta: float = 0.075
+	var shade_delta: float = 0.125
+#	var shade_delta: float = 0.075
 	var depth_shade: float = 1.0 - (depth * shade_delta)
-	var mod: Color = Color.white
-	mod.r = depth_shade
-	mod.g = depth_shade
-	mod.b = depth_shade
-	modulate = mod
+	var mod: Color = in_color
+	mod.r *= depth_shade
+	mod.g *= depth_shade
+	mod.b *= depth_shade
+	self_modulate = mod
 	pass
 
 func set_faction():

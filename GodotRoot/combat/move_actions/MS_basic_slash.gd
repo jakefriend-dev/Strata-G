@@ -10,6 +10,8 @@ func PREVIEW():
 	if !batman.grid_actors.has_cellv(exact_coord):
 		return
 	
+	add_cell(exact_coord, ROWS.BAD)
+	
 	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
 	if !utils.actorpass(victim): return
 	

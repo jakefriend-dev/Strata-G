@@ -31,6 +31,7 @@ func _ready():
 	actionsel_par = get_node(path_actionsel_par)
 	
 	batman.field = self
+	batman.drawer = $Drawer
 	batman.actors = actors
 	batman.board = board
 	
@@ -63,6 +64,7 @@ func set_up_board():
 	for y in h:
 		for x in w:
 			var cell: NinePatchRect = loader.res_battlecell.instance()
+#			cell.set("field", self)
 			board.add_child(cell)
 			
 			var coord: Vector2 = Vector2(x+1, y+1)
@@ -73,6 +75,8 @@ func set_up_board():
 			cell.set_faction()
 			
 			cell.set_depth_tint(h)
+			
+			cell.detach_battle_threat()
 			
 			var type: int = batman.grid_tiles.get_cellv(coord)
 			cell.set_type(type)

@@ -989,6 +989,8 @@ custom_styles/panel = SubResource( 1 )
 
 [node name="Misc" type="YSort" parent="FieldObjects"]
 
+[node name="Threats" type="YSort" parent="FieldObjects"]
+
 [node name="DebugLog" type="Node2D" parent="."]
 position = Vector2( 4, 4 )
 

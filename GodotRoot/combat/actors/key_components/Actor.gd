@@ -220,18 +220,7 @@ func _ready():
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
 	batman.connect("new_round_started", self, "master_pre_round_setup")
-	
-	match name:
-		"P1":
-			set("staple_attack", "basic_shot")
-			set("staple_cost", 2)
-		"P2":
-			set("staple_attack", "basic_melee")
-			set("staple_cost", 2)
-		"P3":
-			set("staple_attack", "basic_shot")
-			set("staple_cost", 1)
-	
+	batman.connect("update_all_preview_drawing", self, "adjust_target_highlights")
 	pass
 
 func perform_initial_data_setup():
@@ -629,6 +618,18 @@ func OLD_monitor_position_as_coordinate():
 # ---
 
 # ---
+
+func adjust_target_highlights():
+	var to_col: Color = Color.white
+	if batman.drawer.drawing:
+		if batman.drawer.MPD != null:
+			if !batman.drawer.MPD.unique_cells.has(coord):
+				to_col = Color.gray
+				to_col.a = 0.75
+	
+	if modulate != to_col:
+		modulate = to_col
+	pass
 
 func sink_into_tile():
 	pass

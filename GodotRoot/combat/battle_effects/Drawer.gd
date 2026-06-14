@@ -13,32 +13,37 @@ var prio_order: Array = [
 ]
 
 func _ready():
-	batman.connect("new_action_preview_data_readied", self, "draw_action_preview")
+	batman.connect("new_action_preview_data_readied", self, "begin_drawing")
 	
 	batman.connect("any_actionstep_initiated", self, "end_drawing")
 	batman.connect("on_turn_ended_naturally", self, "end_drawing")
 	batman.connect("on_turn_ended_via_interruption", self, "end_drawing")
 	pass
 
-func clear_action_preview():
-	MPD = null
-	end_drawing()
-	pass
-
-func begin_drawing():
+func begin_drawing(new_MPD: MoveAction):
+	MPD = new_MPD
 	drawing = true
+	batman.emit_signal("update_all_preview_drawing")
 	update()
 	pass
 
 func end_drawing():
+	MPD = null
 	drawing = false
+	batman.emit_signal("update_all_preview_drawing")
 	update()
 	pass
 
-func draw_action_preview(new_MPD: MoveAction):
-	MPD = new_MPD # We never WIPE from this script though, since it might be linked
-	begin_drawing()
-	
+func pause_drawing():
+	drawing = false
+	batman.emit_signal("update_all_preview_drawing")
+	update()
+	pass
+
+func unpause_drawing():
+	drawing = true
+	batman.emit_signal("update_all_preview_drawing")
+	update()
 	pass
 
 func _draw():

@@ -118,6 +118,7 @@ script = ExtResource( 1 )
 first_initiative = 5
 max_health = 3
 ofc_name = "Mage"
+base_action_points = 5
 faction = 1
 def_weight = 1
 loaded_moves = [ ExtResource( 5 ), ExtResource( 11 ), ExtResource( 6 ), ExtResource( 10 ), ExtResource( 9 ), ExtResource( 7 ), ExtResource( 8 ), null ]

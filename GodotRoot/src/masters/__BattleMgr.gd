@@ -90,6 +90,7 @@ signal on_turn_ended_naturally()
 signal on_turn_ended_via_interruption()
 signal on_turn_exited()
 signal targeted_tiles_updated()
+signal update_all_preview_drawing()
 
 enum factions {
 	NEUTRAL,
@@ -118,6 +119,7 @@ signal action_log_updated()
 
 var battle_details: Dictionary = {}
 var field: Node2D # Owner of all battle stuff
+var drawer: Node2D # Owner of all action preview drawing
 var actors: YSort
 var board: GridContainer # Owner of CELLS not everything
 
@@ -242,7 +244,7 @@ func set_up_random_combat():
 	
 	# Determine a random halfboard size
 	var boardwidth: Array = [3, 4]
-	var boardheight: Array = [3, 4, 5, 6]
+	var boardheight: Array = [3, 4, 5]
 	boardwidth.shuffle()
 	var size_x: int = boardwidth[0]
 	if size_x == 3: boardheight.erase(3)
