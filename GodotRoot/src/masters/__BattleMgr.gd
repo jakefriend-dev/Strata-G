@@ -47,7 +47,7 @@ var loaded_move: MoveAction = null
 var loaded_m_index: int = 0 # The position we're "at" within the moveset list
 var loaded_m_varvec: Vector2 = Vector2.ZERO
 #var loaded_m_variant: int = 1 # If there are variants for the ability, cycles through them
-signal action_option_view_changed()
+signal action_option_view_changed(move_is_newly_selected_bool)
 signal new_action_preview_data_readied(MPD)
 
 const BASE_HP_FACTOR: int = 4
@@ -626,7 +626,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
 	combatstate = C_TURN
-	emit_signal("action_option_view_changed")
+	emit_signal("action_option_view_changed", true)
 	strife.TILE_event_turn_started_on(curr_actor, curr_actor.coord)
 	curr_actor.choose_action()
 	pass
@@ -831,6 +831,8 @@ func player_input_validation_checks() -> bool:
 func cycle_player_move_forward():
 	if !player_input_validation_checks(): return
 	
+	var last_index: int = loaded_m_index
+	
 	loaded_m_index += 1
 	if loaded_m_index >= loaded_moveset.size():
 		loaded_m_index = 0
@@ -839,11 +841,13 @@ func cycle_player_move_forward():
 	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
 	
-	emit_signal("action_option_view_changed")
+	emit_signal("action_option_view_changed", (last_index != loaded_m_index))
 	pass
 
 func cycle_player_move_backward():
 	if !player_input_validation_checks(): return
+	
+	var last_index: int = loaded_m_index
 	
 	loaded_m_index -= 1
 	if loaded_m_index < 0:
@@ -853,13 +857,19 @@ func cycle_player_move_backward():
 	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
 	
-	emit_signal("action_option_view_changed")
+	emit_signal("action_option_view_changed", (last_index != loaded_m_index))
 	pass
 
-func assert_player_variant_against_move(move: MoveAction):
+func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_selected: bool):
 	if move.actualized_variants.empty():
 		loaded_m_varvec = Vector2.ZERO
 		return
+	
+	# We should only exercise this code WHEN THE MOVE IS FIRST LOADED/CHOSEN, not each preview
+	if is_brand_new_move_selected and move.override_global_variant_on_move_load:
+		if loaded_m_varvec != move.starting_variant:
+			print("BATMAN: Overwriting loaded varvec to ",loaded_m_varvec)
+		loaded_m_varvec = move.starting_variant
 	
 	if !move.actualized_variants.has(loaded_m_varvec):
 		loaded_m_varvec = move.starting_variant
@@ -916,34 +926,14 @@ func attempt_to_change_player_variant(tilt: Vector2):
 	
 	# Then update the current preview, IF a change happened!
 	if loaded_m_varvec != prior_varvec:
-		print("CONFIRMED new loaded_m_varvec ",loaded_m_varvec)
-		emit_signal("action_option_view_changed")
+#		print("CONFIRMED new loaded_m_varvec ",loaded_m_varvec)
+		emit_signal("action_option_view_changed", false)
 	pass
 
 func cycle_player_variant_forward():
-#	if !player_input_validation_checks(): return
-#
-#	loaded_m_variant += 1
-#	if loaded_m_variant > loaded_move.options:
-#		loaded_m_variant = 1
-#
-#	if loaded_move.options > 1:
-#		print("suboption ",loaded_m_variant," chosen")
-#
-#	emit_signal("action_option_view_changed")
 	pass
 
 func cycle_player_variant_backward():
-#	if !player_input_validation_checks(): return
-#
-#	loaded_m_variant -= 1
-#	if loaded_m_variant < 1:
-#		loaded_m_variant = loaded_move.options
-#
-#	if loaded_move.options > 1:
-#		print("suboption ",loaded_m_variant," chosen")
-#
-#	emit_signal("action_option_view_changed")
 	pass
 
 func vet_action(action: Array) -> bool:
@@ -1165,7 +1155,7 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	loaded_m_index = 0
 	loaded_m_varvec = Vector2.ZERO
 #	loaded_m_variant = 1
-	emit_signal("action_option_view_changed")
+	emit_signal("action_option_view_changed", false)
 	pass
 
 func is_my_action(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!

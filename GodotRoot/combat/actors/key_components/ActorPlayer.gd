@@ -77,14 +77,14 @@ func prep_moveset_on_turn_end():
 			print("Cooldown ticked down for ",move," to: ",move.current_cooldown)
 	pass
 
-func run_move_preview():
+func run_move_preview(is_brand_new_move_selected: bool = false):
 	if batman.curr_actor != self: return
 	if !batman.player_input_validation_checks(): return
 	
 	var move: MoveAction = batman.loaded_move
 	move.clear_MPD()
 	move.prepare_actualized_variants()
-	batman.assert_player_variant_against_move(move)
+	batman.assert_player_variant_against_move(move, is_brand_new_move_selected)
 #	move.variant = batman.loaded_m_variant
 	
 	if move.has_method(pstring):

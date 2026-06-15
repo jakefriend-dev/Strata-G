@@ -29,6 +29,7 @@ var current_battle_uses: int = 0
 
 export var req_successful_preview: bool = false
 export var use_exact_input_vector: bool = false # If false, it's relative (almost always)
+export var override_global_variant_on_move_load: bool = false # If true, when selecting this move we ALWAYS the batman var back to this starting var.
 
 var actor: Actor # Quickref!
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop
@@ -89,8 +90,6 @@ func log_move_use():
 	
 	current_battle_uses += 1
 	current_turn_uses += 1
-	
-	print("option_image: ",strife.aimflower_vectors_from_file(option_image.resource_path))
 	pass
 
 func prepare_actualized_variants():
