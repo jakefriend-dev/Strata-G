@@ -23,9 +23,10 @@ func PREVIEW(): # Options are 0, 1, 2
 	
 	add_actor(victim, ROWS.NEUTRAL)
 	
-	var check_vector: Vector2 = actor.their_facing
-	if variant == 2: check_vector += Vector2.UP
-	if variant == 3: check_vector += Vector2.DOWN
+	var check_vector: Vector2 = batman.loaded_m_varvec
+#	var check_vector: Vector2 = actor.their_facing
+#	if variant == 2: check_vector += Vector2.UP
+#	if variant == 3: check_vector += Vector2.DOWN
 	var check_coord: Vector2 = victim.coord + check_vector
 	
 	if !support.is_tile_traversable_exact(victim, check_coord):

@@ -3,16 +3,17 @@ extends MoveAction
 var dest: Vector2 = Vector2.ZERO
 
 func PREVIEW():
-	var all_rels: Array = [
-		Vector2( 1,  1),
-		Vector2(-1,  1),
-		Vector2(-1, -1),
-		Vector2( 1, -1)
-	]
+#	var all_rels: Array = [
+#		Vector2( 1,  1),
+#		Vector2(-1,  1),
+#		Vector2(-1, -1),
+#		Vector2( 1, -1)
+#	]
 	
-	var rel = all_rels[variant-1]
-	var target: Vector2 = actor.coord + rel
-	print("target: ",target)
+#	var rel = all_rels[variant-1]
+#	var target: Vector2 = actor.coord + rel
+	var target: Vector2 = actor.coord + batman.loaded_m_varvec
+#	print("target: ",target)
 	
 	if !batman.grid_actors.has_cellv(target):
 		return

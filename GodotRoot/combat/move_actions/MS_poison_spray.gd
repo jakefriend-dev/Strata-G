@@ -5,25 +5,25 @@ func PREVIEW():
 	
 	var near_rel: Vector2
 	var check_array: Array = [] # Should be 4 coords each set
-	match variant:
-		1:
-			check_array.append(Vector2(actor.my_facing.x,    0))
-			check_array.append(Vector2(actor.my_facing.x*2,  0))
-			check_array.append(Vector2(actor.my_facing.x*2,  1))
-			check_array.append(Vector2(actor.my_facing.x*2, -1))
-			near_rel = Vector2(actor.my_facing.x,    0)
-		2:
-			check_array.append(Vector2(actor.my_facing.x,   -1))
-			check_array.append(Vector2(actor.my_facing.x,   -2))
-			check_array.append(Vector2(actor.my_facing.x*2, -1))
-			check_array.append(Vector2(actor.my_facing.x*2, -2))
-			near_rel = Vector2(actor.my_facing.x,   -1)
-		3:
-			check_array.append(Vector2(actor.my_facing.x,    1))
-			check_array.append(Vector2(actor.my_facing.x,    2))
-			check_array.append(Vector2(actor.my_facing.x*2,  1))
-			check_array.append(Vector2(actor.my_facing.x*2,  2))
-			near_rel = Vector2(actor.my_facing.x,    1)
+	
+	if batman.loaded_m_varvec == (actor.my_facing):
+		check_array.append(Vector2(actor.my_facing.x,    0))
+		check_array.append(Vector2(actor.my_facing.x*2,  0))
+		check_array.append(Vector2(actor.my_facing.x*2,  1))
+		check_array.append(Vector2(actor.my_facing.x*2, -1))
+		near_rel = Vector2(actor.my_facing.x,    0)
+	elif batman.loaded_m_varvec == (actor.my_facing + Vector2.UP):
+		check_array.append(Vector2(actor.my_facing.x,   -1))
+		check_array.append(Vector2(actor.my_facing.x,   -2))
+		check_array.append(Vector2(actor.my_facing.x*2, -1))
+		check_array.append(Vector2(actor.my_facing.x*2, -2))
+		near_rel = Vector2(actor.my_facing.x,   -1)
+	elif batman.loaded_m_varvec == (actor.my_facing + Vector2.DOWN):
+		check_array.append(Vector2(actor.my_facing.x,    1))
+		check_array.append(Vector2(actor.my_facing.x,    2))
+		check_array.append(Vector2(actor.my_facing.x*2,  1))
+		check_array.append(Vector2(actor.my_facing.x*2,  2))
+		near_rel = Vector2(actor.my_facing.x,    1)
 	
 	var use_arrows: bool = false
 	

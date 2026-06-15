@@ -46,7 +46,7 @@ var loaded_moveset: Array = []
 var loaded_move: MoveAction = null
 var loaded_m_index: int = 0 # The position we're "at" within the moveset list
 var loaded_m_varvec: Vector2 = Vector2.ZERO
-var loaded_m_variant: int = 1 # If there are variants for the ability, cycles through them
+#var loaded_m_variant: int = 1 # If there are variants for the ability, cycles through them
 signal action_option_view_changed()
 signal new_action_preview_data_readied(MPD)
 
@@ -834,7 +834,7 @@ func cycle_player_move_forward():
 	loaded_m_index += 1
 	if loaded_m_index >= loaded_moveset.size():
 		loaded_m_index = 0
-	loaded_m_variant = 1
+#	loaded_m_variant = 1
 	
 	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
@@ -848,7 +848,7 @@ func cycle_player_move_backward():
 	loaded_m_index -= 1
 	if loaded_m_index < 0:
 		loaded_m_index = loaded_moveset.size()-1
-	loaded_m_variant = 1
+#	loaded_m_variant = 1
 	
 	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
@@ -908,6 +908,11 @@ func attempt_to_change_player_variant(tilt: Vector2):
 			elif loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_2):
 				loaded_m_varvec += vec_else_2
 				print("Fallback H2")
+		
+		# And then if it's DIAGONAL, we want to also try both orthagonals, prioritizing up/down first
+		
+		# Ditto um... orthagonal? Or do we fall back on the EXACT VEC case in case of failure?
+	
 	
 	# Then update the current preview, IF a change happened!
 	if loaded_m_varvec != prior_varvec:
@@ -916,29 +921,29 @@ func attempt_to_change_player_variant(tilt: Vector2):
 	pass
 
 func cycle_player_variant_forward():
-	if !player_input_validation_checks(): return
-	
-	loaded_m_variant += 1
-	if loaded_m_variant > loaded_move.options:
-		loaded_m_variant = 1
-	
-	if loaded_move.options > 1:
-		print("suboption ",loaded_m_variant," chosen")
-	
-	emit_signal("action_option_view_changed")
+#	if !player_input_validation_checks(): return
+#
+#	loaded_m_variant += 1
+#	if loaded_m_variant > loaded_move.options:
+#		loaded_m_variant = 1
+#
+#	if loaded_move.options > 1:
+#		print("suboption ",loaded_m_variant," chosen")
+#
+#	emit_signal("action_option_view_changed")
 	pass
 
 func cycle_player_variant_backward():
-	if !player_input_validation_checks(): return
-	
-	loaded_m_variant -= 1
-	if loaded_m_variant < 1:
-		loaded_m_variant = loaded_move.options
-	
-	if loaded_move.options > 1:
-		print("suboption ",loaded_m_variant," chosen")
-	
-	emit_signal("action_option_view_changed")
+#	if !player_input_validation_checks(): return
+#
+#	loaded_m_variant -= 1
+#	if loaded_m_variant < 1:
+#		loaded_m_variant = loaded_move.options
+#
+#	if loaded_move.options > 1:
+#		print("suboption ",loaded_m_variant," chosen")
+#
+#	emit_signal("action_option_view_changed")
 	pass
 
 func vet_action(action: Array) -> bool:
@@ -1159,7 +1164,7 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	loaded_move = null
 	loaded_m_index = 0
 	loaded_m_varvec = Vector2.ZERO
-	loaded_m_variant = 1
+#	loaded_m_variant = 1
 	emit_signal("action_option_view_changed")
 	pass
 
