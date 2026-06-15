@@ -28,6 +28,7 @@ func PREVIEW():
 func ACT():
 	# THIS WAS RETURNING ZERO AND I DON'T KNOW WHY??
 #	var target: Vector2 = get_first_cell_by_MPD_type(ROWS.BAD)
+	target = get_first_cell_by_MPD_type(ROWS.BAD)
 	print("water lob ACT target: ",target)
 	strife.damage_actor_at_coord(actor, target, 1*batman.BASE_HP_FACTOR, ["elem_WATER"])
 	support.change_tiletype_single(target, batman.tiletypes.ICE)

@@ -224,19 +224,15 @@ func add_cell(coord: Vector2, type: int, from_arrow: bool = false):
 	
 #	print("adding cell for ",actor)
 	
-	var cell_array: Array
-	if !from_arrow:
-		cell_array = sets.get_cell(COLS.PURECELL_ARRAY, type)
-	cell_array = sets.get_cell(COLS.ALLCELL_ARRAY, type) # Keep arrow-based data separate
+	var cell_array_all: Array = sets.get_cell(COLS.ALLCELL_ARRAY, type)
+	if !cell_array_all.has(coord):
+		cell_array_all.append(coord)
 	
-	if !cell_array.has(coord):
-		cell_array.append(coord)
-		if !from_arrow:
-#			print("cell_array appending ",coord)
-			pass
-		else:
-#			print("cell_array ARROW-appending ",coord)
-			pass
+	if from_arrow: return
+	
+	var cell_array_pure: Array = sets.get_cell(COLS.PURECELL_ARRAY, type)
+	if !cell_array_pure.has(coord):
+		cell_array_pure.append(coord)
 	pass
 
 func add_cellset(coords: Array, type: int):
@@ -327,7 +323,7 @@ func get_first_cell_by_MPD_type(type: int, use_arrowcells = false) -> Vector2:
 		cells = sets.get_cell(COLS.ALLCELL_ARRAY, type)
 	else:
 		cells = sets.get_cell(COLS.PURECELL_ARRAY, type)
-	if cells.empty(): return Vector2.ZERO # Should never happen - you only add cells to this AFTER validating, and if you have no cells to work with in the preview you shouldn't be allowed to get further.
+	if cells.empty(): return Vector2(-99, -99) # Should never happen - you only add cells to this AFTER validating, and if you have no cells to work with in the preview you shouldn't be allowed to get further.
 	return cells.front()
 	pass
 
