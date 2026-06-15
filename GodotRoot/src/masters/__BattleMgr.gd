@@ -45,8 +45,7 @@ var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rocket
 var loaded_moveset: Array = []
 var loaded_move: MoveAction = null
 var loaded_m_index: int = 0 # The position we're "at" within the moveset list
-var loaded_m_varvec: Vector2 = Vector2.ZERO
-#var loaded_m_variant: int = 1 # If there are variants for the ability, cycles through them
+var loaded_variant: Vector2 = Vector2.ZERO
 signal action_option_view_changed(move_is_newly_selected_bool)
 signal new_action_preview_data_readied(MPD)
 
@@ -836,7 +835,6 @@ func cycle_player_move_forward():
 	loaded_m_index += 1
 	if loaded_m_index >= loaded_moveset.size():
 		loaded_m_index = 0
-#	loaded_m_variant = 1
 	
 	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
@@ -852,7 +850,6 @@ func cycle_player_move_backward():
 	loaded_m_index -= 1
 	if loaded_m_index < 0:
 		loaded_m_index = loaded_moveset.size()-1
-#	loaded_m_variant = 1
 	
 	var movename: String = loaded_moveset[loaded_m_index]
 	loaded_move = curr_actor.moveset[movename]
@@ -862,18 +859,18 @@ func cycle_player_move_backward():
 
 func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_selected: bool):
 	if move.actualized_variants.empty():
-		loaded_m_varvec = Vector2.ZERO
+		loaded_variant = Vector2.ZERO
 		return
 	
 	# We should only exercise this code WHEN THE MOVE IS FIRST LOADED/CHOSEN, not each preview
 	if is_brand_new_move_selected and move.override_global_variant_on_move_load:
-		if loaded_m_varvec != move.starting_variant:
-			print("BATMAN: Overwriting loaded varvec to ",loaded_m_varvec)
-		loaded_m_varvec = move.starting_variant
+		if loaded_variant != move.starting_variant:
+			print("BATMAN: Overwriting loaded varvec to ",loaded_variant)
+		loaded_variant = move.starting_variant
 	
-	if !move.actualized_variants.has(loaded_m_varvec):
-		loaded_m_varvec = move.starting_variant
-		print("BATMAN: Overwriting loaded varvec to ",loaded_m_varvec)
+	if !move.actualized_variants.has(loaded_variant):
+		loaded_variant = move.starting_variant
+		print("BATMAN: Overwriting loaded varvec to ",loaded_variant)
 	pass
 
 func attempt_to_change_player_variant(tilt: Vector2):
@@ -886,37 +883,37 @@ func attempt_to_change_player_variant(tilt: Vector2):
 	if IB_vec.y == -0: IB_vec.y = 0
 	print("inbound vec: ",IB_vec)
 	
-	var prior_varvec: Vector2 = loaded_m_varvec
+	var prior_varvec: Vector2 = loaded_variant
 	
 	# Then determine if it's possible to take 1 step in that direction FROM our CURRENT variant vec // OR, if we use exact coords, just check if we can use this one
 	
 	if loaded_move.use_exact_input_vector: # Inbound vec is an EXACT coord
 		if loaded_move.actualized_variants.has(IB_vec):
-			loaded_m_varvec = IB_vec
+			loaded_variant = IB_vec
 	else: # Inbound vec is a RELATIVE coord
-		var exact_vec: Vector2 = loaded_m_varvec + IB_vec
+		var exact_vec: Vector2 = loaded_variant + IB_vec
 		if loaded_move.actualized_variants.has(exact_vec):
-			loaded_m_varvec = exact_vec
+			loaded_variant = exact_vec
 		
 		# We ALSO want to, ideally, cover a circumstance where we move orthagonally and there's nothing there.
 		elif IB_vec.x == 0: # Orthagonal V!
 			var vec_else_1: Vector2 = Vector2(-1, IB_vec.y)
 			var vec_else_2: Vector2 = Vector2( 1, IB_vec.y)
-			if   loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_1):
-				loaded_m_varvec += vec_else_1
+			if   loaded_move.actualized_variants.has(loaded_variant + vec_else_1):
+				loaded_variant += vec_else_1
 				print("Fallback V1")
-			elif loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_2):
-				loaded_m_varvec += vec_else_2
+			elif loaded_move.actualized_variants.has(loaded_variant + vec_else_2):
+				loaded_variant += vec_else_2
 				print("Fallback V2")
 			
 		elif IB_vec.y == 0: # Orthagonal X!
 			var vec_else_1: Vector2 = Vector2(IB_vec.x, -1)
 			var vec_else_2: Vector2 = Vector2(IB_vec.x,  1)
-			if   loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_1):
-				loaded_m_varvec += vec_else_1
+			if   loaded_move.actualized_variants.has(loaded_variant + vec_else_1):
+				loaded_variant += vec_else_1
 				print("Fallback H1")
-			elif loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_2):
-				loaded_m_varvec += vec_else_2
+			elif loaded_move.actualized_variants.has(loaded_variant + vec_else_2):
+				loaded_variant += vec_else_2
 				print("Fallback H2")
 		
 		# And then if it's DIAGONAL, we want to also try both orthagonals, prioritizing up/down first
@@ -925,8 +922,8 @@ func attempt_to_change_player_variant(tilt: Vector2):
 	
 	
 	# Then update the current preview, IF a change happened!
-	if loaded_m_varvec != prior_varvec:
-#		print("CONFIRMED new loaded_m_varvec ",loaded_m_varvec)
+	if loaded_variant != prior_varvec:
+#		print("CONFIRMED new loaded_variant ",loaded_variant)
 		emit_signal("action_option_view_changed", false)
 	pass
 
@@ -1153,8 +1150,7 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	loaded_moveset = []
 	loaded_move = null
 	loaded_m_index = 0
-	loaded_m_varvec = Vector2.ZERO
-#	loaded_m_variant = 1
+	loaded_variant = Vector2.ZERO
 	emit_signal("action_option_view_changed", false)
 	pass
 

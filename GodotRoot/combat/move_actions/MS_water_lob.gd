@@ -10,7 +10,7 @@ func LOAD_VARIANTS():
 	pass
 
 func PREVIEW():
-	target = actor.coord + (actor.my_facing*DIST) + batman.loaded_m_varvec
+	target = actor.coord + (actor.my_facing*DIST) + batman.loaded_variant
 #	var target: Vector2 = actor.coord + (actor.my_facing*DIST)
 	
 	for relvec in actualized_variants:

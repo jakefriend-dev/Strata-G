@@ -12,7 +12,7 @@ func PREVIEW():
 	
 #	var rel = all_rels[variant-1]
 #	var target: Vector2 = actor.coord + rel
-	var target: Vector2 = actor.coord + batman.loaded_m_varvec
+	var target: Vector2 = actor.coord + batman.loaded_variant
 #	print("target: ",target)
 	
 	if !batman.grid_actors.has_cellv(target):

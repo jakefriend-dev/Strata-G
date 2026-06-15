@@ -85,7 +85,6 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 	move.clear_MPD()
 	move.prepare_actualized_variants()
 	batman.assert_player_variant_against_move(move, is_brand_new_move_selected)
-#	move.variant = batman.loaded_m_variant
 	
 	if move.has_method(pstring):
 #		print("  --  New Preview  --")
@@ -146,7 +145,6 @@ func attempt_player_char_action():
 	
 	# Should be valid, then! Adjust our stats/values first
 	var move: MoveAction = batman.loaded_move
-#	move.variant = batman.loaded_m_variant
 	
 #	print("going to spend ",move.cost,"-AP when ",action_points,"-AP remain")
 	

@@ -11,7 +11,7 @@ func PREVIEW():
 	slash_count = 0
 	# Don't worry about validations for if cells exist until the ACT()
 	
-	if batman.loaded_m_varvec == actor.my_facing:
+	if batman.loaded_variant == actor.my_facing:
 		slash_1_cells.append(actor.coord + actor.my_facing)
 		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.UP)
 		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.DOWN)
@@ -19,7 +19,7 @@ func PREVIEW():
 		slash_2_cells.append(actor.coord + actor.my_facing)
 		slash_2_cells.append(actor.coord + (actor.my_facing*2))
 	
-	elif batman.loaded_m_varvec == (actor.my_facing + Vector2.UP):
+	elif batman.loaded_variant == (actor.my_facing + Vector2.UP):
 		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.UP)
 		slash_1_cells.append(actor.coord + (Vector2.UP*2))
 		slash_1_cells.append(actor.coord + (actor.my_facing*2))
@@ -27,7 +27,7 @@ func PREVIEW():
 		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.UP)
 		slash_2_cells.append(actor.coord + (actor.my_facing*2) + (Vector2.UP*2))
 	
-	elif batman.loaded_m_varvec == (actor.my_facing + Vector2.DOWN):
+	elif batman.loaded_variant == (actor.my_facing + Vector2.DOWN):
 		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.DOWN)
 		slash_1_cells.append(actor.coord + (Vector2.DOWN*2))
 		slash_1_cells.append(actor.coord + (actor.my_facing*2))

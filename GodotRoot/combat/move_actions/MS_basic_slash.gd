@@ -2,7 +2,7 @@ extends MoveAction
 
 func PREVIEW():
 	
-	var check_vector: Vector2 = batman.loaded_m_varvec
+	var check_vector: Vector2 = batman.loaded_variant
 #	var check_vector: Vector2 = actor.my_facing
 #	if variant == 2: check_vector += Vector2.UP
 #	if variant == 3: check_vector += Vector2.DOWN

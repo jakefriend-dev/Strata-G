@@ -69,7 +69,7 @@ func update_visual(_na = null):
 	
 	var last_state: int = state
 	
-	if batman.loaded_m_varvec == grid_vec:
+	if batman.loaded_variant == grid_vec:
 		state = states.ENABLED_SELECTED
 	elif batman.loaded_move.actualized_variants.has(grid_vec):
 		state = states.ENABLED_INERT

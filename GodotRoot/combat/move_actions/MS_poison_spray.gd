@@ -6,19 +6,19 @@ func PREVIEW():
 	var near_rel: Vector2
 	var check_array: Array = [] # Should be 4 coords each set
 	
-	if batman.loaded_m_varvec == (actor.my_facing):
+	if batman.loaded_variant == (actor.my_facing):
 		check_array.append(Vector2(actor.my_facing.x,    0))
 		check_array.append(Vector2(actor.my_facing.x*2,  0))
 		check_array.append(Vector2(actor.my_facing.x*2,  1))
 		check_array.append(Vector2(actor.my_facing.x*2, -1))
 		near_rel = Vector2(actor.my_facing.x,    0)
-	elif batman.loaded_m_varvec == (actor.my_facing + Vector2.UP):
+	elif batman.loaded_variant == (actor.my_facing + Vector2.UP):
 		check_array.append(Vector2(actor.my_facing.x,   -1))
 		check_array.append(Vector2(actor.my_facing.x,   -2))
 		check_array.append(Vector2(actor.my_facing.x*2, -1))
 		check_array.append(Vector2(actor.my_facing.x*2, -2))
 		near_rel = Vector2(actor.my_facing.x,   -1)
-	elif batman.loaded_m_varvec == (actor.my_facing + Vector2.DOWN):
+	elif batman.loaded_variant == (actor.my_facing + Vector2.DOWN):
 		check_array.append(Vector2(actor.my_facing.x,    1))
 		check_array.append(Vector2(actor.my_facing.x,    2))
 		check_array.append(Vector2(actor.my_facing.x*2,  1))
