@@ -1,12 +1,14 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://combat/move_actions/MS_wind_step.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/3x3 - diag.png" type="Texture" id=2]
 
 [resource]
 script = ExtResource( 1 )
 display_name = "Wind Step"
 display_desc = "Move 1 tile diagonally. Allows user to conveniently move around an obstacle or hazard."
 options = 4
+option_image = ExtResource( 2 )
 option_desc = "Changes angle of movement."
 cost = 2
 action_type = 1

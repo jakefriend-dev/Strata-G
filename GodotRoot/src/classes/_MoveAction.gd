@@ -8,13 +8,10 @@ export (String, MULTILINE) var display_desc: String
 var key: String # For "Yank-Shot" it's "yank" - whatever the resource name is. Just a convenient reference point; almost certainly a redundancy.
 
 export (int, 1, 8) var options: int = 1
+export var option_image: Texture
 export (String, MULTILINE) var option_desc: String
 
 export (int, 0, 8) var cost: int = 1
-
-export var option_image: Texture
-
-
 
 enum restchecks {REST, MOVEMENT}
 export (restchecks) var action_type: int = restchecks.REST
@@ -87,6 +84,8 @@ func log_move_use():
 	
 	current_battle_uses += 1
 	current_turn_uses += 1
+	
+	print("option_image: ",option_image.filename)
 	pass
 
 func end_action():

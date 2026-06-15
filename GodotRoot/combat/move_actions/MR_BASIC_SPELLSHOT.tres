@@ -1,6 +1,7 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://combat/move_actions/MS_basic_spellshot.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/3x3 - fronts.png" type="Texture" id=2]
 
 [resource]
 resource_local_to_scene = true
@@ -8,6 +9,7 @@ script = ExtResource( 1 )
 display_name = "Magic Dart"
 display_desc = "Shoot the first unit in your line of sight for 1 damage. Weak, but convenient."
 options = 3
+option_image = ExtResource( 2 )
 option_desc = "Changes angle of attack."
 cost = 1
 action_type = 0
