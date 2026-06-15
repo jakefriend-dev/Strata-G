@@ -88,7 +88,7 @@ func run_move_preview():
 #	move.variant = batman.loaded_m_variant
 	
 	if move.has_method(pstring):
-		print("  --  New Preview  --")
+#		print("  --  New Preview  --")
 		move.call(pstring)
 		
 		move.generate_cell_highlights()

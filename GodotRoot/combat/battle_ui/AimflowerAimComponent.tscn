@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://art/bui/aimflower components.png" type="Texture" id=1]
+[ext_resource path="res://src/shaders/SHADER palette swap.tres" type="Shader" id=2]
+[ext_resource path="res://combat/battle_ui/AimflowerAimComponent.gd" type="Script" id=3]
+
+[sub_resource type="ShaderMaterial" id=1]
+resource_local_to_scene = true
+shader = ExtResource( 2 )
+shader_param/active = true
+shader_param/swap_num = 3
+shader_param/replacing_col_1 = Color( 0, 0, 0, 1 )
+shader_param/replacing_col_2 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_3 = Color( 1, 0, 0, 1 )
+shader_param/replacing_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacing_col_8 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_1 = Color( 0.992157, 0.819608, 0.54902, 1 )
+shader_param/replacer_col_2 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_3 = Color( 0.960784, 0.705882, 1, 1 )
+shader_param/replacer_col_4 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_5 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_6 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_7 = Color( 1, 1, 1, 1 )
+shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
+
+[node name="AimComponent" type="Node2D"]
+script = ExtResource( 3 )
+
+[node name="Shadow" type="Sprite" parent="."]
+modulate = Color( 1, 1, 1, 0.196078 )
+self_modulate = Color( 0, 0, 0, 1 )
+position = Vector2( 1, 1 )
+texture = ExtResource( 1 )
+hframes = 9
+
+[node name="Top" type="Sprite" parent="."]
+material = SubResource( 1 )
+texture = ExtResource( 1 )
+hframes = 9
