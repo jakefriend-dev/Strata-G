@@ -10,11 +10,16 @@ func LOAD_VARIANTS():
 
 func PREVIEW():
 	var target: Vector2 = actor.coord + (actor.my_facing*DIST)
-#	target = target.round()
-	if !batman.grid_actors.has_cellv(target):
-		return
-	add_cell(target, ROWS.BAD)
-	passfail = true
+	
+	for relvec in actualized_variants:
+		var cell: Vector2 = actor.coord + (actor.my_facing*DIST) + relvec
+		if !batman.grid_actors.has_cellv(cell):
+			return
+		if cell == target:
+			add_cell(cell, ROWS.BAD)
+			passfail = true
+		else:
+			add_cell(cell, ROWS.ERROR)
 	pass
 
 func ACT():
