@@ -45,6 +45,7 @@ var unique_actornames_observed: Dictionary = {} # So if an enemy spawns 3 rocket
 var loaded_moveset: Array = []
 var loaded_move: MoveAction = null
 var loaded_m_index: int = 0 # The position we're "at" within the moveset list
+var loaded_m_varvec: Vector2 = Vector2.ZERO
 var loaded_m_variant: int = 1 # If there are variants for the ability, cycles through them
 signal action_option_view_changed()
 signal new_action_preview_data_readied(MPD)
@@ -855,20 +856,63 @@ func cycle_player_move_backward():
 	emit_signal("action_option_view_changed")
 	pass
 
+func assert_player_variant_against_move(move: MoveAction):
+	if move.actualized_variants.empty():
+		loaded_m_varvec = Vector2.ZERO
+		return
+	
+	if !move.actualized_variants.has(loaded_m_varvec):
+		loaded_m_varvec = move.starting_variant
+		print("BATMAN: Overwriting loaded varvec to ",loaded_m_varvec)
+	pass
+
 func attempt_to_change_player_variant(tilt: Vector2):
 	if !player_input_validation_checks(): return
 	
 	# First, figure out what rounded direction we're moving in
 	# (Tilt should already be normalized)
-	var relvec: Vector2 = tilt.round()
-	print("relvec: ",relvec)
+	var IB_vec: Vector2 = tilt.round()
+	if IB_vec.x == -0: IB_vec.x = 0
+	if IB_vec.y == -0: IB_vec.y = 0
+	print("inbound vec: ",IB_vec)
 	
-	# Then determine if it's possible to take 1 step in that direction FROM our CURRENT variant vec (not implemented yet but should live HERE)
+	var prior_varvec: Vector2 = loaded_m_varvec
 	
-	# If it's possible, do so
+	# Then determine if it's possible to take 1 step in that direction FROM our CURRENT variant vec // OR, if we use exact coords, just check if we can use this one
 	
-	# Then update the current preview
-	emit_signal("action_option_view_changed")
+	if loaded_move.use_exact_input_vector: # Inbound vec is an EXACT coord
+		if loaded_move.actualized_variants.has(IB_vec):
+			loaded_m_varvec = IB_vec
+	else: # Inbound vec is a RELATIVE coord
+		var exact_vec: Vector2 = loaded_m_varvec + IB_vec
+		if loaded_move.actualized_variants.has(exact_vec):
+			loaded_m_varvec = exact_vec
+		
+		# We ALSO want to, ideally, cover a circumstance where we move orthagonally and there's nothing there.
+		elif IB_vec.x == 0: # Orthagonal V!
+			var vec_else_1: Vector2 = Vector2(-1, IB_vec.y)
+			var vec_else_2: Vector2 = Vector2( 1, IB_vec.y)
+			if   loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_1):
+				loaded_m_varvec += vec_else_1
+				print("Fallback V1")
+			elif loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_2):
+				loaded_m_varvec += vec_else_2
+				print("Fallback V2")
+			
+		elif IB_vec.y == 0: # Orthagonal X!
+			var vec_else_1: Vector2 = Vector2(IB_vec.x, -1)
+			var vec_else_2: Vector2 = Vector2(IB_vec.x,  1)
+			if   loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_1):
+				loaded_m_varvec += vec_else_1
+				print("Fallback H1")
+			elif loaded_move.actualized_variants.has(loaded_m_varvec + vec_else_2):
+				loaded_m_varvec += vec_else_2
+				print("Fallback H2")
+	
+	# Then update the current preview, IF a change happened!
+	if loaded_m_varvec != prior_varvec:
+		print("CONFIRMED new loaded_m_varvec ",loaded_m_varvec)
+		emit_signal("action_option_view_changed")
 	pass
 
 func cycle_player_variant_forward():
@@ -1114,6 +1158,7 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	loaded_moveset = []
 	loaded_move = null
 	loaded_m_index = 0
+	loaded_m_varvec = Vector2.ZERO
 	loaded_m_variant = 1
 	emit_signal("action_option_view_changed")
 	pass

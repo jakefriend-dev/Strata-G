@@ -28,6 +28,7 @@ var current_turn_uses: int = 0
 var current_battle_uses: int = 0
 
 export var req_successful_preview: bool = false
+export var use_exact_input_vector: bool = false # If false, it's relative (almost always)
 
 var actor: Actor # Quickref!
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop

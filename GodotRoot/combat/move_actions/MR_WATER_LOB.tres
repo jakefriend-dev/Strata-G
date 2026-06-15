@@ -18,3 +18,4 @@ misc = ""
 uses_per_turn = 0
 uses_per_battle = 0
 req_successful_preview = true
+use_exact_input_vector = false
