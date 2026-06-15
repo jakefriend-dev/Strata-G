@@ -827,7 +827,7 @@ func player_input_validation_checks() -> bool:
 	if !action_queue.empty(): return false
 	return true
 
-func cycle_player_actops_forward():
+func cycle_player_move_forward():
 	if !player_input_validation_checks(): return
 	
 	loaded_m_index += 1
@@ -841,7 +841,7 @@ func cycle_player_actops_forward():
 	emit_signal("action_option_view_changed")
 	pass
 
-func cycle_player_actops_backward():
+func cycle_player_move_backward():
 	if !player_input_validation_checks(): return
 	
 	loaded_m_index -= 1
@@ -855,7 +855,7 @@ func cycle_player_actops_backward():
 	emit_signal("action_option_view_changed")
 	pass
 
-func cycle_player_actop_subops_forward():
+func cycle_player_variant_forward():
 	if !player_input_validation_checks(): return
 	
 	loaded_m_variant += 1
@@ -868,7 +868,7 @@ func cycle_player_actop_subops_forward():
 	emit_signal("action_option_view_changed")
 	pass
 
-func cycle_player_actop_subops_backward():
+func cycle_player_variant_backward():
 	if !player_input_validation_checks(): return
 	
 	loaded_m_variant -= 1

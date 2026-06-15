@@ -2,6 +2,13 @@ extends MoveAction
 
 var DIST: int = 3
 
+func LOAD_VARIANTS():
+	# Because we're checking BEHIND us, check one tile to the front - we only really care about if a row exists above or below us, not any particular cell position.
+	for vec in plausible_variants:
+		if batman.grid_actors.has_cellv(actor.coord + vec + actor.my_facing):
+			actualized_variants.append(vec)
+	pass
+
 func PREVIEW(): # Options are 0, 1, 2
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, actor.my_facing, DIST)
 	if !unoccupieds.empty():

@@ -95,8 +95,8 @@ func is_tile_available(exact_coord: Vector2, exception_actor: Actor = null) -> b
 
 # TILE ADJUSTMENTS ---------------------------------------------------------------------------------
 
-func change_tiletype_single(coord: Vector2, to_tiletype: int, change_tiletype_single: bool = false): # Just a shorthand
-	change_tiletype_mass([coord], to_tiletype, change_tiletype_single)
+func change_tiletype_single(coord: Vector2, to_tiletype: int, restrictions_override: bool = false): # Just a shorthand
+	change_tiletype_mass([coord], to_tiletype, restrictions_override)
 	pass
 
 # For multiple tiletypes, use multiple calls

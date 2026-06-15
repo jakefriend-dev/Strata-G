@@ -150,19 +150,19 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 	# Select a new move/option
 	if Input.is_action_just_pressed("player_cycle_next"):
 		multi_input_lock = true
-		batman.cycle_player_actops_forward()
+		batman.cycle_player_move_forward()
 		return
 	if Input.is_action_just_pressed("player_cycle_prev"):
 		multi_input_lock = true
-		batman.cycle_player_actops_backward()
+		batman.cycle_player_move_backward()
 		return
 	if Input.is_action_just_pressed("player_subcycle_next"):
 		multi_input_lock = true
-		batman.cycle_player_actop_subops_forward()
+		batman.cycle_player_variant_forward()
 		return
 	if Input.is_action_just_pressed("player_subcycle_prev"):
 		multi_input_lock = true
-		batman.cycle_player_actop_subops_backward()
+		batman.cycle_player_variant_backward()
 		return
 	
 	# End turn

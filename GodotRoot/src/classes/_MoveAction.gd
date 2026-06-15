@@ -69,6 +69,10 @@ enum COLS { # LEFT TO RIGHT
 
 # The actions can shorthand target the actors by their coords, where "attack all bad cells by coord" will tackle the actor without having to log it twice... right?
 
+var starting_variant: Vector2
+var actualized_variants: Array = [] # The below list, restricted to only what's situationally possible
+var plausible_variants: Array = [] # ALL the plausible variant vectots, regardless of what might be situationally POSSIBLE
+
 var affected_actors: Array = [] # All of em! Just for reference.
 var unique_cells: Array = []
 var passfail: bool = false # Default false; only mark it true when, you know, true
@@ -86,6 +90,25 @@ func log_move_use():
 	current_turn_uses += 1
 	
 	print("option_image: ",strife.aimflower_vectors_from_file(option_image.resource_path))
+	pass
+
+func prepare_actualized_variants():
+	actualized_variants.clear()
+	starting_variant = Vector2.ZERO
+	
+	# Custom path, if custom logic is desired
+	if has_method("LOAD_VARIANTS"):
+		call("LOAD_VARIANTS")
+	else: # Default path otherwise
+		for vec in plausible_variants:
+			if batman.grid_actors.has_cellv(actor.coord + vec):
+				actualized_variants.append(vec)
+	
+	# Our preferred default is the first one on the list
+	if !actualized_variants.empty():
+		starting_variant = actualized_variants.front()
+	
+#	print("actualized_variants for ",self," now: ",actualized_variants)
 	pass
 
 func end_action():

@@ -897,6 +897,7 @@ func aimflower_key_from_file(filepath: String) -> String:
 	
 	var key: String = filepath.replace(pref, "")
 	key = key.replace(suff, "")
+#	print("key is now ",key)
 	return key
 	pass
 
@@ -981,6 +982,7 @@ func aimflower_vectors_from_key(key: String) -> Array:
 		"west":
 			results.append(Vector2.LEFT)
 	
+#	print("variants for key [",key,"]: ",results)
 	return results
 	pass
 

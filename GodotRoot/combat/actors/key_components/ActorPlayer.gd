@@ -12,8 +12,8 @@ const astring: String = "ACT"
 func _ready():
 	load_moves()
 	prep_moveset_on_battle_start()
-	batman.connect("action_option_view_changed", self, "run_actop_preview")
-	batman.connect("action_step_complete", self, "run_actop_preview")
+	batman.connect("action_option_view_changed", self, "run_move_preview")
+	batman.connect("action_step_complete", self, "run_move_preview")
 	pass
 
 func load_moves():
@@ -36,9 +36,10 @@ func load_moves():
 			continue
 		
 		moveset[move.resource_name] = move
+		move.plausible_variants = strife.aimflower_vectors_from_file(move.option_image.resource_path)
 		pass
 	
-	print("ALL loaded moves in moveset are: ",moveset)
+#	print("ALL loaded moves in moveset are: ",moveset)
 	pass
 
 func prep_moveset_on_battle_start():
@@ -76,12 +77,13 @@ func prep_moveset_on_turn_end():
 			print("Cooldown ticked down for ",move," to: ",move.current_cooldown)
 	pass
 
-func run_actop_preview():
+func run_move_preview():
 	if batman.curr_actor != self: return
 	if !batman.player_input_validation_checks(): return
 	
 	var move: MoveAction = batman.loaded_move
 	move.clear_MPD()
+	move.prepare_actualized_variants()
 	move.variant = batman.loaded_m_variant
 	
 	if move.has_method(pstring):
@@ -112,6 +114,9 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 		return false
 	if move.req_successful_preview and !move.passfail:
 		if do_print: print(name," needs preview pass for ",move)
+		return false
+	if move.actualized_variants.empty():
+		if do_print: print(name," has zero possible variants for ",move," at this position!")
 		return false
 	if move.uses_per_turn > 0: # Ignore if unlimited
 		if move.current_turn_uses >= move.uses_per_turn:
