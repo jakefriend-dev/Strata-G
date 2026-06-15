@@ -674,7 +674,7 @@ func TILE_event_rest(actor: Actor, coord: Vector2):
 	var tiletype: int = batman.grid_tiles.get_cellv(coord)
 	var tilestring: String = get_tiletype_as_string(tiletype)
 	var segment: String = "rested_on"
-	print(str("TILE_",segment,"_",tilestring))
+	
 	if has_method(str("TILE_",segment,"_",tilestring)):
 		call(str("TILE_",segment,"_",tilestring), actor, coord)
 	if has_method(str("TILE_",segment,"_ANY")):
@@ -788,9 +788,6 @@ func TILE_rested_on_ANY(actor: Actor, _coord: Vector2):
 	# MAGNET CHECK
 	TILE_magnet_check(actor)
 	
-		
-	
-	print(actor.name," rested on ANY!")
 	pass
 
 func TILE_rested_on_POISON(actor: Actor, _coord: Vector2):
@@ -892,8 +889,100 @@ func is_affected_by_sinking(actor: Actor) -> bool:
 
 # End of tiletype checks!
 
+# Aimflower 3x3 shorthands!
 
+func aimflower_key_from_file(filepath: String) -> String:
+	var pref: String = "res://art/bui/3x3 - "
+	var suff: String = ".png"
+	
+	var key: String = filepath.replace(pref, "")
+	key = key.replace(suff, "")
+	return key
+	pass
 
+func aimflower_vectors_from_file(filepath: String) -> Array:
+	var key: String = aimflower_key_from_file(filepath)
+	return aimflower_vectors_from_key(key)
+	pass
+
+func aimflower_vectors_from_key(key: String) -> Array:
+	# Note, the expected 'start' position is always the FIRST of these vectors!
+	var results: Array = []
+	
+	match key:
+		"all":
+			results.append(Vector2.ZERO)
+			results.append(Vector2.RIGHT)
+			results.append(Vector2.LEFT)
+			results.append(Vector2.DOWN)
+			results.append(Vector2.UP)
+			results.append(Vector2.DOWN + Vector2.RIGHT)
+			results.append(Vector2.DOWN + Vector2.LEFT)
+			results.append(Vector2.UP + Vector2.RIGHT)
+			results.append(Vector2.UP + Vector2.LEFT)
+		"backs":
+			results.append(Vector2.LEFT)
+			results.append(Vector2.DOWN + Vector2.LEFT)
+			results.append(Vector2.UP + Vector2.LEFT)
+		"diag":
+			results.append(Vector2.DOWN + Vector2.RIGHT)
+			results.append(Vector2.DOWN + Vector2.LEFT)
+			results.append(Vector2.UP + Vector2.RIGHT)
+			results.append(Vector2.UP + Vector2.LEFT)
+		"east":
+			results.append(Vector2.LEFT)
+		"fronts":
+			results.append(Vector2.RIGHT)
+			results.append(Vector2.DOWN + Vector2.RIGHT)
+			results.append(Vector2.UP + Vector2.RIGHT)
+		"hline":
+			results.append(Vector2.ZERO)
+			results.append(Vector2.RIGHT)
+			results.append(Vector2.LEFT)
+		"north":
+			results.append(Vector2.UP)
+		"orthag":
+			results.append(Vector2.RIGHT)
+			results.append(Vector2.LEFT)
+			results.append(Vector2.DOWN)
+			results.append(Vector2.UP)
+		"plus":
+			results.append(Vector2.ZERO)
+			results.append(Vector2.RIGHT)
+			results.append(Vector2.LEFT)
+			results.append(Vector2.DOWN)
+			results.append(Vector2.UP)
+		"rim":
+			results.append(Vector2.RIGHT)
+			results.append(Vector2.LEFT)
+			results.append(Vector2.DOWN)
+			results.append(Vector2.UP)
+			results.append(Vector2.DOWN + Vector2.RIGHT)
+			results.append(Vector2.DOWN + Vector2.LEFT)
+			results.append(Vector2.UP + Vector2.RIGHT)
+			results.append(Vector2.UP + Vector2.LEFT)
+		"rim_alt":
+			results.append(Vector2.RIGHT)
+			results.append(Vector2.LEFT)
+			results.append(Vector2.DOWN)
+			results.append(Vector2.UP)
+			results.append(Vector2.DOWN + Vector2.RIGHT)
+			results.append(Vector2.DOWN + Vector2.LEFT)
+			results.append(Vector2.UP + Vector2.RIGHT)
+			results.append(Vector2.UP + Vector2.LEFT)
+		"sole":
+			results.append(Vector2.ZERO)
+		"south":
+			results.append(Vector2.DOWN)
+		"vline":
+			results.append(Vector2.ZERO)
+			results.append(Vector2.DOWN)
+			results.append(Vector2.UP)
+		"west":
+			results.append(Vector2.LEFT)
+	
+	return results
+	pass
 
 
 

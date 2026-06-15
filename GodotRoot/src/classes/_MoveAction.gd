@@ -85,7 +85,7 @@ func log_move_use():
 	current_battle_uses += 1
 	current_turn_uses += 1
 	
-	print("option_image: ",option_image.filename)
+	print("option_image: ",strife.aimflower_vectors_from_file(option_image.resource_path))
 	pass
 
 func end_action():
