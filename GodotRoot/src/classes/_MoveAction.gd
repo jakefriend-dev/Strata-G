@@ -94,7 +94,7 @@ func log_move_use():
 
 func prepare_actualized_variants():
 	actualized_variants.clear()
-	starting_variant = Vector2.ZERO
+#	starting_variant = Vector2.ZERO
 	
 	# Custom path, if custom logic is desired
 	if has_method("LOAD_VARIANTS"):
@@ -106,7 +106,9 @@ func prepare_actualized_variants():
 	
 	# Our preferred default is the first one on the list
 	if !actualized_variants.empty():
-		starting_variant = actualized_variants.front()
+		# If the one we were using is no longer possible, find another one! (We'll probably want to replace this later?)
+		if !actualized_variants.has(starting_variant):
+			starting_variant = actualized_variants.front()
 	
 #	print("actualized_variants for ",self," now: ",actualized_variants)
 	pass

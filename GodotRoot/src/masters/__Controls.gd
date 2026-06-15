@@ -34,6 +34,7 @@ func monitor_gamepad_sticks():
 	
 	monitor_L_stick(JOY_AXIS_1, "player_cycle_prev", "player_cycle_next")
 	monitor_L_stick(JOY_AXIS_0, "player_subcycle_prev", "player_subcycle_next")
+	monitor_R_stick()
 	
 # JOY_AXIS_0 = 0
 #Gamepad left stick horizontal axis.
@@ -60,11 +61,11 @@ func monitor_L_stick(joy_axis: int, dec_action: String, inc_action: String):
 	if abs(tilt) > deadzone:
 		if tilt < 0:
 			vecstep = -1
-			if !Input.is_action_pressed(dec_action):
+			if !Input.is_action_pressed(dec_action) and !stick_active:
 				Input.action_press(dec_action)
 		else:
 			vecstep = 1
-			if !Input.is_action_pressed(inc_action):
+			if !Input.is_action_pressed(inc_action) and !stick_active:
 				Input.action_press(inc_action)
 		stick_active = true
 		
@@ -86,6 +87,41 @@ func monitor_L_stick(joy_axis: int, dec_action: String, inc_action: String):
 		stick_LY_active = stick_active
 		stick_left_vangle.y = vecstep
 		stick_left_gangle.y = tilt
+	pass
+
+func monitor_R_stick():
+	var vecstep_x: int = 0
+	var vecstep_y: int = 0
+	var tilt: Vector2 = Vector2(
+		Input.get_joy_axis(0, JOY_AXIS_2),
+		Input.get_joy_axis(0, JOY_AXIS_3)
+		)
+	
+	if tilt.length() > deadzone:
+		var tx: float = abs(tilt.x)
+		if tx > deadzone:
+			if tilt.x > 0:
+				vecstep_x = 1
+			elif tilt.x < 0:
+				vecstep_x = -1
+		var ty: float = abs(tilt.y)
+		if ty > deadzone:
+			if tilt.y > 0:
+				vecstep_y = 1
+			elif tilt.y < 0:
+				vecstep_y = -1
+		if !stick_right_active:
+			batman.attempt_to_change_player_variant(tilt)
+		stick_right_active = true
+	
+	else: # Tilt doesn't exceed deadzone
+		if stick_right_active:
+			stick_right_active = false
+			tilt = Vector2.ZERO
+	
+	# These are mostly just tracking; I don't think they're used in the same way
+	stick_right_gangle = tilt
+	stick_right_vangle = Vector2(vecstep_x, vecstep_y)
 	pass
 
 func monitor_inputs():
@@ -171,6 +207,7 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 		actor.emit_signal("player_action_submitted")
 		return
 	pass
+
 
 
 

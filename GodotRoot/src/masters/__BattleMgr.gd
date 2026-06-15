@@ -855,6 +855,22 @@ func cycle_player_move_backward():
 	emit_signal("action_option_view_changed")
 	pass
 
+func attempt_to_change_player_variant(tilt: Vector2):
+	if !player_input_validation_checks(): return
+	
+	# First, figure out what rounded direction we're moving in
+	# (Tilt should already be normalized)
+	var relvec: Vector2 = tilt.round()
+	print("relvec: ",relvec)
+	
+	# Then determine if it's possible to take 1 step in that direction FROM our CURRENT variant vec (not implemented yet but should live HERE)
+	
+	# If it's possible, do so
+	
+	# Then update the current preview
+	emit_signal("action_option_view_changed")
+	pass
+
 func cycle_player_variant_forward():
 	if !player_input_validation_checks(): return
 	
@@ -1240,7 +1256,7 @@ func kill_actor(actor: Actor):
 
 func get_all_current_players() -> Array:
 	var results: Array = []
-	for actor in living_actors: if actor is Actor: if actor.active:
+	for actor in living_actors: if actor is Actor: if utils.actorpass(actor):
 		if actor.faction == factions.PLAYER:
 			results.append(actor)
 	return results
@@ -1248,7 +1264,7 @@ func get_all_current_players() -> Array:
 
 func get_all_current_enemies() -> Array:
 	var results: Array = []
-	for actor in living_actors: if actor is Actor: if actor.active:
+	for actor in living_actors: if actor is Actor: if utils.actorpass(actor):
 		if actor.faction == factions.ENEMY:
 			results.append(actor)
 	return results
@@ -1256,18 +1272,19 @@ func get_all_current_enemies() -> Array:
 
 # ---
 
-func can_player_input() -> bool:
-#	if inputstate != istates.PLAYER_CONTROL:
+# Deprecated because we weren't using it!
+#func can_player_input() -> bool:
+##	if inputstate != istates.PLAYER_CONTROL:
+##		return false
+#	if combatstate != C_TURN:
 #		return false
-	if combatstate != C_TURN:
-		return false
-	if curr_actor == null:
-		return false
-	if curr_actor.faction != factions.PLAYER:
-		return false
-	
-	return true
-	pass
+#	if curr_actor == null:
+#		return false
+#	if curr_actor.faction != factions.PLAYER:
+#		return false
+#
+#	return true
+#	pass
 
 func get_board_size() -> Vector2:
 	if battle_details.has("board_size"):
