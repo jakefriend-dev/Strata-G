@@ -7,21 +7,22 @@ func _enter_tree():
 	add_tool_menu_item('Create New MoveAction', self, 'pre_create_new_move')
 	pass
 
-
 func _exit_tree():
 	remove_tool_menu_item('Create New MoveAction')
 	pass
 
+
+
 # ---
 
 func pre_create_new_move(arguments = null):
-	var res = load("res://addons/editor_tools/EditorInput.tscn")
-	var popup: EditorToolPopup = res.instance()
+	var res = load("res://addons/editor_tools/EditorInputPopup.tscn")
+	var popup: EditorInputPopup = res.instance()
 	var base: Node = get_editor_interface()
 	base.add_child(popup)
 	
-	popup.popup_centered_minsize()
-	popup.prep()
+#	popup.popup_centered_minsize()
+	popup.prep("Enter a new MoveAction key")
 
 	yield(popup, "popup_hide")
 
