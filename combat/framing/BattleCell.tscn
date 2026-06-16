@@ -4,7 +4,7 @@
 [ext_resource path="res://src/shaders/SHADER palette swap.tres" type="Shader" id=2]
 [ext_resource path="res://combat/framing/BattleCell.gd" type="Script" id=3]
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=4]
-[ext_resource path="res://art/_placeholder/tile effects2.png" type="Texture" id=5]
+[ext_resource path="res://art/vfx/tile effects2.png" type="Texture" id=5]
 [ext_resource path="res://combat/framing/BattleThreat.tscn" type="PackedScene" id=6]
 
 [sub_resource type="ShaderMaterial" id=1]
