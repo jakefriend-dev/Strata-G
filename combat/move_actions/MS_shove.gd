@@ -9,8 +9,10 @@ func LOAD_VARIANTS():
 		
 		var cellnear: Vector2 = actor.coord + vec
 		if !batman.grid_actors.has_cellv(cellnear): continue
+		
 		var victim: Actor = batman.grid_actors.get_cellv(cellnear)
 		if !utils.actorpass(victim): continue
+		
 		var cellfar: Vector2 = cellnear + vec
 		if !batman.grid_actors.has_cellv(cellfar): continue
 		
@@ -18,13 +20,11 @@ func LOAD_VARIANTS():
 #		var far_occupant: Actor
 #		if utils.actorpass(far_occupant): continue
 		
-		# Now we're sure that there is room for an actor to move, and a nearby actor to affect
-		if support.is_tile_traversable_exact(victim, cellfar):
-			actualized_variants.append(vec)
+		# Now we're sure that there is a nearby actor to affect
+		actualized_variants.append(vec)
 		
 #		if batman.grid_actors.has_cellv(actor.coord + vec + Vector2(DIST, 0)):
 	pass
-
 
 func PREVIEW():
 	if batman.loaded_variant == Vector2.ZERO:
@@ -35,20 +35,30 @@ func PREVIEW():
 	var far_coord: Vector2 = near_coord + check_vector
 	
 	var victim: Actor = batman.grid_actors.get_cellv(near_coord)
-#	if !utils.actorpass(victim):
+	var far_occupant: Actor = batman.grid_actors.get_cellv(far_coord)
+	var blocked: bool = utils.actorpass(far_occupant)
 	
 	if !strife.is_affected_by_force(victim):
 		add_cell(near_coord, ROWS.ERROR)
-		add_cell(far_coord, ROWS.ERROR)
-		add_arrow(near_coord, far_coord, ROWS.ERROR)
+		add_arrow(near_coord, far_coord, ROWS.PASS)
+		if blocked:
+			add_cell(far_coord, ROWS.ERROR)
+		else:
+			add_cell(far_coord, ROWS.PASS)
 		return
 	
-	add_cell(near_coord, ROWS.NEUTRAL)
+	add_cell(near_coord, ROWS.NEUTRAL) # We're sure the victim is valid at this point
 	
-	var far_occupant: Actor = batman.grid_actors.get_cellv(far_coord)
-	if utils.actorpass(far_occupant):
+	if blocked:
 		add_cell(far_coord, ROWS.ERROR)
-		add_arrow(near_coord, far_coord, ROWS.ERROR)
+		add_arrow(near_coord, far_coord, ROWS.PASS)
+#		add_arrow(near_coord, far_coord, ROWS.ERROR)
+		return
+	
+	if !support.is_tile_traversable_exact(victim, far_coord):
+		add_cell(far_coord, ROWS.PASS) # It's blocked, but NOT by an actor
+		add_arrow(near_coord, far_coord, ROWS.PASS)
+#		add_arrow(near_coord, far_coord, ROWS.ERROR)
 		return
 	
 	add_cell(far_coord, ROWS.NEUTRAL)
