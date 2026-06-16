@@ -895,9 +895,13 @@ func attempt_to_change_player_variant(tilt: Vector2, treat_as_exact_override: bo
 		if loaded_move.actualized_variants.has(IB_vec):
 			loaded_variant = IB_vec
 	
-	# TOGGLE_CYCLE styles
-	elif selection_style == MoveAction.inputstyles.TOGGLE_CYCLE:
-		print("toggle cycle doin' nothing")
+	# TOGGLE between two possibilities, to be treated as a bool
+	elif selection_style == MoveAction.inputstyles.TOGGLE:
+		var diag: Vector2 = (Vector2.RIGHT + Vector2.DOWN)
+		if loaded_variant == Vector2.RIGHT:
+			loaded_variant = diag
+		else:
+			loaded_variant = Vector2.RIGHT
 		pass
 	
 	# RELATIVE vectors (the 'default' and fallback)

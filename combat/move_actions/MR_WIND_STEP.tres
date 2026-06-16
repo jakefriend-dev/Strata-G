@@ -18,5 +18,4 @@ uses_per_turn = 0
 uses_per_battle = 0
 req_successful_preview = true
 selection_style = 1
-use_exact_input_vector = true
 override_global_variant_on_move_load = false
