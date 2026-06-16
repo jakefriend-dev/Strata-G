@@ -1,4 +1,5 @@
 extends Node
+tool
 
 var tween: Tween
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()

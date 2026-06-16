@@ -29,7 +29,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/classes/_Array2D.gd"
 }, {
-"base": "Popup",
+"base": "PopupPanel",
 "class": "EditorToolPopup",
 "language": "GDScript",
 "path": "res://addons/editor_tools/EditorInput.gd"
@@ -97,6 +97,10 @@ window/stretch/aspect="keep"
 [editor]
 
 search_in_file_extensions=PoolStringArray( "gd", "gdshader", "tscn" )
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/editor_tools/plugin.cfg" )
 
 [importer_defaults]
 

@@ -2,18 +2,16 @@
 
 [ext_resource path="res://addons/editor_tools/EditorInput.gd" type="Script" id=1]
 
-[node name="Popup" type="Popup"]
-visible = true
+[node name="Popup" type="PopupPanel"]
 margin_right = 40.0
 margin_bottom = 40.0
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-margin_right = 14.0
-margin_bottom = 14.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 36.0
+margin_bottom = 36.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -38,3 +36,5 @@ rect_min_size = Vector2( 400, 0 )
 align = 1
 max_length = 32
 placeholder_text = "Type a new MoveAction key_name, then Enter"
+caret_blink = true
+caret_blink_speed = 0.5
