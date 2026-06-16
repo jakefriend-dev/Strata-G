@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://combat/actors/PlayerTank.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/bird char mockups2.png" type="Texture" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://combat/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
 [ext_resource path="res://combat/move_actions/MR_BASIC_SLASH.tres" type="Resource" id=5]
 [ext_resource path="res://combat/move_actions/MR_BIG_SLASH.tres" type="Resource" id=6]
+[ext_resource path="res://combat/move_actions/MR_SHOVE.tres" type="Resource" id=7]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -68,7 +69,7 @@ base_action_points = 5
 base_damage = 2
 faction = 1
 def_weight = 3
-loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), null, null, null, null, null, null ]
+loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), null, null, null, null, null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

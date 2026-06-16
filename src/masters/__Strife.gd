@@ -402,7 +402,7 @@ func extmotion_actor_at_coord(attacker: Actor, exact_coord: Vector2, motion: Vec
 	master_do_motion(attacker, victim, motion, flags, is_quiet)
 	pass
 
-func heal_actor_at_coord(attacker: Actor, exact_coord: Vector2, healing: int, flags: Array = []):
+func heal_actor_at_coord(_attacker: Actor, exact_coord: Vector2, healing: int, _flags: Array = []):
 	if !batman.grid_actors.has_cellv(exact_coord): return
 	
 	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
