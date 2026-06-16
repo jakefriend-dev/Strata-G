@@ -181,7 +181,7 @@ __meta__ = {
 
 [node name="Threat" type="Node2D" parent="."]
 visible = false
-modulate = Color( 1, 1, 1, 0.498039 )
+modulate = Color( 1, 1, 1, 0.196078 )
 
 [node name="Med" type="NinePatchRect" parent="Threat"]
 modulate = Color( 0.913725, 0.0784314, 0.541176, 1 )

@@ -76,15 +76,17 @@ func update_cell_highlighting_temp(move: MoveAction):
 		for ea in move.ROWS.size():
 			index += 1 # 0-based
 			var list: Array = move.sets.get_cell(move.COLS.DISPLAY_CELLS, index)
+			if !list.empty(): print("index: ",index,", list: ",list)
 			if list.has(coord):
+				print(index)
 				hcol = move.colors[index]
 				match index:
-					0: hname = "Big"
-					1: hname = "Big"
-					2: hname = "Med"
-					3: hname = "Pass"
-					4: hname = "Big"
-					5: hname = "Small"
+					0: hname = "Big"	# bad
+					1: hname = "Big"	# Good
+					2: hname = "Med"	# Neutral
+					3: hname = "Pass"	# Pass
+					4: hname = "Big"	# Error
+					5: hname = "Small"	# Fallback
 				break
 	else:
 		set_depth_tint(max_row, Color.gray)

@@ -183,6 +183,8 @@ func generate_cell_highlights():
 				add_priority_cell(cell, ROWS.PASS) # Used for 'both'
 			else:
 				add_priority_cell(cell, ROWS.BAD)
+		elif goods.has(cell): # We know it's not Bad+Good because of the above
+			add_priority_cell(cell, ROWS.GOOD)
 		elif neuts.has(cell):
 			add_priority_cell(cell, ROWS.NEUTRAL)
 		elif errs.has(cell):
