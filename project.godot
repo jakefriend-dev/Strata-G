@@ -65,7 +65,7 @@ _global_script_class_icons={
 config/name="Strata-G"
 run/main_scene="res://combat/framing/BattleField.tscn"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
-config/icon="res://art/_placeholder/fight_guy temp.png"
+config/icon="res://art/bui/3x3 - plus.png"
 
 [autoload]
 

@@ -17,12 +17,10 @@ func _exit_tree():
 func pre_create_new_move(arguments = null):
 	var res = load("res://addons/editor_tools/EditorInput.tscn")
 	var popup: EditorToolPopup = res.instance()
-	var base: Node = get_editor_interface()#.get_base_control()
+	var base: Node = get_editor_interface()
 	base.add_child(popup)
-#	get_editor_interface().add_child(popup)
 	
 	popup.popup_centered_minsize()
-	print("prepping A")
 	popup.prep()
 
 	yield(popup, "popup_hide")
@@ -58,7 +56,7 @@ func create_new_move(raw_movename: String):
 		print("File for new MoveAction [",raw_movename,"] already exists, error!!")
 		return
 	
-	print("File is NEW and we ok!")
+#	print("File is NEW and we ok!")
 	
 	# Create a "MS" script, lowercase
 	var template_path: String = "res://combat/move_actions/templates/MS_template.gd"
