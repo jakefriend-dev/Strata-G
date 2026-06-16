@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/classes/_Array2D.gd"
 }, {
+"base": "Popup",
+"class": "EditorToolPopup",
+"language": "GDScript",
+"path": "res://addons/editor_tools/EditorInput.gd"
+}, {
 "base": "Resource",
 "class": "MoveAction",
 "language": "GDScript",
@@ -49,6 +54,7 @@ _global_script_class_icons={
 "ActorEnemy": "",
 "ActorPlayer": "",
 "Array2D": "",
+"EditorToolPopup": "",
 "MoveAction": "",
 "YPing": "",
 "YTimer": ""
