@@ -245,140 +245,6 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	batman.kill_actor(defender)
 	pass
 
-#func OLD_master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Array, is_quiet: bool):
-#	if damage <= 0: return
-#	if !utils.actorpass(defender): return # Attacker is allowed to be null, though!
-#
-#	var attacker_is_real: bool = false
-#	if utils.actorpass(attacker):
-#		attacker_is_real = true
-#
-#	var friendly_fire: bool = true
-#	if flags.has("skip_own_faction"): friendly_fire = false
-#	if !friendly_fire:
-#		if attacker_is_real:
-#			if attacker.faction == defender.faction:
-#				return
-#
-#	var is_melee: bool = support.are_actors_adjacent(attacker, defender)
-#
-#	#
-#	# Apply any elemental modifiers here! Increase the damage for hitting a weakness eg.
-#	#
-#
-#	#
-#	# Now begin the damage management
-#	#
-#
-#	var og_damage: int = damage
-#	var og_shield: int = defender.shield
-#	var og_bonus_shield: int = defender.bonus_shield
-#	var og_total_shield: int = og_shield + og_bonus_shield
-#
-#
-#	var desctext: String = " melee"
-#	if !is_melee: desctext = " ranged"
-#
-#	if !is_quiet:
-#		defender.emit_signal("on_phys_combat_any_contact")
-#		quick_effect(defender, "spark_burst")
-#
-#	# Check for shield bypass / piercing immunity
-#	var piercing: bool = flags.has("piercing")
-#	if defender.is_immune_piercing: piercing = false # Override!
-#	if !piercing:
-#		# Deduct damage and shield equally until either of them depletes fully
-#		while (defender.bonus_shield > 0 or defender.shield > 0) and damage > 0:
-#			damage -= 1
-#			if defender.bonus_shield > 0:
-#				defender.bonus_shield -= 1
-#			else:
-#				defender.shield -= 1
-#
-#	#
-#	# Review the shield state after damage is applied
-#	#
-#
-#	var total_shield_left: int = defender.shield + defender.bonus_shield
-#
-#	# Normally, there's a bunch of signal hooks
-#	if !is_quiet:
-#		if total_shield_left < og_total_shield:
-#	#		print("Some quantity of shield consumed!")
-#			defender.emit_signal("on_shield_consumed", is_melee)
-#			if attacker_is_real:
-#				attacker.emit_signal("on_hit_someones_shield", defender, is_melee)
-#
-#		if total_shield_left > 0: # The shield held!
-#			defender.emit_signal("on_shield_held", is_melee)
-#
-#		if og_total_shield > 0 and total_shield_left == 0:
-#	#		print("Shield BROKEN!")
-#			# Either way, shield broke
-#			if attacker_is_real:
-#				attacker.emit_signal("on_broke_someones_shield", defender, is_melee)
-#			defender.emit_signal("on_shield_broken_any", is_melee)
-#			if damage > 0:
-#				# Shield broke and damage pushed through
-#				defender.emit_signal("on_shield_broken_through", is_melee)
-#				if attacker_is_real:
-#					attacker.emit_signal("on_broke_through_someones_shield", defender, is_melee)
-#				quick_effect(defender, "shield_broken")
-#			else:
-#				# Shield broken but held
-#				if attacker_is_real:
-#					attacker.emit_signal("on_shield_broken_held", is_melee)
-#				quick_effect(defender, "blocked")
-#			pass
-#	# Unless things are quiet, in which case... nope!
-#
-#	var shielded_damage: int = og_damage - damage # This should be 0 for piercing
-#	if damage <= 0:
-#		batman.update_action_log(str(defender.name,": Blocked ",shielded_damage,desctext," and took no damage"))
-#		if !is_quiet:
-#			defender.emit_signal("on_blocked_all_damage", is_melee)
-#			if attacker_is_real:
-#				attacker.emit_signal("on_failed_to_wound_someone", defender, is_melee)
-#		defender.update_bui()
-#		return
-#
-#	#
-#	# Apply remnant damage to the defender's health!
-#	#
-#
-#	var impacted_damage: int = 0
-#	while defender.health > 0 and damage > 0:
-#		damage -= 1
-#		defender.health -= 1
-#		impacted_damage += 1
-#
-#	if !is_quiet:
-#		quick_effect(defender, "damage", impacted_damage)
-#		if attacker_is_real:
-#			attacker.emit_signal("on_wounded_someone", defender, is_melee)
-#
-#	# The defender lives!
-#	if defender.health > 0:
-#		if shielded_damage == 0:
-#			batman.update_action_log(str(defender,": Took ",og_damage,desctext," damage"))
-#		else:
-#			batman.update_action_log(str(defender,": Blocked ",shielded_damage," and took ",impacted_damage,desctext," damage"))
-#		defender.update_bui()
-#		return
-#
-#	# The defender dies!
-#	else:
-#		if shielded_damage == 0:
-#			batman.update_action_log(str(defender.name,": Died from taking ",impacted_damage,desctext," damage"))
-#		else:
-#			batman.update_action_log(str(defender.name,": Died from taking ",impacted_damage,desctext," damage (blocked ",shielded_damage,")"))
-#		batman.kill_actor(defender)
-#		if !is_quiet:
-#			if attacker_is_real:
-#				attacker.emit_signal("on_killed_someone", defender, is_melee)
-#	pass
-
-
 # -
 
 func do_impact_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array = []):
@@ -446,7 +312,6 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	var max_loops: int = support.get_steps_in_vector_line_int(motion)
 	var step: Vector2 = motion.normalized().round()
 	var check_tile_rel: Vector2 = Vector2.ZERO
-#	var last_successful_final_coord: Vector2 = defender.coord
 	
 	while !unspent_motion.is_equal_approx(Vector2.ZERO):
 		loops += 1
@@ -460,18 +325,16 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 			tilemove_failures += 1
 			continue
 		
-		# Otherwise, we're still in the game!
+		# Last validation check to make sure we're still on the board
 		check_tile_rel += step
 		var check_tile_exact: Vector2 = defender.coord + check_tile_rel
 		if !batman.grid_tiles.has_cellv(check_tile_exact): # (Unless we're off the board)
 			tilemove_failures += 1
 			continue
-		# Okay, NOW we're still in the game!
 		
-		# (Ignore this ice stuff - it actually shouldn't matter, since this scenario (running out of motion but ending on an ice tile) would actually result in a natural slide on the arrived-to ice, so it doesn't actually matter.
-#		var check_tiletype: int = batman.grid_tiles.get_cellv(check_tile_exact)
-#		if check_tiletype == batman.tiletypes.ICE:
-#			# If we'd be on ice now
+		#
+		# Okay, NOW we're still in the game!
+		#
 		
 		# Finally, if we're ABLE to exist on that tile, spend the motion; otherwise continue
 		if support.is_tile_traversable_exact(defender, check_tile_exact):
@@ -539,6 +402,28 @@ func extmotion_actor_at_coord(attacker: Actor, exact_coord: Vector2, motion: Vec
 	master_do_motion(attacker, victim, motion, flags, is_quiet)
 	pass
 
+func heal_actor_at_coord(attacker: Actor, exact_coord: Vector2, healing: int, flags: Array = []):
+	if !batman.grid_actors.has_cellv(exact_coord): return
+	
+	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
+	if !utils.actorpass(victim): return
+	
+	# Temporary jank setup until we do a 'main' function for this
+	
+	var before_health: int = victim.health
+	var new_health: int = victim.health + healing
+	if new_health < victim.max_health:
+		victim.health = new_health
+	else:
+		victim.health = victim.max_health
+	
+	victim.update_bui()
+	print("Healed ",victim," +",healing," HP from ",before_health," to ",victim.health,"!")
+	
+#	var is_quiet: bool = flags.has("quiet")
+#	
+#	master_do_damage(attacker, victim, -healing, flags, is_quiet)
+	pass
 
 # VISUAL EFFECTS (not STATUS effects mechanically, just VISUALS ----------------
 

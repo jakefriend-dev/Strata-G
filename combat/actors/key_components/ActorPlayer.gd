@@ -34,6 +34,9 @@ func load_moves():
 		if moveset.has(move.resource_name):
 			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
 			continue
+		if move.option_image == null:
+			print(name," can't load move ",move,", no option_image!")
+			continue
 		
 		moveset[move.resource_name] = move
 		move.plausible_variants = strife.aimflower_vectors_from_file(move.option_image.resource_path)

@@ -7,7 +7,7 @@ export var display_name: String
 export (String, MULTILINE) var display_desc: String
 var key: String # For "Yank-Shot" it's "yank" - whatever the resource name is. Just a convenient reference point; almost certainly a redundancy.
 
-export (int, 1, 8) var options: int = 1
+#export (int, 1, 8) var options: int = 1 # Deprecated in favour of variants & aimflower!
 export var option_image: Texture
 export (String, MULTILINE) var option_desc: String
 
@@ -234,13 +234,14 @@ func add_cell(coord: Vector2, type: int, from_arrow: bool = false):
 		cell_array_pure.append(coord)
 	pass
 
-func add_cellset(coords: Array, type: int):
+func add_cellset(coords: Array, type: int, is_exact: bool = true):
 	if type >= ROWS.size() or type < 0: return
-	###
+	
 	
 	var purecell_array: Array = sets.get_cell(COLS.PURECELL_ARRAY, type)
 	var allcell_array: Array = sets.get_cell(COLS.ALLCELL_ARRAY, type)
 	for coord in coords: if coord is Vector2:
+		if !is_exact: coord += actor.coord
 		if !batman.grid_tiles.has_cellv(coord): continue
 		###
 		if !purecell_array.has(coord):
