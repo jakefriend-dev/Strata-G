@@ -96,7 +96,7 @@ window/stretch/aspect="keep"
 
 [editor]
 
-search_in_file_extensions=PoolStringArray( "gd", "gdshader", "tscn" )
+search_in_file_extensions=PoolStringArray( "gd", "gdshader", "tscn", "tres" )
 
 [editor_plugins]
 

@@ -29,13 +29,17 @@ var current_battle_uses: int = 0
 
 export var req_successful_preview: bool = false
 
+# Input control and selection styles, for aimflower control
 enum inputstyles {
 	RELATIVE,		# Treats 3x3 grid as positions to move between
 	EXACT,			# Exact input is selected (can't reach middle tile!)
 	TOGGLE_CYCLE	# Any input registers a cycling toggle, as defined on the move script
 }
 export (inputstyles) var selection_style: int = 0
-export var use_exact_input_vector: bool = false # If false, it's relative (almost always)
+var toggle_cell_options: Array = [] # Can hold either exact cells, or subarrays of exact cells
+var toggle_index: int = 0 # Current position within the toggle_options array
+
+#export var use_exact_input_vector: bool = false # If false, it's relative (almost always)
 export var override_global_variant_on_move_load: bool = false # If true, when selecting this move we ALWAYS the batman var back to this starting var.
 
 var actor: Actor # Quickref!

@@ -2,6 +2,13 @@ extends MoveAction
 
 #var DIST: int = 3
 
+func PREPARE_TOGGLE_OPTIONS():
+	
+	# Orthag then diag
+	toggle_cell_options.append(support.get_adj_orthagonal_tiles(actor.coord, true))
+	toggle_cell_options.append(support.get_adj_diagonal_tiles(actor.coord, true))
+	pass
+
 # Only uncomment this method if you want to bypass "normal" variant loading
 #func LOAD_VARIANTS():
 #	for vec in plausible_variants:
@@ -10,7 +17,7 @@ extends MoveAction
 #	pass
 
 func PREVIEW():
-
+	
 	var check_vector: Vector2 = batman.loaded_variant
 	
 	var orthag_shapes: Array = [Vector2.UP, Vector2.DOWN, Vector2.RIGHT, Vector2.LEFT]

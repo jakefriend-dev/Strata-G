@@ -887,10 +887,21 @@ func attempt_to_change_player_variant(tilt: Vector2, treat_as_exact_override: bo
 	
 	# Then determine if it's possible to take 1 step in that direction FROM our CURRENT variant vec // OR, if we use exact coords, just check if we can use this one
 	
-	if loaded_move.use_exact_input_vector or treat_as_exact_override: # Inbound vec is an EXACT coord
+	var selection_style: int = loaded_move.selection_style
+	if treat_as_exact_override: selection_style = MoveAction.inputstyles.EXACT
+	
+	# EXACT vectors, or some numpad inputs
+	if selection_style == MoveAction.inputstyles.EXACT:
 		if loaded_move.actualized_variants.has(IB_vec):
 			loaded_variant = IB_vec
-	else: # Inbound vec is a RELATIVE coord
+	
+	# TOGGLE_CYCLE styles
+	elif selection_style == MoveAction.inputstyles.TOGGLE_CYCLE:
+		print("toggle cycle doin' nothing")
+		pass
+	
+	# RELATIVE vectors (the 'default' and fallback)
+	else:
 		var exact_vec: Vector2 = loaded_variant + IB_vec
 		if loaded_move.actualized_variants.has(exact_vec):
 			loaded_variant = exact_vec

@@ -76,9 +76,9 @@ func update_cell_highlighting_temp(move: MoveAction):
 		for ea in move.ROWS.size():
 			index += 1 # 0-based
 			var list: Array = move.sets.get_cell(move.COLS.DISPLAY_CELLS, index)
-			if !list.empty(): print("index: ",index,", list: ",list)
+#			if !list.empty(): print("index: ",index,", list: ",list)
 			if list.has(coord):
-				print(index)
+#				print(index)
 				hcol = move.colors[index]
 				match index:
 					0: hname = "Big"	# bad
