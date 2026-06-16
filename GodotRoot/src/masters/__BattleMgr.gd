@@ -865,15 +865,15 @@ func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_sele
 	# We should only exercise this code WHEN THE MOVE IS FIRST LOADED/CHOSEN, not each preview
 	if is_brand_new_move_selected and move.override_global_variant_on_move_load:
 		if loaded_variant != move.starting_variant:
-			print("BATMAN: Overwriting loaded varvec to ",loaded_variant)
+			print("BATMAN: Overwriting loaded_variant to ",loaded_variant)
 		loaded_variant = move.starting_variant
 	
 	if !move.actualized_variants.has(loaded_variant):
 		loaded_variant = move.starting_variant
-		print("BATMAN: Overwriting loaded varvec to ",loaded_variant)
+		print("BATMAN: Overwriting loaded_variant to ",loaded_variant)
 	pass
 
-func attempt_to_change_player_variant(tilt: Vector2):
+func attempt_to_change_player_variant(tilt: Vector2, treat_as_exact_override: bool = false):
 	if !player_input_validation_checks(): return
 	
 	# First, figure out what rounded direction we're moving in
@@ -887,7 +887,7 @@ func attempt_to_change_player_variant(tilt: Vector2):
 	
 	# Then determine if it's possible to take 1 step in that direction FROM our CURRENT variant vec // OR, if we use exact coords, just check if we can use this one
 	
-	if loaded_move.use_exact_input_vector: # Inbound vec is an EXACT coord
+	if loaded_move.use_exact_input_vector or treat_as_exact_override: # Inbound vec is an EXACT coord
 		if loaded_move.actualized_variants.has(IB_vec):
 			loaded_variant = IB_vec
 	else: # Inbound vec is a RELATIVE coord

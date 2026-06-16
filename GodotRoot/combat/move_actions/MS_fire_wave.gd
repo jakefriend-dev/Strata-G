@@ -9,7 +9,7 @@ func PREVIEW():
 	
 	var sighted: Array = support.get_all_tiles_in_dir(actor.coord, check_vector)
 	if !sighted.empty():
-		add_arrow(actor.coord, sighted.back(), ROWS.BAD)
+		add_arrow(actor.coord + check_vector, sighted.back(), ROWS.BAD)
 	
 #	var victims: Array = []
 	for coord in sighted:

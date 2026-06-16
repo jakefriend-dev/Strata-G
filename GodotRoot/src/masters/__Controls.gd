@@ -183,7 +183,7 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 		actor.attempt_player_char_action()
 		return
 	
-	# Select a new move/option
+	# Select a move
 	if Input.is_action_just_pressed("player_cycle_next"):
 		multi_input_lock = true
 		batman.cycle_player_move_forward()
@@ -192,13 +192,51 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 		multi_input_lock = true
 		batman.cycle_player_move_backward()
 		return
-	if Input.is_action_just_pressed("player_subcycle_next"):
+#	if Input.is_action_just_pressed("player_subcycle_next"):
+#		multi_input_lock = true
+#		batman.cycle_player_variant_forward()
+#		return
+#	if Input.is_action_just_pressed("player_subcycle_prev"):
+#		multi_input_lock = true
+#		batman.cycle_player_variant_backward()
+#		return
+	
+	# Select a variant
+	if Input.is_action_just_pressed("player_aim_TL"):
 		multi_input_lock = true
-		batman.cycle_player_variant_forward()
+		batman.attempt_to_change_player_variant(Vector2.UP + Vector2.LEFT)
 		return
-	if Input.is_action_just_pressed("player_subcycle_prev"):
+	if Input.is_action_just_pressed("player_aim_TC"):
 		multi_input_lock = true
-		batman.cycle_player_variant_backward()
+		batman.attempt_to_change_player_variant(Vector2.UP)
+		return
+	if Input.is_action_just_pressed("player_aim_TR"):
+		multi_input_lock = true
+		batman.attempt_to_change_player_variant(Vector2.UP + Vector2.RIGHT)
+		return
+	if Input.is_action_just_pressed("player_aim_CL"):
+		multi_input_lock = true
+		batman.attempt_to_change_player_variant(Vector2.LEFT)
+		return
+	if Input.is_action_just_pressed("player_aim_CC"):
+		multi_input_lock = true
+		batman.attempt_to_change_player_variant(Vector2.ZERO, true)
+		return
+	if Input.is_action_just_pressed("player_aim_CR"):
+		multi_input_lock = true
+		batman.attempt_to_change_player_variant(Vector2.RIGHT)
+		return
+	if Input.is_action_just_pressed("player_aim_BL"):
+		multi_input_lock = true
+		batman.attempt_to_change_player_variant(Vector2.DOWN + Vector2.LEFT)
+		return
+	if Input.is_action_just_pressed("player_aim_BC"):
+		multi_input_lock = true
+		batman.attempt_to_change_player_variant(Vector2.DOWN)
+		return
+	if Input.is_action_just_pressed("player_aim_BR"):
+		multi_input_lock = true
+		batman.attempt_to_change_player_variant(Vector2.DOWN + Vector2.RIGHT)
 		return
 	
 	# End turn
