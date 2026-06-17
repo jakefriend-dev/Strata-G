@@ -1149,6 +1149,7 @@ z_index = 1
 script = ExtResource( 6 )
 
 [node name="ActionTestbed" type="Node2D" parent="."]
+visible = false
 
 [node name="Node2D" type="Node2D" parent="ActionTestbed"]
 position = Vector2( 30, 31 )

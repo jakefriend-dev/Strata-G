@@ -9,6 +9,24 @@ extends Node
 	# TRAVERSABLE: The tile is available AND a specific actor is capable of being there
 		# (ie. it's not a "pit but I can't hover" situation, or a faction bounds issue)
 
+func get_actor_at_cellv(coord: Vector2) -> Actor:
+	if !batman.grid_actors.has_cellv(coord): return null # Off the grid
+	
+	# Valid actor exists (normally)
+	var actor: Actor = batman.grid_actors.get_cellv(coord)
+	if actor != null:
+		if utils.actorpass(actor):
+			return actor
+	
+	# If not on the grid, let's check ghost actors!
+	for ghost in batman.ghost_actors:
+		if ghost.coord == coord:
+			if utils.actorpass(ghost):
+				return ghost
+	
+	return null
+	pass
+
 func get_all_tiles_in_dir(og_cell: Vector2, dir: Vector2) -> Array:
 	if dir == Vector2.ZERO: return []
 	

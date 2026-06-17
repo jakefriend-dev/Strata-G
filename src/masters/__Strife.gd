@@ -821,7 +821,7 @@ func aimflower_vectors_from_key(key: String) -> Array:
 			results.append(Vector2.UP + Vector2.RIGHT)
 			results.append(Vector2.UP + Vector2.LEFT)
 		"east":
-			results.append(Vector2.LEFT)
+			results.append(Vector2.RIGHT)
 		"fronts":
 			results.append(Vector2.RIGHT)
 			results.append(Vector2.DOWN + Vector2.RIGHT)
