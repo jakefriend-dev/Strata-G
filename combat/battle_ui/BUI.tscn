@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
 [ext_resource path="res://combat/battle_ui/BUI.gd" type="Script" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://combat/battle_ui/HealthPip.tscn" type="PackedScene" id=4]
 [ext_resource path="res://combat/battle_ui/ShieldPip.tscn" type="PackedScene" id=5]
 [ext_resource path="res://combat/battle_ui/BonusShieldPip.tscn" type="PackedScene" id=6]
+[ext_resource path="res://text/fonts/built/Font BUI Header 1x.tres" type="DynamicFont" id=7]
 
 [node name="BUI" type="Node2D"]
 position = Vector2( 0, 16 )
@@ -33,18 +34,19 @@ margin_right = 251.0
 margin_bottom = 225.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-custom_constants/separation = -2
+custom_constants/separation = 0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Name" type="Label" parent="MC/VB"]
-margin_left = 45.0
-margin_right = 57.0
-margin_bottom = 14.0
+margin_left = 19.0
+margin_right = 83.0
+margin_bottom = 12.0
 size_flags_horizontal = 4
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-text = "P1"
+custom_fonts/font = ExtResource( 7 )
+text = "Magickdart"
 
 [node name="GC" type="GridContainer" parent="MC/VB"]
 margin_top = 12.0

@@ -20,7 +20,7 @@ export (int, 0, 8) var on_use_cooldown: int = 0
 export (int, 0, 8) var initial_cooldown: int = 0
 var current_cooldown: int = 0
 
-export var misc: String
+export var display_tags: String # EG piercing, fire, knockback, heavy
 
 export (int, 0, 8) var uses_per_turn: int = 0
 export (int, 0, 8) var uses_per_battle: int = 0
@@ -41,6 +41,7 @@ export (inputstyles) var selection_style: int = 0
 
 #export var use_exact_input_vector: bool = false # If false, it's relative (almost always)
 export var override_global_variant_on_move_load: bool = false # If true, when selecting this move we ALWAYS the batman var back to this starting var.
+export var misc: String
 
 var actor: Actor # Quickref!
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop
