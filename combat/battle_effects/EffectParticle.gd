@@ -56,7 +56,10 @@ func gather_lifetime():
 
 func prep_custom_details():
 	match effect_name:
-		"DamageBoom":
+		"damage":
+			for p in par_node.get_children(): if p is Particles2D:
+				p.amount = intensity
+		"heal":
 			for p in par_node.get_children(): if p is Particles2D:
 				p.amount = intensity
 	pass

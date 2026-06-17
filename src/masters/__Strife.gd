@@ -416,7 +416,9 @@ func heal_actor_at_coord(_attacker: Actor, exact_coord: Vector2, healing: int, _
 		victim.health = new_health
 	else:
 		victim.health = victim.max_health
+	var delta: int = new_health - before_health
 	
+	quick_effect(victim, "heal", delta)
 	victim.update_bui()
 	print("Healed ",victim," +",healing," HP from ",before_health," to ",victim.health,"!")
 	
@@ -432,6 +434,9 @@ func quick_effect(actor_or_coord, effect: String, variant = null):
 		
 		"damage":
 			spawn_effect_on_actor(actor_or_coord, "damage", false, float(variant))
+		
+		"heal":
+			spawn_effect_on_actor(actor_or_coord, "heal", false, float(variant))
 		
 		"blocked":
 			spawn_effect_on_actor(actor_or_coord, "blocked", false)
