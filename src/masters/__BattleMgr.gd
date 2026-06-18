@@ -120,12 +120,12 @@ enum tiletypes {
 	
 	NORMAL, 	#
 	
-	PIT,    	# Can't be walked into naturally; like a wall without blocking projectiles or LOS (not sure we're using it but it's referenced in the code so we can always leave it be)
+	PIT,    	# Can't be walked into naturally; like a wall without blocking projectiles or LOS
+					# (not sure we're using it but it's referenced in the code
+					# so we may as well leave it be)
 	
-	STEEL,		# Unbreakable; type cannot be changed
-					# In practice not sure this makes sense if 'breaking' is a rare effect on a tile...
-					# More like 'self-cleaning' to wipe away runes and blood and melt ice
-					# We may not wish to use this...
+	MAGIC,		# Unbreakable & unchangeable
+					# Magic attacks (inc elemental damage?) cast on it do +1 damage
 	
 	MAGNET,		# Actors adjacent to this block are pulled onto it when resting - themed as 'lodestone'!
 					# Ignored if ON a magnet, adjacent to MULTIPLE magnet, or the magnet is occupied
@@ -145,13 +145,11 @@ enum tiletypes {
 					# This gives the effect of "slightly protected by cover"
 					# Maybe you can 'shoot over' sunk actors...?
 	
-	ENCHANTED,	# I'm not sure about this one but... Can be used to trigger effects remotely, such as "damage all units on enchanted tiles" or even "adjacent to enchanted tiles"
-					# Or perhaps: "Any damage/effect performed to someone on an enchanted tile also happens to any/everyone else on an enchanted tile? Quite situational though, and it means 1 is kind of meaningless
-					# As simple as "receive double damage all the time" or something?
+	FOG_WIND,	# Moves you (physically, not as force) 1 tile in a specific direction
 	
 	STATIC,		# Your next action must be a REST (or ending your turn) to discharge movement. Repaired on discharge.
 	
-	POISON, 	# Poison damage is only taken if you END your turn here
+	POISON, 	# Poison damage ticks on rest
 	
 	JAGGED,  	# Sharp and jagged; causes damage and AP loss when stepped on (this also repairs it)
 					# Maybe this should be an effect, not a tile 'type'?
@@ -160,7 +158,13 @@ enum tiletypes {
 	
 	GLOWING,	# Heal at end of turn, but receive extra damage while on tile
 	
+	
+	
 	# NOT SURE ABOUT COMMITTING TO THESE
+	
+	RUNIC,		# I'm not sure about this one but... Can be used to trigger effects remotely, such as "damage all units on runic tiles" or even "adjacent to runic tiles"
+					# Or perhaps: "Any damage/effect performed to someone on an enchanted tile also happens to any/everyone else on an enchanted tile? Quite situational though, and it means 1 is kind of meaningless
+					# As simple as "receive double damage all the time" or something?
 	
 	SAND,		# Lose 1 AP on entry; it's just hard to walk on
 	
@@ -170,12 +174,10 @@ enum tiletypes {
 	
 #	WATER,  	# The tile 'sinks' and slows non-swimmers. Lightweights do NOT have immunity
 	
-	
+
 	BOGROT,		# Poison and mud combined; poison only counts if you are sunk into the tile
 	
 	# LILYPAD: A type of water that can break into 'real' water tiles
-	
-	# CONVEYOR: Moves you (physically, not as force) 1 tile in a specific direction
 	
 	DNU
 }
