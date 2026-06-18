@@ -3,7 +3,7 @@ extends Node
 var default_halfboard_size: Vector2 = Vector2(3, 5)
 const DETERMINISTIC: bool = false # When true, randomness is not initiated
 
-enum {
+enum { # Combat states
 	C_OOC,			# Out of combat - the turn system is not active, aka between fights
 	
 	C_BATTLE_SETUP,	# Exists from battle initiation through until first turn selection
@@ -23,17 +23,8 @@ enum {
 	C_BATTLE_WON,			# Only happens once, when the player wins!
 	
 }
-
 var combatstate: int = C_OOC
-# TURNSTATE exists to know the GRANDER SCHEME of turns, mainly if it's the player's or enemy's turn, plus some in-between stages
 
-#enum istates {
-#	NPT,				# "Not Player's Turn"
-#	PC_BOARD,			# Player has tactical control
-#	PLAYER_EXECUTE,	# The player's commands are being executed (like animation delays for switching characters, attack anims, etc); first we spend any consumed points, then we perform the action, then we check to see if the char is spent or not (if yes, force-pick the next unspent char, unless all chars are spent, in which case end the player's turn)
-#}
-#
-#var inputstate: int = istates.NPT
 var curr_actor: Actor = null # Whichever player OR enemy char whose turn it is
 var acting_actor: Actor = null # Whichever player OR enemy char whose ACTION STEP it currently is
 var curr_turndata: Dictionary = {} # The more complex packet that includes the actor itself, plus other references from initiative rolling
@@ -125,41 +116,28 @@ var board: GridContainer # Owner of CELLS not everything
 
 # Tile types refer to the GROUND, not any effect on that coordinate (such as oil).
 enum tiletypes {
-	# CORE TYPES
+	# BASIC TYPES -------------------------------------------
 	
 	NORMAL, 	#
 	
+	PIT,    	# Can't be walked into naturally; like a wall without blocking projectiles or LOS (not sure we're using it but it's referenced in the code so we can always leave it be)
+	
 	STEEL,		# Unbreakable; type cannot be changed
+					# In practice not sure this makes sense if 'breaking' is a rare effect on a tile...
+					# More like 'self-cleaning' to wipe away runes and blood and melt ice
+					# We may not wish to use this...
 	
-	PIT,    	# Can't be walked into naturally; like a wall without blocking projectiles or LOS
+	MAGNET,		# Actors adjacent to this block are pulled onto it when resting - themed as 'lodestone'!
+					# Ignored if ON a magnet, adjacent to MULTIPLE magnet, or the magnet is occupied
+					# Essentially, "1 free adjacent magnet" is when it works
 	
-	# COMMITTED SPECIALS
-	
-	JAGGED,  	# Sharp and jagged; causes damage and AP loss when stepped on (this also repairs it)
+	# TAG-MATCHED TYPES --------------------------------------
 	
 	ICE,    	# Any movement direction that isn't a 'jump' causes continued sliding
 	
-	HOT,	   	# It hurts to enter this tile (each time), as fire damage
+	EMBER,	   	# 1 damage to end turn on this tile; +1 AP to start to on this tile
 	
-	SAND,		# Actors only sink on it if they END their turn on sand, unless lightweight
-					# Perhaps can become mud with water effect
-					# If sunk, immune to lightning damage
-	
-	POISON, 	# Poison damage is only taken if you END your turn here
-					# Maybe this should be an effect, not a tile 'type'?
-	
-	# NOT SURE ABOUT COMMITTING TO THESE
-	
-	GRASS,		# Fire damage is doubled, which also destroys the grass
-	
-	MUD,    	# The tile 'sinks' immediately and slow everyone down; lightweights treat as sand
-	
-	WATER,  	# The tile 'sinks' and slows non-swimmers. Lightweights do NOT have immunity
-	
-	MAGNET,		# Actors adjacent to this block who are not ALREADY on a magnet are pulled on to it
-					# Applied at the end of their turn?
-	
-	BOGROT,		# Poison and mud combined; poison only counts if you are sunk into the tile
+	OVERGROWTH	# -1 AP on entering (unless immune), but damage lowered while on tile
 	
 	TRENCH,		# Provides 'cover,' so to speak, at the cost of some movement
 					# You gain 1 bonus shield by entering it
@@ -167,13 +145,37 @@ enum tiletypes {
 					# This gives the effect of "slightly protected by cover"
 					# Maybe you can 'shoot over' sunk actors...?
 	
-	#ELEC,   	# 'Static' on the tile hurts when walking on ONCE, but doing so also discharges it
-	#				# Also still affects hovering actors?
-	#				# Maybe this should be an effect, not a tile 'type'.... yeahhh
+	ENCHANTED,	# I'm not sure about this one but... Can be used to trigger effects remotely, such as "damage all units on enchanted tiles" or even "adjacent to enchanted tiles"
+					# Or perhaps: "Any damage/effect performed to someone on an enchanted tile also happens to any/everyone else on an enchanted tile? Quite situational though, and it means 1 is kind of meaningless
+					# As simple as "receive double damage all the time" or something?
+	
+	STATIC,		# Your next action must be a REST (or ending your turn) to discharge movement. Repaired on discharge.
+	
+	POISON, 	# Poison damage is only taken if you END your turn here
+	
+	JAGGED,  	# Sharp and jagged; causes damage and AP loss when stepped on (this also repairs it)
+					# Maybe this should be an effect, not a tile 'type'?
+	
+	BLOOD,		# Can be consumed for special Blood Magic effects
+	
+	GLOWING,	# Heal at end of turn, but receive extra damage while on tile
+	
+	# NOT SURE ABOUT COMMITTING TO THESE
+	
+	SAND,		# Lose 1 AP on entry; it's just hard to walk on
+	
+	MUD,    	# The tile 'sinks' immediately and slow everyone down; lightweights treat as sand
+
+#	GRASS,		# Fire damage is doubled, which also destroys the grass
+	
+#	WATER,  	# The tile 'sinks' and slows non-swimmers. Lightweights do NOT have immunity
+	
+	
+	BOGROT,		# Poison and mud combined; poison only counts if you are sunk into the tile
 	
 	# LILYPAD: A type of water that can break into 'real' water tiles
 	
-	# CONVEYOR: Moves you (physically, not as force) 1 tile
+	# CONVEYOR: Moves you (physically, not as force) 1 tile in a specific direction
 	
 	DNU
 }
@@ -210,8 +212,8 @@ func test_new_combat(test: String):
 				],
 				"tile_exceptions": {
 					Vector2(3, 3): tiletypes.STEEL,
-					Vector2(2, 1): tiletypes.HOT,
-					Vector2(4, 1): tiletypes.HOT,
+					Vector2(2, 1): tiletypes.EMBER,
+					Vector2(4, 1): tiletypes.EMBER,
 					Vector2(2, 4): tiletypes.POISON,
 				},
 			}):
