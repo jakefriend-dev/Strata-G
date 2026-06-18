@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=49 format=2]
 
 [ext_resource path="res://combat/framing/BattleCell.tscn" type="PackedScene" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
@@ -11,6 +11,9 @@
 [ext_resource path="res://art/bui/3x3 - fronts.png" type="Texture" id=9]
 [ext_resource path="res://text/fonts/built/Font MoveCard Header 1x.tres" type="DynamicFont" id=10]
 [ext_resource path="res://text/fonts/built/Font BUI Body 1x.tres" type="DynamicFont" id=11]
+[ext_resource path="res://art/_placeholder/mc/castle wall unusable.png" type="Texture" id=12]
+[ext_resource path="res://art/_placeholder/mc/default_silver_sandstone_block RESIZED full.png" type="Texture" id=13]
+[ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -685,7 +688,7 @@ VBoxContainer/constants/separation = 0
 
 [node name="BattleField" type="Node2D"]
 script = ExtResource( 2 )
-path_board = NodePath("Control/MC/VB/HB/Board")
+path_board = NodePath("BoardOwner/MC/VB/HB/Board")
 path_actors = NodePath("FieldObjects/Actors")
 path_effects = NodePath("FieldObjects/Effects")
 path_misc = NodePath("FieldObjects/Misc")
@@ -693,7 +696,30 @@ path_debuglog_par = NodePath("DebugLog/VB")
 path_turndisplay_par = NodePath("TurnDisplay/VB")
 path_actionsel_par = NodePath("ActionSelect/VB")
 
-[node name="Control" type="Control" parent="."]
+[node name="BG" type="Node2D" parent="."]
+
+[node name="floor" type="TextureRect" parent="BG"]
+margin_left = -38.0
+margin_top = 103.0
+margin_right = 728.0
+margin_bottom = 417.0
+texture = ExtResource( 13 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="big" type="Sprite" parent="BG"]
+position = Vector2( 317, -10 )
+scale = Vector2( 1.25, 1.25 )
+texture = ExtResource( 12 )
+
+[node name="big2" type="Sprite" parent="BG"]
+position = Vector2( 298, 176 )
+scale = Vector2( 3, 3 )
+texture = ExtResource( 14 )
+
+[node name="BoardOwner" type="Control" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
 theme = ExtResource( 3 )
@@ -701,18 +727,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="MC" type="MarginContainer" parent="Control"]
+[node name="MC" type="MarginContainer" parent="BoardOwner"]
 margin_right = 640.0
 margin_bottom = 360.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VB" type="VBoxContainer" parent="Control/MC"]
+[node name="VB" type="VBoxContainer" parent="BoardOwner/MC"]
 margin_right = 640.0
 margin_bottom = 360.0
 
-[node name="SpacerFore1" type="Panel" parent="Control/MC/VB"]
+[node name="SpacerFore1" type="Panel" parent="BoardOwner/MC/VB"]
 margin_right = 640.0
 margin_bottom = 17.0
 mouse_filter = 2
@@ -720,7 +746,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="SpacerFore2" type="Panel" parent="Control/MC/VB"]
+[node name="SpacerFore2" type="Panel" parent="BoardOwner/MC/VB"]
 margin_top = 17.0
 margin_right = 640.0
 margin_bottom = 34.0
@@ -729,7 +755,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="SpacerFore3" type="Panel" parent="Control/MC/VB"]
+[node name="SpacerFore3" type="Panel" parent="BoardOwner/MC/VB"]
 margin_top = 34.0
 margin_right = 640.0
 margin_bottom = 51.0
@@ -738,7 +764,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="SpacerFore4" type="Panel" parent="Control/MC/VB"]
+[node name="SpacerFore4" type="Panel" parent="BoardOwner/MC/VB"]
 margin_top = 51.0
 margin_right = 640.0
 margin_bottom = 68.0
@@ -747,7 +773,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="SpacerFore5" type="Panel" parent="Control/MC/VB"]
+[node name="SpacerFore5" type="Panel" parent="BoardOwner/MC/VB"]
 margin_top = 68.0
 margin_right = 640.0
 margin_bottom = 85.0
@@ -756,7 +782,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="SpacerFore6" type="Panel" parent="Control/MC/VB"]
+[node name="SpacerFore6" type="Panel" parent="BoardOwner/MC/VB"]
 margin_top = 85.0
 margin_right = 640.0
 margin_bottom = 102.0
@@ -765,12 +791,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="HB" type="HBoxContainer" parent="Control/MC/VB"]
+[node name="HB" type="HBoxContainer" parent="BoardOwner/MC/VB"]
 margin_top = 102.0
 margin_right = 640.0
 margin_bottom = 342.0
 
-[node name="Spacer1" type="Panel" parent="Control/MC/VB/HB"]
+[node name="Spacer1" type="Panel" parent="BoardOwner/MC/VB/HB"]
 margin_right = 104.0
 margin_bottom = 240.0
 mouse_filter = 2
@@ -778,7 +804,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="Board" type="GridContainer" parent="Control/MC/VB/HB"]
+[node name="Board" type="GridContainer" parent="BoardOwner/MC/VB/HB"]
 margin_left = 104.0
 margin_right = 536.0
 margin_bottom = 240.0
@@ -787,195 +813,195 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BattleCell" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 2 )
 
-[node name="BattleCell2" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell2" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 3 )
 margin_left = 72.0
 margin_right = 144.0
 
-[node name="BattleCell31" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell31" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 4 )
 margin_left = 144.0
 margin_right = 216.0
 
-[node name="BattleCell3" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell3" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 5 )
 margin_left = 216.0
 margin_right = 288.0
 
-[node name="BattleCell4" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell4" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 6 )
 margin_left = 288.0
 margin_right = 360.0
 
-[node name="BattleCell5" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell5" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 7 )
 margin_left = 360.0
 margin_right = 432.0
 
-[node name="BattleCell6" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell6" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 8 )
 margin_top = 48.0
 margin_bottom = 96.0
 
-[node name="BattleCell7" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell7" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 9 )
 margin_left = 72.0
 margin_top = 48.0
 margin_right = 144.0
 margin_bottom = 96.0
 
-[node name="BattleCell8" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell8" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 10 )
 margin_left = 144.0
 margin_top = 48.0
 margin_right = 216.0
 margin_bottom = 96.0
 
-[node name="BattleCell9" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell9" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 11 )
 margin_left = 216.0
 margin_top = 48.0
 margin_right = 288.0
 margin_bottom = 96.0
 
-[node name="BattleCell10" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell10" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 12 )
 margin_left = 288.0
 margin_top = 48.0
 margin_right = 360.0
 margin_bottom = 96.0
 
-[node name="BattleCell11" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell11" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 13 )
 margin_left = 360.0
 margin_top = 48.0
 margin_right = 432.0
 margin_bottom = 96.0
 
-[node name="BattleCell12" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell12" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 14 )
 margin_top = 96.0
 margin_bottom = 144.0
 
-[node name="BattleCell13" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell13" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 15 )
 margin_left = 72.0
 margin_top = 96.0
 margin_right = 144.0
 margin_bottom = 144.0
 
-[node name="BattleCell14" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell14" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 16 )
 margin_left = 144.0
 margin_top = 96.0
 margin_right = 216.0
 margin_bottom = 144.0
 
-[node name="BattleCell15" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell15" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 17 )
 margin_left = 216.0
 margin_top = 96.0
 margin_right = 288.0
 margin_bottom = 144.0
 
-[node name="BattleCell16" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell16" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 18 )
 margin_left = 288.0
 margin_top = 96.0
 margin_right = 360.0
 margin_bottom = 144.0
 
-[node name="BattleCell17" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell17" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 19 )
 margin_left = 360.0
 margin_top = 96.0
 margin_right = 432.0
 margin_bottom = 144.0
 
-[node name="BattleCell18" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell18" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 20 )
 margin_top = 144.0
 margin_bottom = 192.0
 
-[node name="BattleCell19" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell19" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 21 )
 margin_left = 72.0
 margin_top = 144.0
 margin_right = 144.0
 margin_bottom = 192.0
 
-[node name="BattleCell20" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell20" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 22 )
 margin_left = 144.0
 margin_top = 144.0
 margin_right = 216.0
 margin_bottom = 192.0
 
-[node name="BattleCell21" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell21" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 23 )
 margin_left = 216.0
 margin_top = 144.0
 margin_right = 288.0
 margin_bottom = 192.0
 
-[node name="BattleCell22" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell22" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 24 )
 margin_left = 288.0
 margin_top = 144.0
 margin_right = 360.0
 margin_bottom = 192.0
 
-[node name="BattleCell23" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell23" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 25 )
 margin_left = 360.0
 margin_top = 144.0
 margin_right = 432.0
 margin_bottom = 192.0
 
-[node name="BattleCell24" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell24" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 26 )
 margin_top = 192.0
 margin_bottom = 240.0
 
-[node name="BattleCell25" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell25" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 27 )
 margin_left = 72.0
 margin_top = 192.0
 margin_right = 144.0
 margin_bottom = 240.0
 
-[node name="BattleCell26" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell26" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 28 )
 margin_left = 144.0
 margin_top = 192.0
 margin_right = 216.0
 margin_bottom = 240.0
 
-[node name="BattleCell27" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell27" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 29 )
 margin_left = 216.0
 margin_top = 192.0
 margin_right = 288.0
 margin_bottom = 240.0
 
-[node name="BattleCell28" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell28" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 30 )
 margin_left = 288.0
 margin_top = 192.0
 margin_right = 360.0
 margin_bottom = 240.0
 
-[node name="BattleCell29" parent="Control/MC/VB/HB/Board" instance=ExtResource( 1 )]
+[node name="BattleCell29" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 31 )
 margin_left = 360.0
 margin_top = 192.0
 margin_right = 432.0
 margin_bottom = 240.0
 
-[node name="Spacer2" type="Panel" parent="Control/MC/VB/HB"]
+[node name="Spacer2" type="Panel" parent="BoardOwner/MC/VB/HB"]
 margin_left = 536.0
 margin_right = 640.0
 margin_bottom = 240.0
@@ -984,7 +1010,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="SpacerEnd" type="Panel" parent="Control/MC/VB"]
+[node name="SpacerEnd" type="Panel" parent="BoardOwner/MC/VB"]
 margin_top = 342.0
 margin_right = 640.0
 margin_bottom = 360.0
@@ -1151,7 +1177,7 @@ script = ExtResource( 6 )
 [node name="ActionTestbed" type="Node2D" parent="."]
 
 [node name="Node2D" type="Node2D" parent="ActionTestbed"]
-position = Vector2( -303, 125 )
+position = Vector2( -342, 10 )
 
 [node name="PanelContainer" type="PanelContainer" parent="ActionTestbed/Node2D"]
 margin_right = 268.0
@@ -1174,6 +1200,9 @@ margin_bottom = 16.0
 [node name="Title" type="Label" parent="ActionTestbed/Node2D/PanelContainer/VBoxContainer/HBoxContainer"]
 margin_right = 66.0
 margin_bottom = 16.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 2
 custom_fonts/font = ExtResource( 10 )
 text = "Heat Wave"
 

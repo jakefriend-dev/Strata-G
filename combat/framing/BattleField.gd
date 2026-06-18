@@ -38,7 +38,7 @@ func _ready():
 	update_debuglog()
 	update_turn_display()
 	
-	$Control/MC.rect_size = Vector2(
+	$BoardOwner/MC.rect_size = Vector2(
 		ProjectSettings.get_setting("display/window/size/width"),
 		ProjectSettings.get_setting("display/window/size/height"))
 	

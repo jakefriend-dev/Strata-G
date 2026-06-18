@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://combat/actors/PlayerLeader.gd" type="Script" id=1]
-[ext_resource path="res://art/actors/bird char mockups3.png" type="Texture" id=2]
+[ext_resource path="res://art/actors/bird char mockups3b.png" type="Texture" id=2]
 [ext_resource path="res://combat/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://combat/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
 [ext_resource path="res://combat/move_actions/MR_BASIC_ARROWLINE.tres" type="Resource" id=5]
@@ -81,7 +81,6 @@ margin_right = 13.0
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )
 position = Vector2( -1, -24 )
-scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ArtMgr"]
