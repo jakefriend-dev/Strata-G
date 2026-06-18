@@ -3,15 +3,11 @@ extends MoveAction
 func PREVIEW():
 	
 	var check_vector: Vector2 = batman.loaded_variant
-#	var check_vector: Vector2 = actor.my_facing
-#	if variant == 2: check_vector += Vector2.UP
-#	if variant == 3: check_vector += Vector2.DOWN
 	
 	var sighted: Array = support.get_all_tiles_in_dir(actor.coord, check_vector)
 	if !sighted.empty():
 		add_arrow(actor.coord + check_vector, sighted.back(), ROWS.BAD)
 	
-#	var victims: Array = []
 	for coord in sighted:
 		var victim: Actor = batman.grid_actors.get_cellv(coord)
 		if !utils.actorpass(victim): continue
