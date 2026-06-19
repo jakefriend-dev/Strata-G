@@ -121,7 +121,6 @@ ofc_name = "Mage"
 base_action_points = 5
 faction = 1
 def_weight = 1
-def_immune_water = null
 loaded_moves = [ ExtResource( 5 ), ExtResource( 11 ), ExtResource( 6 ), ExtResource( 10 ), ExtResource( 9 ), ExtResource( 7 ), ExtResource( 8 ), null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
