@@ -1075,7 +1075,6 @@ custom_styles/panel = SubResource( 1 )
 [node name="Threats" type="YSort" parent="FieldObjects"]
 
 [node name="DebugLog" type="Node2D" parent="."]
-visible = false
 position = Vector2( 4, 4 )
 
 [node name="VB" type="VBoxContainer" parent="DebugLog"]
@@ -1112,7 +1111,6 @@ __meta__ = {
 }
 
 [node name="TurnDisplay" type="Node2D" parent="."]
-visible = false
 position = Vector2( 636, 4 )
 
 [node name="VB" type="VBoxContainer" parent="TurnDisplay"]
@@ -1153,7 +1151,6 @@ __meta__ = {
 }
 
 [node name="ActionSelect" type="Node2D" parent="."]
-visible = false
 position = Vector2( 4, 356 )
 
 [node name="VB" type="VBoxContainer" parent="ActionSelect"]
