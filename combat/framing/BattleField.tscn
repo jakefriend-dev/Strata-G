@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://combat/framing/BattleCell.tscn" type="PackedScene" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://art/_placeholder/mc/castle wall unusable.png" type="Texture" id=12]
 [ext_resource path="res://art/_placeholder/mc/default_silver_sandstone_block RESIZED full.png" type="Texture" id=13]
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
+[ext_resource path="res://combat/framing/TEST_GridDrawer.gd" type="Script" id=15]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -699,6 +700,7 @@ path_actionsel_par = NodePath("ActionSelect/VB")
 [node name="BG" type="Node2D" parent="."]
 
 [node name="floor" type="TextureRect" parent="BG"]
+visible = false
 margin_left = -38.0
 margin_top = 103.0
 margin_right = 728.0
@@ -710,16 +712,19 @@ __meta__ = {
 }
 
 [node name="big" type="Sprite" parent="BG"]
+visible = false
 position = Vector2( 317, -10 )
 scale = Vector2( 1.25, 1.25 )
 texture = ExtResource( 12 )
 
 [node name="big2" type="Sprite" parent="BG"]
+visible = false
 position = Vector2( 298, 176 )
 scale = Vector2( 3, 3 )
 texture = ExtResource( 14 )
 
 [node name="BoardOwner" type="Control" parent="."]
+visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 theme = ExtResource( 3 )
@@ -740,23 +745,41 @@ margin_bottom = 360.0
 
 [node name="SpacerFore1" type="Panel" parent="BoardOwner/MC/VB"]
 margin_right = 640.0
-margin_bottom = 17.0
+margin_bottom = 10.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
 [node name="SpacerFore2" type="Panel" parent="BoardOwner/MC/VB"]
-margin_top = 17.0
+margin_top = 10.0
 margin_right = 640.0
-margin_bottom = 34.0
+margin_bottom = 20.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
 [node name="SpacerFore3" type="Panel" parent="BoardOwner/MC/VB"]
-margin_top = 34.0
+margin_top = 20.0
+margin_right = 640.0
+margin_bottom = 30.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="SpacerFore4" type="Panel" parent="BoardOwner/MC/VB"]
+margin_top = 30.0
+margin_right = 640.0
+margin_bottom = 41.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="SpacerFore5" type="Panel" parent="BoardOwner/MC/VB"]
+margin_top = 41.0
 margin_right = 640.0
 margin_bottom = 51.0
 mouse_filter = 2
@@ -764,41 +787,23 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="SpacerFore4" type="Panel" parent="BoardOwner/MC/VB"]
+[node name="SpacerFore6" type="Panel" parent="BoardOwner/MC/VB"]
 margin_top = 51.0
 margin_right = 640.0
-margin_bottom = 68.0
-mouse_filter = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_styles/panel = SubResource( 1 )
-
-[node name="SpacerFore5" type="Panel" parent="BoardOwner/MC/VB"]
-margin_top = 68.0
-margin_right = 640.0
-margin_bottom = 85.0
-mouse_filter = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_styles/panel = SubResource( 1 )
-
-[node name="SpacerFore6" type="Panel" parent="BoardOwner/MC/VB"]
-margin_top = 85.0
-margin_right = 640.0
-margin_bottom = 102.0
+margin_bottom = 61.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
 [node name="HB" type="HBoxContainer" parent="BoardOwner/MC/VB"]
-margin_top = 102.0
+margin_top = 61.0
 margin_right = 640.0
-margin_bottom = 342.0
+margin_bottom = 349.0
 
 [node name="Spacer1" type="Panel" parent="BoardOwner/MC/VB/HB"]
 margin_right = 104.0
-margin_bottom = 240.0
+margin_bottom = 288.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -807,7 +812,7 @@ custom_styles/panel = SubResource( 1 )
 [node name="Board" type="GridContainer" parent="BoardOwner/MC/VB/HB"]
 margin_left = 104.0
 margin_right = 536.0
-margin_bottom = 240.0
+margin_bottom = 288.0
 columns = 6
 __meta__ = {
 "_edit_use_anchors_": false
@@ -1001,17 +1006,57 @@ margin_top = 192.0
 margin_right = 432.0
 margin_bottom = 240.0
 
+[node name="BattleCell30" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 31 )
+margin_top = 240.0
+margin_bottom = 288.0
+
+[node name="BattleCell32" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 31 )
+margin_left = 72.0
+margin_top = 240.0
+margin_right = 144.0
+margin_bottom = 288.0
+
+[node name="BattleCell33" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 31 )
+margin_left = 144.0
+margin_top = 240.0
+margin_right = 216.0
+margin_bottom = 288.0
+
+[node name="BattleCell34" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 31 )
+margin_left = 216.0
+margin_top = 240.0
+margin_right = 288.0
+margin_bottom = 288.0
+
+[node name="BattleCell35" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 31 )
+margin_left = 288.0
+margin_top = 240.0
+margin_right = 360.0
+margin_bottom = 288.0
+
+[node name="BattleCell36" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
+material = SubResource( 31 )
+margin_left = 360.0
+margin_top = 240.0
+margin_right = 432.0
+margin_bottom = 288.0
+
 [node name="Spacer2" type="Panel" parent="BoardOwner/MC/VB/HB"]
 margin_left = 536.0
 margin_right = 640.0
-margin_bottom = 240.0
+margin_bottom = 288.0
 mouse_filter = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
 [node name="SpacerEnd" type="Panel" parent="BoardOwner/MC/VB"]
-margin_top = 342.0
+margin_top = 349.0
 margin_right = 640.0
 margin_bottom = 360.0
 mouse_filter = 2
@@ -1173,6 +1218,11 @@ scale = Vector2( 0.5, 0.5 )
 process_priority = 1
 z_index = 1
 script = ExtResource( 6 )
+
+[node name="GridDrawer" type="Node2D" parent="."]
+process_priority = 1
+z_index = 1
+script = ExtResource( 15 )
 
 [node name="ActionTestbed" type="Node2D" parent="."]
 

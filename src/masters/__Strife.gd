@@ -684,14 +684,14 @@ func TILE_check_MAGNET(actor: Actor) -> bool:
 	if actor.is_immune_magnet: return false
 	if !is_affected_by_force(actor): return false
 	
-	if batman.grid_tiles.get_cellv(actor.coord) == batman.tiletypes.LODESTONE:
+	if batman.grid_tiles.get_cellv(actor.coord) == batman.tiletypes.MAGNET:
 		# We're already on a magnet, so don't bother
 		return false
 	
 	# Check for adjacent magnets! If multiple, do nothing. If there is only 1 *valid* magnet (within your traversable rules), get dragged on to it.
 	var adj_valid_magnets: Array = []
 	for adjcoord in support.get_adj_orthagonal_tiles(actor.coord):
-		if batman.grid_tiles.get_cellv(adjcoord) == batman.tiletypes.LODESTONE:
+		if batman.grid_tiles.get_cellv(adjcoord) == batman.tiletypes.MAGNET:
 			if support.is_tile_traversable_exact(actor, adjcoord):
 				adj_valid_magnets.append(adjcoord)
 	

@@ -110,7 +110,7 @@ func set_depth_tint(in_max_row: int, in_color: Color = Color.white):
 	mod.r *= depth_shade
 	mod.g *= depth_shade
 	mod.b *= depth_shade
-	mod.a = 0.0
+#	mod.a = 0.0
 	self_modulate = mod
 	pass
 
