@@ -128,7 +128,7 @@ func change_tiletype_mass(coordset: Array, to_tiletype: int, restrictions_overri
 		if !batman.grid_tiles.has_cellv(coord): continue
 		
 		# Steel should be immune
-		if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.STEEL:
+		if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.MAGIC:
 			if !restrictions_override:
 				continue
 		

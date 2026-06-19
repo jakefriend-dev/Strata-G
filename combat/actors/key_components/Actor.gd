@@ -116,7 +116,7 @@ export var tile_walk_speed: float = 0.125
 export var def_unmovable:			bool = false # Not affected by ANY external factors! (Can still move ITSELF of course)
 export var def_immune_jagged:		bool = false # Doesn't take damage or AP penalties from jaggies
 export var def_immune_fire:			bool = false # Not affected by ember floors
-export var def_immune_water:		bool = false # Not slowed by water tiles (even lightweights are)
+export var def_immune_shrub:		bool = false # Not slowed by overgrowth tiles
 export var def_immune_sand:			bool = false # Doesn't sink or take penalty from sand
 export var def_immune_mud:			bool = false # Doesn't take penalty from mud
 export var def_immune_ice:			bool = false # Doesn't slide on ice
@@ -132,7 +132,7 @@ var weight: int
 var is_unmovable: bool
 var is_immune_jagged: bool
 var is_immune_fire: bool
-var is_immune_water: bool
+var is_immune_shrub: bool
 var is_immune_sand: bool
 var is_immune_mud: bool
 var is_immune_ice: bool
@@ -234,7 +234,7 @@ func perform_initial_data_setup():
 	action_points = base_action_points
 	base_damage *= batman.BASE_HP_FACTOR
 	
-	for term in ["unmovable", "immune_fire", "immune_water", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged", "immune_mud", "immune_piercing"]:
+	for term in ["unmovable", "immune_fire", "immune_shrub", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged", "immune_mud", "immune_piercing"]:
 		set( str("is_"+term), get(str("def_",term)) )
 	weight = def_weight
 	pass

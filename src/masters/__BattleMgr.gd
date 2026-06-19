@@ -127,36 +127,39 @@ enum tiletypes {
 	MAGIC,		# Unbreakable & unchangeable
 					# Magic attacks (inc elemental damage?) cast on it do +1 damage
 	
-	MAGNET,		# Actors adjacent to this block are pulled onto it when resting - themed as 'lodestone'!
-					# Ignored if ON a magnet, adjacent to MULTIPLE magnet, or the magnet is occupied
+	MAGNET,		# Actors adjacent to this block are pulled onto it when resting
+					# Themed as 'lodestone'!
+					# Ignored if ON a magnet, adjacent to MULTIPLE magnet, or occupied
 					# Essentially, "1 free adjacent magnet" is when it works
 	
 	# TAG-MATCHED TYPES --------------------------------------
 	
 	ICE,    	# Any movement direction that isn't a 'jump' causes continued sliding
 	
-	EMBER,	   	# 1 damage to end turn on this tile; +1 AP to start to on this tile
+	HOT,	   	# 1 damage to END turn on this tile; +1 AP to START to on this tile
 	
-	OVERGROWTH	# -1 AP on entering (unless immune), but damage lowered while on tile
+	SHRUB		# -1 AP on entering (unless immune), but inbound damage lowered while on tile
 	
 	TRENCH,		# Provides 'cover,' so to speak, at the cost of some movement
-					# You gain 1 bonus shield by entering it
-					# You lose 1 bonus shield by exiting it (and 1 extra AP to climb out)
-					# This gives the effect of "slightly protected by cover"
-					# Maybe you can 'shoot over' sunk actors...?
+					# Line of sight affected (can't shoot on angle up/down)
+					# Free to enter, 1AP to leave
+					# Much more complex than the others so maybe we ignore for now!!
 	
-	FOG_WIND,	# Moves you (physically, not as force) 1 tile in a specific direction
+	WIND_TUNNEL,# Moves you (physically, not as force) 1 tile in a specific direction
+					# when RESTED on (like a conveyor belt)
 	
-	STATIC,		# Your next action must be a REST (or ending your turn) to discharge movement. Repaired on discharge.
+	STATIC,		# Your next action must be a REST (or ending your turn) to discharge movement.
+					# Repaired on discharge.
 	
 	POISON, 	# Poison damage ticks on rest
 	
-	JAGGED,  	# Sharp and jagged; causes damage and AP loss when stepped on (this also repairs it)
-					# Maybe this should be an effect, not a tile 'type'?
+	JAGGED,  	# Sharp and jagged; causes damage and AP loss when stepped on
+					# Stepping on and 'triggering' the tile repairs it to Normal
 	
 	BLOOD,		# Can be consumed for special Blood Magic effects
 	
 	GLOWING,	# Heal at end of turn, but receive extra damage while on tile
+					# (Because you're more visible)
 	
 	
 	
@@ -213,9 +216,9 @@ func test_new_combat(test: String):
 					[4, 1, "Rock"],
 				],
 				"tile_exceptions": {
-					Vector2(3, 3): tiletypes.STEEL,
-					Vector2(2, 1): tiletypes.EMBER,
-					Vector2(4, 1): tiletypes.EMBER,
+					Vector2(3, 3): tiletypes.MAGIC,
+					Vector2(2, 1): tiletypes.HOT,
+					Vector2(4, 1): tiletypes.HOT,
 					Vector2(2, 4): tiletypes.POISON,
 				},
 			}):
@@ -434,7 +437,7 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	
 	# Set up all actors, starting with PCs
 	
-	# DATA-PLACE PARTY MEMBERS
+	# DATA-PLACE PARTY MHOTS
 	
 	# IF battle details involve custom party starting positions, use those. Otherwise, use defaults.
 	var use_custom_pc_positions: bool = false

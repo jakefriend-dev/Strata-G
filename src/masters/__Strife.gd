@@ -622,20 +622,6 @@ func TILE_started_on_HOT(actor: Actor, _coord: Vector2):
 # The moment you ENTER a tiletype MID-turn -------------------------------------
 	# Also triggers if a tile is changed beneath your feet, whether your turn or not
 
-func TILE_entered_JAGGED(actor: Actor, coord: Vector2):
-	if is_affected_by_jagged(actor):
-		# 1 damage, 1 move debuff
-		quick_effect(actor, "quick_bad")
-		do_impact_damage(null, actor, 4)
-		actor.spend(1)
-		pass
-	
-	if is_fixes_jagged_on_contact(actor):
-		# Then fix the tile
-		support.change_tiletype_single(coord, batman.tiletypes.NORMAL)
-		pass
-	pass
-
 # warning-ignore:unused_argument
 func TILE_entered_ICE(actor: Actor, coord: Vector2):
 	if !is_affected_by_ice(actor): return
@@ -650,23 +636,30 @@ func TILE_entered_ICE(actor: Actor, coord: Vector2):
 		# This replaces any upcoming 'this actor slips' ice-related actionstep. There can only be one ice actionstep per actor happening or about to happen at a time!
 	pass
 
+func TILE_entered_SHRUB(actor: Actor, coord: Vector2):
+	if !is_affected_by_shrub(actor): return
+	actor.spend(1)
+	pass
+
+func TILE_entered_JAGGED(actor: Actor, coord: Vector2):
+	if is_affected_by_jagged(actor):
+		# 1 damage, 1 move debuff
+		quick_effect(actor, "quick_bad")
+		do_impact_damage(null, actor, 4)
+		actor.spend(1)
+		pass
+	
+	if is_fixes_jagged_on_contact(actor):
+		# Then fix the tile
+		support.change_tiletype_single(coord, batman.tiletypes.NORMAL)
+		pass
+	pass
+
 func TILE_entered_POISON(actor: Actor, _coord: Vector2):
 	if actor.is_immune_poison: return
 	
 	# Immediately take 1 damage
 	do_quiet_damage(null, actor, 1, ["piercing"])
-	pass
-
-func TILE_entered_MUD(actor: Actor, _coord: Vector2):
-	if actor.is_immune_mud: return
-	if !is_affected_by_sinking(actor): return
-	
-	# Lose a movestep, unless lightweight (in which case it checks at end-of-turn instead)
-	pass
-
-func TILE_entered_WATER(actor: Actor, _coord: Vector2):
-	if actor.is_immune_water: return
-	# Lose a movestep, unless you're a swimmer (lightweight doesn't matter here)
 	pass
 
 # If you REST on a tiletype MID-turn -------------------------------------------
@@ -675,8 +668,8 @@ func TILE_entered_WATER(actor: Actor, _coord: Vector2):
 # warning-ignore:unused_argument
 func TILE_rested_on_ANY(actor: Actor, _coord: Vector2):
 	
-	# LODESTONE CHECK
-	TILE_magnet_check(actor)
+	# "LODESTONE" CHECK
+	TILE_check_MAGNET(actor)
 	
 	pass
 
@@ -687,7 +680,7 @@ func TILE_rested_on_POISON(actor: Actor, _coord: Vector2):
 	do_quiet_damage(null, actor, 1, ["piercing"])
 	pass
 
-func TILE_magnet_check(actor: Actor) -> bool:
+func TILE_check_MAGNET(actor: Actor) -> bool:
 	if actor.is_immune_magnet: return false
 	if !is_affected_by_force(actor): return false
 	
@@ -723,10 +716,11 @@ func TILE_exited_ICE(actor: Actor, coord: Vector2):
 # If you END your turn on a tiletype -------------------------------------------
 
 func TILE_ended_on_HOT(actor: Actor, _coord: Vector2):
+	if !utils.actorpass(actor): return
 	if actor.is_immune_fire: return
 	
 	# Take 1 damage unless immune
-	do_quiet_damage(null, actor, 4, ["piercing"])
+	do_quiet_damage(null, actor, 4, ["piercing", "elem_FIRE"])
 	pass
 
 func TILE_ended_on_SAND(actor: Actor, _coord: Vector2):
@@ -735,11 +729,12 @@ func TILE_ended_on_SAND(actor: Actor, _coord: Vector2):
 	# Lose a movestep, unless lightweight (you'll still lose 1 later for ending your turn there if that happens tho)
 	pass
 
-func TILE_ended_on_MUD(actor: Actor, _coord: Vector2):
-	if is_affected_by_sinking(actor): return
+func TILE_ended_on_GLOWING(actor: Actor, coord: Vector2):
+	if !utils.actorpass(actor): return
 	
-	# Lightweight actors should sink now, since they didn't earlier (everyone else should already be sunk)
+	heal_actor_at_coord(actor, coord, 4, ["elem_HOLY"])
 	pass
+
 
 # ---
 
@@ -763,6 +758,12 @@ func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback; not ice s
 	
 	if actor.is_unmovable: return false
 	if actor.weight == actor.weightclasses.HEAVY: return false
+	return true
+
+func is_affected_by_shrub(actor: Actor) -> bool: # Overgrowth! Does it slow you down?
+	if !utils.actorpass(actor): return false
+	
+	if actor.is_immune_shrub: return false
 	return true
 
 func is_affected_by_ice(actor: Actor) -> bool:
