@@ -101,4 +101,4 @@ material = SubResource( 1 )
 position = Vector2( -2, 50 )
 rotation = -1.5708
 texture = SubResource( 3 )
-polygon = PoolVector2Array( 3, 3, 2.99974, 73, 48.9997, 73.0002, 49, 3.00018 )
+polygon = PoolVector2Array( 3, 3, 2.99976, 65, 48.9998, 65.0002, 49, 3.00018 )

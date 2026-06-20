@@ -17,7 +17,7 @@ var actionsel_par: VBoxContainer
 
 var board_offset: Vector2
 
-const CELL_SIZE: Vector2 = Vector2(72, 48)
+const CELL_SIZE: Vector2 = Vector2(64, 48)
 
 # ---
 

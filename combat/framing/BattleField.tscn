@@ -724,7 +724,6 @@ scale = Vector2( 3, 3 )
 texture = ExtResource( 14 )
 
 [node name="BoardOwner" type="Control" parent="."]
-visible = false
 margin_right = 40.0
 margin_bottom = 40.0
 theme = ExtResource( 3 )
@@ -802,7 +801,7 @@ margin_right = 640.0
 margin_bottom = 349.0
 
 [node name="Spacer1" type="Panel" parent="BoardOwner/MC/VB/HB"]
-margin_right = 104.0
+margin_right = 128.0
 margin_bottom = 288.0
 mouse_filter = 2
 size_flags_horizontal = 3
@@ -810,8 +809,8 @@ size_flags_vertical = 3
 custom_styles/panel = SubResource( 1 )
 
 [node name="Board" type="GridContainer" parent="BoardOwner/MC/VB/HB"]
-margin_left = 104.0
-margin_right = 536.0
+margin_left = 128.0
+margin_right = 512.0
 margin_bottom = 288.0
 columns = 6
 __meta__ = {
@@ -823,28 +822,28 @@ material = SubResource( 2 )
 
 [node name="BattleCell2" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 3 )
-margin_left = 72.0
-margin_right = 144.0
+margin_left = 64.0
+margin_right = 128.0
 
 [node name="BattleCell31" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 4 )
-margin_left = 144.0
-margin_right = 216.0
+margin_left = 128.0
+margin_right = 192.0
 
 [node name="BattleCell3" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 5 )
-margin_left = 216.0
-margin_right = 288.0
+margin_left = 192.0
+margin_right = 256.0
 
 [node name="BattleCell4" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 6 )
-margin_left = 288.0
-margin_right = 360.0
+margin_left = 256.0
+margin_right = 320.0
 
 [node name="BattleCell5" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 7 )
-margin_left = 360.0
-margin_right = 432.0
+margin_left = 320.0
+margin_right = 384.0
 
 [node name="BattleCell6" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 8 )
@@ -853,37 +852,37 @@ margin_bottom = 96.0
 
 [node name="BattleCell7" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 9 )
-margin_left = 72.0
+margin_left = 64.0
 margin_top = 48.0
-margin_right = 144.0
+margin_right = 128.0
 margin_bottom = 96.0
 
 [node name="BattleCell8" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 10 )
-margin_left = 144.0
+margin_left = 128.0
 margin_top = 48.0
-margin_right = 216.0
+margin_right = 192.0
 margin_bottom = 96.0
 
 [node name="BattleCell9" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 11 )
-margin_left = 216.0
+margin_left = 192.0
 margin_top = 48.0
-margin_right = 288.0
+margin_right = 256.0
 margin_bottom = 96.0
 
 [node name="BattleCell10" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 12 )
-margin_left = 288.0
+margin_left = 256.0
 margin_top = 48.0
-margin_right = 360.0
+margin_right = 320.0
 margin_bottom = 96.0
 
 [node name="BattleCell11" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 13 )
-margin_left = 360.0
+margin_left = 320.0
 margin_top = 48.0
-margin_right = 432.0
+margin_right = 384.0
 margin_bottom = 96.0
 
 [node name="BattleCell12" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
@@ -893,37 +892,37 @@ margin_bottom = 144.0
 
 [node name="BattleCell13" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 15 )
-margin_left = 72.0
+margin_left = 64.0
 margin_top = 96.0
-margin_right = 144.0
+margin_right = 128.0
 margin_bottom = 144.0
 
 [node name="BattleCell14" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 16 )
-margin_left = 144.0
+margin_left = 128.0
 margin_top = 96.0
-margin_right = 216.0
+margin_right = 192.0
 margin_bottom = 144.0
 
 [node name="BattleCell15" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 17 )
-margin_left = 216.0
+margin_left = 192.0
 margin_top = 96.0
-margin_right = 288.0
+margin_right = 256.0
 margin_bottom = 144.0
 
 [node name="BattleCell16" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 18 )
-margin_left = 288.0
+margin_left = 256.0
 margin_top = 96.0
-margin_right = 360.0
+margin_right = 320.0
 margin_bottom = 144.0
 
 [node name="BattleCell17" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 19 )
-margin_left = 360.0
+margin_left = 320.0
 margin_top = 96.0
-margin_right = 432.0
+margin_right = 384.0
 margin_bottom = 144.0
 
 [node name="BattleCell18" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
@@ -933,37 +932,37 @@ margin_bottom = 192.0
 
 [node name="BattleCell19" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 21 )
-margin_left = 72.0
+margin_left = 64.0
 margin_top = 144.0
-margin_right = 144.0
+margin_right = 128.0
 margin_bottom = 192.0
 
 [node name="BattleCell20" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 22 )
-margin_left = 144.0
+margin_left = 128.0
 margin_top = 144.0
-margin_right = 216.0
+margin_right = 192.0
 margin_bottom = 192.0
 
 [node name="BattleCell21" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 23 )
-margin_left = 216.0
+margin_left = 192.0
 margin_top = 144.0
-margin_right = 288.0
+margin_right = 256.0
 margin_bottom = 192.0
 
 [node name="BattleCell22" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 24 )
-margin_left = 288.0
+margin_left = 256.0
 margin_top = 144.0
-margin_right = 360.0
+margin_right = 320.0
 margin_bottom = 192.0
 
 [node name="BattleCell23" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 25 )
-margin_left = 360.0
+margin_left = 320.0
 margin_top = 144.0
-margin_right = 432.0
+margin_right = 384.0
 margin_bottom = 192.0
 
 [node name="BattleCell24" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
@@ -973,37 +972,37 @@ margin_bottom = 240.0
 
 [node name="BattleCell25" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 27 )
-margin_left = 72.0
+margin_left = 64.0
 margin_top = 192.0
-margin_right = 144.0
+margin_right = 128.0
 margin_bottom = 240.0
 
 [node name="BattleCell26" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 28 )
-margin_left = 144.0
+margin_left = 128.0
 margin_top = 192.0
-margin_right = 216.0
+margin_right = 192.0
 margin_bottom = 240.0
 
 [node name="BattleCell27" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 29 )
-margin_left = 216.0
+margin_left = 192.0
 margin_top = 192.0
-margin_right = 288.0
+margin_right = 256.0
 margin_bottom = 240.0
 
 [node name="BattleCell28" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 30 )
-margin_left = 288.0
+margin_left = 256.0
 margin_top = 192.0
-margin_right = 360.0
+margin_right = 320.0
 margin_bottom = 240.0
 
 [node name="BattleCell29" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 31 )
-margin_left = 360.0
+margin_left = 320.0
 margin_top = 192.0
-margin_right = 432.0
+margin_right = 384.0
 margin_bottom = 240.0
 
 [node name="BattleCell30" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
@@ -1013,41 +1012,41 @@ margin_bottom = 288.0
 
 [node name="BattleCell32" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 31 )
-margin_left = 72.0
+margin_left = 64.0
 margin_top = 240.0
-margin_right = 144.0
+margin_right = 128.0
 margin_bottom = 288.0
 
 [node name="BattleCell33" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 31 )
-margin_left = 144.0
+margin_left = 128.0
 margin_top = 240.0
-margin_right = 216.0
+margin_right = 192.0
 margin_bottom = 288.0
 
 [node name="BattleCell34" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 31 )
-margin_left = 216.0
+margin_left = 192.0
 margin_top = 240.0
-margin_right = 288.0
+margin_right = 256.0
 margin_bottom = 288.0
 
 [node name="BattleCell35" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 31 )
-margin_left = 288.0
+margin_left = 256.0
 margin_top = 240.0
-margin_right = 360.0
+margin_right = 320.0
 margin_bottom = 288.0
 
 [node name="BattleCell36" parent="BoardOwner/MC/VB/HB/Board" instance=ExtResource( 1 )]
 material = SubResource( 31 )
-margin_left = 360.0
+margin_left = 320.0
 margin_top = 240.0
-margin_right = 432.0
+margin_right = 384.0
 margin_bottom = 288.0
 
 [node name="Spacer2" type="Panel" parent="BoardOwner/MC/VB/HB"]
-margin_left = 536.0
+margin_left = 512.0
 margin_right = 640.0
 margin_bottom = 288.0
 mouse_filter = 2
