@@ -1,0 +1,701 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
+[ext_resource path="res://text/fonts/built/Font MoveCard Header 1x.tres" type="DynamicFont" id=2]
+[ext_resource path="res://art/_placeholder/test play area sprite.png" type="Texture" id=3]
+[ext_resource path="res://art/bui/Moveset AP Icon.png" type="Texture" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[node name="UXtest" type="Node2D"]
+
+[node name="PlayAreaBG" type="Sprite" parent="."]
+texture = ExtResource( 3 )
+centered = false
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2( 6, 6 )
+
+[node name="GridContainer" type="GridContainer" parent="Node2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+theme = ExtResource( 1 )
+custom_constants/vseparation = 0
+custom_constants/hseparation = 9
+columns = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer1" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_right = 104.0
+margin_bottom = 16.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer1"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+margin_right = 20.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer1"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_left = 113.0
+margin_right = 217.0
+margin_bottom = 16.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer2"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+margin_right = 20.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer2"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_top = 16.0
+margin_right = 104.0
+margin_bottom = 32.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer3"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+margin_right = 12.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+margin_left = 4.0
+margin_top = 1.0
+margin_right = 16.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer3"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_left = 113.0
+margin_top = 16.0
+margin_right = 217.0
+margin_bottom = 32.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer4"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
+margin_right = 12.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
+margin_left = 4.0
+margin_top = 1.0
+margin_right = 16.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer4"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_top = 32.0
+margin_right = 104.0
+margin_bottom = 48.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer5"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
+margin_right = 16.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
+visible = false
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer5"]
+margin_left = 24.0
+margin_right = 104.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 80, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "Heat Wave"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_left = 113.0
+margin_top = 32.0
+margin_right = 217.0
+margin_bottom = 48.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer6"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
+margin_right = 8.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
+margin_top = 1.0
+margin_right = 12.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
+margin_left = 4.0
+margin_top = 1.0
+margin_right = 16.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer6"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_top = 48.0
+margin_right = 104.0
+margin_bottom = 64.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer7"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
+margin_right = 8.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
+margin_top = 1.0
+margin_right = 12.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
+margin_left = 4.0
+margin_top = 1.0
+margin_right = 16.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer7"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"
+
+[node name="HBoxContainer8" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_left = 113.0
+margin_top = 48.0
+margin_right = 217.0
+margin_bottom = 64.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer8"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
+margin_right = 16.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
+visible = false
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer8"]
+margin_left = 24.0
+margin_right = 104.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 80, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "ZorpZarpyZap"
+
+[node name="HBoxContainer9" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_top = 64.0
+margin_right = 104.0
+margin_bottom = 80.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer9"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+margin_right = 24.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+visible = false
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer9"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"
+
+[node name="HBoxContainer10" type="HBoxContainer" parent="Node2D/GridContainer"]
+margin_left = 113.0
+margin_top = 64.0
+margin_right = 217.0
+margin_bottom = 80.0
+
+[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer10"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
+margin_right = 24.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
+visible = false
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
+visible = false
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer10"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"
