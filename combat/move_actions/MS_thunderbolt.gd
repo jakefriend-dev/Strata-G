@@ -49,7 +49,7 @@ func ACT():
 	for cell in coord_path:
 		strife.quick_effect(cell, "spark_burst")
 	if utils.actorpass(victim):
-		strife.damage_actor_at_coord(actor, victim.coord, dmg, ["elem_ELEC"])
+		strife.damage_actor_at_coord(actor, victim.coord, dmg, ["elec"])
 		strife.quick_effect(victim, "spark_burstdamage")
 	
 	end_action()

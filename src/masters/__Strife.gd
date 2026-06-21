@@ -13,15 +13,9 @@ extends Node
 	# Tile entry/exit effects
 	# Global checks for if a given actor is 'allowed' to move to a given tile
 
-# Made up a few on the fly here, probably no harm
-enum elements {NORMAL, FIRE, WATER, ELEC, MAGIC, POISON, ROCK, AIR}
-# STANDARD ELEMENTS:
-	# Water -> Fire -> Grass -> Rock/Metal -> Elec -> Water?
-	# If we go in a linear pattern, at least
-	# Normal is moreso the default; an 'absence' of elemental factor. No resistances or vulnurabilities.
-# NONSTANDARD:
-	# Poison == "shadow" or "dark"
-# Water == Ice for "simplicity" (hang the lampshade anywhere)
+enum elements {NORMAL, COLD, FIRE, WOOD, GROUND, AIR, MAGIC, ELEC, POISON, BLOOD, LIGHT}
+# Ones I'm unsure of being an 'element' so much as just a flag:
+	# BREAKING
 
 enum hitrange {CONTACT, DISTANT} # Not used anywhere atm
 
@@ -61,7 +55,7 @@ func do_quiet_damage(attacker: Actor, defender: Actor, damage: int, flags: Array
 
 # Common DAMAGE flags:
 	# piercing: Shields are bypassed
-	# elem_ICE (or similar): Elemental immunities/weaknesses are applied
+	# poison (or other element): Elemental immunities/weaknesses are applied
 	# skip_own_faction: Typically FF is default-on; this would bypass that
 
 func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Array, is_quiet: bool):
@@ -88,6 +82,21 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	# Apply any elemental modifiers here! Increase the damage for hitting a weakness eg.
 	#
 	
+	# REFERENCE - these should ALWAYS be mutually exclusive, I thiiink?
+#	{NORMAL, COLD, FIRE, WOOD, GROUND, AIR, MAGIC, ELEC, POISON, BLOOD, LIGHT}
+	
+	
+	# Determine our element
+	var elem: String = "NORMAL"
+	var elemkeys: Array = elements.keys()
+	for flag in flags: if flag is String:
+		var flag_upper: String = flag.to_upper()
+		if elemkeys.has(flag_upper):
+			elem = flag_upper
+			break
+	
+	print("damage element is: ",elem)
+	
 	#
 	# Now begin the damage management
 	#
@@ -107,13 +116,21 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	#
 	
 	var breaking: bool = flags.has("breaking")
+	var break_damage: int = 0
+	var break_spends: int = 0 # Goes up by 1 per break_damage applied
+	if breaking: break_damage = damage
+	if elem == "COLD":
+		break_damage += 1
+		break_spends -= 1 # The cold pip is "free"
+	
 	var did_shield_break_occur: bool = false # For signals to hook into later
 	var were_all_shields_broken: bool = false # Ditto
-	if breaking:
+	if break_damage > 0:
 		# Deduct damage and shield equally until either of them depletes fully
-		while (defender.bonus_shield > 0 or defender.shield > 0) and damage > 0:
+		while (defender.bonus_shield > 0 or defender.shield > 0) and break_damage > 0:
 			# Remove bonus shield first, then apply the rest as breakage
-			damage -= 1
+			break_damage -= 1
+			break_spends += 1
 			if defender.bonus_shield > 0:
 				defender.bonus_shield -= 1
 			else:
@@ -121,6 +138,10 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 				did_shield_break_occur = true
 				if defender.shield == 0:
 					were_all_shields_broken = true
+	
+	# This is how we keep break_damage and damage separated but linked
+	if break_spends > 0:
+		damage -= break_spends
 	
 	#
 	# Check for piercing or piercing immunity - you cannot break AND pierce; breaking means shields ARE interacted with and overrides piercing which means they aren't
@@ -193,10 +214,10 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			defender.emit_signal("on_not_wounded", combat_package)
 			if attacker_is_real: attacker.emit_signal("on_failed_to_wound_someone", combat_package)
 		
-		if total_shield_left < og_total_shield:
-	#		print("Some quantity of shield consumed!")
-			defender.emit_signal("on_shield_consumed", combat_package)
-			if attacker_is_real: attacker.emit_signal("on_hit_someones_shield", combat_package)
+#		if total_shield_left < og_total_shield:
+#	#		print("Some quantity of shield consumed!")
+#			defender.emit_signal("on_shield_consumed", combat_package)
+#			if attacker_is_real: attacker.emit_signal("on_hit_someones_shield", combat_package)
 	
 		pass
 	# Unless things are quiet, in which case... nope, no signals!
@@ -720,7 +741,7 @@ func TILE_ended_on_HOT(actor: Actor, _coord: Vector2):
 	if actor.is_immune_fire: return
 	
 	# Take 1 damage unless immune
-	do_quiet_damage(null, actor, 4, ["piercing", "elem_FIRE"])
+	do_quiet_damage(null, actor, 4, ["piercing", "fire"])
 	pass
 
 func TILE_ended_on_SAND(actor: Actor, _coord: Vector2):
@@ -732,7 +753,7 @@ func TILE_ended_on_SAND(actor: Actor, _coord: Vector2):
 func TILE_ended_on_GLOWING(actor: Actor, coord: Vector2):
 	if !utils.actorpass(actor): return
 	
-	heal_actor_at_coord(actor, coord, 4, ["elem_HOLY"])
+	heal_actor_at_coord(actor, coord, 4, ["light"])
 	pass
 
 

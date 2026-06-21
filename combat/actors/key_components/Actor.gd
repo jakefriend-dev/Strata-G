@@ -328,7 +328,7 @@ func master_pre_turn_setup(who: Actor):
 	
 #	print("Pre-turn refresh for ",self)
 	actions_completed_this_turn = 0
-	shield = max_shield
+#	shield = max_shield # We no longer refill shield automatically!
 	if !check_effect("keeps_bonus_shield"):
 		bonus_shield = 0
 	ghost_mode(false)
