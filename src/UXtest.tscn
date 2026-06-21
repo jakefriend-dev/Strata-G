@@ -21,7 +21,7 @@ margin_right = 40.0
 margin_bottom = 40.0
 theme = ExtResource( 1 )
 custom_constants/vseparation = 0
-custom_constants/hseparation = 9
+custom_constants/hseparation = 1
 columns = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -95,8 +95,8 @@ custom_fonts/font = ExtResource( 2 )
 text = "Magickdart"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_left = 113.0
-margin_right = 217.0
+margin_left = 105.0
+margin_right = 209.0
 margin_bottom = 16.0
 
 [node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer2"]
@@ -223,15 +223,15 @@ stretch_mode = 3
 
 [node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer3"]
 margin_left = 24.0
-margin_right = 90.0
+margin_right = 82.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 2 )
-text = "Magickdart"
+text = "Heat Wave"
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_left = 113.0
+margin_left = 105.0
 margin_top = 16.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 32.0
 
 [node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer4"]
@@ -361,12 +361,12 @@ margin_right = 104.0
 margin_bottom = 16.0
 rect_min_size = Vector2( 80, 0 )
 custom_fonts/font = ExtResource( 2 )
-text = "Heat Wave"
+text = "ZorpZarpyZap"
 
 [node name="HBoxContainer6" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_left = 113.0
+margin_left = 105.0
 margin_top = 32.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 48.0
 
 [node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer6"]
@@ -493,9 +493,9 @@ custom_fonts/font = ExtResource( 2 )
 text = "Magickdart"
 
 [node name="HBoxContainer8" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_left = 113.0
+margin_left = 105.0
 margin_top = 48.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 64.0
 
 [node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer8"]
@@ -631,9 +631,9 @@ custom_fonts/font = ExtResource( 2 )
 text = "Magickdart"
 
 [node name="HBoxContainer10" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_left = 113.0
+margin_left = 105.0
 margin_top = 64.0
-margin_right = 217.0
+margin_right = 209.0
 margin_bottom = 80.0
 
 [node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer10"]

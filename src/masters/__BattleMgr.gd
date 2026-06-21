@@ -2,6 +2,9 @@ extends Node
 
 var default_halfboard_size: Vector2 = Vector2(3, 5)
 const DETERMINISTIC: bool = false # When true, randomness is not initiated
+const CELL_HEIGHT: float = 48.0
+const CELL_OFFSET: float = 24.0 # Each column southward moves +offset X position
+const CELL_WIDTH: float = 64.0
 
 enum { # Combat states
 	C_OOC,			# Out of combat - the turn system is not active, aka between fights
