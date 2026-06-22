@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://art/bui/Moveset AP costs.png" type="Texture" id=1]
+[ext_resource path="res://text/fonts/built/Font MoveSet Name 1x.tres" type="DynamicFont" id=2]
+[ext_resource path="res://combat/battle_ui/MovesetOption.gd" type="Script" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[node name="Option" type="HBoxContainer"]
+margin_right = 97.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icons" type="HBoxContainer" parent="."]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="Icons"]
+margin_right = 24.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="APCost" type="Sprite" parent="Icons"]
+position = Vector2( 1, 2 )
+texture = ExtResource( 1 )
+centered = false
+hframes = 24
+frame = 6
+
+[node name="Key" type="Sprite" parent="Icons"]
+visible = false
+position = Vector2( 1, 2 )
+texture = ExtResource( 1 )
+centered = false
+hframes = 24
+
+[node name="MoveName" type="Label" parent="."]
+margin_left = 28.0
+margin_right = 94.0
+margin_bottom = 14.0
+custom_fonts/font = ExtResource( 2 )
+text = "Magickdart"

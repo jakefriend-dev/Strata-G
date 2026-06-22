@@ -104,6 +104,24 @@ func log_move_use():
 	current_turn_uses += 1
 	pass
 
+func is_usable(ignore_ap: bool = false) -> bool:
+	if !ignore_ap:
+		if cost > actor.action_points:
+			return false
+	
+#	if !passfail: return false
+	
+	if current_cooldown > 0:
+		return false
+	
+	if current_turn_uses >= uses_per_turn:
+		return false
+	
+	if current_battle_uses >= uses_per_battle:
+		return false
+	
+	return true
+
 func prepare_actualized_variants():
 	actualized_variants.clear()
 #	starting_variant = Vector2.ZERO
