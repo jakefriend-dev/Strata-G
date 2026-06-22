@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
-[ext_resource path="res://text/fonts/built/Font MoveCard Header 1x.tres" type="DynamicFont" id=2]
+[ext_resource path="res://text/fonts/built/Font MoveSet Name 1x.tres" type="DynamicFont" id=2]
 [ext_resource path="res://art/_placeholder/test play area sprite.png" type="Texture" id=3]
 [ext_resource path="res://art/bui/Moveset AP Icon.png" type="Texture" id=4]
+[ext_resource path="res://text/fonts/built/Font Testing 1.tres" type="DynamicFont" id=5]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -13,10 +14,10 @@
 texture = ExtResource( 3 )
 centered = false
 
-[node name="Node2D" type="Node2D" parent="."]
+[node name="MoveSet" type="Node2D" parent="."]
 position = Vector2( 6, 6 )
 
-[node name="GridContainer" type="GridContainer" parent="Node2D"]
+[node name="GridContainer" type="GridContainer" parent="MoveSet"]
 margin_right = 40.0
 margin_bottom = 40.0
 theme = ExtResource( 1 )
@@ -27,24 +28,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer1" type="HBoxContainer" parent="Node2D/GridContainer"]
+[node name="HBoxContainer1" type="HBoxContainer" parent="MoveSet/GridContainer"]
 margin_right = 104.0
 margin_bottom = 16.0
 
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer1"]
+[node name="Icons" type="HBoxContainer" parent="MoveSet/GridContainer/HBoxContainer1"]
 margin_right = 24.0
 margin_bottom = 14.0
 rect_min_size = Vector2( 24, 14 )
 size_flags_vertical = 0
 custom_constants/separation = -8
 
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+[node name="Spacer" type="Panel" parent="MoveSet/GridContainer/HBoxContainer1/Icons"]
 margin_right = 20.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+[node name="TextureRect" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer1/Icons"]
 margin_left = 12.0
 margin_top = 1.0
 margin_right = 24.0
@@ -54,7 +55,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+[node name="TextureRect2" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer1/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -65,7 +66,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+[node name="TextureRect3" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer1/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -76,7 +77,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer1/Icons"]
+[node name="TextureRect4" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer1/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -87,32 +88,32 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer1"]
+[node name="Label" type="Label" parent="MoveSet/GridContainer/HBoxContainer1"]
 margin_left = 24.0
 margin_right = 90.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 2 )
 text = "Magickdart"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Node2D/GridContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MoveSet/GridContainer"]
 margin_left = 105.0
-margin_right = 209.0
+margin_right = 200.0
 margin_bottom = 16.0
 
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer2"]
+[node name="Icons" type="HBoxContainer" parent="MoveSet/GridContainer/HBoxContainer2"]
 margin_right = 24.0
 margin_bottom = 14.0
 rect_min_size = Vector2( 24, 14 )
 size_flags_vertical = 0
 custom_constants/separation = -8
 
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+[node name="Spacer" type="Panel" parent="MoveSet/GridContainer/HBoxContainer2/Icons"]
 margin_right = 20.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+[node name="TextureRect" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer2/Icons"]
 margin_left = 12.0
 margin_top = 1.0
 margin_right = 24.0
@@ -122,7 +123,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+[node name="TextureRect2" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer2/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -133,7 +134,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+[node name="TextureRect3" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer2/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -144,7 +145,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer2/Icons"]
+[node name="TextureRect4" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer2/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -155,32 +156,32 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer2"]
+[node name="Label" type="Label" parent="MoveSet/GridContainer/HBoxContainer2"]
 margin_left = 24.0
-margin_right = 90.0
+margin_right = 80.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 2 )
-text = "Magickdart"
+text = "Wind Step"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="Node2D/GridContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="MoveSet/GridContainer"]
 margin_top = 16.0
 margin_right = 104.0
 margin_bottom = 32.0
 
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer3"]
+[node name="Icons" type="HBoxContainer" parent="MoveSet/GridContainer/HBoxContainer3"]
 margin_right = 24.0
 margin_bottom = 14.0
 rect_min_size = Vector2( 24, 14 )
 size_flags_vertical = 0
 custom_constants/separation = -8
 
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+[node name="Spacer" type="Panel" parent="MoveSet/GridContainer/HBoxContainer3/Icons"]
 margin_right = 12.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+[node name="TextureRect" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer3/Icons"]
 margin_left = 4.0
 margin_top = 1.0
 margin_right = 16.0
@@ -190,7 +191,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+[node name="TextureRect2" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer3/Icons"]
 margin_left = 8.0
 margin_top = 1.0
 margin_right = 20.0
@@ -200,7 +201,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+[node name="TextureRect3" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer3/Icons"]
 margin_left = 12.0
 margin_top = 1.0
 margin_right = 24.0
@@ -210,7 +211,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer3/Icons"]
+[node name="TextureRect4" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer3/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -221,376 +222,297 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="MoveSet/GridContainer/HBoxContainer3"]
+margin_left = 24.0
+margin_right = 80.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Vine Yank"
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="MoveSet/GridContainer"]
+margin_left = 105.0
+margin_top = 16.0
+margin_right = 200.0
+margin_bottom = 32.0
+
+[node name="Icons" type="HBoxContainer" parent="MoveSet/GridContainer/HBoxContainer4"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="MoveSet/GridContainer/HBoxContainer4/Icons"]
+margin_right = 12.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer4/Icons"]
+margin_left = 4.0
+margin_top = 1.0
+margin_right = 16.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer4/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer4/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer4/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="MoveSet/GridContainer/HBoxContainer4"]
 margin_left = 24.0
 margin_right = 82.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 2 )
+text = "Water Lob"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="MoveSet/GridContainer"]
+margin_top = 32.0
+margin_right = 104.0
+margin_bottom = 48.0
+
+[node name="Icons" type="HBoxContainer" parent="MoveSet/GridContainer/HBoxContainer5"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="MoveSet/GridContainer/HBoxContainer5/Icons"]
+margin_right = 16.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer5/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer5/Icons"]
+visible = false
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer5/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer5/Icons"]
+visible = false
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="MoveSet/GridContainer/HBoxContainer5"]
+margin_left = 24.0
+margin_right = 104.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 80, 0 )
+custom_fonts/font = ExtResource( 2 )
+text = "Poison Spray"
+
+[node name="HBoxContainer6" type="HBoxContainer" parent="MoveSet/GridContainer"]
+margin_left = 105.0
+margin_top = 32.0
+margin_right = 200.0
+margin_bottom = 48.0
+
+[node name="Icons" type="HBoxContainer" parent="MoveSet/GridContainer/HBoxContainer6"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="MoveSet/GridContainer/HBoxContainer6/Icons"]
+margin_right = 8.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer6/Icons"]
+margin_top = 1.0
+margin_right = 12.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer6/Icons"]
+margin_left = 4.0
+margin_top = 1.0
+margin_right = 16.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer6/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer6/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="MoveSet/GridContainer/HBoxContainer6"]
+margin_left = 24.0
+margin_right = 95.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
+text = "Thunderbolt"
+
+[node name="HBoxContainer7" type="HBoxContainer" parent="MoveSet/GridContainer"]
+margin_top = 48.0
+margin_right = 104.0
+margin_bottom = 64.0
+
+[node name="Icons" type="HBoxContainer" parent="MoveSet/GridContainer/HBoxContainer7"]
+margin_right = 24.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 24, 14 )
+size_flags_vertical = 0
+custom_constants/separation = -8
+
+[node name="Spacer" type="Panel" parent="MoveSet/GridContainer/HBoxContainer7/Icons"]
+margin_right = 8.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+custom_styles/panel = SubResource( 1 )
+
+[node name="TextureRect" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer7/Icons"]
+margin_top = 1.0
+margin_right = 12.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect2" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer7/Icons"]
+margin_left = 4.0
+margin_top = 1.0
+margin_right = 16.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer7/Icons"]
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect4" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer7/Icons"]
+margin_left = 12.0
+margin_top = 1.0
+margin_right = 24.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="MoveSet/GridContainer/HBoxContainer7"]
+margin_left = 24.0
+margin_right = 90.0
+margin_bottom = 16.0
+custom_fonts/font = ExtResource( 2 )
 text = "Heat Wave"
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_left = 105.0
-margin_top = 16.0
-margin_right = 209.0
-margin_bottom = 32.0
-
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer4"]
-margin_right = 24.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 24, 14 )
-size_flags_vertical = 0
-custom_constants/separation = -8
-
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
-margin_right = 12.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-custom_styles/panel = SubResource( 1 )
-
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
-margin_left = 4.0
-margin_top = 1.0
-margin_right = 16.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer4/Icons"]
-visible = false
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer4"]
-margin_left = 24.0
-margin_right = 90.0
-margin_bottom = 16.0
-custom_fonts/font = ExtResource( 2 )
-text = "Magickdart"
-
-[node name="HBoxContainer5" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_top = 32.0
-margin_right = 104.0
-margin_bottom = 48.0
-
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer5"]
-margin_right = 24.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 24, 14 )
-size_flags_vertical = 0
-custom_constants/separation = -8
-
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
-margin_right = 16.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-custom_styles/panel = SubResource( 1 )
-
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
-visible = false
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer5/Icons"]
-visible = false
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer5"]
-margin_left = 24.0
-margin_right = 104.0
-margin_bottom = 16.0
-rect_min_size = Vector2( 80, 0 )
-custom_fonts/font = ExtResource( 2 )
-text = "ZorpZarpyZap"
-
-[node name="HBoxContainer6" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_left = 105.0
-margin_top = 32.0
-margin_right = 209.0
-margin_bottom = 48.0
-
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer6"]
-margin_right = 24.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 24, 14 )
-size_flags_vertical = 0
-custom_constants/separation = -8
-
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
-margin_right = 8.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-custom_styles/panel = SubResource( 1 )
-
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
-margin_left = 4.0
-margin_top = 1.0
-margin_right = 16.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer6/Icons"]
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer6"]
-margin_left = 24.0
-margin_right = 90.0
-margin_bottom = 16.0
-custom_fonts/font = ExtResource( 2 )
-text = "Magickdart"
-
-[node name="HBoxContainer7" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_top = 48.0
-margin_right = 104.0
-margin_bottom = 64.0
-
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer7"]
-margin_right = 24.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 24, 14 )
-size_flags_vertical = 0
-custom_constants/separation = -8
-
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
-margin_right = 8.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-custom_styles/panel = SubResource( 1 )
-
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
-margin_top = 1.0
-margin_right = 12.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
-margin_left = 4.0
-margin_top = 1.0
-margin_right = 16.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer7/Icons"]
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer7"]
-margin_left = 24.0
-margin_right = 90.0
-margin_bottom = 16.0
-custom_fonts/font = ExtResource( 2 )
-text = "Magickdart"
-
-[node name="HBoxContainer8" type="HBoxContainer" parent="Node2D/GridContainer"]
+[node name="HBoxContainer10" type="HBoxContainer" parent="MoveSet/GridContainer"]
 margin_left = 105.0
 margin_top = 48.0
-margin_right = 209.0
+margin_right = 200.0
 margin_bottom = 64.0
 
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer8"]
+[node name="Icons" type="HBoxContainer" parent="MoveSet/GridContainer/HBoxContainer10"]
 margin_right = 24.0
 margin_bottom = 14.0
 rect_min_size = Vector2( 24, 14 )
 size_flags_vertical = 0
 custom_constants/separation = -8
 
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
-margin_right = 16.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-custom_styles/panel = SubResource( 1 )
-
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
-visible = false
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer8/Icons"]
-visible = false
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer8"]
-margin_left = 24.0
-margin_right = 104.0
-margin_bottom = 16.0
-rect_min_size = Vector2( 80, 0 )
-custom_fonts/font = ExtResource( 2 )
-text = "ZorpZarpyZap"
-
-[node name="HBoxContainer9" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_top = 64.0
-margin_right = 104.0
-margin_bottom = 80.0
-
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer9"]
-margin_right = 24.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 24, 14 )
-size_flags_vertical = 0
-custom_constants/separation = -8
-
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+[node name="Spacer" type="Panel" parent="MoveSet/GridContainer/HBoxContainer10/Icons"]
 margin_right = 24.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 custom_styles/panel = SubResource( 1 )
 
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
-visible = false
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+[node name="TextureRect" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer10/Icons"]
 visible = false
 margin_left = 8.0
 margin_top = 1.0
@@ -601,7 +523,18 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+[node name="TextureRect2" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer10/Icons"]
+visible = false
+margin_left = 8.0
+margin_top = 1.0
+margin_right = 20.0
+margin_bottom = 13.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+stretch_mode = 3
+
+[node name="TextureRect3" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer10/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -612,7 +545,7 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer9/Icons"]
+[node name="TextureRect4" type="TextureRect" parent="MoveSet/GridContainer/HBoxContainer10/Icons"]
 visible = false
 margin_left = 12.0
 margin_top = 1.0
@@ -623,79 +556,21 @@ size_flags_vertical = 4
 texture = ExtResource( 4 )
 stretch_mode = 3
 
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer9"]
+[node name="Label" type="Label" parent="MoveSet/GridContainer/HBoxContainer10"]
 margin_left = 24.0
-margin_right = 90.0
+margin_right = 88.0
 margin_bottom = 16.0
 custom_fonts/font = ExtResource( 2 )
-text = "Magickdart"
+text = "Party Items"
 
-[node name="HBoxContainer10" type="HBoxContainer" parent="Node2D/GridContainer"]
-margin_left = 105.0
-margin_top = 64.0
-margin_right = 209.0
-margin_bottom = 80.0
-
-[node name="Icons" type="HBoxContainer" parent="Node2D/GridContainer/HBoxContainer10"]
-margin_right = 24.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 24, 14 )
-size_flags_vertical = 0
-custom_constants/separation = -8
-
-[node name="Spacer" type="Panel" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
-margin_right = 24.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-custom_styles/panel = SubResource( 1 )
-
-[node name="TextureRect" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
-visible = false
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect2" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
-visible = false
-margin_left = 8.0
-margin_top = 1.0
-margin_right = 20.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect3" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
-visible = false
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="TextureRect4" type="TextureRect" parent="Node2D/GridContainer/HBoxContainer10/Icons"]
-visible = false
-margin_left = 12.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 13.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 4 )
-stretch_mode = 3
-
-[node name="Label" type="Label" parent="Node2D/GridContainer/HBoxContainer10"]
-margin_left = 24.0
-margin_right = 90.0
-margin_bottom = 16.0
-custom_fonts/font = ExtResource( 2 )
-text = "Magickdart"
+[node name="Label" type="Label" parent="."]
+margin_left = 4.0
+margin_top = 257.0
+margin_right = 290.0
+margin_bottom = 273.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 5 )
+text = "Changes angle of attack. Not enough AP. [i]"
+__meta__ = {
+"_edit_use_anchors_": false
+}
