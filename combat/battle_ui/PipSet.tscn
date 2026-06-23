@@ -1,0 +1,119 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://art/bui/PipsEdges-APV2.png" type="Texture" id=1]
+[ext_resource path="res://src/classes/_Sprite9Patch.gd" type="Script" id=2]
+[ext_resource path="res://art/bui/PipsFull-AP.png" type="Texture" id=3]
+[ext_resource path="res://art/bui/PipsEdges-HealthV2.png" type="Texture" id=4]
+[ext_resource path="res://art/bui/PipsFull-Health.png" type="Texture" id=5]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[node name="PanelContainer" type="PanelContainer"]
+margin_left = 32.0
+margin_right = 46.0
+margin_bottom = 14.0
+
+[node name="AP-L" type="HBoxContainer" parent="."]
+visible = false
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 41.0
+margin_bottom = 17.0
+custom_constants/separation = -2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="L" type="NinePatchRect" parent="AP-L"]
+margin_right = 14.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 14, 10 )
+size_flags_vertical = 4
+texture = ExtResource( 1 )
+region_rect = Rect2( 12, 0, 6, 10 )
+patch_margin_left = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource( 2 )
+sprite_overrides_size = false
+
+[node name="C" type="Panel" parent="AP-L"]
+margin_left = 12.0
+margin_right = 22.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 0 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="R" type="NinePatchRect" parent="AP-L"]
+margin_left = 20.0
+margin_right = 34.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 14, 10 )
+size_flags_vertical = 4
+texture = ExtResource( 1 )
+region_rect = Rect2( 24, 0, 6, 10 )
+patch_margin_right = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource( 2 )
+sprite_overrides_size = false
+
+[node name="Sprite" type="Sprite" parent="AP-L"]
+position = Vector2( 12, 0 )
+texture = ExtResource( 3 )
+centered = false
+hframes = 6
+
+[node name="Health" type="HBoxContainer" parent="."]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 35.0
+margin_bottom = 17.0
+custom_constants/separation = -2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="L" type="NinePatchRect" parent="Health"]
+margin_right = 11.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 11, 10 )
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+region_rect = Rect2( 0, 0, 6, 10 )
+patch_margin_left = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource( 2 )
+hframes = 2
+sprite_overrides_size = false
+
+[node name="C" type="Panel" parent="Health"]
+margin_left = 9.0
+margin_right = 20.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 11, 0 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="R" type="NinePatchRect" parent="Health"]
+margin_left = 18.0
+margin_right = 28.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 10 )
+size_flags_vertical = 4
+texture = ExtResource( 4 )
+region_rect = Rect2( 6, 0, 6, 10 )
+patch_margin_right = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource( 2 )
+hframes = 2
+frame = 1
+sprite_overrides_size = false
+
+[node name="Sprite" type="Sprite" parent="Health"]
+position = Vector2( 9, 0 )
+texture = ExtResource( 5 )
+centered = false
+hframes = 5
+frame = 4
