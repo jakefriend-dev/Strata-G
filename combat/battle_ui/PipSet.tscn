@@ -14,19 +14,19 @@
 [sub_resource type="StyleBoxEmpty" id=1]
 
 [node name="PanelContainer" type="PanelContainer"]
-margin_right = 28.0
+margin_right = 22.0
 margin_bottom = 10.0
 custom_styles/panel = SubResource( 2 )
-script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="AP-L" type="HBoxContainer" parent="."]
-visible = false
-margin_right = 30.0
+margin_right = 22.0
 margin_bottom = 10.0
+size_flags_horizontal = 4
 custom_constants/separation = -2
+script = ExtResource( 6 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -51,7 +51,32 @@ margin_bottom = 10.0
 rect_min_size = Vector2( 10, 0 )
 custom_styles/panel = SubResource( 1 )
 
+[node name="R2" type="NinePatchRect" parent="AP-L/C"]
+margin_left = 8.0
+margin_right = 18.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 10 )
+size_flags_vertical = 4
+texture = ExtResource( 1 )
+region_rect = Rect2( 24, 0, 6, 10 )
+patch_margin_right = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+sprite_overrides_size = false
+
+[node name="Sprite" type="Sprite" parent="AP-L/C"]
+texture = ExtResource( 3 )
+centered = false
+hframes = 6
+frame = 5
+
 [node name="R" type="NinePatchRect" parent="AP-L"]
+visible = false
+self_modulate = Color( 1, 1, 1, 0 )
 margin_left = 20.0
 margin_right = 30.0
 margin_bottom = 10.0
@@ -65,13 +90,8 @@ axis_stretch_vertical = 1
 script = ExtResource( 2 )
 sprite_overrides_size = false
 
-[node name="Sprite" type="Sprite" parent="AP-L"]
-position = Vector2( 12, 0 )
-texture = ExtResource( 3 )
-centered = false
-hframes = 6
-
 [node name="Health" type="HBoxContainer" parent="."]
+visible = false
 margin_right = 28.0
 margin_bottom = 10.0
 custom_constants/separation = -2
@@ -100,6 +120,13 @@ margin_bottom = 10.0
 rect_min_size = Vector2( 12, 0 )
 custom_styles/panel = SubResource( 1 )
 
+[node name="Sprite" type="Sprite" parent="Health/C"]
+position = Vector2( 1, 0 )
+texture = ExtResource( 5 )
+centered = false
+hframes = 5
+frame = 4
+
 [node name="R" type="NinePatchRect" parent="Health"]
 margin_left = 18.0
 margin_right = 28.0
@@ -115,13 +142,6 @@ script = ExtResource( 2 )
 hframes = 2
 frame = 1
 sprite_overrides_size = false
-
-[node name="Sprite" type="Sprite" parent="Health"]
-position = Vector2( 9, 0 )
-texture = ExtResource( 5 )
-centered = false
-hframes = 5
-frame = 4
 
 [node name="Shield" type="HBoxContainer" parent="."]
 visible = false
@@ -153,6 +173,13 @@ margin_bottom = 10.0
 rect_min_size = Vector2( 12, 0 )
 custom_styles/panel = SubResource( 1 )
 
+[node name="Sprite" type="Sprite" parent="Shield/C"]
+position = Vector2( 1, 0 )
+texture = ExtResource( 8 )
+centered = false
+hframes = 5
+frame = 4
+
 [node name="R" type="NinePatchRect" parent="Shield"]
 margin_left = 18.0
 margin_right = 28.0
@@ -168,10 +195,3 @@ script = ExtResource( 2 )
 hframes = 2
 frame = 1
 sprite_overrides_size = false
-
-[node name="Sprite" type="Sprite" parent="Shield"]
-position = Vector2( 9, 0 )
-texture = ExtResource( 8 )
-centered = false
-hframes = 5
-frame = 4
