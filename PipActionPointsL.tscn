@@ -1,0 +1,75 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://combat/battle_ui/PipSet.gd" type="Script" id=1]
+[ext_resource path="res://src/classes/_Sprite9Patch.gd" type="Script" id=2]
+[ext_resource path="res://art/bui/PipsEdges-APV2.png" type="Texture" id=3]
+[ext_resource path="res://art/bui/PipsFull-AP.png" type="Texture" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=1]
+
+[node name="ActionPoints-L" type="HBoxContainer"]
+margin_right = 18.0
+margin_bottom = 10.0
+custom_constants/separation = -2
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+type = 1
+
+[node name="L" type="NinePatchRect" parent="."]
+visible = false
+margin_right = 10.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 10 )
+size_flags_vertical = 4
+texture = ExtResource( 3 )
+region_rect = Rect2( 6, 0, 6, 10 )
+patch_margin_left = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource( 2 )
+sprite_overrides_size = false
+
+[node name="C" type="Panel" parent="."]
+margin_right = 10.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 10 )
+custom_styles/panel = SubResource( 1 )
+
+[node name="R2" type="NinePatchRect" parent="C"]
+margin_left = 8.0
+margin_right = 18.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 10 )
+size_flags_vertical = 4
+texture = ExtResource( 3 )
+region_rect = Rect2( 24, 0, 6, 10 )
+patch_margin_right = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+sprite_overrides_size = false
+
+[node name="Sprite" type="Sprite" parent="C"]
+texture = ExtResource( 4 )
+centered = false
+hframes = 6
+
+[node name="R" type="NinePatchRect" parent="."]
+self_modulate = Color( 1, 1, 1, 0 )
+margin_left = 8.0
+margin_right = 18.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 10, 10 )
+size_flags_vertical = 4
+texture = ExtResource( 3 )
+region_rect = Rect2( 24, 0, 6, 10 )
+patch_margin_right = 2
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+script = ExtResource( 2 )
+sprite_overrides_size = false

@@ -1,19 +1,16 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
+[ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=1]
 [ext_resource path="res://combat/battle_ui/BUI.gd" type="Script" id=2]
-[ext_resource path="res://combat/battle_ui/ActionPointPip.tscn" type="PackedScene" id=3]
-[ext_resource path="res://combat/battle_ui/HealthPip.tscn" type="PackedScene" id=4]
-[ext_resource path="res://combat/battle_ui/ShieldPip.tscn" type="PackedScene" id=5]
-[ext_resource path="res://combat/battle_ui/BonusShieldPip.tscn" type="PackedScene" id=6]
+[ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=3]
+[ext_resource path="res://PipHealth.tscn" type="PackedScene" id=4]
+[ext_resource path="res://PipShield.tscn" type="PackedScene" id=5]
+[ext_resource path="res://PipActionPointsR.tscn" type="PackedScene" id=6]
 [ext_resource path="res://text/fonts/built/Font BUI Header 1x.tres" type="DynamicFont" id=7]
 
 [node name="BUI" type="Node2D"]
 position = Vector2( 0, 16 )
 script = ExtResource( 2 )
-path_healthpar = NodePath("MC/VB/VBoxContainer/HBoxContainer/Health")
-path_shieldpar = NodePath("MC/VB/VBoxContainer/HBoxContainer/Shield")
-path_bonusshieldpar = NodePath("MC/VB/VBoxContainer/HBoxContainer/BonusShield")
-path_actionpar = NodePath("MC/VB/VBoxContainer/AP")
 
 [node name="MC" type="MarginContainer" parent="."]
 margin_left = -200.0
@@ -21,15 +18,25 @@ margin_top = -200.0
 margin_right = 200.0
 margin_bottom = 200.0
 rect_min_size = Vector2( 400, 400 )
+theme = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VB" type="VBoxContainer" parent="MC"]
-margin_left = 127.0
-margin_top = 174.0
-margin_right = 272.0
-margin_bottom = 226.0
+[node name="PC" type="PanelContainer" parent="MC"]
+margin_left = 178.0
+margin_top = 181.0
+margin_right = 222.0
+margin_bottom = 218.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = ExtResource( 1 )
+
+[node name="VB" type="VBoxContainer" parent="MC/PC"]
+margin_left = 1.0
+margin_top = 2.0
+margin_right = 44.0
+margin_bottom = 36.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
@@ -37,122 +44,42 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Name" type="Label" parent="MC/VB"]
-margin_right = 145.0
+[node name="Name" type="Label" parent="MC/PC/VB"]
+margin_right = 43.0
 margin_bottom = 14.0
 size_flags_horizontal = 4
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 7 )
-text = "Beast Thrower Knight"
+text = "Knight"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MC/VB"]
+[node name="HP" type="HBoxContainer" parent="MC/PC/VB"]
+margin_left = 10.0
 margin_top = 14.0
-margin_right = 145.0
-margin_bottom = 52.0
-custom_constants/separation = 0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MC/VB/VBoxContainer"]
-margin_left = 21.0
-margin_right = 123.0
+margin_right = 33.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
-custom_constants/separation = 0
+custom_constants/separation = -1
 
-[node name="Health" type="GridContainer" parent="MC/VB/VBoxContainer/HBoxContainer"]
-margin_right = 44.0
-margin_bottom = 24.0
-custom_constants/vseparation = -4
-custom_constants/hseparation = -4
-columns = 4
+[node name="Health" parent="MC/PC/VB/HP" instance=ExtResource( 4 )]
+margin_top = 0.0
+margin_right = 12.0
+margin_bottom = 10.0
 
-[node name="1" parent="MC/VB/VBoxContainer/HBoxContainer/Health" instance=ExtResource( 4 )]
+[node name="Shield" parent="MC/PC/VB/HP" instance=ExtResource( 5 )]
+margin_left = 11.0
+margin_top = 0.0
+margin_right = 23.0
+margin_bottom = 10.0
 
-[node name="2" parent="MC/VB/VBoxContainer/HBoxContainer/Health" instance=ExtResource( 4 )]
-margin_left = 10.0
-margin_right = 24.0
-
-[node name="3" parent="MC/VB/VBoxContainer/HBoxContainer/Health" instance=ExtResource( 4 )]
-margin_left = 20.0
-margin_right = 34.0
-
-[node name="4" parent="MC/VB/VBoxContainer/HBoxContainer/Health" instance=ExtResource( 4 )]
-margin_left = 30.0
-margin_right = 44.0
-
-[node name="5" parent="MC/VB/VBoxContainer/HBoxContainer/Health" instance=ExtResource( 4 )]
-margin_top = 10.0
-margin_bottom = 24.0
-
-[node name="6" parent="MC/VB/VBoxContainer/HBoxContainer/Health" instance=ExtResource( 4 )]
-margin_left = 10.0
-margin_top = 10.0
-margin_right = 24.0
-margin_bottom = 24.0
-
-[node name="7" parent="MC/VB/VBoxContainer/HBoxContainer/Health" instance=ExtResource( 4 )]
-margin_left = 20.0
-margin_top = 10.0
-margin_right = 34.0
-margin_bottom = 24.0
-
-[node name="8" parent="MC/VB/VBoxContainer/HBoxContainer/Health" instance=ExtResource( 4 )]
-margin_left = 30.0
-margin_top = 10.0
-margin_right = 44.0
-margin_bottom = 24.0
-
-[node name="Shield" type="GridContainer" parent="MC/VB/VBoxContainer/HBoxContainer"]
-margin_left = 44.0
-margin_right = 88.0
-margin_bottom = 24.0
-custom_constants/vseparation = -4
-custom_constants/hseparation = -4
-columns = 4
-
-[node name="1" parent="MC/VB/VBoxContainer/HBoxContainer/Shield" instance=ExtResource( 5 )]
-
-[node name="2" parent="MC/VB/VBoxContainer/HBoxContainer/Shield" instance=ExtResource( 5 )]
-margin_left = 10.0
-margin_right = 24.0
-
-[node name="3" parent="MC/VB/VBoxContainer/HBoxContainer/Shield" instance=ExtResource( 5 )]
-margin_left = 20.0
-margin_right = 34.0
-
-[node name="4" parent="MC/VB/VBoxContainer/HBoxContainer/Shield" instance=ExtResource( 5 )]
-margin_left = 30.0
-margin_right = 44.0
-
-[node name="BonusShield" type="GridContainer" parent="MC/VB/VBoxContainer/HBoxContainer"]
-margin_left = 88.0
-margin_right = 102.0
-margin_bottom = 24.0
-custom_constants/vseparation = -4
-custom_constants/hseparation = -4
-columns = 4
-
-[node name="1" parent="MC/VB/VBoxContainer/HBoxContainer/BonusShield" instance=ExtResource( 6 )]
-
-[node name="AP" type="GridContainer" parent="MC/VB/VBoxContainer"]
-margin_left = 56.0
-margin_top = 24.0
-margin_right = 88.0
-margin_bottom = 38.0
-size_flags_horizontal = 4
-custom_constants/vseparation = -4
-custom_constants/hseparation = -8
-columns = 8
-
-[node name="1" parent="MC/VB/VBoxContainer/AP" instance=ExtResource( 3 )]
-
-[node name="2" parent="MC/VB/VBoxContainer/AP" instance=ExtResource( 3 )]
-margin_left = 6.0
-margin_right = 20.0
-
-[node name="3" parent="MC/VB/VBoxContainer/AP" instance=ExtResource( 3 )]
+[node name="AP" type="HBoxContainer" parent="MC/PC/VB"]
 margin_left = 12.0
-margin_right = 26.0
+margin_top = 24.0
+margin_right = 30.0
+margin_bottom = 34.0
+size_flags_horizontal = 4
+custom_constants/separation = -1
 
-[node name="4" parent="MC/VB/VBoxContainer/AP" instance=ExtResource( 3 )]
-margin_left = 18.0
-margin_right = 32.0
+[node name="ActionPoints-R" parent="MC/PC/VB/AP" instance=ExtResource( 6 )]
+margin_top = 0.0
+margin_bottom = 10.0
+size_flags_horizontal = 4

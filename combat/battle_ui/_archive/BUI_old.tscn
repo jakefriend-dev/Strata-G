@@ -1,11 +1,12 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://combat/battle_ui/BUI.gd" type="Script" id=2]
-[ext_resource path="res://combat/battle_ui/ActionPointPip.tscn" type="PackedScene" id=3]
-[ext_resource path="res://combat/battle_ui/HealthPip.tscn" type="PackedScene" id=4]
-[ext_resource path="res://combat/battle_ui/ShieldPip.tscn" type="PackedScene" id=5]
-[ext_resource path="res://combat/battle_ui/BonusShieldPip.tscn" type="PackedScene" id=6]
+[ext_resource path="res://combat/battle_ui/_archive/ActionPointPip.tscn" type="PackedScene" id=3]
+[ext_resource path="res://combat/battle_ui/_archive/HealthPip.tscn" type="PackedScene" id=4]
+[ext_resource path="res://combat/battle_ui/_archive/ShieldPip.tscn" type="PackedScene" id=5]
+[ext_resource path="res://combat/battle_ui/_archive/BonusShieldPip.tscn" type="PackedScene" id=6]
 [ext_resource path="res://text/fonts/built/Font BUI Header 1x.tres" type="DynamicFont" id=7]
+
 
 [node name="BUI" type="Node2D"]
 position = Vector2( 0, 16 )
