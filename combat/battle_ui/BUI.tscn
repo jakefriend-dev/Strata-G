@@ -1,11 +1,22 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
+[ext_resource path="res://combat/battle_ui/PipSet.tscn" type="PackedScene" id=1]
 [ext_resource path="res://combat/battle_ui/BUI.gd" type="Script" id=2]
 [ext_resource path="res://combat/battle_ui/ActionPointPip.tscn" type="PackedScene" id=3]
 [ext_resource path="res://combat/battle_ui/HealthPip.tscn" type="PackedScene" id=4]
 [ext_resource path="res://combat/battle_ui/ShieldPip.tscn" type="PackedScene" id=5]
 [ext_resource path="res://combat/battle_ui/BonusShieldPip.tscn" type="PackedScene" id=6]
 [ext_resource path="res://text/fonts/built/Font BUI Header 1x.tres" type="DynamicFont" id=7]
+[ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=8]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 0.498039 )
+border_width_left = 1
+border_width_top = 2
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color( 0, 0, 0, 0.498039 )
+anti_aliasing = false
 
 [node name="BUI" type="Node2D"]
 position = Vector2( 0, 16 )
@@ -48,7 +59,7 @@ text = "Beast Thrower Knight"
 [node name="VBoxContainer" type="VBoxContainer" parent="MC/VB"]
 margin_top = 14.0
 margin_right = 145.0
-margin_bottom = 52.0
+margin_bottom = 14.0
 custom_constants/separation = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MC/VB/VBoxContainer"]
@@ -156,3 +167,289 @@ margin_right = 26.0
 [node name="4" parent="MC/VB/VBoxContainer/AP" instance=ExtResource( 3 )]
 margin_left = 18.0
 margin_right = 32.0
+
+[node name="PanelContainer" type="PanelContainer" parent="MC/VB/VBoxContainer"]
+visible = false
+margin_left = 43.0
+margin_top = 38.0
+margin_right = 102.0
+margin_bottom = 62.0
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MC/VB/VBoxContainer/PanelContainer"]
+margin_left = 1.0
+margin_top = 2.0
+margin_right = 58.0
+margin_bottom = 23.0
+custom_constants/separation = 1
+
+[node name="Name" type="Label" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer"]
+visible = false
+margin_left = 7.0
+margin_right = 50.0
+margin_bottom = 14.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 7 )
+text = "Knight"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer"]
+margin_right = 57.0
+margin_bottom = 10.0
+size_flags_horizontal = 4
+custom_constants/separation = 1
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 1 )]
+margin_right = 40.0
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Health" index="1"]
+margin_right = 40.0
+
+[node name="L" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Health/Health" index="0"]
+margin_right = 22.0
+rect_min_size = Vector2( 22, 10 )
+
+[node name="C" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Health/Health" index="1"]
+margin_left = 20.0
+margin_right = 32.0
+
+[node name="R" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Health/Health" index="2"]
+margin_left = 30.0
+margin_right = 40.0
+
+[node name="Sprite" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Health/Health" index="3"]
+position = Vector2( 21, 0 )
+
+[node name="Shield" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2" instance=ExtResource( 1 )]
+margin_left = 41.0
+margin_right = 57.0
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Shield" index="1"]
+visible = false
+
+[node name="Shield" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Shield" index="2"]
+visible = true
+margin_right = 16.0
+
+[node name="L" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Shield/Shield" index="0"]
+visible = false
+
+[node name="C" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Shield/Shield" index="1"]
+margin_left = 0.0
+margin_right = 12.0
+
+[node name="R" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Shield/Shield" index="2"]
+margin_left = 10.0
+margin_right = 16.0
+rect_min_size = Vector2( 6, 10 )
+
+[node name="Sprite" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Shield/Shield" index="3"]
+position = Vector2( 1, 0 )
+
+[node name="AP" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer" instance=ExtResource( 1 )]
+margin_left = 13.0
+margin_top = 11.0
+margin_right = 43.0
+margin_bottom = 21.0
+size_flags_horizontal = 4
+
+[node name="AP-L" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/AP" index="0"]
+visible = true
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/AP" index="1"]
+visible = false
+margin_right = 30.0
+
+[node name="PanelContainer2" type="PanelContainer" parent="MC/VB/VBoxContainer"]
+visible = false
+margin_left = 43.0
+margin_right = 101.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_styles/panel = ExtResource( 8 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MC/VB/VBoxContainer/PanelContainer2"]
+margin_left = 1.0
+margin_top = 2.0
+margin_right = 58.0
+margin_bottom = 38.0
+custom_constants/separation = 1
+
+[node name="Name" type="Label" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer"]
+margin_left = 7.0
+margin_right = 50.0
+margin_bottom = 14.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 7 )
+text = "Knight"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer"]
+margin_top = 15.0
+margin_right = 57.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+custom_constants/separation = 1
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" instance=ExtResource( 1 )]
+margin_right = 40.0
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Health" index="1"]
+margin_right = 40.0
+
+[node name="L" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Health/Health" index="0"]
+margin_right = 22.0
+rect_min_size = Vector2( 22, 10 )
+
+[node name="C" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Health/Health" index="1"]
+margin_left = 20.0
+margin_right = 32.0
+
+[node name="R" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Health/Health" index="2"]
+margin_left = 30.0
+margin_right = 40.0
+
+[node name="Sprite" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Health/Health" index="3"]
+position = Vector2( 21, 0 )
+
+[node name="Shield" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2" instance=ExtResource( 1 )]
+margin_left = 41.0
+margin_right = 57.0
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Shield" index="1"]
+visible = false
+
+[node name="Shield" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Shield" index="2"]
+visible = true
+margin_right = 16.0
+
+[node name="L" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Shield/Shield" index="0"]
+visible = false
+
+[node name="C" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Shield/Shield" index="1"]
+margin_left = 0.0
+margin_right = 12.0
+
+[node name="R" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Shield/Shield" index="2"]
+margin_left = 10.0
+margin_right = 16.0
+rect_min_size = Vector2( 6, 10 )
+
+[node name="Sprite" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Shield/Shield" index="3"]
+position = Vector2( 1, 0 )
+
+[node name="AP" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer" instance=ExtResource( 1 )]
+margin_left = 13.0
+margin_top = 26.0
+margin_right = 43.0
+margin_bottom = 36.0
+size_flags_horizontal = 4
+
+[node name="AP-L" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/AP" index="0"]
+visible = true
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/AP" index="1"]
+visible = false
+margin_right = 30.0
+
+[node name="PanelContainer3" type="PanelContainer" parent="MC/VB/VBoxContainer"]
+visible = false
+margin_left = 57.0
+margin_top = 39.0
+margin_right = 88.0
+margin_bottom = 52.0
+size_flags_horizontal = 4
+custom_styles/panel = ExtResource( 8 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MC/VB/VBoxContainer/PanelContainer3"]
+margin_left = 1.0
+margin_top = 2.0
+margin_right = 31.0
+margin_bottom = 12.0
+custom_constants/separation = 1
+
+[node name="Name" type="Label" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer"]
+visible = false
+margin_left = 7.0
+margin_right = 50.0
+margin_bottom = 14.0
+size_flags_horizontal = 4
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 7 )
+text = "Knight"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer"]
+visible = false
+margin_right = 57.0
+margin_bottom = 10.0
+size_flags_horizontal = 4
+custom_constants/separation = 1
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2" instance=ExtResource( 1 )]
+margin_right = 40.0
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Health" index="1"]
+margin_right = 40.0
+
+[node name="L" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Health/Health" index="0"]
+margin_right = 22.0
+rect_min_size = Vector2( 22, 10 )
+
+[node name="C" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Health/Health" index="1"]
+margin_left = 20.0
+margin_right = 32.0
+
+[node name="R" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Health/Health" index="2"]
+margin_left = 30.0
+margin_right = 40.0
+
+[node name="Sprite" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Health/Health" index="3"]
+position = Vector2( 21, 0 )
+
+[node name="Shield" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2" instance=ExtResource( 1 )]
+margin_left = 41.0
+margin_right = 57.0
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Shield" index="1"]
+visible = false
+
+[node name="Shield" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Shield" index="2"]
+visible = true
+margin_right = 16.0
+
+[node name="L" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Shield/Shield" index="0"]
+visible = false
+
+[node name="C" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Shield/Shield" index="1"]
+margin_left = 0.0
+margin_right = 12.0
+
+[node name="R" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Shield/Shield" index="2"]
+margin_left = 10.0
+margin_right = 16.0
+rect_min_size = Vector2( 6, 10 )
+
+[node name="Sprite" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Shield/Shield" index="3"]
+position = Vector2( 1, 0 )
+
+[node name="AP" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer" instance=ExtResource( 1 )]
+margin_right = 30.0
+size_flags_horizontal = 4
+
+[node name="AP-L" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/AP" index="0"]
+visible = true
+
+[node name="Health" parent="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/AP" index="1"]
+visible = false
+margin_right = 30.0
+
+[editable path="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Health"]
+[editable path="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Shield"]
+[editable path="MC/VB/VBoxContainer/PanelContainer/VBoxContainer/AP"]
+[editable path="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Health"]
+[editable path="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/HBoxContainer2/Shield"]
+[editable path="MC/VB/VBoxContainer/PanelContainer2/VBoxContainer/AP"]
+[editable path="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Health"]
+[editable path="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/HBoxContainer2/Shield"]
+[editable path="MC/VB/VBoxContainer/PanelContainer3/VBoxContainer/AP"]
