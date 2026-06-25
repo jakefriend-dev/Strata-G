@@ -88,12 +88,16 @@ func determine_units():
 	pass
 
 func update_visuals():
+	var offset: int = 2
+	if type == the_types.ACTION_POINTS:
+		offset = 2
+	
 	# Left side
 	var left_to_vis: bool = true
 	if side_pips_left == 0:
 		left_to_vis = false
 	else:
-		get_node("L").rect_min_size.x = (2 + (side_pips_left*4))
+		get_node("L").rect_min_size.x = (offset + (side_pips_left*5))
 #		print("For ",actor.name,"'s ",name,", left px width ",get_node("L").rect_min_size.x)
 	if get_node("L").visible != left_to_vis:
 		get_node("L").visible = left_to_vis
@@ -103,7 +107,7 @@ func update_visuals():
 	if side_pips_right == 0:
 		right_to_vis = false
 	else:
-		get_node("R").rect_min_size.x = (2 + (side_pips_right*4))
+		get_node("R").rect_min_size.x = (offset + (side_pips_right*5))
 		if type == the_types.ACTION_POINTS:
 			get_node("C/R2").rect_min_size.x = get_node("R").rect_min_size.x
 	if get_node("R").visible != right_to_vis:
