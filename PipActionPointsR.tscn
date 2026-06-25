@@ -1,12 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://combat/battle_ui/PipSet.gd" type="Script" id=1]
 [ext_resource path="res://src/classes/_Sprite9Patch.gd" type="Script" id=2]
 [ext_resource path="res://art/bui/pips/PipsEdges-APV2.png" type="Texture" id=3]
 [ext_resource path="res://art/bui/pips/PipsFull-AP.png" type="Texture" id=4]
-
+[ext_resource path="res://text/fonts/built/Font Testing 1.tres" type="DynamicFont" id=5]
 
 [sub_resource type="StyleBoxEmpty" id=1]
+
+[sub_resource type="CanvasItemMaterial" id=2]
 
 [node name="ActionPoints-R" type="HBoxContainer"]
 margin_top = 14.0
@@ -61,6 +63,21 @@ sprite_overrides_size = false
 texture = ExtResource( 4 )
 centered = false
 hframes = 6
+
+[node name="Count" type="Label" parent="C/Sprite"]
+material = SubResource( 2 )
+margin_left = 11.0
+margin_right = 51.0
+margin_bottom = 14.0
+custom_colors/font_color = Color( 1, 0.560784, 0, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 1
+custom_constants/shadow_offset_y = 1
+custom_fonts/font = ExtResource( 5 )
+text = "1"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="R" type="NinePatchRect" parent="."]
 visible = false

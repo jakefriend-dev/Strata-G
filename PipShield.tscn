@@ -7,9 +7,8 @@
 [sub_resource type="StyleBoxEmpty" id=1]
 
 [node name="Shield" type="HBoxContainer"]
-margin_top = 28.0
-margin_right = 30.0
-margin_bottom = 38.0
+margin_right = 12.0
+margin_bottom = 10.0
 custom_constants/separation = -2
 script = ExtResource( 1 )
 __meta__ = {

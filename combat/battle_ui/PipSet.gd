@@ -117,6 +117,7 @@ func update_visuals():
 			var center_to_vis: bool = (center_unit_value > 0)
 			if get_node("C").visible != center_to_vis:
 				get_node("C").visible = center_to_vis
+			get_node("C/Sprite/Count").text = str(curr_units)
 		the_types.HEALTH:
 			get_node("C/Sprite").frame = center_unit_value
 		the_types.SHIELD:
