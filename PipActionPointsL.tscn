@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://combat/battle_ui/PipSet.gd" type="Script" id=1]
-[ext_resource path="res://src/classes/_Sprite9Patch.gd" type="Script" id=2]
-[ext_resource path="res://art/bui/PipsEdges-APV2.png" type="Texture" id=3]
-[ext_resource path="res://art/bui/PipsFull-AP.png" type="Texture" id=4]
+[ext_resource path="res://art/bui/pips/PipsEdges-APV2.png" type="Texture" id=3]
+[ext_resource path="res://art/bui/pips/PipsFull-AP.png" type="Texture" id=4]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
@@ -28,8 +27,6 @@ region_rect = Rect2( 6, 0, 6, 10 )
 patch_margin_left = 2
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
-script = ExtResource( 2 )
-sprite_overrides_size = false
 
 [node name="C" type="Panel" parent="."]
 margin_right = 10.0
@@ -48,11 +45,9 @@ region_rect = Rect2( 24, 0, 6, 10 )
 patch_margin_right = 2
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
-script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-sprite_overrides_size = false
 
 [node name="Sprite" type="Sprite" parent="C"]
 texture = ExtResource( 4 )
@@ -71,5 +66,3 @@ region_rect = Rect2( 24, 0, 6, 10 )
 patch_margin_right = 2
 axis_stretch_horizontal = 1
 axis_stretch_vertical = 1
-script = ExtResource( 2 )
-sprite_overrides_size = false

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://combat/move_actions/MS_basic_spellshot.gd" type="Script" id=1]
-[ext_resource path="res://art/bui/3x3 - fronts.png" type="Texture" id=2]
+[ext_resource path="res://art/bui/aimflowers/3x3 - fronts.png" type="Texture" id=2]
 
 [resource]
 resource_local_to_scene = true

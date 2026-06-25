@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://art/bui/3x3 - rim_alt.png" type="Texture" id=1]
+[ext_resource path="res://art/bui/aimflowers/3x3 - rim_alt.png" type="Texture" id=1]
 [ext_resource path="res://combat/battle_ui/AimflowerAimComponent.tscn" type="PackedScene" id=2]
 
 [node name="Aimflower" type="Node2D"]

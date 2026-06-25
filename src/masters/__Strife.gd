@@ -804,7 +804,7 @@ func is_affected_by_sinking(actor: Actor) -> bool:
 # Aimflower 3x3 shorthands!
 
 func aimflower_key_from_file(filepath: String) -> String:
-	var pref: String = "res://art/bui/3x3 - "
+	var pref: String = "res://art/bui/aimflowers/3x3 - "
 	var suff: String = ".png"
 	
 	var key: String = filepath.replace(pref, "")

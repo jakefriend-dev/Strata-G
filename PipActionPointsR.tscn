@@ -2,8 +2,9 @@
 
 [ext_resource path="res://combat/battle_ui/PipSet.gd" type="Script" id=1]
 [ext_resource path="res://src/classes/_Sprite9Patch.gd" type="Script" id=2]
-[ext_resource path="res://art/bui/PipsEdges-APV2.png" type="Texture" id=3]
-[ext_resource path="res://art/bui/PipsFull-AP.png" type="Texture" id=4]
+[ext_resource path="res://art/bui/pips/PipsEdges-APV2.png" type="Texture" id=3]
+[ext_resource path="res://art/bui/pips/PipsFull-AP.png" type="Texture" id=4]
+
 
 [sub_resource type="StyleBoxEmpty" id=1]
 

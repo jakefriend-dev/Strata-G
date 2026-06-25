@@ -10,7 +10,12 @@
 
 [node name="BUI" type="Node2D"]
 position = Vector2( 0, 16 )
+z_index = 1
 script = ExtResource( 2 )
+path_health = NodePath("MC/PC/VB/HP/Health")
+path_shield = NodePath("MC/PC/VB/HP/Shield")
+path_action = NodePath("MC/PC/VB/AP/ActionPoints-R")
+path_aname = NodePath("MC/PC/VB/Name")
 
 [node name="MC" type="MarginContainer" parent="."]
 margin_left = -200.0

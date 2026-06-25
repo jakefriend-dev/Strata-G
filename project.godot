@@ -39,6 +39,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/classes/_MoveAction.gd"
 }, {
+"base": "HBoxContainer",
+"class": "PipSet",
+"language": "GDScript",
+"path": "res://combat/battle_ui/PipSet.gd"
+}, {
 "base": "NinePatchRect",
 "class": "Sprite9Patch",
 "language": "GDScript",
@@ -61,6 +66,7 @@ _global_script_class_icons={
 "Array2D": "",
 "EditorInputPopup": "",
 "MoveAction": "",
+"PipSet": "",
 "Sprite9Patch": "",
 "YPing": "",
 "YTimer": ""
@@ -71,7 +77,7 @@ _global_script_class_icons={
 config/name="Strata-G"
 run/main_scene="res://combat/framing/BattleField.tscn"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
-config/icon="res://art/bui/3x3 - plus.png"
+config/icon="res://art/bui/aimflowers/3x3 - plus.png"
 
 [autoload]
 
