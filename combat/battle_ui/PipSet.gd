@@ -75,36 +75,16 @@ func determine_units():
 	var absent_units: int = max_units - curr_units
 	side_pips_right = floor(float(absent_units)/4.0)
 	
-	side_pips_left = floor(float(curr_units)/4.0) - 1
+	side_pips_left = ceil(float(curr_units)/4.0) - 1
 	if side_pips_left < 0: side_pips_left = 0
 	
 	center_unit_value = curr_units - (side_pips_left*4)
 	
+#	if type == the_types.HEALTH:
+#		print("PIPSET: ",actor.name,"'s ",name," curr_units: ",curr_units,", max_units: ",max_units,", so absent_units: ",absent_units)
 	
-	
-	
-#	if overall_units > 1:
-#		side_pips_left = 0
-#	else:
-#		side_pips_left = 0
-	
-	
-	
-	
-	
-#	center_unit_value = (curr_units - overall_units)
-#	side_pips_left = overall_pips/4
-	
-	if type == the_types.HEALTH:
-		print("PIPSET: ",actor.name,"'s ",name," curr_units: ",curr_units,", max_units: ",max_units,", so absent_units: ",absent_units)
-	
-#	# Get the max beyond that (ignore the possible center 4)
-#	var not_right_units: int = overall_units + 4
-#	var right_units: int = max_units - not_right_units
-#	side_pips_right = right_units/4
-	
-	if type == the_types.HEALTH:
-		print("PIPSET: ",actor.name,"'s ",name," left/center/right pips/units/pips): ",side_pips_left,"/",center_unit_value,"/",side_pips_right)
+#	if type == the_types.HEALTH:
+#		print("PIPSET: ",actor.name,"'s ",name," left/center/right pips/units/pips): ",side_pips_left,"/",center_unit_value,"/",side_pips_right)
 	pass
 
 func update_visuals():

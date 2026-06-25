@@ -95,7 +95,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			elem = flag_upper
 			break
 	
-	print("damage element is: ",elem)
+#	print("damage element is: ",elem)
 	
 	#
 	# Now begin the damage management

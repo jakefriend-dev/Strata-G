@@ -875,12 +875,13 @@ func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_sele
 	# We should only exercise this code WHEN THE MOVE IS FIRST LOADED/CHOSEN, not each preview
 	if is_brand_new_move_selected and move.override_global_variant_on_move_load:
 		if loaded_variant != move.starting_variant:
-			print("BATMAN: Overwriting loaded_variant to ",loaded_variant)
+#			print("BATMAN: Overwriting loaded_variant to ",loaded_variant)
+			pass
 		loaded_variant = move.starting_variant
 	
 	if !move.actualized_variants.has(loaded_variant):
 		loaded_variant = move.starting_variant
-		print("BATMAN: Overwriting loaded_variant to ",loaded_variant)
+#		print("BATMAN: Overwriting loaded_variant to ",loaded_variant)
 	pass
 
 func attempt_to_change_player_variant(tilt: Vector2, treat_as_exact_override: bool = false):
