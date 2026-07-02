@@ -653,9 +653,9 @@ centered = false
 hframes = 5
 
 [node name="Bot" type="HBoxContainer" parent="MC/PC/VB"]
-margin_left = 9.0
+margin_left = 1.0
 margin_top = 30.0
-margin_right = 51.0
+margin_right = 59.0
 margin_bottom = 43.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -733,7 +733,7 @@ __meta__ = {
 
 [node name="Status" type="HBoxContainer" parent="MC/PC/VB/Bot"]
 margin_left = 34.0
-margin_right = 42.0
+margin_right = 58.0
 margin_bottom = 13.0
 
 [node name="Icon" type="Panel" parent="MC/PC/VB/Bot/Status"]
@@ -749,7 +749,38 @@ custom_styles/panel = SubResource( 4 )
 texture = ExtResource( 9 )
 centered = false
 hframes = 3
+
+[node name="Icon2" type="Panel" parent="MC/PC/VB/Bot/Status"]
+margin_left = 8.0
+margin_top = 2.0
+margin_right = 16.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 8, 8 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="MC/PC/VB/Bot/Status/Icon2"]
+texture = ExtResource( 9 )
+centered = false
+hframes = 3
 frame = 1
+
+[node name="Icon3" type="Panel" parent="MC/PC/VB/Bot/Status"]
+margin_left = 16.0
+margin_top = 2.0
+margin_right = 24.0
+margin_bottom = 10.0
+rect_min_size = Vector2( 8, 8 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="MC/PC/VB/Bot/Status/Icon3"]
+texture = ExtResource( 9 )
+centered = false
+hframes = 3
+frame = 2
 
 [node name="Count" type="Label" parent="MC/PC/VB/Bot/Status"]
 visible = false
