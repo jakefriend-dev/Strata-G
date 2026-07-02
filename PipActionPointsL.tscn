@@ -2,7 +2,7 @@
 
 [ext_resource path="res://combat/battle_ui/PipSet.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/pips/_archive/PipsEdges-APV2.png" type="Texture" id=3]
-[ext_resource path="res://art/bui/pips/PipsFull-AP.png" type="Texture" id=4]
+[ext_resource path="res://art/bui/pips/10x action pip.png" type="Texture" id=4]
 
 
 [sub_resource type="StyleBoxEmpty" id=1]

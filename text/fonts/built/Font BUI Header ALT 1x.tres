@@ -3,4 +3,5 @@
 [ext_resource path="res://text/fonts/raw/assigned/Seraphimb1.ttf" type="DynamicFontData" id=1]
 
 [resource]
+extra_spacing_top = -2
 font_data = ExtResource( 1 )

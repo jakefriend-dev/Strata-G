@@ -107,4 +107,4 @@ __meta__ = {
 }
 
 [node name="BUI" parent="." instance=ExtResource( 4 )]
-position = Vector2( 310, 209 )
+position = Vector2( 265, 206 )
