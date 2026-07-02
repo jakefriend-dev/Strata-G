@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Pip BonusShield UI.png-17a0e3805ab634868df0c979a30335d9.stex"
+path="res://.import/Pip Health UI.png-4fbb6a1fa73822d8e7e781b696348683.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/bui/_archive/Pip BonusShield UI.png"
-dest_files=[ "res://.import/Pip BonusShield UI.png-17a0e3805ab634868df0c979a30335d9.stex" ]
+source_file="res://art/bui/pips/_archive/Pip Health UI.png"
+dest_files=[ "res://.import/Pip Health UI.png-4fbb6a1fa73822d8e7e781b696348683.stex" ]
 
 [params]
 

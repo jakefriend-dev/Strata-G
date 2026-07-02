@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/PipsEdges-Shield.png-90bf5203353c5b5989c8b14f8f11d4d9.stex"
+path="res://.import/PipsEdges-BShield.png-369ee4a366832d80d31fe02f94d25f20.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/bui/pips/PipsEdges-Shield.png"
-dest_files=[ "res://.import/PipsEdges-Shield.png-90bf5203353c5b5989c8b14f8f11d4d9.stex" ]
+source_file="res://art/bui/pips/_archive/PipsEdges-BShield.png"
+dest_files=[ "res://.import/PipsEdges-BShield.png-369ee4a366832d80d31fe02f94d25f20.stex" ]
 
 [params]
 

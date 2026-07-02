@@ -1,6 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://art/bui/_archive/Pip AP UI.png" type="Texture" id=1]
+[ext_resource path="res://art/bui/pips/_archive/Pip AP UI.png" type="Texture" id=1]
+
 
 
 [sub_resource type="StyleBoxEmpty" id=1]

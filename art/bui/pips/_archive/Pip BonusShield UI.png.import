@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/PipsEdges-HealthV2.png-20ac9b4fb95d9c8e3308b51f09bf467d.stex"
+path="res://.import/Pip BonusShield UI.png-5e9ef5ca6ad8c1cc9c1c61afa79e5b73.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/bui/pips/PipsEdges-HealthV2.png"
-dest_files=[ "res://.import/PipsEdges-HealthV2.png-20ac9b4fb95d9c8e3308b51f09bf467d.stex" ]
+source_file="res://art/bui/pips/_archive/Pip BonusShield UI.png"
+dest_files=[ "res://.import/Pip BonusShield UI.png-5e9ef5ca6ad8c1cc9c1c61afa79e5b73.stex" ]
 
 [params]
 
