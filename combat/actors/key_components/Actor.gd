@@ -30,8 +30,9 @@ const global_moves: Array = ["walk", "be_external_motioned"]
 
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
-export var max_health: int = 4
-var health: int = 4
+export var max_health: int = 4 # Pre-factoring
+var health: int = 4 # Pre-factoring
+var base_health_pips: int = 4 # Updated ONCE by max health and that's it!
 
 export var max_shield: int = 0
 var shield: int = 0
@@ -225,6 +226,7 @@ func _ready():
 
 func perform_initial_data_setup():
 	
+	base_health_pips = max_health
 	max_health *= batman.BASE_HP_FACTOR
 	health = max_health
 	
@@ -657,10 +659,11 @@ func update_bui():
 	if !has_node("BUI"):
 		bui = loader.res_bui.instance()
 		bui.set("actor", self)
+		bui.set("position", Vector2(0, 16))
 		add_child(bui)
 		bui.set("owner", self)
 	
-	bui.update_all()
+	bui.refresh()
 	pass
 
 func update_outline(): # Should be called every time targeting changes

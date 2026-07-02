@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://art/bui/pips/6x health pip.png" type="Texture" id=1]
+[ext_resource path="res://combat/battle_ui/components/PipPanel.gd" type="Script" id=2]
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[node name="Panel" type="Panel"]
+margin_right = 6.0
+margin_bottom = 6.0
+rect_min_size = Vector2( 6, 6 )
+custom_styles/panel = SubResource( 3 )
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+centered = false
+hframes = 5
+frame = 4
