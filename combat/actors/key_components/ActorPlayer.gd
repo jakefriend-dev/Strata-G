@@ -156,7 +156,7 @@ func attempt_player_char_action():
 	# Now execute!
 	batman.append_action(self, move.resource_name)
 	
-	submit_player_action(move.action_type == move.restchecks.REST)
+	submit_player_action(move.motion_type == move.motionchecks.REST)
 	pass
 
 func submit_player_action(is_rest: bool):

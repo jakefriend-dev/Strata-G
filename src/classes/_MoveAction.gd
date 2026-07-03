@@ -13,8 +13,17 @@ export (String, MULTILINE) var option_desc: String
 
 export (int, 0, 8) var cost: int = 1
 
-enum restchecks {REST, MOVEMENT}
-export (restchecks) var action_type: int = restchecks.REST
+#	NOT_MOVING,
+#	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
+#	BY_JUMP,
+#	BY_WARP,
+#	BY_SPECIAL_TRAVEL, # A cartwheel might be immune to slipping, for instance
+#	MOVED_EXTERNALLY, # Similar to BY_TRAVEL but helps separate external forces from ourselves
+#		# If someone else warps our position, we'll just use BY_WARP rather than make another WARPED_EXTERNALLY
+#	DNU
+
+enum motionchecks {REST, TRAVEL, JUMP, WARP}
+export (motionchecks) var motion_type: int = motionchecks.REST
 
 export (int, 0, 8) var on_use_cooldown: int = 0
 export (int, 0, 8) var initial_cooldown: int = 0

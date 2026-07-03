@@ -54,25 +54,27 @@ __meta__ = {
 }
 
 [node name="TopPlate" type="HBoxContainer" parent="MC/PC/VB"]
-margin_left = 12.0
-margin_right = 46.0
+margin_left = 5.0
+margin_right = 53.0
 margin_bottom = 12.0
+rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
 [node name="Name" type="Label" parent="MC/PC/VB/TopPlate"]
-margin_right = 34.0
+margin_right = 48.0
 margin_bottom = 12.0
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 7 )
 text = "Beast"
+align = 1
 
 [node name="MidPlate" type="HBoxContainer" parent="MC/PC/VB"]
-margin_left = 26.0
+margin_left = 29.0
 margin_top = 12.0
-margin_right = 32.0
+margin_right = 29.0
 margin_bottom = 12.0
 size_flags_horizontal = 4
 
@@ -113,13 +115,11 @@ rect_min_size = Vector2( 4, 0 )
 custom_styles/panel = SubResource( 5 )
 
 [node name="6xSize" type="VBoxContainer" parent="MC/PC/VB/MidPlate"]
-margin_right = 6.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = -1
 
 [node name="R1" type="HBoxContainer" parent="MC/PC/VB/MidPlate/6xSize"]
-margin_right = 6.0
 custom_constants/separation = 0
 
 [node name="R2" type="HBoxContainer" parent="MC/PC/VB/MidPlate/6xSize"]
@@ -147,8 +147,6 @@ rect_min_size = Vector2( 6, 0 )
 custom_styles/panel = SubResource( 5 )
 
 [node name="4xSize" type="VBoxContainer" parent="MC/PC/VB/MidPlate"]
-margin_left = 6.0
-margin_right = 6.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
