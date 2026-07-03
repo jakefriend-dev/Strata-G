@@ -58,10 +58,14 @@ func connect_pips():
 		res_hp = loader.res_hp_8
 		health = midplate.get_node("8xSize")
 		hp_row_size = 6
-	else:
+	elif actor.base_health_pips <= 27:
 		health = midplate.get_node("6xSize")
 		res_hp = loader.res_hp_6
 		hp_row_size = 9
+	else: # Up to max of 52
+		health = midplate.get_node("4xSize")
+		res_hp = loader.res_hp_4
+		hp_row_size = 13
 	
 	# Generate all needed health pip scene instances, add them to our array, and add them to the scene (under the appropriate row)
 	
@@ -71,7 +75,7 @@ func connect_pips():
 	var row: HBoxContainer = health.get_node(str("R",row_num))
 	for n in actor.base_health_pips:
 		count += 1
-		if count > 27: break # Our max possible, atm
+		if count > 52: break # Our max possible, atm
 		
 		col_num += 1
 		if col_num > hp_row_size:

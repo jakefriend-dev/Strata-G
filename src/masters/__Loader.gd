@@ -5,6 +5,7 @@ var res_battlecell = preload("res://combat/framing/BattleCell.tscn")
 
 # Battle UI
 var res_bui = preload("res://combat/battle_ui/BUI.tscn")
+var res_hp_4  = preload("res://combat/battle_ui/components/Pip_4_Health.tscn")
 var res_hp_6  = preload("res://combat/battle_ui/components/Pip_6_Health.tscn")
 var res_hp_8  = preload("res://combat/battle_ui/components/Pip_8_Health.tscn")
 var res_hp_10 = preload("res://combat/battle_ui/components/Pip_10_Health.tscn")

@@ -70,9 +70,9 @@ custom_fonts/font = ExtResource( 7 )
 text = "Beast"
 
 [node name="MidPlate" type="HBoxContainer" parent="MC/PC/VB"]
-margin_left = 29.0
+margin_left = 26.0
 margin_top = 12.0
-margin_right = 29.0
+margin_right = 32.0
 margin_bottom = 12.0
 size_flags_horizontal = 4
 
@@ -113,16 +113,20 @@ rect_min_size = Vector2( 4, 0 )
 custom_styles/panel = SubResource( 5 )
 
 [node name="6xSize" type="VBoxContainer" parent="MC/PC/VB/MidPlate"]
+margin_right = 6.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = -1
 
 [node name="R1" type="HBoxContainer" parent="MC/PC/VB/MidPlate/6xSize"]
+margin_right = 6.0
 custom_constants/separation = 0
 
 [node name="R2" type="HBoxContainer" parent="MC/PC/VB/MidPlate/6xSize"]
 visible = false
+margin_top = -1.0
 margin_right = 6.0
+margin_bottom = -1.0
 custom_constants/separation = 0
 
 [node name="LEFT_SPACER" type="Panel" parent="MC/PC/VB/MidPlate/6xSize/R2"]
@@ -132,12 +136,52 @@ custom_styles/panel = SubResource( 5 )
 
 [node name="R3" type="HBoxContainer" parent="MC/PC/VB/MidPlate/6xSize"]
 visible = false
-margin_top = -1.0
+margin_top = -2.0
 margin_right = 6.0
-margin_bottom = -1.0
+margin_bottom = -2.0
 custom_constants/separation = 0
 
 [node name="LEFT_SPACER_WIDE" type="Panel" parent="MC/PC/VB/MidPlate/6xSize/R3"]
+margin_right = 6.0
+rect_min_size = Vector2( 6, 0 )
+custom_styles/panel = SubResource( 5 )
+
+[node name="4xSize" type="VBoxContainer" parent="MC/PC/VB/MidPlate"]
+margin_left = 6.0
+margin_right = 6.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="R1" type="HBoxContainer" parent="MC/PC/VB/MidPlate/4xSize"]
+custom_constants/separation = 0
+
+[node name="R2" type="HBoxContainer" parent="MC/PC/VB/MidPlate/4xSize"]
+visible = false
+margin_right = 2.0
+custom_constants/separation = 0
+
+[node name="LEFT_SPACER" type="Panel" parent="MC/PC/VB/MidPlate/4xSize/R2"]
+margin_right = 2.0
+rect_min_size = Vector2( 2, 0 )
+custom_styles/panel = SubResource( 5 )
+
+[node name="R3" type="HBoxContainer" parent="MC/PC/VB/MidPlate/4xSize"]
+visible = false
+margin_right = 4.0
+custom_constants/separation = 0
+
+[node name="LEFT_SPACER_WIDE" type="Panel" parent="MC/PC/VB/MidPlate/4xSize/R3"]
+margin_right = 4.0
+rect_min_size = Vector2( 4, 0 )
+custom_styles/panel = SubResource( 5 )
+
+[node name="R4" type="HBoxContainer" parent="MC/PC/VB/MidPlate/4xSize"]
+visible = false
+margin_right = 6.0
+custom_constants/separation = 0
+
+[node name="LEFT_SPACER_WIDEST" type="Panel" parent="MC/PC/VB/MidPlate/4xSize/R4"]
 margin_right = 6.0
 rect_min_size = Vector2( 6, 0 )
 custom_styles/panel = SubResource( 5 )

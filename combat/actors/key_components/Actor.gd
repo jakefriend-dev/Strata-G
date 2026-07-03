@@ -30,7 +30,7 @@ const global_moves: Array = ["walk", "be_external_motioned"]
 
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
-export var max_health: int = 4 # Pre-factoring
+export (int, 1, 52) var max_health: int = 4 # Pre-factoring
 var health: int = 4 # Pre-factoring
 var base_health_pips: int = 4 # Updated ONCE by max health and that's it!
 

@@ -212,6 +212,7 @@ func test_new_combat(test: String):
 		
 		"1": # Manual battle 1
 			if !init_new_combat({
+				"halfboard_size": Vector2(3, 3),
 				"npc_positions": [
 					[4, 3, "Beast"],
 #					[6, 2, "Beast"],
@@ -221,8 +222,8 @@ func test_new_combat(test: String):
 				"tile_exceptions": {
 					Vector2(3, 3): tiletypes.MAGIC,
 					Vector2(2, 1): tiletypes.HOT,
-					Vector2(4, 1): tiletypes.HOT,
-					Vector2(2, 4): tiletypes.POISON,
+					Vector2(4, 3): tiletypes.HOT,
+#					Vector2(2, 4): tiletypes.POISON,
 				},
 			}):
 				print("TURN MGR: test_new_combat(",test,") failed!")

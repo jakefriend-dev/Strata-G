@@ -60,7 +60,9 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="Beast" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 2
-max_health = 12
+second_initiative = 4
+third_initiative = 6
+max_health = 52
 max_shield = 1
 base_action_points = 5
 base_damage = 2
