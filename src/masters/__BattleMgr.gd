@@ -2,9 +2,12 @@ extends Node
 
 var default_halfboard_size: Vector2 = Vector2(3, 5)
 const DETERMINISTIC: bool = false # When true, randomness is not initiated
-const CELL_HEIGHT: float = 48.0
-const CELL_OFFSET: float = 24.0 # Each column southward moves +offset X position
-const CELL_WIDTH: float = 64.0
+const CELL_SIZE: Vector2 = Vector2(64.0, 48.0)
+const CELL_ROW_OFFSET: float = 24.0 # Each column southward moves +offset X position
+const CELL_CENTER_OFFSET: Vector2 = Vector2(44.0, 24.0) # Any top-left cell corner + this = centerPOS
+const BOARD_CENTERPOINT: Vector2 = Vector2(320.0, 236.0)
+const TRAVEL_MARGIN: Vector2 = Vector2(8, 6) # Used for measuring 'when' an actor officially changes coordinates
+var board_topleft: Vector2 # Used as a reference for where cell 1, 1 begins (top-left)
 
 enum { # Combat states
 	C_OOC,			# Out of combat - the turn system is not active, aka between fights
@@ -69,6 +72,7 @@ var grid_actors:   Array2D	# Initially this TEMPORARILY populates string names,
 var grid_claims:   Array2D
 var grid_tiles:    Array2D
 var grid_gpos:     Array2D
+var grid_rects:    Array2D
 var grid_factions: Array2D
 var targeted_tiles: Array = [] # Just a list of Vector2 coords
 
@@ -115,7 +119,7 @@ var battle_details: Dictionary = {}
 var field: Node2D # Owner of all battle stuff
 var drawer: Node2D # Owner of all action preview drawing
 var actors: YSort
-var board: GridContainer # Owner of CELLS not everything
+var board: Node2D # Owner of CELLS not everything
 
 # Tile types refer to the GROUND, not any effect on that coordinate (such as oil).
 enum tiletypes {
@@ -397,11 +401,12 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	# And quickref
 	var w: int = local_board_size.x
 	var h: int = local_board_size.y
+	print("local_board_size ",local_board_size)
 	
 	battle_details["board_size"] = local_board_size
 	
 	# Set up all our Array2Ds
-	for grid in ["grid_tiles", "grid_actors", "grid_gpos", "grid_factions", "grid_claims"]:
+	for grid in ["grid_tiles", "grid_actors", "grid_gpos", "grid_factions", "grid_claims", "grid_rects"]:
 		set(grid, Array2D.new())
 		get(grid).resizev(local_board_size)
 		get(grid).onebased = true
@@ -486,6 +491,8 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	print("TURN MGR: ",npc_count-error_count," NPCs placed, ",error_count," errors")
 #	print("TURN MGR: All actors (by name). Results:",grid_actors)
 	
+	math_out_board_cell_positions(w, h)
+	
 	emit_signal("set_up_board")
 	yield(VisualServer, "frame_post_draw") # Only exists to let Control-based nodes set their actual position data; bypass-able once we're sure values won't change though
 	emit_signal("populate_gpos_data")
@@ -499,6 +506,41 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 #	print("TURN: GPos data is:",grid_gpos)
 	
 	return true
+	pass
+
+func math_out_board_cell_positions(colcount: int, rowcount: int):
+#	var total_cells: int = colcount * rowcount
+	
+	var total_size: Vector2
+	total_size.y = CELL_SIZE.y * rowcount
+	total_size.x = (CELL_SIZE.x * colcount) + (CELL_ROW_OFFSET * rowcount)
+	
+	print("For XY board size ",colcount,":",rowcount,", total_size is ",total_size)
+	
+	board_topleft = BOARD_CENTERPOINT - (total_size/2.0)
+	
+# warning-ignore:unused_variable
+	var index: int = 0 # 1-based
+	var row: int = 0 # 1-based
+	for y in rowcount:
+		row += 1
+		
+		var col: int = 0 # 1-based
+		for x in colcount:
+			index += 1
+			col += 1
+			
+			var coord: Vector2 = Vector2(col, row)
+			var zcoord: Vector2 = Vector2(col-1, row-1) # 0based
+			var cell_topleft: Vector2 = board_topleft
+			cell_topleft += (CELL_SIZE*zcoord)
+			cell_topleft.x += (CELL_ROW_OFFSET * (row-1))
+			var cell_center: Vector2 = cell_topleft + CELL_CENTER_OFFSET
+			
+			grid_gpos.set_cellv(coord, cell_center)
+			
+			var rect: Rect2 = Rect2(cell_topleft + Vector2(12, 0), CELL_SIZE)
+			grid_rects.set_cellv(coord, rect)
 	pass
 
 func roll_initiative():
@@ -1357,6 +1399,24 @@ func get_halfboard_size() -> Vector2:
 	if battle_details.has("halfboard_size"):
 		return battle_details["halfboard_size"]
 	return Vector2.ZERO
+
+func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:
+	var relpos: Vector2 = actorpos - board_topleft
+	var tpos: Vector2
+	tpos.y = relpos.y/CELL_SIZE.y
+	
+	# Every 2 down is 1 across
+	# We know relpos is already on the slanted board, so we need to "de-warp" it
+	var warp: float = relpos.y/2.0
+	var effective_x: float = relpos.x - warp
+	tpos.x = effective_x/CELL_SIZE.x
+	
+	tpos = tpos.floor()
+	tpos += Vector2(1, 1) # Always one-based!
+
+	return tpos
+	pass
+
 
 func must_player_turn_be_over() -> bool: # Asked after any player action is executed
 	# The turn is auto-over IF all PC characters are spent

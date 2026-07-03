@@ -7,7 +7,7 @@ export var path_misc: NodePath
 export var path_debuglog_par: NodePath
 export var path_turndisplay_par: NodePath
 export var path_actionsel_par: NodePath
-var board: GridContainer
+var board: Node2D
 var actors: YSort
 var effects: YSort
 var misc: YSort
@@ -38,9 +38,9 @@ func _ready():
 	update_debuglog()
 	update_turn_display()
 	
-	$BoardOwner/MC.rect_size = Vector2(
-		ProjectSettings.get_setting("display/window/size/width"),
-		ProjectSettings.get_setting("display/window/size/height"))
+#	$BoardOwner/MC.rect_size = Vector2(
+#		ProjectSettings.get_setting("display/window/size/width"),
+#		ProjectSettings.get_setting("display/window/size/height"))
 	
 	batman.connect("action_log_updated", self, "update_debuglog")
 	batman.connect("set_up_board", self, "set_up_board")
@@ -50,54 +50,55 @@ func _ready():
 	pass
 
 func set_up_board():
-	
+
 	# Clear the board
 	while board.get_child_count() > 0:
 		var c = board.get_child(0)
 		board.remove_child(c)
 		c.queue_free()
-	
+
 	var w: int = batman.battle_details["board_size"].x #Always even
 	var h: int = batman.battle_details["board_size"].y
-	board.columns = w
-	
+#	board.columns = w
+
 	for y in h:
 		for x in w:
-			var cell: NinePatchRect = loader.res_battlecell.instance()
-#			cell.set("field", self)
+			var cell: Node2D = loader.res_battlecell.instance()
+			cell.set("field", self)
+			cell.set("position", batman.grid_gpos.get_cell(x+1, y+1))
 			board.add_child(cell)
-			
+
 			var coord: Vector2 = Vector2(x+1, y+1)
 			cell.coord = coord
 			cell.col = coord.x
 			cell.row = coord.y
-			
+
 			cell.set_faction()
-			
+
 			cell.set_depth_tint(h)
-			
+
 			cell.detach_battle_threat()
-			
+
 			var type: int = batman.grid_tiles.get_cellv(coord)
 			cell.set_type(type)
 	pass
 
 func populate_gpos_data():# This happens AFTER yielding a draw frame, so it's reliable
-	
-	board_offset = board.rect_global_position
-	
-	var w: int = batman.battle_details["board_size"][0] # Always even
-	var _h: int = batman.battle_details["board_size"][1]
-	
-	var xcoord: int = 1
-	var ycoord: int = 1
-	for cell in board.get_children():
-		batman.grid_gpos.set_cell(xcoord, ycoord, cell.get_center_gpos())
-		xcoord += 1
-		if xcoord > w:
-			xcoord = 1 # Back to the leftmost column, onebased
-			ycoord += 1
-	
+#
+#	board_offset = board.rect_global_position
+#
+#	var w: int = batman.battle_details["board_size"][0] # Always even
+#	var _h: int = batman.battle_details["board_size"][1]
+#
+#	var xcoord: int = 1
+#	var ycoord: int = 1
+#	for cell in board.get_children():
+#		batman.grid_gpos.set_cell(xcoord, ycoord, cell.get_center_gpos())
+#		xcoord += 1
+#		if xcoord > w:
+#			xcoord = 1 # Back to the leftmost column, onebased
+#			ycoord += 1
+#
 	pass
 
 func populate_actors():
@@ -319,15 +320,15 @@ func push_action_selector_changes(p: String = "", c: String = "", n: String = ""
 		next.visible = (n != "")
 	pass
 
-func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:
-	actorpos -= board_offset # Adjust it to board-local coordinates
-	
-	var tpos: Vector2 = actorpos / CELL_SIZE
-	tpos = tpos.floor()
-	tpos += Vector2(1, 1) # Always one-based!
-	
-	return tpos
-	pass
+#func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:
+##	actorpos -= board_offset # Adjust it to board-local coordinates
+#
+#	var tpos: Vector2 = actorpos / CELL_SIZE
+#	tpos = tpos.floor()
+#	tpos += Vector2(1, 1) # Always one-based!
+#
+#	return tpos
+#	pass
 
 
 

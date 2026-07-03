@@ -1,4 +1,4 @@
-extends Node2D
+extends NinePatchRect
 
 var colset: Dictionary = {
 	batman.factions.PLAYER:  ["5e96dd"],
@@ -34,8 +34,8 @@ func detach_battle_threat():
 	threat.cell = self
 	threat.get_parent().remove_child(threat)
 	batman.field.get_node("FieldObjects/Threats").add_child(threat)
-#	yield(VisualServer, "frame_post_draw")
-	threat.position = global_position + Vector2(-20, -24)
+	yield(VisualServer, "frame_post_draw")
+	threat.position = rect_global_position
 	pass
 
 func update_tiletype(): # Visual only; data is already handled
@@ -115,10 +115,10 @@ func set_depth_tint(in_max_row: int, in_color: Color = Color.white):
 	pass
 
 func set_faction():
-#	var m: ShaderMaterial = $BaseSprite.material
-#	faction = batman.grid_factions.get_cellv(coord)
-#
-#	m.set_shader_param("replacer_col_2", Color(colset[faction][0]))
+	var m: ShaderMaterial = material
+	faction = batman.grid_factions.get_cellv(coord)
+	
+	m.set_shader_param("replacer_col_2", Color(colset[faction][0]))
 	pass
 
 func set_type(to_type: int):
@@ -127,8 +127,8 @@ func set_type(to_type: int):
 	pass
 
 func get_center_gpos() -> Vector2:
-	var gpos: Vector2 = global_position
-#	gpos += (rect_size/2.0)
+	var gpos: Vector2 = rect_global_position
+	gpos += (rect_size/2.0)
 	return gpos
 	pass
 

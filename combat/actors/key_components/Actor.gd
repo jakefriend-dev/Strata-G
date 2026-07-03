@@ -559,28 +559,27 @@ func monitor_position_as_coordinate():
 	# If a position change is registered, we need to check we have gone FAR ENOUGH outside the currently-registered coord to warrant an actual change
 	
 	var margin: float = 0.125
-	var ERROR_MARGIN_X: Vector2 = Vector2(batman.field.CELL_SIZE.x * margin, 0)
-	var ERROR_MARGIN_Y: Vector2 = Vector2(0, batman.field.CELL_SIZE.y * margin)
+	var ERROR_MARGIN_X: Vector2 = Vector2(batman.CELL_SIZE.x * margin, 0)
+	var ERROR_MARGIN_Y: Vector2 = Vector2(0, batman.CELL_SIZE.y * margin)
 		
 	# As long as ANY of the left/right/etc checks are STILL our current coord, return!
 	
-	var ver_coord_left: Vector2 = batman.field.actorpos_to_tilecoord(position - ERROR_MARGIN_X)
+	var ver_coord_left: Vector2 = batman.actorpos_to_tilecoord(position - ERROR_MARGIN_X)
 	if ver_coord_left == coord: return
-	var ver_coord_right: Vector2 = batman.field.actorpos_to_tilecoord(position + ERROR_MARGIN_X)
+	var ver_coord_right: Vector2 = batman.actorpos_to_tilecoord(position + ERROR_MARGIN_X)
 	if ver_coord_right == coord: return
-	var ver_coord_up: Vector2 = batman.field.actorpos_to_tilecoord(position - ERROR_MARGIN_Y)
+	var ver_coord_up: Vector2 = batman.actorpos_to_tilecoord(position - ERROR_MARGIN_Y)
 	if ver_coord_up == coord: return
-	var ver_coord_down: Vector2 = batman.field.actorpos_to_tilecoord(position + ERROR_MARGIN_Y)
+	var ver_coord_down: Vector2 = batman.actorpos_to_tilecoord(position + ERROR_MARGIN_Y)
 	if ver_coord_down == coord: return
 	
 	# At this point, it's fair to say that we aren't "too close" to our last-registered coord, so let's update and see where we're at
 	
-	coord = batman.field.actorpos_to_tilecoord(position)
-	
+	coord = batman.actorpos_to_tilecoord(position)
 	
 	if coord == prev_tick_coord: return
 	
-#	print("new coord for ",name,": ",coord)
+	print("new coord for ",name,": ",coord)
 	
 	strife.TILE_event_exit(self, prev_tick_coord)
 	strife.TILE_event_entry(self, coord)
@@ -599,7 +598,7 @@ func OLD_monitor_position_as_coordinate():
 	last_pos = position
 	var prev_tick_coord: Vector2 = coord
 
-	coord = batman.field.actorpos_to_tilecoord(position)
+	coord = batman.actorpos_to_tilecoord(position)
 
 
 	if coord == prev_tick_coord: return
