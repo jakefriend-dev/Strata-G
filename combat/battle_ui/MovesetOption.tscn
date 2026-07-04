@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://art/bui/Moveset AP costs.png" type="Texture" id=1]
 [ext_resource path="res://text/fonts/built/Font MoveSet ALT Name 1x.tres" type="DynamicFont" id=2]
@@ -9,12 +9,22 @@
 [ext_resource path="res://text/fonts/built/Font BUI Numeration 1x.tres" type="DynamicFont" id=7]
 [ext_resource path="res://art/bui/pips/8x action pip.png" type="Texture" id=8]
 [ext_resource path="res://art/bui/pips/8x error icon.png" type="Texture" id=9]
+[ext_resource path="res://text/TextShader1.gdshader" type="Shader" id=10]
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
 [sub_resource type="StyleBoxEmpty" id=4]
 
 [sub_resource type="CanvasItemMaterial" id=2]
+
+[sub_resource type="ShaderMaterial" id=6]
+resource_local_to_scene = true
+shader = ExtResource( 10 )
+shader_param/active = true
+shader_param/unfilled_checkheight = 7
+shader_param/unfilled_checkwidth = 4
+shader_param/body_col = Color( 1, 1, 1, 1 )
+shader_param/shade_col = Color( 0.501961, 0.729412, 1, 1 )
 
 [node name="Option" type="HBoxContainer"]
 margin_right = 86.0
@@ -184,6 +194,7 @@ __meta__ = {
 }
 
 [node name="MoveName" type="Label" parent="."]
+material = SubResource( 6 )
 margin_left = 20.0
 margin_right = 100.0
 margin_bottom = 14.0
