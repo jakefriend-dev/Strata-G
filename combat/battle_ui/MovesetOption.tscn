@@ -1,7 +1,7 @@
 [gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://art/bui/Moveset AP costs.png" type="Texture" id=1]
-[ext_resource path="res://text/fonts/built/Font MoveSet ALT Name 1x.tres" type="DynamicFont" id=2]
+[ext_resource path="res://text/fonts/raw/assigned/SERAPHIM BITMAP 1.fnt" type="BitmapFont" id=2]
 [ext_resource path="res://combat/battle_ui/MovesetOption.gd" type="Script" id=3]
 [ext_resource path="res://art/bui/pips/8x clock icon.png" type="Texture" id=4]
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=5]
@@ -21,10 +21,15 @@
 resource_local_to_scene = true
 shader = ExtResource( 10 )
 shader_param/active = true
-shader_param/unfilled_checkheight = 7
-shader_param/unfilled_checkwidth = 4
-shader_param/body_col = Color( 1, 1, 1, 1 )
-shader_param/shade_col = Color( 0.501961, 0.729412, 1, 1 )
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
 
 [node name="Option" type="HBoxContainer"]
 margin_right = 86.0
@@ -200,4 +205,4 @@ margin_right = 100.0
 margin_bottom = 14.0
 rect_min_size = Vector2( 80, 0 )
 custom_fonts/font = ExtResource( 2 )
-text = "Magickdart"
+text = "Water Lob"

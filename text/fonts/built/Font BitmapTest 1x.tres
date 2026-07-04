@@ -1,0 +1,9 @@
+[gd_resource type="BitmapFont" load_steps=2 format=2]
+
+[ext_resource path="res://text/fonts/raw/assigned/02ff02bca84b40b19cf246ba4713c379-16.fnt" type="BitmapFont" id=1]
+
+[resource]
+height = 6.0
+ascent = 6.0
+distance_field = true
+fallback = ExtResource( 1 )
