@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=1]
 [ext_resource path="res://combat/battle_ui/BUI.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://combat/battle_ui/components/Pip_8_Action_Count.tscn" type="PackedScene" id=5]
 [ext_resource path="res://combat/battle_ui/components/PipStatus.tscn" type="PackedScene" id=6]
 [ext_resource path="res://text/fonts/built/Font BUI Header ALT 1x.tres" type="DynamicFont" id=7]
+[ext_resource path="res://art/_placeholder/mage tuntaker head x48.png" type="Texture" id=8]
 
 [sub_resource type="StyleBoxEmpty" id=6]
 
@@ -15,7 +16,7 @@
 [node name="BUI" type="Node2D"]
 z_index = 1
 script = ExtResource( 2 )
-path_actorname = NodePath("MC/PC/VB/TopPlate/Name")
+path_actorname = NodePath("MC/PC/VB/TopPlate/NamePlate/Name")
 path_midplate = NodePath("MC/PC/VB/MidPlate")
 path_action = NodePath("MC/PC/VB/BotPlate/AP")
 path_shield = NodePath("MC/PC/VB/BotPlate/Shield")
@@ -53,17 +54,31 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TopPlate" type="HBoxContainer" parent="MC/PC/VB"]
+[node name="TopPlate" type="VBoxContainer" parent="MC/PC/VB"]
+margin_right = 58.0
+margin_bottom = 12.0
+
+[node name="Head48x" type="TextureRect" parent="MC/PC/VB/TopPlate"]
+visible = false
 margin_left = 5.0
 margin_right = 53.0
+margin_bottom = 48.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 8 )
+stretch_mode = 3
+
+[node name="NamePlate" type="HBoxContainer" parent="MC/PC/VB/TopPlate"]
+margin_left = 12.0
+margin_right = 46.0
 margin_bottom = 12.0
 rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="Name" type="Label" parent="MC/PC/VB/TopPlate"]
-margin_right = 48.0
+[node name="Name" type="Label" parent="MC/PC/VB/TopPlate/NamePlate"]
+margin_right = 34.0
 margin_bottom = 12.0
 size_flags_horizontal = 3
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
