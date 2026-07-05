@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://combat/battle_ui/MovesetOption.tscn" type="PackedScene" id=1]
 [ext_resource path="res://text/fonts/built/Font MoveSet Name 1x.tres" type="DynamicFont" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://art/bui/pips/8x action pip.png" type="Texture" id=14]
 [ext_resource path="res://combat/battle_ui/components/Pip_10_Health.tscn" type="PackedScene" id=15]
 [ext_resource path="res://art/general/9patch standard shapes1.png" type="Texture" id=16]
+[ext_resource path="res://text/TextShader1.gdshader" type="Shader" id=17]
 
 [sub_resource type="StyleBoxEmpty" id=9]
 
@@ -35,6 +36,118 @@ Label/constants/shadow_offset_y = 1
 Label/fonts/font = ExtResource( 2 )
 Label/styles/normal = null
 VBoxContainer/constants/separation = 0
+
+[sub_resource type="ShaderMaterial" id=11]
+resource_local_to_scene = true
+shader = ExtResource( 17 )
+shader_param/active = true
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
+
+[sub_resource type="ShaderMaterial" id=12]
+resource_local_to_scene = true
+shader = ExtResource( 17 )
+shader_param/active = true
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
+
+[sub_resource type="ShaderMaterial" id=13]
+resource_local_to_scene = true
+shader = ExtResource( 17 )
+shader_param/active = true
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
+
+[sub_resource type="ShaderMaterial" id=14]
+resource_local_to_scene = true
+shader = ExtResource( 17 )
+shader_param/active = true
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
+
+[sub_resource type="ShaderMaterial" id=15]
+resource_local_to_scene = true
+shader = ExtResource( 17 )
+shader_param/active = true
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
+
+[sub_resource type="ShaderMaterial" id=16]
+resource_local_to_scene = true
+shader = ExtResource( 17 )
+shader_param/active = true
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
+
+[sub_resource type="ShaderMaterial" id=17]
+resource_local_to_scene = true
+shader = ExtResource( 17 )
+shader_param/active = true
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
+
+[sub_resource type="ShaderMaterial" id=18]
+resource_local_to_scene = true
+shader = ExtResource( 17 )
+shader_param/active = true
+shader_param/unfill_height = 7
+shader_param/type = 4
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+shader_param/midcol_blue = Color( 0.54902, 1, 0.870588, 1 )
+shader_param/midcol_brown = Color( 0.8, 0.67451, 0.407843, 1 )
+shader_param/midcol_gray = Color( 0.545098, 0.670588, 0.74902, 1 )
+shader_param/midcol_red = Color( 1, 0.580392, 0.701961, 1 )
+shader_param/midcol_custom = Color( 1, 0.964706, 0.682353, 1 )
 
 [sub_resource type="StyleBoxTexture" id=7]
 content_margin_left = 4.0
@@ -129,6 +242,7 @@ margin_right = 12.0
 text = "1"
 
 [node name="MoveName" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid/Option1" index="4"]
+material = SubResource( 11 )
 margin_left = 16.0
 margin_right = 96.0
 
@@ -143,6 +257,7 @@ frame = 2
 custom_colors/font_color = Color( 0.482353, 0.258824, 0.301961, 1 )
 
 [node name="MoveName" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid/Option2" index="4"]
+material = SubResource( 12 )
 margin_left = 16.0
 margin_right = 96.0
 text = "Heat Wave"
@@ -164,6 +279,7 @@ margin_right = 16.0
 text = "2"
 
 [node name="MoveName" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid/Option3" index="4"]
+material = SubResource( 13 )
 margin_left = 16.0
 margin_right = 96.0
 text = "Wind Step"
@@ -183,9 +299,9 @@ margin_left = 0.0
 margin_right = 16.0
 
 [node name="MoveName" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid/Option4" index="4"]
+material = SubResource( 14 )
 margin_left = 16.0
 margin_right = 96.0
-text = "Water Lob"
 
 [node name="Option5" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid" instance=ExtResource( 1 )]
 margin_top = 32.0
@@ -196,6 +312,7 @@ margin_bottom = 46.0
 text = "2"
 
 [node name="MoveName" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid/Option5" index="4"]
+material = SubResource( 15 )
 margin_left = 16.0
 margin_right = 96.0
 text = "Vine Yank"
@@ -214,6 +331,7 @@ custom_colors/font_color = Color( 0.482353, 0.258824, 0.301961, 1 )
 text = "3"
 
 [node name="MoveName" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid/Option6" index="4"]
+material = SubResource( 16 )
 margin_left = 16.0
 margin_right = 96.0
 text = "Thunderbolt"
@@ -235,6 +353,7 @@ margin_right = 16.0
 text = "2"
 
 [node name="MoveName" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid/Option7" index="4"]
+material = SubResource( 17 )
 margin_left = 16.0
 text = "Poison Spray"
 
@@ -269,6 +388,7 @@ margin_right = 13.0
 text = "t"
 
 [node name="MoveName" parent="MoveSet/PanelContainer/HB/VB/UpperHB/VB/MoveGrid/Option8" index="4"]
+material = SubResource( 18 )
 margin_left = 16.0
 margin_right = 108.0
 text = "ZorpyZapZorp"

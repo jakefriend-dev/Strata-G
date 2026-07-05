@@ -68,35 +68,35 @@ var is_facing_left: bool = true # Default true for enemies; false for party
 var my_facing: Vector2 = Vector2.ZERO # either LEFT or RIGHT
 var their_facing: Vector2 = Vector2.ZERO # either RIGHT or LEFT
 
-# A list of effects for tracking and live usage
-var ongoing_turn_effects: Dictionary = {
-	# All ongoing effects are in the format: [STRING key, INT ticks remaining]
+# A list of statuses for tracking and live usage
+var ongoing_statuses: Dictionary = {
+	# All ongoing statuses are in the format: [STRING key, INT ticks remaining]
 	# Any string inc custom stuff can be used; if it does nothing it'll just be ignored
-	# If an effect already exists when a new one is added, it'll set to the highest of either ticks
+	# If a statuses already exists when a new one is added, it'll set to the highest of either ticks
 	
 	# A call is made each START and END of turn
 	# If you want 'only for the rest of this turn,' mark 1 tick
 	# If you want 'until the start of next turn' like a superguard, mark 2 ticks
 	# If you want 'the rest of this turn until the end of the next' like rage, mark 3 ticks
 	
-	# Generally for SELF-EFFECTS you want a formula of ((X-1) + Y), where:
-		# X is the total number of rounds you want the effect to last (including the current one)
+	# Generally for SELF-STATUSES you want a formula of ((X-1) + Y), where:
+		# X is the total number of rounds you want the status to last (including the current one)
 		# Y is a int(bool) where 1 if it ends at the end of your turn
 }
-# Concluded effects are logged by the ROUND as a key, and an array of the effects as a value
-var concluded_effects: Dictionary = {
+# Concluded statuses are logged by the ROUND as a key, and an array of the statuses as a value
+var concluded_statuses: Dictionary = {
 	# Example:
 	# 3: ["poison", "power_surge"],
 	# 5: ["enrage"],
 }
 
-var template_action_preview: Dictionary = {
-	"damaged":    [], # RED! Any cells where damage will occur
-	"occupied":   [], # YELLOW! Any cells where occupation will change - this could be where you yank someone else to, or who you swap spots with, or a space for stepsword
-	"buffed":     [], # LIGHT GREEN? Any cells that will receive an 'effect', good or bad
-	"unaffected": [], # DARK TURQUOISE? For line-of-travel, such as all the tiles between you and the enemy for "shoot first enemy in sight and explode in a 3x3 around them"
-	"cancelled":  [], # GREY? For things that don't work, like trying to reposition an actor to a cell it can't exist in
-}
+#var template_action_preview: Dictionary = {
+#	"damaged":    [], # RED! Any cells where damage will occur
+#	"occupied":   [], # YELLOW! Any cells where occupation will change - this could be where you yank someone else to, or who you swap spots with, or a space for stepsword
+#	"buffed":     [], # LIGHT GREEN? Any cells that will receive an 'status, good or bad
+#	"unaffected": [], # DARK TURQUOISE? For line-of-travel, such as all the tiles between you and the enemy for "shoot first enemy in sight and explode in a 3x3 around them"
+#	"cancelled":  [], # GREY? For things that don't work, like trying to reposition an actor to a cell it can't exist in
+#}
 
 enum weightclasses {
 	HOVER,  # Flying; not affects by the ground beneath it at ALL. Allowed to enter pit tiles!
@@ -315,7 +315,7 @@ func add_bonus_actions(value: int):
 
 func refresh_action_points():
 	action_points = base_action_points
-	if !check_effect("keeps_bonus_actions"):
+	if !check_status("keeps_bonus_actions"):
 		bonus_actions = 0
 	
 	update_bui()
@@ -331,18 +331,18 @@ func master_pre_turn_setup(who: Actor):
 #	print("Pre-turn refresh for ",self)
 	actions_completed_this_turn = 0
 #	shield = max_shield # We no longer refill shield automatically!
-	if !check_effect("keeps_bonus_shield"):
+	if !check_status("keeps_bonus_shield"):
 		bonus_shield = 0
 	ghost_mode(false)
 #	action_points = base_action_points # This is handled during turn teardown
-	tick_down_ongoing_effects(true)
+	tick_down_ongoing_statuses(true)
 	
 	update_bui()
 	pass
 
 func master_post_turn_teardown(): # Teardown happens EVEN IF turn is interrupted! Baseline needs!
 	turns_completed_total += 1
-	tick_down_ongoing_effects(false)
+	tick_down_ongoing_statuses(false)
 	refresh_action_points()
 	pass
 
@@ -350,79 +350,83 @@ func master_post_turn_teardown(): # Teardown happens EVEN IF turn is interrupted
 func end_action(): batman.end_action()
 func end_turn():   batman.end_turn()
 
-func start_effect(effect_name: String, turns_to_last: int = 1, until_end_of_turn: bool = true):
+# ---
+
+func start_status(status_name: String, turns_to_last: int = 1, until_end_of_turn: bool = true):
 	var ticks: int = (turns_to_last * 2)
 	if until_end_of_turn:
 		ticks -= 1
 	
-	# When until_end_of_turn is false, it'll treat it as ending at the start of a turn - in almost all cases we want to end effects at the end of a turn, but a reaction guard ability might be different
+	# When until_end_of_turn is false, it'll treat it as ending at the start of a turn - in almost all cases we want to end statuses at the end of a turn, but a reaction guard ability might be different
 	
 	if batman.curr_actor != self:
-		# When it's my turn, a "1-turn" effect typically means "for the rest of the turn"
+		# When it's my turn, a "1-turn" status typically means "for the rest of the turn"
 		
-		# When it's NOT my turn, ie. someone else is applying this effect to us, a "1-turn" effect typically means "until the end of your upcoming turn," so we need to add a tick to survive the start-of-turn tickover. This is basically always true, otherwise effects on others would only last UNTIL their turn starts and generally do nothing to them
+		# When it's NOT my turn, ie. someone else is applying this status to us, a "1-turn" status typically means "until the end of your upcoming turn," so we need to add a tick to survive the start-of-turn tickover. This is basically always true, otherwise statuses on others would only last UNTIL their turn starts and generally do nothing to them
 		
 		# So let's add a tick!
 		ticks += 1
 		pass
 	
-	# For existing effects, re-up the tick count to the higher of the new-vs-current
-	if ongoing_turn_effects.has(effect_name):
-		var existing_ticks: int = ongoing_turn_effects[effect_name]
+	# For existing statuses, re-up the tick count to the higher of the new-vs-current
+	if ongoing_statuses.has(status_name):
+		var existing_ticks: int = ongoing_statuses[status_name]
 		if ticks > existing_ticks:
-			ongoing_turn_effects[effect_name] = ticks
-			batman.update_action_log(str(name," RE-effected with [",effect_name,"], topped up to ",ticks," ticks!"))
+			ongoing_statuses[status_name] = ticks
+			batman.update_action_log(str(name," RE-statused with [",status_name,"], topped up to ",ticks," ticks!"))
 		return
 	
-	# Otherwise, it's a new effect!
-	ongoing_turn_effects[effect_name] = ticks
-	batman.update_action_log(str(name," effected with [",effect_name,"] for ",ticks," ticks!"))
+	# Otherwise, it's a new status!
+	ongoing_statuses[status_name] = ticks
+	batman.update_action_log(str(name," statused with [",status_name,"] for ",ticks," ticks!"))
 	pass
 
-func clear_effect(effect_name: String):
-	if !ongoing_turn_effects.has(effect_name): return
+func clear_status(status_name: String):
+	if !ongoing_statuses.has(status_name): return
 	
-	ongoing_turn_effects.erase(effect_name)
-	log_ended_effect(effect_name, true)
+	ongoing_statuses.erase(status_name)
+	log_ended_status(status_name, true)
 	pass
 
-func check_effect(effect_name: String) -> bool:
-	return ongoing_turn_effects.has(effect_name)
+func check_status(status_name: String) -> bool:
+	return ongoing_statuses.has(status_name)
 	pass
 
-func tick_down_ongoing_effects(_is_turn_start: bool):
+func tick_down_ongoing_statuses(_is_turn_start: bool):
 	if batman.curr_actor != self: return # We only tick down our OWN!
 	
 	var new_dict: Dictionary = {}
 	
-	for key in ongoing_turn_effects.keys():
-		var ticks: int = ongoing_turn_effects[key]
+	for key in ongoing_statuses.keys():
+		var ticks: int = ongoing_statuses[key]
 		ticks -= 1
 		
 		# If we've run out, log it in our records
 		if ticks <= 0:
-			log_ended_effect(key, false)
+			log_ended_status(key, false)
 			continue
 		
 		# Otherwise, pass it to the new temp dict to carry forward
 		new_dict[key] = ticks
 		pass
 	
-	ongoing_turn_effects.clear()
-	ongoing_turn_effects = new_dict
+	ongoing_statuses.clear()
+	ongoing_statuses = new_dict
 	pass
 
-func log_ended_effect(effect_name: String, manual_end: bool):
+func log_ended_status(status_name: String, manual_end: bool):
 	if manual_end:
-		batman.update_action_log(str(name," ended its effect [",effect_name,"]"))
+		batman.update_action_log(str(name," ended its status [",status_name,"]"))
 	else:
-		batman.update_action_log(str(name,"'s effect [",effect_name,"] timed out"))
+		batman.update_action_log(str(name,"'s status [",status_name,"] timed out"))
 	
-	if !concluded_effects.has(batman.round_count):
-		concluded_effects[batman.round_count] = []
-	if !concluded_effects[batman.round_count].has(effect_name):
-		concluded_effects[batman.round_count].append(effect_name)
+	if !concluded_statuses.has(batman.round_count):
+		concluded_statuses[batman.round_count] = []
+	if !concluded_statuses[batman.round_count].has(status_name):
+		concluded_statuses[batman.round_count].append(status_name)
 	pass
+
+# ---
 
 func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99)) -> bool:
 	# Ignore status quo
@@ -626,7 +630,7 @@ func adjust_target_highlights():
 		if batman.drawer.MPD != null:
 			if !batman.drawer.MPD.unique_cells.has(coord):
 				to_col = Color.gray
-				to_col.a = 0.75
+#				to_col.a = 0.75
 	
 	if modulate != to_col:
 		modulate = to_col

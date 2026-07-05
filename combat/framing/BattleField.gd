@@ -31,7 +31,7 @@ func _ready():
 	actionsel_par = get_node(path_actionsel_par)
 	
 	batman.field = self
-	batman.drawer = $Drawer
+	batman.drawer = $FieldFore/Drawer
 	batman.actors = actors
 	batman.board = board
 	

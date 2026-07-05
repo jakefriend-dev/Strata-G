@@ -53,7 +53,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 			batman.append_action(self, "charge_back")
 			return
 		# Otherwise, if we can SEE the target but can't attack it - get angry!
-		elif !check_effect("enrage") and can_afford(COST_ENRAGE):
+		elif !check_status("enrage") and can_afford(COST_ENRAGE):
 			spend(COST_ENRAGE)
 			batman.append_action(self, "enrage")
 			return
@@ -69,7 +69,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# From here on, we know we CAN'T see the target. So we need to move!
 	
 	# If we're enraged, charge/bite regardless! (If we can afford it)
-	if check_effect("enrage"):
+	if check_status("enrage"):
 		if can_charge_left:
 			if can_afford(COST_CHARGE):
 				print("Doggo charging REGARDLESS OF LACK OF LOS because it enraged last turn! Ostensibly we have at least 1 tile we're allowed to charge into")
@@ -177,11 +177,11 @@ func ACT_bite():
 #	print("Biting!")
 	
 	var damage: int = base_damage
-	if check_effect("enrage"):
+	if check_status("enrage"):
 		damage += batman.BASE_HP_FACTOR
 	strife.damage_actor_at_coord(self, coord + Vector2.LEFT, damage)
 	
-	clear_effect("enrage") # Whether it's active of not
+	clear_status("enrage") # Whether it's active of not
 	strife.end_effect_on_actor(self, "buff", true)
 	if !batman.is_my_action(self): return
 	
@@ -189,7 +189,7 @@ func ACT_bite():
 	pass
 
 func ACT_enrage():
-	start_effect("enrage", 2)
+	start_status("enrage", 2)
 	strife.quick_effect(self, "quick_good")
 	strife.quick_effect(self, "buff")
 #	add_bonus_actions(1)

@@ -191,7 +191,7 @@ func post_all_action_prep():
 	if get_bonus_action_next_turn:
 		get_bonus_action_next_turn = false
 		add_bonus_actions(1)
-		start_effect("keeps_bonus_action", 1, false)
+		start_status("keeps_bonus_action", 1, false)
 	pass
 
 # ---

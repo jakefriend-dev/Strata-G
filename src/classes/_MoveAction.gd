@@ -70,8 +70,8 @@ var colors: Dictionary = {
 var sets: Array2D
 
 enum ROWS {  # TOP TO BOTTOM
-	BAD,      # Negative effect, like a debuff OR just plain damage
-	GOOD,     # Positive effect, like a buff
+	BAD,      # Negative outcome, like a debuff OR just plain damage
+	GOOD,     # Positive outcome, like a buff
 	NEUTRAL,  # Repositioning
 	PASS,     # Shooting through an empty tile
 	ERROR,    # When an actor blocks a movement from playing out, eg

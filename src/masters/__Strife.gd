@@ -448,7 +448,7 @@ func heal_actor_at_coord(_attacker: Actor, exact_coord: Vector2, healing: int, _
 #	master_do_damage(attacker, victim, -healing, flags, is_quiet)
 	pass
 
-# VISUAL EFFECTS (not STATUS effects mechanically, just VISUALS ----------------
+# VISUAL EFFECTS ---------------------------------------------------------------
 
 func quick_effect(actor_or_coord, effect: String, variant = null):
 	match effect:
