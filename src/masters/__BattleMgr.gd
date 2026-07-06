@@ -936,7 +936,7 @@ func attempt_to_change_player_variant(tilt: Vector2, treat_as_exact_override: bo
 	var IB_vec: Vector2 = tilt.round()
 	if IB_vec.x == -0: IB_vec.x = 0
 	if IB_vec.y == -0: IB_vec.y = 0
-	print("inbound vec: ",IB_vec)
+#	print("inbound vec: ",IB_vec)
 	
 	var prior_varvec: Vector2 = loaded_variant
 	

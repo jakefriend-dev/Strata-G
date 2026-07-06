@@ -50,13 +50,13 @@ func ACT():
 	var victim: Actor = get_first_actor_by_MPD_type(ROWS.NEUTRAL)
 	
 	# Data setup!
-	var motion: Vector2 = actor.their_facing
-	if variant == 2: motion += Vector2.UP
-	if variant == 3: motion += Vector2.DOWN
+	var motion: Vector2 = batman.loaded_variant
 	
 	var dest_coord: Vector2 = victim.coord + motion
+	print("dest_coord A: ",dest_coord)
 	if !support.is_tile_traversable_exact(victim, dest_coord):
 		dest_coord = victim.coord
+		print("dest_coord B: ",dest_coord)
 	
 	# Visuals!
 	strife.quick_vfx(victim, "spark_burst")
@@ -65,6 +65,7 @@ func ACT():
 	if !batman.is_my_action(actor): return
 	
 	strife.quick_vfx(victim, "dust")
+	print("dest_coord C: ",dest_coord," and victim.coord: ",victim.coord," and motion: ",motion)
 	if dest_coord != victim.coord:
 		victim.ACT_be_external_motioned(motion, 0, actor, false)
 	
