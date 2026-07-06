@@ -102,7 +102,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	#
 	
 	var og_damage: int = damage
-	var og_shield: int = defender.shield
+	var _og_shield: int = defender.shield
 	
 	if !is_quiet:
 		defender.emit_signal("on_phys_combat_any_contact")
@@ -162,7 +162,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	# Let's also not bother with the is_melee tag in the signal; maybe instead we can send out a combat assessment package
 	#
 	
-	var total_shield_left: int = defender.shield
+	var _total_shield_left: int = defender.shield
 	var shielded_damage: int = og_damage - damage
 	var combat_package: Dictionary = {}
 	
@@ -653,7 +653,7 @@ func TILE_entered_ICE(actor: Actor, coord: Vector2):
 		# This replaces any upcoming 'this actor slips' ice-related actionstep. There can only be one ice actionstep per actor happening or about to happen at a time!
 	pass
 
-func TILE_entered_SHRUB(actor: Actor, coord: Vector2):
+func TILE_entered_SHRUB(actor: Actor, _coord: Vector2):
 	if !is_affected_by_shrub(actor): return
 	actor.spend(1)
 	pass
