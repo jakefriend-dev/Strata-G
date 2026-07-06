@@ -43,6 +43,11 @@ var loaded_moveset: Array = []
 var loaded_move: MoveAction = null
 var loaded_m_index: int = 0 # The position we're "at" within the moveset list
 var loaded_variant: Vector2 = Vector2.ZERO
+
+# For move selection
+var moveselcol: int = 0 # 0-based; up to 1
+var moveselrow: int = 0 # 0-based; up to 3
+
 signal action_option_view_changed(move_is_newly_selected_bool)
 signal new_action_preview_data_readied(MPD)
 
@@ -674,6 +679,8 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		else:
 			print("player char ",curr_actor.name," has literally no set moveset!")
 		curr_actor.prep_moveset_on_turn_start()
+	moveselcol = 0
+	moveselrow = 0
 	field.movewindow.load_moves()
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
@@ -881,35 +888,58 @@ func player_input_validation_checks() -> bool:
 	if !action_queue.empty(): return false
 	return true
 
-func cycle_player_move_forward():
+
+func change_selrow(amount: int):
 	if !player_input_validation_checks(): return
+	moveselrow += amount
+	if moveselrow > 3:
+		moveselrow = 0
+	elif moveselrow < 0:
+		moveselrow = 3
 	
-	var last_index: int = loaded_m_index
-	
-	loaded_m_index += 1
-	if loaded_m_index >= loaded_moveset.size():
-		loaded_m_index = 0
-	
-	var movename: String = loaded_moveset[loaded_m_index]
-	loaded_move = curr_actor.moveset[movename]
-	
-	emit_signal("action_option_view_changed", (last_index != loaded_m_index))
+	field.movewindow.refresh_all()
 	pass
 
-func cycle_player_move_backward():
+func change_selcol(amount: int):
 	if !player_input_validation_checks(): return
+	moveselcol += amount
+	if moveselcol > 1:
+		moveselcol = 0
+	elif moveselcol < 0:
+		moveselcol = 1
 	
-	var last_index: int = loaded_m_index
-	
-	loaded_m_index -= 1
-	if loaded_m_index < 0:
-		loaded_m_index = loaded_moveset.size()-1
-	
-	var movename: String = loaded_moveset[loaded_m_index]
-	loaded_move = curr_actor.moveset[movename]
-	
-	emit_signal("action_option_view_changed", (last_index != loaded_m_index))
+	field.movewindow.refresh_all()
 	pass
+
+#func cycle_player_move_forward():
+#	if !player_input_validation_checks(): return
+#
+#	var last_index: int = loaded_m_index
+#
+#	loaded_m_index += 1
+#	if loaded_m_index >= loaded_moveset.size():
+#		loaded_m_index = 0
+#
+#	var movename: String = loaded_moveset[loaded_m_index]
+#	loaded_move = curr_actor.moveset[movename]
+#
+#	emit_signal("action_option_view_changed", (last_index != loaded_m_index))
+#	pass
+#
+#func cycle_player_move_backward():
+#	if !player_input_validation_checks(): return
+#
+#	var last_index: int = loaded_m_index
+#
+#	loaded_m_index -= 1
+#	if loaded_m_index < 0:
+#		loaded_m_index = loaded_moveset.size()-1
+#
+#	var movename: String = loaded_moveset[loaded_m_index]
+#	loaded_move = curr_actor.moveset[movename]
+#
+#	emit_signal("action_option_view_changed", (last_index != loaded_m_index))
+#	pass
 
 func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_selected: bool):
 	if move.actualized_variants.empty():

@@ -133,8 +133,14 @@ func visual_refresh():
 			$AllIcons.visible = false
 		if $MoveName.text != "":
 			$MoveName.text = ""
-		if $Highlight.visible:
-			$Highlight.visible = false
+		
+		if not batman.curr_actor is ActorPlayer:
+			if $Highlight.visible:
+				$Highlight.visible = false
+		elif $Highlight.visible != currently_highlighted:
+			$Highlight.visible = currently_highlighted
+		if $Highlight/Shape.modulate != Color("000000"):
+			$Highlight/Shape.modulate = Color("000000")
 		return
 	
 	# Generic visibility setups

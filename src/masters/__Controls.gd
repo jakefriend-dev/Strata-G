@@ -184,19 +184,19 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 	# Move selection (2D grid)
 	if Input.is_action_just_pressed("player_move_up"):
 		multi_input_lock = true
-		batman.field.movewindow.change_selrow(-1)
+		batman.change_selrow(-1)
 		return
 	if Input.is_action_just_pressed("player_move_down"):
 		multi_input_lock = true
-		batman.field.movewindow.change_selrow(1)
+		batman.change_selrow(1)
 		return
 	if Input.is_action_just_pressed("player_move_left"):
 		multi_input_lock = true
-		batman.field.movewindow.change_selcol(-1)
+		batman.change_selcol(-1)
 		return
 	if Input.is_action_just_pressed("player_move_right"):
 		multi_input_lock = true
-		batman.field.movewindow.change_selcol(1)
+		batman.change_selcol(1)
 		return
 	
 	# Use the currently selected attack (and option)
