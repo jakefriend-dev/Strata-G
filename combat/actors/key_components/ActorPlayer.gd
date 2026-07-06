@@ -2,6 +2,7 @@ extends Actor
 class_name ActorPlayer
 
 var moveset: Dictionary = {} # Post-validation
+var move_layout: Array2D
 export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null, null]
 
 const pstring: String = "PREVIEW"
@@ -17,6 +18,11 @@ func _ready():
 	pass
 
 func load_moves():
+	var row: int = 0
+	var col: int = 0
+	move_layout = Array2D.new()
+	move_layout.resize(2, 4)
+	
 	for move in loaded_moves: if move != null: if move is MoveAction:
 		# Basic setup first!
 		if move.resource_name == "":
@@ -25,9 +31,9 @@ func load_moves():
 		move.actor = self
 		move.initialize_MPD()
 		
+		# Validations!
 		if !move.has_method(pstring):
 			print(name," can't find PREVIEW() method for move ",move,"! Soft error")
-#			continue
 		if !move.has_method(astring):
 			print(name," can't load move ",move,", no ACT() method!")
 			continue
@@ -38,10 +44,21 @@ func load_moves():
 			print(name," can't load move ",move,", no option_image!")
 			continue
 		
+		# Pass!
 		moveset[move.resource_name] = move
 		move.plausible_variants = strife.aimflower_vectors_from_file(move.option_image.resource_path)
+		
+		# Pass to the layout 2x4 and update the position data!
+#		print(name," col:row ",col,":",row)
+		move_layout.set_cell(col, row, move)
+		
+		col += 1
+		if col > 1:
+			col = 0
+			row += 1
 		pass
 	
+#	print(name," move_layout: ",move_layout)
 #	print("ALL loaded moves in moveset are: ",moveset)
 	pass
 
