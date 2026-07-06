@@ -11,9 +11,15 @@ func _ready():
 
 func refresh():
 	
-	var vis_buff: bool = bool(false)
-	var vis_debuff: bool = bool(false)
-	var vis_misc: bool = bool(false)
+	var types_in_play: Array = actor.get_status_icons_in_play()
+	
+	var overall_vis: bool = !types_in_play.empty()
+	var vis_buff:   bool = types_in_play.has("good")
+	var vis_debuff: bool = types_in_play.has("bad")
+	var vis_misc:   bool = types_in_play.has("misc")
+	
+	if visible != overall_vis:
+		visible = overall_vis
 	
 	if $Buff.visible != vis_buff:
 		$Buff.visible = vis_buff

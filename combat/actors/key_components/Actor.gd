@@ -70,13 +70,13 @@ var their_facing: Vector2 = Vector2.ZERO # either RIGHT or LEFT
 
 # A list of statuses for tracking and live usage
 var ongoing_statuses: Dictionary = {
-	"example_status": {
-		"tick_style": "start", # vs "end"
-		"ticks_remaining": 2, # auto-ends UPON reaching 0
-		"display_name": "Example Status Name",
-		"key_name": "example_status", # Convenient redundancy; harmless
-		"icon_type": "good", # vs "bad" or "misc"
-	},
+#	"example_status": {
+#		"tick_style": "start", # vs "end"
+#		"ticks_remaining": 2, # auto-ends UPON reaching 0
+#		"display_name": "Example Status Name",
+#		"key_name": "example_status", # Convenient redundancy; harmless
+#		"icon_type": "good", # vs "bad" or "misc"
+#	},
 }
 # Concluded statuses are logged by the ROUND as a key, and an array of the statuses as a value
 # Not sure we'll ever NEED these, but no harm storing it in the odd case like "don't use this status again if you used it last turn"
@@ -368,6 +368,7 @@ func start_status(status_key: String, status_display_name: String, icon_type: St
 		return
 	
 	# Otherwise, it's a new status!
+	ongoing_statuses[status_key] = {}
 	ongoing_statuses[status_key]["key_name"] = status_key
 	ongoing_statuses[status_key]["display_name"] = status_display_name
 	ongoing_statuses[status_key]["icon_type"] = icon_type
@@ -378,6 +379,7 @@ func start_status(status_key: String, status_display_name: String, icon_type: St
 		ongoing_statuses[status_key]["tick_style"] = "start"
 	
 	batman.update_action_log(str(name," statused with [",status_key,"] for ",ticks," ticks!"))
+	update_bui()
 	pass
 
 func clear_status(status_key: String):
@@ -385,6 +387,7 @@ func clear_status(status_key: String):
 	
 	ongoing_statuses.erase(status_key)
 	log_ended_status(status_key, true)
+	update_bui()
 	pass
 
 func check_status(status_key: String) -> bool:
@@ -420,6 +423,7 @@ func tick_down_ongoing_statuses(is_turn_start: bool):
 		if ongoing_statuses.has(key):
 			ongoing_statuses.erase(key)
 			log_ended_status(key, false)
+	update_bui()
 #	ongoing_statuses.clear()
 #	ongoing_statuses = new_dict
 	pass
@@ -435,6 +439,15 @@ func log_ended_status(status_name: String, manual_end: bool):
 	if !concluded_statuses[batman.round_count].has(status_name):
 		concluded_statuses[batman.round_count].append(status_name)
 	pass
+
+func get_status_icons_in_play() -> Array:
+	var results: Array = []
+	
+	for key in ongoing_statuses.keys():
+		if !results.has(ongoing_statuses[key]["icon_type"]):
+			results.append(ongoing_statuses[key]["icon_type"])
+	
+	return results
 
 # ---
 
@@ -574,7 +587,8 @@ func monitor_position_as_coordinate():
 	
 	var margin: float = 0.125
 	var ERROR_MARGIN_X: Vector2 = Vector2(batman.CELL_SIZE.x * margin, 0)
-	var ERROR_MARGIN_Y: Vector2 = Vector2(0, batman.CELL_SIZE.y * margin)
+	var ERROR_MARGIN_YL: Vector2 = Vector2(-24.0 * margin, batman.CELL_SIZE.y * margin)
+	var ERROR_MARGIN_YR: Vector2 = Vector2( 24.0 * margin, batman.CELL_SIZE.y * margin)
 		
 	# As long as ANY of the left/right/etc checks are STILL our current coord, return!
 	
@@ -582,9 +596,9 @@ func monitor_position_as_coordinate():
 	if ver_coord_left == coord: return
 	var ver_coord_right: Vector2 = batman.actorpos_to_tilecoord(position + ERROR_MARGIN_X)
 	if ver_coord_right == coord: return
-	var ver_coord_up: Vector2 = batman.actorpos_to_tilecoord(position - ERROR_MARGIN_Y)
+	var ver_coord_up: Vector2 = batman.actorpos_to_tilecoord(position - ERROR_MARGIN_YL)
 	if ver_coord_up == coord: return
-	var ver_coord_down: Vector2 = batman.actorpos_to_tilecoord(position + ERROR_MARGIN_Y)
+	var ver_coord_down: Vector2 = batman.actorpos_to_tilecoord(position + ERROR_MARGIN_YR)
 	if ver_coord_down == coord: return
 	
 	# At this point, it's fair to say that we aren't "too close" to our last-registered coord, so let's update and see where we're at
