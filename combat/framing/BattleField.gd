@@ -323,16 +323,6 @@ func push_action_selector_changes(p: String = "", c: String = "", n: String = ""
 		next.visible = (n != "")
 	pass
 
-#func actorpos_to_tilecoord(actorpos: Vector2) -> Vector2:
-##	actorpos -= board_offset # Adjust it to board-local coordinates
-#
-#	var tpos: Vector2 = actorpos / CELL_SIZE
-#	tpos = tpos.floor()
-#	tpos += Vector2(1, 1) # Always one-based!
-#
-#	return tpos
-#	pass
-
 
 
 

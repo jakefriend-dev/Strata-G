@@ -893,7 +893,7 @@ func player_input_validation_checks() -> bool:
 	return true
 
 
-func change_selrow(amount: int):
+func change_movewindow_selrow(amount: int):
 	if !player_input_validation_checks(): return
 	moveselrow += amount
 	if moveselrow > 3:
@@ -910,7 +910,7 @@ func change_selrow(amount: int):
 #		curr_actor.clear_all_move_previews()
 	pass
 
-func change_selcol(amount: int):
+func change_movewindow_selcol(amount: int):
 	if !player_input_validation_checks(): return
 	moveselcol += amount
 	if moveselcol > 1:
@@ -925,36 +925,6 @@ func change_selcol(amount: int):
 #	if loaded_move == null: if curr_actor is ActorPlayer:
 #		curr_actor.clear_all_move_previews()
 	pass
-
-#func cycle_player_move_forward():
-#	if !player_input_validation_checks(): return
-#
-#	var last_index: int = loaded_m_index
-#
-#	loaded_m_index += 1
-#	if loaded_m_index >= loaded_moveset.size():
-#		loaded_m_index = 0
-#
-#	var movename: String = loaded_moveset[loaded_m_index]
-#	loaded_move = curr_actor.moveset[movename]
-#
-#	emit_signal("action_option_view_changed", (last_index != loaded_m_index))
-#	pass
-#
-#func cycle_player_move_backward():
-#	if !player_input_validation_checks(): return
-#
-#	var last_index: int = loaded_m_index
-#
-#	loaded_m_index -= 1
-#	if loaded_m_index < 0:
-#		loaded_m_index = loaded_moveset.size()-1
-#
-#	var movename: String = loaded_moveset[loaded_m_index]
-#	loaded_move = curr_actor.moveset[movename]
-#
-#	emit_signal("action_option_view_changed", (last_index != loaded_m_index))
-#	pass
 
 func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_selected: bool):
 	if move.actualized_variants.empty():

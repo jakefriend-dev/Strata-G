@@ -4,6 +4,7 @@ var move: MoveAction # Linked upon Moveset generation (unless is_not_move)
 var actor: Actor # Also linked, for quickref
 export var nonmove_function: String = "" # If NOT blank and VALIDATED, signals that this MovesetOption is not a 'move' and instead a function, like "check party bag"
 
+var loaded_tt_col: Color = Color("ff94b3") # Default invalid
 var loaded_tooltip: String = ""
 var nonmove_tooltip: String # Loaded externally!
 var loaded_display_name: String = ""
@@ -47,6 +48,8 @@ var state: int = s.TBD
 var valid: bool = false
 var currently_highlighted: bool = false # Controlled externally
 
+var window: Node2D # Our parent; sets itself
+
 # ---
 
 func update_against_new_move():
@@ -66,15 +69,17 @@ func validate():
 	loaded_iconpar = null
 	loaded_value = ""
 	loaded_display_name = ""
+	loaded_tt_col = Color("ff94b3") # Default invalid
 	
 	if nonmove_function != "":
 		var funcname: String = str("CUSTOM_",nonmove_function)
-		if has_method(funcname):
+		if window.has_method(funcname):
 			valid = true
 			state = s.NOT_MOVE
 			loaded_tooltip = nonmove_tooltip
 			loaded_iconpar = $AllIcons/Arrow
 			loaded_display_name = nonmove_display_name
+			loaded_tt_col = Color("fff6ae")
 			return
 	
 	# Regular moves
@@ -112,6 +117,7 @@ func validate():
 		state = s.AVAILABLE
 		loaded_iconpar = $AllIcons/ActionYes
 		loaded_value = str(move.cost)
+		loaded_tt_col = Color("fff6ae")
 		
 		if move.on_use_cooldown > 0:
 			loaded_tooltip = str("Enters ",move.on_use_cooldown,"-turn cooldown after use")
@@ -128,6 +134,7 @@ func validate():
 	pass
 
 func visual_refresh():
+	
 	if !valid:
 		if $AllIcons.visible:
 			$AllIcons.visible = false
@@ -175,10 +182,6 @@ func visual_refresh():
 	pass
 
 # ---
-
-func CUSTOM_check_bag():
-	print("Testing CUSTOM_check_bag()! Wow it worked!!")
-	pass
 
 
 

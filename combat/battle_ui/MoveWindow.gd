@@ -15,6 +15,9 @@ func _ready():
 	movegrid = get_node(path_movegrid)
 	movetooltip = get_node(path_movetooltip)
 	userpanel = get_node(path_userpanel)
+	
+	for moveopt in movegrid.get_children():
+		moveopt.window = self
 	pass
 
 func load_movewindow():
@@ -69,15 +72,19 @@ func load_movewindow():
 
 func refresh_all():
 	var tooltip_text: String = ""
+	var tt_col: Color
 	
 	for moveopt in movegrid.get_children():
 		moveopt.currently_highlighted = (moveopt.my_x_col == batman.moveselcol and moveopt.my_y_row == batman.moveselrow)
 		moveopt.full_refresh()
 		if moveopt.currently_highlighted:
 			tooltip_text = moveopt.loaded_tooltip
+			tt_col = moveopt.loaded_tt_col
 	
 	if movetooltip.text != tooltip_text:
 		movetooltip.text = tooltip_text
+	if movetooltip.get("custom_colors/font_color") != tt_col:
+		movetooltip.set("custom_colors/font_color", tt_col)
 	pass
 
 func get_loaded_move() -> MoveAction: # Assumes validations have ALREADY happened
@@ -91,3 +98,25 @@ func get_loaded_move() -> MoveAction: # Assumes validations have ALREADY happene
 	
 	return null
 	pass
+
+func attempt_to_run_moveoption_custom_function() -> bool:
+	# Does nothing if there's no function to run; the bool is just for SFX to hook in
+	for moveopt in movegrid.get_children():
+		if moveopt.currently_highlighted:
+			if !moveopt.valid:
+				return false
+			if moveopt.state == moveopt.s.NOT_MOVE:
+				var funcname: String = str("CUSTOM_",moveopt.nonmove_function)
+				if has_method(funcname): # Always should, but doublecheck
+					call(funcname)
+					return true
+				return false
+	
+	return false
+	pass
+
+
+func CUSTOM_check_bag():
+	print("Testing CUSTOM_check_bag()! Wow it worked!!")
+	pass
+

@@ -135,6 +135,19 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 	
 	var move: MoveAction = batman.loaded_move
 	
+	if move == null:
+		# Sometimes 'valid' when it's a custom script, so we have to check
+		# (but either way, this is still not a 'usable move' so return false!)
+		
+		if batman.field.movewindow.attempt_to_run_moveoption_custom_function():
+#			print("sfx good")
+			pass
+		else:
+#			print("sfx bad")
+			pass
+		
+		return false
+	
 	if !can_afford(move.cost):
 		if do_print: print(name," can't afford ",move.cost,"-AP for ",move)
 		return false

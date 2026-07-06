@@ -81,6 +81,7 @@ position = Vector2( 365, 41 )
 scale = Vector2( 0.5, 0.5 )
 
 [node name="ActionSelect" type="Node2D" parent="MenuOverlays"]
+visible = false
 position = Vector2( 4, 356 )
 
 [node name="VB" type="VBoxContainer" parent="MenuOverlays/ActionSelect"]
