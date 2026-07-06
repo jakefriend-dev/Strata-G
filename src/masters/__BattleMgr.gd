@@ -1330,6 +1330,7 @@ func kill_actor(actor: Actor):
 		actor.remove_from_group("live_actors")
 	
 	# Clear the actor from the board and all tracking lists
+	strife.end_all_vfx_on_actor(actor)
 	remove_actor_from_actorgrid(actor)
 	if ghost_actors.has(actor):
 		ghost_actors.erase(actor)

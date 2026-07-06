@@ -47,10 +47,10 @@ func ACT():
 	dmg *= batman.BASE_HP_FACTOR
 	
 	for cell in coord_path:
-		strife.quick_effect(cell, "spark_burst")
+		strife.quick_vfx(cell, "spark_burst")
 	if utils.actorpass(victim):
 		strife.damage_actor_at_coord(actor, victim.coord, dmg, ["elec"])
-		strife.quick_effect(victim, "spark_burstdamage")
+		strife.quick_vfx(victim, "spark_burstdamage")
 	
 	end_action()
 	pass

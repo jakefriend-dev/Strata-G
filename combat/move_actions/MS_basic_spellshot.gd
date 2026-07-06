@@ -24,7 +24,7 @@ func ACT():
 	
 	if utils.actorpass(victim):
 		strife.damage_actor_at_coord(actor, victim.coord, 1*batman.BASE_HP_FACTOR)
-		strife.quick_effect(victim, "spark_burst")
+		strife.quick_vfx(victim, "spark_burst")
 	
 	end_action()
 	pass

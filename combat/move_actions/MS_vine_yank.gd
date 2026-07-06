@@ -59,12 +59,12 @@ func ACT():
 		dest_coord = victim.coord
 	
 	# Visuals!
-	strife.quick_effect(victim, "spark_burst")
+	strife.quick_vfx(victim, "spark_burst")
 	
 	yield(utils.yt(0.25, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
-	strife.quick_effect(victim, "dust")
+	strife.quick_vfx(victim, "dust")
 	if dest_coord != victim.coord:
 		victim.ACT_be_external_motioned(motion, 0, actor, false)
 	

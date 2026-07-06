@@ -35,7 +35,7 @@ func ACT():
 	var targets: Array = get_all_cells_by_MPD_type(ROWS.GOOD)
 	for target in targets:
 		strife.heal_actor_at_coord(actor, target, 2*batman.BASE_HP_FACTOR)
-		strife.quick_effect(target, "spark_burst")
+		strife.quick_vfx(target, "spark_burst")
 	
 	end_action()
 	pass

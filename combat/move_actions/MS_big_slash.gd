@@ -55,7 +55,7 @@ func slash_1():
 	for cell in slash_1_cells:
 		if !batman.grid_actors.has_cellv(cell): continue
 		strife.damage_actor_at_coord(actor, cell, 2*batman.BASE_HP_FACTOR)
-		strife.quick_effect(cell, "spark_burst")
+		strife.quick_vfx(cell, "spark_burst")
 	
 	end_action()
 	pass
@@ -67,7 +67,7 @@ func slash_2():
 	for cell in slash_2_cells:
 		if !batman.grid_actors.has_cellv(cell): continue
 		strife.damage_actor_at_coord(actor, cell, 2*batman.BASE_HP_FACTOR)
-		strife.quick_effect(cell, "spark_burst")
+		strife.quick_vfx(cell, "spark_burst")
 	
 	end_action()
 	pass

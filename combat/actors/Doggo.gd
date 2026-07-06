@@ -182,7 +182,7 @@ func ACT_bite():
 	strife.damage_actor_at_coord(self, coord + Vector2.LEFT, damage)
 	
 	clear_status("enrage") # Whether it's active of not
-	strife.end_effect_on_actor(self, "buff", true)
+	strife.end_vfx_on_actor(self, "buff", true)
 	if !batman.is_my_action(self): return
 	
 	end_action()
@@ -190,8 +190,8 @@ func ACT_bite():
 
 func ACT_enrage():
 	start_status("enrage", 2)
-	strife.quick_effect(self, "quick_good")
-	strife.quick_effect(self, "buff")
+	strife.quick_vfx(self, "quick_good")
+	strife.quick_vfx(self, "buff")
 #	add_bonus_actions(1)
 	
 	yield(utils.yt(0.5, self), "timeout")

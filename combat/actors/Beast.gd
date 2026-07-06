@@ -272,7 +272,7 @@ func ACT_lunge_forward():
 	for target in targeted_tiles:
 		if target == coord: # Center tile
 			strife.damage_actor_at_coord(self, target, base_damage)
-			strife.quick_effect(target, "dust")
+			strife.quick_vfx(target, "dust")
 			support.change_tiletype_single(target, batman.tiletypes.JAGGED)
 		else: # Adjacent tiles
 			# For testing! Disables orthagonal damage, but instead pushes actors away!
@@ -284,7 +284,7 @@ func ACT_lunge_forward():
 			
 			strife.extmotion_actor_at_coord(self, target, motion, ["travel_damage"])
 #			strife.damage_actor_at_coord(self, target, batman.BASE_HP_FACTOR)
-			strife.quick_effect(target, "dust")
+			strife.quick_vfx(target, "dust")
 	release_targeted_tiles()
 	
 	if moved_actor_count == 0:
@@ -323,15 +323,15 @@ func ACT_debuff():
 	
 	for actor in batman.living_actors: if actor is Actor:
 		if actor == self:
-			strife.quick_effect(self, "quick_good")
+			strife.quick_vfx(self, "quick_good")
 			continue # We handle ourselves later!
 		
 		# Enemies gain 1AP, playerside loses 1AP
 		if actor.faction == batman.factions.ENEMY:
-			strife.quick_effect(actor, "quick_good")
+			strife.quick_vfx(actor, "quick_good")
 			actor.add_bonus_actions(1)
 		elif actor.faction == batman.factions.PLAYER:
-			strife.quick_effect(actor, "quick_bad")
+			strife.quick_vfx(actor, "quick_bad")
 			actor.spend(1)
 	
 	end_action()

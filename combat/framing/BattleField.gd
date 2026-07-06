@@ -2,14 +2,14 @@ extends Node2D
 
 export var path_board: NodePath
 export var path_actors: NodePath
-export var path_effects: NodePath
+export var path_vfx: NodePath
 export var path_misc: NodePath
 export var path_debuglog_par: NodePath
 export var path_turndisplay_par: NodePath
 export var path_actionsel_par: NodePath
 var board: Node2D
 var actors: YSort
-var effects: YSort
+var vfx: YSort
 var misc: YSort
 var debuglog_par: VBoxContainer
 var turndisplay_par: VBoxContainer
@@ -24,7 +24,7 @@ const CELL_SIZE: Vector2 = Vector2(64, 48)
 func _ready():
 	board = get_node(path_board)
 	actors = get_node(path_actors)
-	effects = get_node(path_effects)
+	vfx = get_node(path_vfx)
 	misc = get_node(path_misc)
 	debuglog_par = get_node(path_debuglog_par)
 	turndisplay_par = get_node(path_turndisplay_par)

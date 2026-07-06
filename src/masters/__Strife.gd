@@ -109,7 +109,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	if !is_quiet:
 		defender.emit_signal("on_phys_combat_any_contact")
-		quick_effect(defender, "spark_burst")
+		quick_vfx(defender, "spark_burst")
 	
 	#
 	# If able, break shields first
@@ -186,7 +186,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			if were_all_shields_broken:
 				defender.emit_signal("on_shield_broken_through", combat_package)
 				if attacker_is_real: attacker.emit_signal("on_broke_someones_shield_total", combat_package)
-				quick_effect(defender, "shield_broken")
+				quick_vfx(defender, "shield_broken")
 			else:
 				defender.emit_signal("on_shield_broken_held", combat_package)
 				if attacker_is_real: attacker.emit_signal("on_broke_someones_shield_partial", combat_package)
@@ -200,7 +200,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 		if shielded_damage > 0:
 			defender.emit_signal("on_blocked_damage_any", combat_package)
 			if attacker_is_real: attacker.emit_signal("on_blocked_by_shield_any", combat_package)
-			quick_effect(defender, "blocked")
+			quick_vfx(defender, "blocked")
 			
 			if damage == 0:
 				defender.emit_signal("on_blocked_damage_total", combat_package)
@@ -243,7 +243,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	# Any remaining damage in the 'damage' var is overkill
 	
 	if !is_quiet:
-		quick_effect(defender, "damage", impacted_damage)
+		quick_vfx(defender, "damage", impacted_damage)
 	
 	# The defender lives!
 	if defender.health > 0:
@@ -439,7 +439,7 @@ func heal_actor_at_coord(_attacker: Actor, exact_coord: Vector2, healing: int, _
 		victim.health = victim.max_health
 	var delta: int = new_health - before_health
 	
-	quick_effect(victim, "heal", delta)
+	quick_vfx(victim, "heal", delta)
 	victim.update_bui()
 	print("Healed ",victim," +",healing," HP from ",before_health," to ",victim.health,"!")
 	
@@ -450,85 +450,91 @@ func heal_actor_at_coord(_attacker: Actor, exact_coord: Vector2, healing: int, _
 
 # VISUAL EFFECTS ---------------------------------------------------------------
 
-func quick_effect(actor_or_coord, effect: String, variant = null):
-	match effect:
+func quick_vfx(actor_or_coord, vfx_name: String, variant = null):
+	match vfx_name:
 		
 		"damage":
-			spawn_effect_on_actor(actor_or_coord, "damage", false, float(variant))
+			spawn_vfx_on_actor(actor_or_coord, "damage", false, float(variant))
 		
 		"heal":
-			spawn_effect_on_actor(actor_or_coord, "heal", false, float(variant))
+			spawn_vfx_on_actor(actor_or_coord, "heal", false, float(variant))
 		
 		"blocked":
-			spawn_effect_on_actor(actor_or_coord, "blocked", false)
+			spawn_vfx_on_actor(actor_or_coord, "blocked", false)
 			pass
 		
 		"shield_broken":
-			spawn_effect_on_actor(actor_or_coord, "shield_broken", false)
+			spawn_vfx_on_actor(actor_or_coord, "shield_broken", false)
 		
 		"quick_good":
-			spawn_effect_on_actor(actor_or_coord, "power_up", false)
+			spawn_vfx_on_actor(actor_or_coord, "power_up", false)
 			pass
 		
 		"quick_bad":
-			spawn_effect_on_actor(actor_or_coord, "power_down", false)
+			spawn_vfx_on_actor(actor_or_coord, "power_down", false)
 			pass
 		
 		"buff": # Implies somewhat persistent
-			spawn_effect_on_actor(actor_or_coord, "buff", true)
+			spawn_vfx_on_actor(actor_or_coord, "buff", true)
 		
 		"debuff": # Implies somewhat persistent
 			pass
 		
 		"spark_burst":
 			if actor_or_coord is Vector2:
-				spawn_effect_on_tile(actor_or_coord, "spark_burst")
+				spawn_vfx_on_tile(actor_or_coord, "spark_burst")
 			elif actor_or_coord is Actor:
-				spawn_effect_on_actor(actor_or_coord, "spark_burst", false)
+				spawn_vfx_on_actor(actor_or_coord, "spark_burst", false)
 			pass
 		
 		"dust": # This one needs to be a tile coord
 			if actor_or_coord is Actor: actor_or_coord = actor_or_coord.coord
-			spawn_effect_on_tile(actor_or_coord, "dust_cloud", false)
+			spawn_vfx_on_tile(actor_or_coord, "dust_cloud", false)
 	pass
 
-func spawn_effect_on_actor(actor: Actor, effect: String, persistent: bool, intensity: float = 1.0, misc: String = ""):
+func spawn_vfx_on_actor(actor: Actor, vfx_name: String, persistent: bool, intensity: float = 1.0, misc: String = ""):
 	var pos: Vector2 = actor.position
-	var ep: Node2D = loader.res_effect_particle.instance()
+	var ep: Node2D = loader.res_vfx_particle.instance()
 	ep.set("position", pos + Vector2.DOWN)
 	ep.set("actor", actor)
-	ep.set("effect_name", effect)
+	ep.set("vfx_name", vfx_name)
 	ep.set("persistent", persistent)
 	ep.set("intensity", intensity)
 	ep.set("misc", misc)
 	
-	batman.field.effects.add_child(ep)
+	batman.field.vfx.add_child(ep)
 	# The EP begins itself via _ready()
 	pass
 
-func spawn_effect_on_tile(coord: Vector2, effect: String, intensity: float = 1.0, misc: String = ""):
+func spawn_vfx_on_tile(coord: Vector2, vfx_name: String, intensity: float = 1.0, misc: String = ""):
 	var pos: Vector2 = batman.grid_gpos.get_cellv(coord)
-	var ep: Node2D = loader.res_effect_particle.instance()
+	var ep: Node2D = loader.res_vfx_particle.instance()
 	ep.set("position", pos + Vector2.DOWN)
 #	ep.set("actor", actor)
-	ep.set("effect_name", effect)
+	ep.set("vfx_name", vfx_name)
 	ep.set("persistent", false)
 	ep.set("intensity", intensity)
 	ep.set("misc", misc)
 	
-	batman.field.effects.add_child(ep)
+	batman.field.vfx.add_child(ep)
 	# The EP begins itself via _ready()
 	pass
 
-func end_effect_on_actor(actor: Actor, effect: String, immediate: bool = false):
-	for ep in batman.field.effects.get_children():
+func end_vfx_on_actor(actor: Actor, vfx_name: String, immediate: bool = false):
+	for ep in batman.field.vfx.get_children():
 		if ep.actor == actor:
-			if ep.effect_name == effect:
+			if ep.vfx_name == vfx_name:
 				# Valid!
 				if immediate:
 					ep.quick_clear()
 				else:
 					ep.end_persistent()
+	pass
+
+func end_all_vfx_on_actor(actor: Actor):
+	for ep in batman.field.vfx.get_children():
+		if ep.actor == actor:
+			ep.quick_clear()
 	pass
 
 
@@ -636,7 +642,7 @@ func get_tilestring_as_int(tilestring: String) -> int:
 func TILE_started_on_HOT(actor: Actor, _coord: Vector2):
 	# Gain 1 AP - fire immunity doesn't matter here, you get the upside regardless
 	
-	quick_effect(actor, "quick_good")
+	quick_vfx(actor, "quick_good")
 	actor.add_bonus_actions(1)
 	pass
 
@@ -665,7 +671,7 @@ func TILE_entered_SHRUB(actor: Actor, coord: Vector2):
 func TILE_entered_JAGGED(actor: Actor, coord: Vector2):
 	if is_affected_by_jagged(actor):
 		# 1 damage, 1 move debuff
-		quick_effect(actor, "quick_bad")
+		quick_vfx(actor, "quick_bad")
 		do_impact_damage(null, actor, 4)
 		actor.spend(1)
 		pass

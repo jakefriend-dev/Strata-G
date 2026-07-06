@@ -16,4 +16,4 @@ var res_hp_10 = preload("res://combat/battle_ui/components/Pip_10_Health.tscn")
 #var res_pipbonusaction = preload("res://combat/battle_ui/BonusActionPointPip.tscn")
 
 # Actors
-var res_effect_particle = preload("res://combat/battle_effects/EffectParticle.tscn")
+var res_vfx_particle = preload("res://combat/battle_effects/VFXParticle.tscn")

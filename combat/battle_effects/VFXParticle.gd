@@ -1,7 +1,7 @@
 extends Node2D
 
 var lifetime: float = -1.0
-var effect_name: String = "" # Set BEFORE instancing
+var vfx_name: String = "" # Set BEFORE instancing
 
 var intensity: float = 1.0 # Set before instancing; used by some things as a multiplier
 var misc: String = ""
@@ -23,7 +23,7 @@ func _ready():
 		die(true)
 		return
 	
-	par_node = $ZPar.get_node(effect_name)
+	par_node = $ZPar.get_node(vfx_name)
 	gather_lifetime()
 	
 	prep_custom_details()
@@ -32,13 +32,13 @@ func _ready():
 	pass
 
 func validate_or_die() -> bool:
-	if !$ZPar.has_node(effect_name):
+	if !$ZPar.has_node(vfx_name):
 		return false
 	
-	if $ZPar.get_node(effect_name).get_child_count() == 0:
+	if $ZPar.get_node(vfx_name).get_child_count() == 0:
 		return false
 	
-	for p in $ZPar.get_node(effect_name).get_children(): # SUCCESS if at least 1 child is a Particles2D
+	for p in $ZPar.get_node(vfx_name).get_children(): # SUCCESS if at least 1 child is a Particles2D
 		if p is Particles2D:
 			return true
 	
@@ -55,7 +55,7 @@ func gather_lifetime():
 	pass
 
 func prep_custom_details():
-	match effect_name:
+	match vfx_name:
 		"damage":
 			for p in par_node.get_children(): if p is Particles2D:
 				p.amount = intensity

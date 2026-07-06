@@ -26,7 +26,7 @@ VBoxContainer/constants/separation = 0
 script = ExtResource( 2 )
 path_board = NodePath("Ground")
 path_actors = NodePath("FieldObjects/Actors")
-path_effects = NodePath("FieldObjects/Effects")
+path_vfx = NodePath("FieldObjects/VFX")
 path_misc = NodePath("FieldObjects/Misc")
 path_debuglog_par = NodePath("MenuOverlays/DebugLog/VB")
 path_turndisplay_par = NodePath("MenuOverlays/TurnDisplay/VB")
@@ -70,7 +70,7 @@ centered = false
 
 [node name="Actors" type="YSort" parent="FieldObjects"]
 
-[node name="Effects" type="YSort" parent="FieldObjects"]
+[node name="VFX" type="YSort" parent="FieldObjects"]
 
 [node name="Misc" type="YSort" parent="FieldObjects"]
 
