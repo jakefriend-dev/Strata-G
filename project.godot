@@ -42,7 +42,7 @@ _global_script_classes=[ {
 "base": "HBoxContainer",
 "class": "PipSet",
 "language": "GDScript",
-"path": "res://combat/battle_ui/PipSet.gd"
+"path": "res://combat/battle_ui/_archive/PipSet.gd"
 }, {
 "base": "NinePatchRect",
 "class": "Sprite9Patch",

@@ -5,7 +5,7 @@ extends ActorEnemy
 const COST_AIM_ROCK: int = 1
 const COST_THROW: int = 2
 const COST_KICK: int = 2
-const COST_BOOST_SHIELD: int = 1
+#const COST_BOOST_SHIELD: int = 1
 
 enum {NO_ROCK, HELD_ROCK, DROPPED_ROCK}
 var rockstate: int = NO_ROCK
@@ -30,12 +30,12 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 			spend(COST_AIM_ROCK)
 			batman.append_action(self, "prep_rock")
 			return
-		# If we can't afford to, buff our shield instead for all we've got!
-		if can_afford(COST_BOOST_SHIELD):
-			var remainder: int = action_points
-			spend(remainder)
-			batman.append_action(self, "boost_shield", [remainder])
-			return
+#		# If we can't afford to, buff our shield instead for all we've got!
+#		if can_afford(COST_BOOST_SHIELD):
+#			var remainder: int = action_points
+#			spend(remainder)
+#			batman.append_action(self, "boost_shield", [remainder])
+#			return
 		return
 	
 	if rockstate == HELD_ROCK:
@@ -106,11 +106,10 @@ func ACT_kick_rock():
 	end_action()
 	pass
 
-func ACT_boost_shield(amount: int):
-	bonus_shield = amount
-	update_bui()
-	end_action()
-	pass
+#func ACT_boost_shield(amount: int):
+#	update_bui()
+#	end_action()
+#	pass
 
 
 

@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://PipActionPointsR.tscn" type="PackedScene" id=1]
-[ext_resource path="res://PipActionPointsL.tscn" type="PackedScene" id=2]
-[ext_resource path="res://PipHealth.tscn" type="PackedScene" id=4]
-[ext_resource path="res://PipShield.tscn" type="PackedScene" id=5]
+[ext_resource path="res://combat/battle_ui/_archive/PipActionPointsR.tscn" type="PackedScene" id=1]
+[ext_resource path="res://combat/battle_ui/_archive/PipActionPointsL.tscn" type="PackedScene" id=2]
+[ext_resource path="res://combat/battle_ui/_archive/PipHealth.tscn" type="PackedScene" id=4]
+[ext_resource path="res://combat/battle_ui/_archive/PipShield.tscn" type="PackedScene" id=5]
 
 [node name="PanelContainer" type="VBoxContainer"]
 margin_right = 10.0

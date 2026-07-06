@@ -214,3 +214,5 @@ margin_left = 17.0
 margin_right = 31.0
 
 [node name="Status" parent="MC/PC/VB/BotPlate" instance=ExtResource( 6 )]
+margin_left = 34.0
+margin_right = 58.0

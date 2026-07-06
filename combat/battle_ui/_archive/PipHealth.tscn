@@ -1,13 +1,14 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://combat/battle_ui/PipSet.gd" type="Script" id=1]
-[ext_resource path="res://art/bui/pips/10x shield pip.png" type="Texture" id=3]
-[ext_resource path="res://art/bui/pips/_archive/PipsEdges-ShieldV2.png" type="Texture" id=4]
+[ext_resource path="res://combat/battle_ui/_archive/PipSet.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/pips/_archive/PipsFull-HealthV3.png" type="Texture" id=2]
+[ext_resource path="res://art/bui/pips/_archive/PipsEdges-HealthV3.png" type="Texture" id=3]
+
 
 
 [sub_resource type="StyleBoxEmpty" id=1]
 
-[node name="Shield" type="HBoxContainer"]
+[node name="Health" type="HBoxContainer"]
 margin_right = 12.0
 margin_bottom = 10.0
 custom_constants/separation = -2
@@ -15,7 +16,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-type = 3
+type = 2
 
 [node name="L" type="NinePatchRect" parent="."]
 visible = false
@@ -23,7 +24,7 @@ margin_right = 10.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 10, 10 )
 size_flags_vertical = 4
-texture = ExtResource( 4 )
+texture = ExtResource( 3 )
 region_rect = Rect2( 0, 0, 6, 10 )
 patch_margin_left = 2
 axis_stretch_horizontal = 1
@@ -37,7 +38,7 @@ custom_styles/panel = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="C"]
 position = Vector2( 1, 0 )
-texture = ExtResource( 3 )
+texture = ExtResource( 2 )
 centered = false
 hframes = 5
 frame = 4
@@ -49,7 +50,7 @@ margin_right = 20.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 10, 10 )
 size_flags_vertical = 4
-texture = ExtResource( 4 )
+texture = ExtResource( 3 )
 region_rect = Rect2( 6, 0, 6, 10 )
 patch_margin_right = 2
 axis_stretch_horizontal = 1

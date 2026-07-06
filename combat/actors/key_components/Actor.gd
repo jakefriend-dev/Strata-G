@@ -37,8 +37,6 @@ var base_health_pips: int = 4 # Updated ONCE by max health and that's it!
 export var max_shield: int = 0
 var shield: int = 0
 
-var bonus_shield: int = 0 # Generally never starts with any, I think?
-
 export var ofc_name: String = "--"
 var numerated_name: String = ""
 
@@ -326,11 +324,7 @@ func master_pre_turn_setup(who: Actor):
 	
 #	print("Pre-turn refresh for ",self)
 	actions_completed_this_turn = 0
-#	shield = max_shield # We no longer refill shield automatically!
-	if !check_status("keeps_bonus_shield"):
-		bonus_shield = 0
 	ghost_mode(false)
-#	action_points = base_action_points # This is handled during turn teardown
 	tick_down_ongoing_statuses(true)
 	
 	update_bui()

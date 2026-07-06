@@ -103,9 +103,6 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	var og_damage: int = damage
 	var og_shield: int = defender.shield
-	var og_bonus_shield: int = defender.bonus_shield
-	var og_total_shield: int = og_shield + og_bonus_shield
-	
 	
 	if !is_quiet:
 		defender.emit_signal("on_phys_combat_any_contact")
@@ -127,17 +124,14 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	var were_all_shields_broken: bool = false # Ditto
 	if break_damage > 0:
 		# Deduct damage and shield equally until either of them depletes fully
-		while (defender.bonus_shield > 0 or defender.shield > 0) and break_damage > 0:
+		while defender.shield > 0 and break_damage > 0:
 			# Remove bonus shield first, then apply the rest as breakage
 			break_damage -= 1
 			break_spends += 1
-			if defender.bonus_shield > 0:
-				defender.bonus_shield -= 1
-			else:
-				defender.shield -= 1
-				did_shield_break_occur = true
-				if defender.shield == 0:
-					were_all_shields_broken = true
+			defender.shield -= 1
+			did_shield_break_occur = true
+			if defender.shield == 0:
+				were_all_shields_broken = true
 	
 	# This is how we keep break_damage and damage separated but linked
 	if break_spends > 0:
@@ -152,18 +146,14 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	var unbroken_shield: int = defender.shield
 	
 	# If NOT piercing, in this order:
-		# 1. Deduct damage & bonus_shield together
-		# 2. Deduct damage $ unbroken_shield together (not ACTUAL LIVE SHIELD VALUE, just this int)
-		# 3. Deduct damage & health together
+		# 1. Deduct damage & unbroken_shield together (not ACTUAL LIVE SHIELD VALUE, just this int)
+		# 2. Deduct damage & health together
 	
 	if !piercing:
 		# Deduct damage and shield equally until either of them depletes fully
-		while (defender.bonus_shield > 0 or unbroken_shield > 0) and damage > 0:
+		while unbroken_shield > 0 and damage > 0:
 			damage -= 1
-			if defender.bonus_shield > 0:
-				defender.bonus_shield -= 1
-			else:
-				unbroken_shield -= 1
+			unbroken_shield -= 1
 	
 	#
 	# In standard circumstances, we need to send out a bunch of signal hooks
@@ -172,7 +162,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	# Let's also not bother with the is_melee tag in the signal; maybe instead we can send out a combat assessment package
 	#
 	
-	var total_shield_left: int = defender.shield + defender.bonus_shield
+	var total_shield_left: int = defender.shield
 	var shielded_damage: int = og_damage - damage
 	var combat_package: Dictionary = {}
 	
