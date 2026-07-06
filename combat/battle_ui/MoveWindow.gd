@@ -57,13 +57,26 @@ func load_moves():
 		
 		pass
 	
+	var tooltip_text: String = ""
 	for moveopt in movegrid.get_children():
 		moveopt.update_against_new_move()
+		if moveopt.currently_highlighted:
+			tooltip_text = moveopt.loaded_tooltip
+	
+	if movetooltip.text != tooltip_text:
+		movetooltip.text = tooltip_text
 	pass
 
 func refresh_all():
+	var tooltip_text: String = ""
+	
 	for moveopt in movegrid.get_children():
 		moveopt.full_refresh()
+		if moveopt.currently_highlighted:
+			tooltip_text = moveopt.loaded_tooltip
+	
+	if movetooltip.text != tooltip_text:
+		movetooltip.text = tooltip_text
 	pass
 
 
