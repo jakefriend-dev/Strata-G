@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Moveset AP Icon.png-b1c06c0fa36d530adb627457f7c09320.stex"
+path="res://.import/8x select arrow icon.png-25938831d4e2a6f56e09d03a08e7bb2e.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/bui/Moveset AP Icon.png"
-dest_files=[ "res://.import/Moveset AP Icon.png-b1c06c0fa36d530adb627457f7c09320.stex" ]
+source_file="res://art/bui/pips/8x select arrow icon.png"
+dest_files=[ "res://.import/8x select arrow icon.png-25938831d4e2a6f56e09d03a08e7bb2e.stex" ]
 
 [params]
 

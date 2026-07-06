@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Moveset AP costs.png-ce4752038ffe9249f5dd90620afe45eb.stex"
+path="res://.import/16x8 select arrow icon.png-9b4a66a181dbaa305bf04f65f321bf28.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/bui/Moveset AP costs.png"
-dest_files=[ "res://.import/Moveset AP costs.png-ce4752038ffe9249f5dd90620afe45eb.stex" ]
+source_file="res://art/bui/pips/16x8 select arrow icon.png"
+dest_files=[ "res://.import/16x8 select arrow icon.png-9b4a66a181dbaa305bf04f65f321bf28.stex" ]
 
 [params]
 

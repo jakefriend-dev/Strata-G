@@ -1,47 +1,161 @@
 extends HBoxContainer
 
-var move: MoveAction # Linked upon Moveset generation
+var move: MoveAction # Linked upon Moveset generation (unless is_not_move)
 var actor: Actor # Also linked, for quickref
+export var nonmove_function: String = "" # If NOT blank and VALIDATED, signals that this MovesetOption is not a 'move' and instead a function, like "check party bag"
 
-export var is_not_move: bool = false # Turn TRUE for things like 'check the party pouch' where a custom command is played
+var loaded_tooltip: String = ""
+var nonmove_tooltip: String # Loaded externally!
+var loaded_display_name: String = ""
+var nonmove_display_name: String # Loaded externally!
 
-var icon_bases: Dictionary = { # 1-based Aseprite frames for when the FIRST of that count appears
-	"cooldown": 2,
-	"other": 3,
-	0: 5,
-	1: 7,
-	2: 10,
-	3: 14,
-	4: 19,
+var loaded_iconpar: HBoxContainer
+var loaded_value: String = ""
+
+
+
+#
+
+enum s { # States represent the unselected AND selected variants!
+	TBD,
+	NOT_MOVE,
+	UNAVAILABLE,
+	AVAILABLE,
 }
+
+var colsets: Dictionary = {
+	# Array indices are: Light colour, dark colour, unfill_height shader param
+	s.NOT_MOVE: {
+		"unsel": [Color("79808d"), Color("566a89"), 5],
+		"sel":   [Color("ffffff"), Color("c9ec85"), 9],
+	},
+	s.UNAVAILABLE: {
+		"unsel": [Color("79808d"), Color("566a89"), 5],
+		"sel":   [Color("cce2e1"), Color("8babbf"), 9],
+	},
+	s.AVAILABLE: {
+		"unsel": [Color("ffdba5"), Color("ffa468"), 5],
+		"sel":   [Color("ffffff"), Color("8cffde"), 9],
+	},
+}
+
+var state: int = s.TBD
+var valid: bool = false
+var currently_highlighted: bool = false # Controlled externally
 
 # ---
 
-func update_icon(is_selected: bool):
-	var base_frame: int = 0
-	
-	if is_not_move:
-		base_frame = icon_bases["other"]
-		if is_selected: base_frame += 1
-	elif !move.is_usable(true):
-		base_frame = icon_bases["cooldown"]
-	else:
-		base_frame = icon_bases[move.cost]
-		var emptiest: int = base_frame
-		var full_unsel: int = base_frame + move.cost
-		var full_sel: int = full_unsel + 1
-		
-		# I have more than enough to afford!
-		if actor.action_points >= move.cost:
-			if is_selected:
-				base_frame = full_sel
-			else:
-				base_frame = full_unsel
-		
-		else: # I *cannot* afford!
-			base_frame = emptiest + actor.action_points
-		
-		pass
-	
-	$Icons/APCost.frame = base_frame
+func assign_new_move():
+	validate()
+	refresh()
 	pass
+
+func validate():
+	valid = false
+	state = s.TBD
+	loaded_tooltip = ""
+	loaded_iconpar = null
+	loaded_value = ""
+	loaded_display_name = ""
+	
+	if nonmove_function != "":
+		var funcname: String = str("CUSTOM_",nonmove_function)
+		if has_method(funcname):
+			valid = true
+			state = s.NOT_MOVE
+			loaded_tooltip = nonmove_tooltip
+			loaded_iconpar = $AllIcons/Arrow
+			return
+	
+	# Regular moves
+	if move == null: return
+	valid = true
+	
+	if move.current_cooldown > 0:
+		state = s.UNAVAILABLE
+		loaded_iconpar = $AllIcons/Cooldown
+		loaded_value = str(move.current_cooldown)
+		loaded_tooltip = str("Move in cooldown for ",move.current_cooldown," more turns")
+	
+	elif move.current_battle_uses >= move.uses_per_battle:
+		state = s.UNAVAILABLE
+		loaded_iconpar = $AllIcons/Error
+		loaded_value = "b"
+		loaded_tooltip = str("Move has reached per-battle limit (",move.uses_per_battle,")")
+	
+	elif move.current_turn_uses >= move.uses_per_turn:
+		state = s.UNAVAILABLE
+		loaded_iconpar = $AllIcons/Error
+		loaded_value = "t"
+		loaded_tooltip = str("Move has reached per-turn limit (",move.uses_per_turn,")")
+	
+	# At this point it should just be a matter of whether we can afford the AP cost or not
+	
+	elif move.cost > actor.action_points:
+		state = s.UNAVAILABLE
+		loaded_iconpar = $AllIcons/ActionNo
+		loaded_value = str(move.cost)
+		loaded_tooltip = str("Cannot afford ",move.cost," cost with ",actor.action_points,"AP remaining")
+	
+	else: # We CAN afford it! Finally!
+		state = s.AVAILABLE
+		loaded_iconpar = $AllIcons/ActionYes
+		loaded_value = str(move.cost)
+		
+		if move.on_use_cooldown > 0:
+			loaded_tooltip = str("Enters ",move.on_use_cooldown,"-turn cooldown after use")
+		elif move.uses_per_battle > 0:
+			var rem_uses: int = move.uses_per_battle - move.current_battle_uses
+			loaded_tooltip = str(rem_uses," per-battle uses remaining")
+		elif move.uses_per_turn > 0:
+			var rem_uses: int = move.uses_per_turn - move.current_turn_uses
+			loaded_tooltip = str(rem_uses," per-turn uses remaining")
+		# ...And if it's just an AP cost issue and we can afford it, no message to really show?
+	
+	pass
+
+func refresh():
+	if !valid:
+		if $AllIcons.visible:
+			$AllIcons.visible = false
+		return
+	
+	# Generic visibility setups
+	if !$AllIcons.visible:
+		$AllIcons.visible = true
+	
+	for child in $AllIcons.get_children():
+		if child == loaded_iconpar:
+			if !child.visible: child.visible = true
+		else:
+			if child.visible: child.visible = false
+	
+	if state != s.NOT_MOVE:
+		loaded_iconpar.get_node("Count").text = loaded_value
+	
+	if $MoveName.text != loaded_display_name:
+		$MoveName.text = loaded_display_name
+	
+	var m: ShaderMaterial = $MoveName.material
+	
+	var colset: Array = colsets[state][int(currently_highlighted)]
+	
+	m.set_shader_param("col_body",       colset[0])
+	m.set_shader_param("col_mid",        colset[1])
+	m.set_shader_param("unfill_height",  colset[2])
+	
+	pass
+
+# ---
+
+func CUSTOM_check_bag():
+	print("Testing CUSTOM_check_bag()! Wow it worked!!")
+	pass
+
+
+
+
+
+
+
+

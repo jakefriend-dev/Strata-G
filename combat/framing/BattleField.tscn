@@ -1,24 +1,14 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://art/_placeholder/test play area bg.png" type="Texture" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
+[ext_resource path="res://combat/battle_ui/MoveWindow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://text/fonts/built/Font Readout.tres" type="DynamicFont" id=4]
 [ext_resource path="res://combat/battle_effects/Drawer.gd" type="Script" id=6]
 [ext_resource path="res://combat/battle_ui/Aimflower.tscn" type="PackedScene" id=7]
-[ext_resource path="res://art/bui/pips/_archive/Pip AP - Single.png" type="Texture" id=8]
-[ext_resource path="res://art/bui/aimflowers/3x3 - fronts.png" type="Texture" id=9]
-[ext_resource path="res://text/fonts/built/Font MoveCard Header 1x.tres" type="DynamicFont" id=10]
-[ext_resource path="res://text/fonts/built/Font BUI Body 1x.tres" type="DynamicFont" id=11]
 [ext_resource path="res://art/_placeholder/mc/castle wall unusable.png" type="Texture" id=12]
 [ext_resource path="res://art/_placeholder/mc/default_silver_sandstone_block RESIZED full.png" type="Texture" id=13]
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
-
-[sub_resource type="Theme" id=33]
-default_font = ExtResource( 11 )
-HBoxContainer/constants/separation = 0
-VBoxContainer/constants/separation = 0
-
-[sub_resource type="StyleBoxEmpty" id=34]
 
 [sub_resource type="StyleBoxEmpty" id=32]
 
@@ -84,138 +74,6 @@ z_index = 1
 script = ExtResource( 6 )
 
 [node name="MenuOverlays" type="Node2D" parent="."]
-
-[node name="ActionTestbed" type="Node2D" parent="MenuOverlays"]
-
-[node name="Node2D" type="Node2D" parent="MenuOverlays/ActionTestbed"]
-position = Vector2( -342, 10 )
-
-[node name="PanelContainer" type="PanelContainer" parent="MenuOverlays/ActionTestbed/Node2D"]
-margin_right = 268.0
-margin_bottom = 156.0
-theme = SubResource( 33 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 261.0
-margin_bottom = 171.0
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_right = 254.0
-margin_bottom = 16.0
-
-[node name="Title" type="Label" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_right = 58.0
-margin_bottom = 16.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 2
-custom_constants/shadow_offset_y = 2
-custom_fonts/font = ExtResource( 10 )
-text = "Heat Wave"
-
-[node name="CostIcon" type="TextureRect" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_left = 58.0
-margin_right = 72.0
-margin_bottom = 16.0
-texture = ExtResource( 8 )
-stretch_mode = 3
-
-[node name="CostIcon2" type="TextureRect" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_left = 72.0
-margin_right = 86.0
-margin_bottom = 16.0
-texture = ExtResource( 8 )
-stretch_mode = 3
-
-[node name="Spacer4" type="Panel" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_top = 16.0
-margin_right = 254.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 0, 8 )
-custom_styles/panel = SubResource( 34 )
-
-[node name="MainDesc" type="Label" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_top = 24.0
-margin_right = 254.0
-margin_bottom = 72.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-text = "Deals 1 fire damage to ALL units in a straight line, ignoring cover and piercing shields."
-autowrap = true
-
-[node name="Spacer3" type="Panel" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_top = 72.0
-margin_right = 254.0
-margin_bottom = 80.0
-rect_min_size = Vector2( 0, 8 )
-custom_styles/panel = SubResource( 34 )
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_top = 80.0
-margin_right = 254.0
-margin_bottom = 103.0
-custom_constants/separation = 4
-
-[node name="Panel" type="Panel" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer/HBoxContainer2"]
-margin_right = 23.0
-margin_bottom = 23.0
-rect_min_size = Vector2( 23, 23 )
-
-[node name="Aimflower" type="Sprite" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer/HBoxContainer2/Panel"]
-scale = Vector2( 0.175, 0.175 )
-texture = ExtResource( 9 )
-centered = false
-
-[node name="OptionDesc" type="Label" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer/HBoxContainer2"]
-margin_left = 27.0
-margin_top = 4.0
-margin_right = 187.0
-margin_bottom = 18.0
-text = "Changes angle of attack."
-
-[node name="Spacer2" type="Panel" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_top = 103.0
-margin_right = 254.0
-margin_bottom = 111.0
-rect_min_size = Vector2( 0, 8 )
-custom_styles/panel = SubResource( 34 )
-
-[node name="CooldownText" type="Label" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-visible = false
-margin_top = 86.0
-margin_right = 302.0
-margin_bottom = 100.0
-text = "Cooldown for 2 turns after use"
-
-[node name="UPT" type="Label" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_top = 111.0
-margin_right = 254.0
-margin_bottom = 125.0
-text = "Uses per turn remaining: [1]"
-
-[node name="UPB" type="Label" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-visible = false
-margin_top = 86.0
-margin_right = 302.0
-margin_bottom = 100.0
-text = "Uses per battle remaining: [1]"
-
-[node name="Spacer" type="Panel" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_top = 125.0
-margin_right = 254.0
-margin_bottom = 133.0
-rect_min_size = Vector2( 0, 8 )
-custom_styles/panel = SubResource( 34 )
-
-[node name="Tags" type="Label" parent="MenuOverlays/ActionTestbed/Node2D/PanelContainer/VBoxContainer"]
-margin_top = 133.0
-margin_right = 254.0
-margin_bottom = 164.0
-text = "Fire: 2x damage to treeboys
-Piercing: Damage bypasses shields"
 
 [node name="Aimflower" parent="MenuOverlays" instance=ExtResource( 7 )]
 position = Vector2( 365, 41 )
@@ -357,3 +215,5 @@ text = "Testing one two, testing one two"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="MoveWindow" parent="MenuOverlays" instance=ExtResource( 3 )]
