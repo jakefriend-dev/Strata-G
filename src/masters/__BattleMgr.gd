@@ -670,18 +670,22 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		if curr_actor.has_method("pre_turn_setup"):
 			curr_actor.call("pre_turn_setup")
 	
-	if curr_actor is ActorPlayer:
-		loaded_moveset = curr_actor.moveset.keys()
-		if !loaded_moveset.empty():
-			var movename: String = loaded_moveset[loaded_m_index]
-			loaded_move = curr_actor.moveset[movename]
-#			print("first move ",loaded_move)
-		else:
-			print("player char ",curr_actor.name," has literally no set moveset!")
-		curr_actor.prep_moveset_on_turn_start()
 	moveselcol = 0
 	moveselrow = 0
-	field.movewindow.load_moves()
+	field.movewindow.load_movewindow()
+	
+	if curr_actor is ActorPlayer:
+		loaded_moveset = curr_actor.moveset.keys()
+		loaded_move = field.movewindow.get_loaded_move() # Allowed to return null even when 'scripted' function
+		
+#		if !loaded_moveset.empty():
+#			var movename: String = loaded_moveset[loaded_m_index]
+#			loaded_move = curr_actor.moveset[movename]
+#			print("first move ",loaded_move)
+#		else:
+#			print("player char ",curr_actor.name," has literally no set moveset!")
+		
+		curr_actor.prep_moveset_on_turn_start()
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
@@ -898,6 +902,12 @@ func change_selrow(amount: int):
 		moveselrow = 3
 	
 	field.movewindow.refresh_all()
+	loaded_move = field.movewindow.get_loaded_move() # Allowed to return null even when 'scripted' function
+	emit_signal("action_option_view_changed", true)
+	
+	if loaded_move == null: emit_signal("new_action_preview_data_readied", null)
+#	if loaded_move == null: if curr_actor is ActorPlayer:
+#		curr_actor.clear_all_move_previews()
 	pass
 
 func change_selcol(amount: int):
@@ -909,6 +919,11 @@ func change_selcol(amount: int):
 		moveselcol = 1
 	
 	field.movewindow.refresh_all()
+	loaded_move = field.movewindow.get_loaded_move() # Allowed to return null even when 'scripted' function
+	emit_signal("action_option_view_changed", true)
+	if loaded_move == null: emit_signal("new_action_preview_data_readied", null)
+#	if loaded_move == null: if curr_actor is ActorPlayer:
+#		curr_actor.clear_all_move_previews()
 	pass
 
 #func cycle_player_move_forward():

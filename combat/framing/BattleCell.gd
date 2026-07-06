@@ -68,7 +68,9 @@ func update_cell_highlighting_temp(move: MoveAction):
 	var hname: String = ""
 	var hcol: Color
 	
-	if move.unique_cells.has(coord):
+	if move == null:
+		set_depth_tint(max_row, Color.gray)
+	elif move.unique_cells.has(coord):
 		set_depth_tint(max_row) # White if non-darkened
 		
 		# The highlights!

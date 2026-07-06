@@ -17,7 +17,7 @@ func _ready():
 	userpanel = get_node(path_userpanel)
 	pass
 
-func load_moves():
+func load_movewindow():
 	
 	for moveopt in movegrid.get_children():
 		moveopt.move = null
@@ -80,4 +80,14 @@ func refresh_all():
 		movetooltip.text = tooltip_text
 	pass
 
-
+func get_loaded_move() -> MoveAction: # Assumes validations have ALREADY happened
+	for moveopt in movegrid.get_children():
+		if moveopt.currently_highlighted:
+			if !moveopt.valid:
+				return null
+			if moveopt.state == moveopt.s.NOT_MOVE:
+				return null
+			return moveopt.move
+	
+	return null
+	pass
