@@ -6,7 +6,8 @@
 [resource]
 script = ExtResource( 1 )
 display_name = "Poison Spray"
-display_desc = "Deals 1 poison damage to each unit in a small cone covering 4 tiles, ignoring cover and piercing shields."
+short_desc = "Poisons all enemies in AOE"
+display_desc = "Inflicts Poisoned effect to all units in a small cone covering 4 tiles."
 option_image = ExtResource( 2 )
 option_desc = "Changes angle of attack."
 cost = 2

@@ -8,6 +8,7 @@ resource_local_to_scene = true
 resource_name = "LEAP"
 script = ExtResource( 1 )
 display_name = "Leap"
+short_desc = "Jump over 1 tile orthagonally"
 display_desc = "Jump 2 tiles orthagonally, bypassing any unit or obstacle in your way."
 option_image = ExtResource( 2 )
 option_desc = "Changes angle of jump."

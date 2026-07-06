@@ -3,17 +3,22 @@ extends Node2D
 export var path_movegrid: NodePath
 var movegrid: GridContainer
 
-export var path_movetooltip: NodePath
-var movetooltip: Label
+export var path_tooltip_par: NodePath
+var tooltip_par: VBoxContainer
 
 export var path_userpanel: NodePath
 var userpanel: PanelContainer
+
+#                             Valid           Invalid
+#var desccols: Array = [Color("fff6ae"), Color("8babbf")]
+var desccols: Array = [Color("fff6ae"), Color("ff94b3")]
+var warncols: Array = [Color("9cd8fc"), Color("ff94b3")]
 
 # ---
 
 func _ready():
 	movegrid = get_node(path_movegrid)
-	movetooltip = get_node(path_movetooltip)
+	tooltip_par = get_node(path_tooltip_par)
 	userpanel = get_node(path_userpanel)
 	
 	for moveopt in movegrid.get_children():
@@ -59,32 +64,46 @@ func load_movewindow():
 		
 		pass
 	
-	var tooltip_text: String = ""
+	var tt_desc_text: String = ""
+	var tt_warn_text: String = ""
 	for moveopt in movegrid.get_children():
 		moveopt.update_against_new_move()
 		
 		if moveopt.currently_highlighted:
-			tooltip_text = moveopt.loaded_tooltip
+			tt_warn_text = moveopt.loaded_tt_warn_text
+			tt_desc_text = moveopt.loaded_tt_desc_text
 	
-	if movetooltip.text != tooltip_text:
-		movetooltip.text = tooltip_text
+	if tooltip_par.get_node("DescTooltip").text != tt_desc_text:
+		tooltip_par.get_node("DescTooltip").text = tt_desc_text
+	if tooltip_par.get_node("WarnTooltip").text != tt_warn_text:
+		tooltip_par.get_node("WarnTooltip").text = tt_warn_text
 	pass
 
 func refresh_all():
-	var tooltip_text: String = ""
-	var tt_col: Color
+	var tt_desc_text: String = ""
+	var tt_warn_text: String = ""
+	var tt_desc_col: Color = desccols[1]
+	var tt_warn_col: Color = warncols[1]
 	
 	for moveopt in movegrid.get_children():
 		moveopt.currently_highlighted = (moveopt.my_x_col == batman.moveselcol and moveopt.my_y_row == batman.moveselrow)
 		moveopt.full_refresh()
 		if moveopt.currently_highlighted:
-			tooltip_text = moveopt.loaded_tooltip
-			tt_col = moveopt.loaded_tt_col
+			tt_warn_text = moveopt.loaded_tt_warn_text
+			tt_desc_text = moveopt.loaded_tt_desc_text
+			if moveopt.tooltips_are_valid:
+				tt_desc_col = desccols[0]
+				tt_warn_col = warncols[0]
 	
-	if movetooltip.text != tooltip_text:
-		movetooltip.text = tooltip_text
-	if movetooltip.get("custom_colors/font_color") != tt_col:
-		movetooltip.set("custom_colors/font_color", tt_col)
+	if tooltip_par.get_node("DescTooltip").text != tt_desc_text:
+		tooltip_par.get_node("DescTooltip").text = tt_desc_text
+	if tooltip_par.get_node("WarnTooltip").text != tt_warn_text:
+		tooltip_par.get_node("WarnTooltip").text = tt_warn_text
+	
+	if tooltip_par.get_node("DescTooltip").get("custom_colors/font_color") != tt_desc_col:
+		tooltip_par.get_node("DescTooltip").set("custom_colors/font_color", tt_desc_col)
+	if tooltip_par.get_node("WarnTooltip").get("custom_colors/font_color") != tt_warn_col:
+		tooltip_par.get_node("WarnTooltip").set("custom_colors/font_color", tt_warn_col)
 	pass
 
 func get_loaded_move() -> MoveAction: # Assumes validations have ALREADY happened

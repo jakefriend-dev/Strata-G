@@ -4,8 +4,10 @@ var move: MoveAction # Linked upon Moveset generation (unless is_not_move)
 var actor: Actor # Also linked, for quickref
 export var nonmove_function: String = "" # If NOT blank and VALIDATED, signals that this MovesetOption is not a 'move' and instead a function, like "check party bag"
 
-var loaded_tt_col: Color = Color("ff94b3") # Default invalid
-var loaded_tooltip: String = ""
+var tooltips_are_valid: bool = false # Used for colour control by MoveWindow
+var loaded_tt_desc_text: String = ""
+var loaded_tt_warn_text: String = ""
+
 var nonmove_tooltip: String # Loaded externally!
 var loaded_display_name: String = ""
 var nonmove_display_name: String # Loaded externally!
@@ -65,45 +67,47 @@ func full_refresh():
 func validate():
 	valid = false
 	state = s.TBD
-	loaded_tooltip = ""
+	loaded_tt_desc_text = ""
+	loaded_tt_warn_text = ""
 	loaded_iconpar = null
 	loaded_value = ""
 	loaded_display_name = ""
-	loaded_tt_col = Color("ff94b3") # Default invalid
+	tooltips_are_valid = false
 	
 	if nonmove_function != "":
 		var funcname: String = str("CUSTOM_",nonmove_function)
 		if window.has_method(funcname):
 			valid = true
 			state = s.NOT_MOVE
-			loaded_tooltip = nonmove_tooltip
+			loaded_tt_desc_text = nonmove_tooltip
 			loaded_iconpar = $AllIcons/Arrow
 			loaded_display_name = nonmove_display_name
-			loaded_tt_col = Color("fff6ae")
+			tooltips_are_valid = true
 			return
 	
 	# Regular moves
 	if move == null: return
 	valid = true
 	loaded_display_name = move.display_name
+	loaded_tt_desc_text = move.short_desc
 	
 	if move.current_cooldown > 0:
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/Cooldown
 		loaded_value = str(move.current_cooldown)
-		loaded_tooltip = str("Move in cooldown for ",move.current_cooldown," more turns")
+		loaded_tt_warn_text = str("Move in cooldown for ",move.current_cooldown," more turns")
 	
 	elif move.current_battle_uses >= move.uses_per_battle and move.uses_per_battle > 0:
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/Error
 		loaded_value = "b"
-		loaded_tooltip = str("Move has reached per-battle limit [ ",move.uses_per_battle," ]")
+		loaded_tt_warn_text = str("Move has reached per-battle limit [ ",move.uses_per_battle," ]")
 	
 	elif move.current_turn_uses >= move.uses_per_turn and move.uses_per_turn > 0:
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/Error
 		loaded_value = "t"
-		loaded_tooltip = str("Move has reached per-turn limit [ ",move.uses_per_turn," ]")
+		loaded_tt_warn_text = str("Move has reached per-turn limit [ ",move.uses_per_turn," ]")
 	
 	# At this point it should just be a matter of whether we can afford the AP cost or not
 	
@@ -111,22 +115,22 @@ func validate():
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/ActionNo
 		loaded_value = str(move.cost)
-		loaded_tooltip = str("Cannot afford ",move.cost," cost with ",actor.action_points," AP remaining")
+		loaded_tt_warn_text = str("Cannot afford ",move.cost," cost with ",actor.action_points," AP remaining")
 	
 	else: # We CAN afford it! Finally!
 		state = s.AVAILABLE
 		loaded_iconpar = $AllIcons/ActionYes
 		loaded_value = str(move.cost)
-		loaded_tt_col = Color("fff6ae")
+		tooltips_are_valid = true
 		
 		if move.on_use_cooldown > 0:
-			loaded_tooltip = str("Enters ",move.on_use_cooldown,"-turn cooldown after use")
+			loaded_tt_warn_text = str("Enters ",move.on_use_cooldown,"-turn cooldown after use")
 		elif move.uses_per_battle > 0:
 			var rem_uses: int = move.uses_per_battle - move.current_battle_uses
-			loaded_tooltip = str(rem_uses," per-battle uses remaining")
+			loaded_tt_warn_text = str(rem_uses," per-battle uses remaining")
 		elif move.uses_per_turn > 0:
 			var rem_uses: int = move.uses_per_turn - move.current_turn_uses
-			loaded_tooltip = str(rem_uses," per-turn uses remaining")
+			loaded_tt_warn_text = str(rem_uses," per-turn uses remaining")
 		else:
 			# ...And if it's just an AP cost issue and we CAN afford it, no message to really show?
 			pass

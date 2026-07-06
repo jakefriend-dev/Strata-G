@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource( 1 )
 display_name = "Slash"
+short_desc = "3 damage"
 display_desc = "Make a strong melee attack against a target for 3 damage."
 option_image = ExtResource( 2 )
 option_desc = "Changes angle of attack."

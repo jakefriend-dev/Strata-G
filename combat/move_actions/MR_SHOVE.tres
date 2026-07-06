@@ -8,6 +8,7 @@ resource_local_to_scene = true
 resource_name = "SHOVE"
 script = ExtResource( 1 )
 display_name = "Shove"
+short_desc = "Push 1 unit 1 tile away"
 display_desc = "Push an adjacent unit 1 tile away. Helpful for getting allies out of danger. Heavy enemies are unaffected."
 option_image = ExtResource( 2 )
 option_desc = "Changes angle of effect."

@@ -8,6 +8,7 @@ resource_local_to_scene = true
 resource_name = "SHIELD_RAM"
 script = ExtResource( 1 )
 display_name = "Shield Ram"
+short_desc = "Move back then charge for high knockback"
 display_desc = "Step backwards as far as you can, then charge forward into the first unit in your path, before returning to your original position.
 
 Units will receive knockback per tile charged."
