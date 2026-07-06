@@ -97,13 +97,13 @@ func validate():
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/Error
 		loaded_value = "b"
-		loaded_tooltip = str("Move has reached per-battle limit [",move.uses_per_battle,"]")
+		loaded_tooltip = str("Move has reached per-battle limit [ ",move.uses_per_battle," ]")
 	
 	elif move.current_turn_uses >= move.uses_per_turn and move.uses_per_turn > 0:
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/Error
 		loaded_value = "t"
-		loaded_tooltip = str("Move has reached per-turn limit [",move.uses_per_turn,"]")
+		loaded_tooltip = str("Move has reached per-turn limit [ ",move.uses_per_turn," ]")
 	
 	# At this point it should just be a matter of whether we can afford the AP cost or not
 	
