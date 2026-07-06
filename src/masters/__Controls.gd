@@ -160,21 +160,43 @@ func monitor_inputs():
 
 func inputcheck_player_combat_turn(actor: ActorPlayer):
 	# Orthagonal movement
+	if Input.is_action_pressed("player_modifier"):
+		if Input.is_action_just_pressed("player_move_up"):
+			multi_input_lock = true
+			actor.attempt_player_char_move(Vector2.UP)
+			return
+		if Input.is_action_just_pressed("player_move_down"):
+			multi_input_lock = true
+			actor.attempt_player_char_move(Vector2.DOWN)
+			return
+		if Input.is_action_just_pressed("player_move_left"):
+			multi_input_lock = true
+			actor.attempt_player_char_move(Vector2.LEFT)
+			return
+		if Input.is_action_just_pressed("player_move_right"):
+			multi_input_lock = true
+			actor.attempt_player_char_move(Vector2.RIGHT)
+			return
+		
+		# End of ALL modifier code
+		return
+	
+	# Move selection (2D grid)
 	if Input.is_action_just_pressed("player_move_up"):
 		multi_input_lock = true
-		actor.attempt_player_char_move(Vector2.UP)
+		batman.field.movewindow.change_selrow(-1)
 		return
 	if Input.is_action_just_pressed("player_move_down"):
 		multi_input_lock = true
-		actor.attempt_player_char_move(Vector2.DOWN)
+		batman.field.movewindow.change_selrow(1)
 		return
 	if Input.is_action_just_pressed("player_move_left"):
 		multi_input_lock = true
-		actor.attempt_player_char_move(Vector2.LEFT)
+		batman.field.movewindow.change_selcol(-1)
 		return
 	if Input.is_action_just_pressed("player_move_right"):
 		multi_input_lock = true
-		actor.attempt_player_char_move(Vector2.RIGHT)
+		batman.field.movewindow.change_selcol(1)
 		return
 	
 	# Use the currently selected attack (and option)
@@ -183,22 +205,14 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 		actor.attempt_player_char_action()
 		return
 	
-	# Select a move
-	if Input.is_action_just_pressed("player_cycle_next"):
-		multi_input_lock = true
-		batman.cycle_player_move_forward()
-		return
-	if Input.is_action_just_pressed("player_cycle_prev"):
-		multi_input_lock = true
-		batman.cycle_player_move_backward()
-		return
-#	if Input.is_action_just_pressed("player_subcycle_next"):
+	# Select a move (OLD)
+#	if Input.is_action_just_pressed("player_cycle_next"):
 #		multi_input_lock = true
-#		batman.cycle_player_variant_forward()
+#		batman.cycle_player_move_forward()
 #		return
-#	if Input.is_action_just_pressed("player_subcycle_prev"):
+#	if Input.is_action_just_pressed("player_cycle_prev"):
 #		multi_input_lock = true
-#		batman.cycle_player_variant_backward()
+#		batman.cycle_player_move_backward()
 #		return
 	
 	# Select a variant

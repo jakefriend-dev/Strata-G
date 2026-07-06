@@ -106,7 +106,7 @@ func validate():
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/ActionNo
 		loaded_value = str(move.cost)
-		loaded_tooltip = str("Cannot afford ",move.cost," cost with ",actor.action_points,"AP remaining")
+		loaded_tooltip = str("Cannot afford ",move.cost," cost with ",actor.action_points," AP remaining")
 	
 	else: # We CAN afford it! Finally!
 		state = s.AVAILABLE
@@ -121,7 +121,9 @@ func validate():
 		elif move.uses_per_turn > 0:
 			var rem_uses: int = move.uses_per_turn - move.current_turn_uses
 			loaded_tooltip = str(rem_uses," per-turn uses remaining")
-		# ...And if it's just an AP cost issue and we can afford it, no message to really show?
+		else:
+			# ...And if it's just an AP cost issue and we CAN afford it, no message to really show?
+			pass
 	
 	pass
 
