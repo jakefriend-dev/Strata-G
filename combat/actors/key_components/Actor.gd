@@ -70,20 +70,16 @@ var their_facing: Vector2 = Vector2.ZERO # either RIGHT or LEFT
 
 # A list of statuses for tracking and live usage
 var ongoing_statuses: Dictionary = {
-	# All ongoing statuses are in the format: [STRING key, INT ticks remaining]
-	# Any string inc custom stuff can be used; if it does nothing it'll just be ignored
-	# If a statuses already exists when a new one is added, it'll set to the highest of either ticks
-	
-	# A call is made each START and END of turn
-	# If you want 'only for the rest of this turn,' mark 1 tick
-	# If you want 'until the start of next turn' like a superguard, mark 2 ticks
-	# If you want 'the rest of this turn until the end of the next' like rage, mark 3 ticks
-	
-	# Generally for SELF-STATUSES you want a formula of ((X-1) + Y), where:
-		# X is the total number of rounds you want the status to last (including the current one)
-		# Y is a int(bool) where 1 if it ends at the end of your turn
+	"example_status": {
+		"tick_style": "start", # vs "end"
+		"ticks_remaining": 2, # auto-ends UPON reaching 0
+		"display_name": "Example Status Name",
+		"key_name": "example_status", # Convenient redundancy; harmless
+		"icon_type": "good", # vs "bad" or "misc"
+	},
 }
 # Concluded statuses are logged by the ROUND as a key, and an array of the statuses as a value
+# Not sure we'll ever NEED these, but no harm storing it in the odd case like "don't use this status again if you used it last turn"
 var concluded_statuses: Dictionary = {
 	# Example:
 	# 3: ["poison", "power_surge"],
@@ -352,66 +348,80 @@ func end_turn():   batman.end_turn()
 
 # ---
 
-func start_status(status_name: String, turns_to_last: int = 1, until_end_of_turn: bool = true):
-	var ticks: int = (turns_to_last * 2)
-	if until_end_of_turn:
-		ticks -= 1
-	
-	# When until_end_of_turn is false, it'll treat it as ending at the start of a turn - in almost all cases we want to end statuses at the end of a turn, but a reaction guard ability might be different
-	
-	if batman.curr_actor != self:
-		# When it's my turn, a "1-turn" status typically means "for the rest of the turn"
-		
-		# When it's NOT my turn, ie. someone else is applying this status to us, a "1-turn" status typically means "until the end of your upcoming turn," so we need to add a tick to survive the start-of-turn tickover. This is basically always true, otherwise statuses on others would only last UNTIL their turn starts and generally do nothing to them
-		
-		# So let's add a tick!
-		ticks += 1
-		pass
+#var ref: Dictionary = {
+#"example_status": {
+#	"tick_style": "start", # vs "end"
+#	"ticks_remaining": 2, # auto-ends UPON reaching 0
+#	"display_name": "Example Status Name",
+#	"key_name": "example_status", # Convenient redundancy; harmless
+#	"icon_type": "good", # vs "bad" or "misc"
+#}}
+
+func start_status(status_key: String, status_display_name: String, icon_type: String, ticks: int, until_end_of_turn: bool):
 	
 	# For existing statuses, re-up the tick count to the higher of the new-vs-current
-	if ongoing_statuses.has(status_name):
-		var existing_ticks: int = ongoing_statuses[status_name]
+	if ongoing_statuses.has(status_key):
+		var existing_ticks: int = ongoing_statuses[status_key]["ticks_remaining"]
 		if ticks > existing_ticks:
-			ongoing_statuses[status_name] = ticks
-			batman.update_action_log(str(name," RE-statused with [",status_name,"], topped up to ",ticks," ticks!"))
+			ongoing_statuses[status_key]["ticks_remaining"] = ticks
+			batman.update_action_log(str(name," RE-statused with [",status_key,"], topped up to ",ticks," ticks!"))
 		return
 	
 	# Otherwise, it's a new status!
-	ongoing_statuses[status_name] = ticks
-	batman.update_action_log(str(name," statused with [",status_name,"] for ",ticks," ticks!"))
-	pass
-
-func clear_status(status_name: String):
-	if !ongoing_statuses.has(status_name): return
+	ongoing_statuses[status_key]["key_name"] = status_key
+	ongoing_statuses[status_key]["display_name"] = status_display_name
+	ongoing_statuses[status_key]["icon_type"] = icon_type
+	ongoing_statuses[status_key]["ticks_remaining"] = ticks
+	if until_end_of_turn:
+		ongoing_statuses[status_key]["tick_style"] = "end"
+	else:
+		ongoing_statuses[status_key]["tick_style"] = "start"
 	
-	ongoing_statuses.erase(status_name)
-	log_ended_status(status_name, true)
+	batman.update_action_log(str(name," statused with [",status_key,"] for ",ticks," ticks!"))
 	pass
 
-func check_status(status_name: String) -> bool:
-	return ongoing_statuses.has(status_name)
+func clear_status(status_key: String):
+	if !ongoing_statuses.has(status_key): return
+	
+	ongoing_statuses.erase(status_key)
+	log_ended_status(status_key, true)
 	pass
 
-func tick_down_ongoing_statuses(_is_turn_start: bool):
+func check_status(status_key: String) -> bool:
+	return ongoing_statuses.has(status_key)
+	pass
+
+func tick_down_ongoing_statuses(is_turn_start: bool):
 	if batman.curr_actor != self: return # We only tick down our OWN!
 	
-	var new_dict: Dictionary = {}
+#	var new_dict: Dictionary = {}
+	var newly_ended_status_keys: Array = []
 	
 	for key in ongoing_statuses.keys():
-		var ticks: int = ongoing_statuses[key]
+		# Only tick the appropriate type at the appropriate time!
+		if is_turn_start:
+			if ongoing_statuses[key]["tick_style"] != "start": continue
+		else:
+			if ongoing_statuses[key]["tick_style"] != "end":   continue
+		
+		var ticks: int = ongoing_statuses[key]["ticks_remaining"]
 		ticks -= 1
 		
 		# If we've run out, log it in our records
 		if ticks <= 0:
-			log_ended_status(key, false)
+			newly_ended_status_keys.append(key)
 			continue
 		
 		# Otherwise, pass it to the new temp dict to carry forward
-		new_dict[key] = ticks
+		ongoing_statuses[key]["ticks_remaining"] = ticks
 		pass
 	
-	ongoing_statuses.clear()
-	ongoing_statuses = new_dict
+	for key in newly_ended_status_keys:
+		if ongoing_statuses.has(key):
+			ongoing_statuses.erase(key)
+			log_ended_status(key, false)
+#	ongoing_statuses.clear()
+#	ongoing_statuses = new_dict
 	pass
 
 func log_ended_status(status_name: String, manual_end: bool):

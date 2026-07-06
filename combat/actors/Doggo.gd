@@ -189,7 +189,7 @@ func ACT_bite():
 	pass
 
 func ACT_enrage():
-	start_status("enrage", 2)
+	start_status("enrage", "Enrage", "good", 2, true)
 	strife.quick_vfx(self, "quick_good")
 	strife.quick_vfx(self, "buff")
 #	add_bonus_actions(1)

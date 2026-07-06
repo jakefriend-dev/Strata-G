@@ -187,13 +187,6 @@ func prep_next_action():
 	prep_next_action()
 	pass
 
-func post_all_action_prep():
-	if get_bonus_action_next_turn:
-		get_bonus_action_next_turn = false
-		add_bonus_actions(1)
-		start_status("keeps_bonus_action", 1, false)
-	pass
-
 # ---
 
 func ACT_pre_shoot():
@@ -324,7 +317,8 @@ func ACT_debuff():
 	for actor in batman.living_actors: if actor is Actor:
 		if actor == self:
 			strife.quick_vfx(self, "quick_good")
-			continue # We handle ourselves later!
+			actor.add_bonus_actions(1)
+			continue
 		
 		# Enemies gain 1AP, playerside loses 1AP
 		if actor.faction == batman.factions.ENEMY:
