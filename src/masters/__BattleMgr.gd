@@ -674,6 +674,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		else:
 			print("player char ",curr_actor.name," has literally no set moveset!")
 		curr_actor.prep_moveset_on_turn_start()
+	field.movewindow.load_moves()
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	
@@ -1146,6 +1147,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var logline: String = str("[",actor.ofc_name,"] --> ",logname)
 	update_action_log(logline)
 	emit_signal("any_actionstep_initiated")
+	field.movewindow.refresh_all()
 	
 	# Execute!
 	if paramset.empty():

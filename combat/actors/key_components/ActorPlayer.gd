@@ -3,7 +3,7 @@ class_name ActorPlayer
 
 var moveset: Dictionary = {} # Post-validation
 var move_layout: Array2D
-export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null, null]
+export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null]
 
 const pstring: String = "PREVIEW"
 const astring: String = "ACT"

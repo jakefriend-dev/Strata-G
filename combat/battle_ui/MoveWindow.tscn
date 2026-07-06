@@ -1,7 +1,8 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
 [ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=2]
+[ext_resource path="res://combat/battle_ui/MoveWindow.gd" type="Script" id=3]
 [ext_resource path="res://combat/battle_ui/components/Pip_8_Shield_Count.tscn" type="PackedScene" id=5]
 [ext_resource path="res://combat/battle_ui/components/Pip_8_Action_Count.tscn" type="PackedScene" id=6]
 [ext_resource path="res://combat/battle_ui/components/PipStatus.tscn" type="PackedScene" id=7]
@@ -48,6 +49,10 @@ modulate_color = Color( 0.588235, 0.423529, 0.603922, 1 )
 [sub_resource type="StyleBoxEmpty" id=8]
 
 [node name="MoveWindow" type="Node2D"]
+script = ExtResource( 3 )
+path_movegrid = NodePath("PanelContainer/HB/VB/UpperHB/MoveGrid")
+path_movetooltip = NodePath("PanelContainer/HB/VB/LowerHB/MoveTooltip")
+path_userpanel = NodePath("PanelContainer/HB/VB/UpperHB/UserPanel")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
 margin_left = -4.0
@@ -74,24 +79,24 @@ custom_styles/panel = SubResource( 9 )
 
 [node name="VB" type="VBoxContainer" parent="PanelContainer/HB"]
 margin_left = 10.0
-margin_right = 292.0
+margin_right = 224.0
 margin_bottom = 87.0
 
 [node name="SpacerTop" type="Panel" parent="PanelContainer/HB/VB"]
-margin_right = 282.0
+margin_right = 214.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 0, 10 )
 custom_styles/panel = SubResource( 10 )
 
 [node name="UpperHB" type="HBoxContainer" parent="PanelContainer/HB/VB"]
 margin_top = 10.0
-margin_right = 282.0
-margin_bottom = 74.0
+margin_right = 214.0
+margin_bottom = 72.0
 custom_constants/separation = 4
 
 [node name="MoveGrid" type="GridContainer" parent="PanelContainer/HB/VB/UpperHB"]
 margin_right = 214.0
-margin_bottom = 64.0
+margin_bottom = 62.0
 rect_min_size = Vector2( 214, 0 )
 theme = SubResource( 1 )
 custom_constants/hseparation = 6
@@ -101,46 +106,47 @@ __meta__ = {
 }
 
 [node name="Option1" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
-margin_right = 96.0
+margin_right = 100.0
 
 [node name="Option2" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
-margin_left = 102.0
-margin_right = 198.0
+margin_left = 106.0
+margin_right = 206.0
 
 [node name="Option3" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 16.0
-margin_right = 96.0
+margin_right = 100.0
 margin_bottom = 30.0
 
 [node name="Option4" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
-margin_left = 102.0
+margin_left = 106.0
 margin_top = 16.0
-margin_right = 198.0
+margin_right = 206.0
 margin_bottom = 30.0
 
 [node name="Option5" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 32.0
-margin_right = 96.0
+margin_right = 100.0
 margin_bottom = 46.0
 
 [node name="Option6" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
-margin_left = 102.0
+margin_left = 106.0
 margin_top = 32.0
-margin_right = 198.0
+margin_right = 206.0
 margin_bottom = 46.0
 
 [node name="Option7" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 48.0
-margin_right = 96.0
+margin_right = 100.0
 margin_bottom = 62.0
 
 [node name="Option8" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
-margin_left = 102.0
+margin_left = 106.0
 margin_top = 48.0
-margin_right = 198.0
+margin_right = 206.0
 margin_bottom = 62.0
 
 [node name="UserPanel" type="PanelContainer" parent="PanelContainer/HB/VB/UpperHB"]
+visible = false
 margin_left = 218.0
 margin_right = 282.0
 margin_bottom = 64.0
@@ -515,9 +521,9 @@ margin_right = 31.0
 [node name="Status" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/BotPlate" instance=ExtResource( 7 )]
 
 [node name="LowerHB" type="HBoxContainer" parent="PanelContainer/HB/VB"]
-margin_top = 74.0
-margin_right = 282.0
-margin_bottom = 87.0
+margin_top = 72.0
+margin_right = 214.0
+margin_bottom = 85.0
 
 [node name="SpacerL" type="Panel" parent="PanelContainer/HB/VB/LowerHB"]
 margin_right = 16.0
@@ -525,11 +531,11 @@ margin_bottom = 13.0
 rect_min_size = Vector2( 16, 0 )
 custom_styles/panel = SubResource( 8 )
 
-[node name="MoveInfo" type="Label" parent="PanelContainer/HB/VB/LowerHB"]
+[node name="MoveTooltip" type="Label" parent="PanelContainer/HB/VB/LowerHB"]
 margin_left = 16.0
 margin_right = 137.0
 margin_bottom = 13.0
-custom_colors/font_color = Color( 0.588235, 0.423529, 0.603922, 1 )
+custom_colors/font_color = Color( 1, 0.964706, 0.682353, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 15 )
 text = "2 per-battle uses remain."

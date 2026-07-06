@@ -7,6 +7,7 @@ export var path_misc: NodePath
 export var path_debuglog_par: NodePath
 export var path_turndisplay_par: NodePath
 export var path_actionsel_par: NodePath
+export var path_movewindow: NodePath
 var board: Node2D
 var actors: YSort
 var vfx: YSort
@@ -14,6 +15,7 @@ var misc: YSort
 var debuglog_par: VBoxContainer
 var turndisplay_par: VBoxContainer
 var actionsel_par: VBoxContainer
+var movewindow: Node2D
 
 var board_offset: Vector2
 
@@ -29,6 +31,7 @@ func _ready():
 	debuglog_par = get_node(path_debuglog_par)
 	turndisplay_par = get_node(path_turndisplay_par)
 	actionsel_par = get_node(path_actionsel_par)
+	movewindow = get_node(path_movewindow)
 	
 	batman.field = self
 	batman.drawer = $FieldFore/Drawer

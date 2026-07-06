@@ -21,6 +21,7 @@ path_misc = NodePath("FieldObjects/Misc")
 path_debuglog_par = NodePath("MenuOverlays/DebugLog/VB")
 path_turndisplay_par = NodePath("MenuOverlays/TurnDisplay/VB")
 path_actionsel_par = NodePath("MenuOverlays/ActionSelect/VB")
+path_movewindow = NodePath("MenuOverlays/MoveWindow")
 
 [node name="BG" type="Node2D" parent="."]
 

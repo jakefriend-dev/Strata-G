@@ -26,16 +26,19 @@ enum s { # States represent the unselected AND selected variants!
 var colsets: Dictionary = {
 	# Array indices are: Light colour, dark colour, unfill_height shader param
 	s.NOT_MOVE: {
-		"unsel": [Color("79808d"), Color("566a89"), 5],
-		"sel":   [Color("ffffff"), Color("c9ec85"), 9],
+		0: [Color("8babbf"), Color("79808d"), 5],
+		1: [Color("ffffff"), Color("c9ec85"), 9],
+		"highlight_shape": Color("cce2e1"),
 	},
 	s.UNAVAILABLE: {
-		"unsel": [Color("79808d"), Color("566a89"), 5],
-		"sel":   [Color("cce2e1"), Color("8babbf"), 9],
+		0: [Color("79808d"), Color("566a89"), 5],
+		1: [Color("cce2e1"), Color("8babbf"), 9],
+		"highlight_shape": Color("ff94b3"),
 	},
 	s.AVAILABLE: {
-		"unsel": [Color("ffdba5"), Color("ffa468"), 5],
-		"sel":   [Color("ffffff"), Color("8cffde"), 9],
+		0: [Color("ffdba5"), Color("ffa468"), 5],
+		1: [Color("ffffff"), Color("8cffde"), 9],
+		"highlight_shape": Color("8cffde"),
 	},
 }
 
@@ -45,9 +48,14 @@ var currently_highlighted: bool = false # Controlled externally
 
 # ---
 
-func assign_new_move():
+func update_against_new_move():
 	validate()
-	refresh()
+	visual_refresh()
+	pass
+
+func full_refresh():
+	validate()
+	visual_refresh()
 	pass
 
 func validate():
@@ -65,11 +73,13 @@ func validate():
 			state = s.NOT_MOVE
 			loaded_tooltip = nonmove_tooltip
 			loaded_iconpar = $AllIcons/Arrow
+			loaded_display_name = nonmove_display_name
 			return
 	
 	# Regular moves
 	if move == null: return
 	valid = true
+	loaded_display_name = move.display_name
 	
 	if move.current_cooldown > 0:
 		state = s.UNAVAILABLE
@@ -77,13 +87,13 @@ func validate():
 		loaded_value = str(move.current_cooldown)
 		loaded_tooltip = str("Move in cooldown for ",move.current_cooldown," more turns")
 	
-	elif move.current_battle_uses >= move.uses_per_battle:
+	elif move.current_battle_uses >= move.uses_per_battle and move.uses_per_battle > 0:
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/Error
 		loaded_value = "b"
 		loaded_tooltip = str("Move has reached per-battle limit (",move.uses_per_battle,")")
 	
-	elif move.current_turn_uses >= move.uses_per_turn:
+	elif move.current_turn_uses >= move.uses_per_turn and move.uses_per_turn > 0:
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/Error
 		loaded_value = "t"
@@ -114,10 +124,14 @@ func validate():
 	
 	pass
 
-func refresh():
+func visual_refresh():
 	if !valid:
 		if $AllIcons.visible:
 			$AllIcons.visible = false
+		if $MoveName.text != "":
+			$MoveName.text = ""
+		if $Highlight.visible:
+			$Highlight.visible = false
 		return
 	
 	# Generic visibility setups
@@ -144,6 +158,11 @@ func refresh():
 	m.set_shader_param("col_mid",        colset[1])
 	m.set_shader_param("unfill_height",  colset[2])
 	
+	if $Highlight/Shape.modulate != colsets[state]["highlight_shape"]:
+		$Highlight/Shape.modulate = colsets[state]["highlight_shape"]
+	
+	if $Highlight.visible != currently_highlighted:
+		$Highlight.visible = currently_highlighted
 	pass
 
 # ---
