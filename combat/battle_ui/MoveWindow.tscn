@@ -111,39 +111,49 @@ margin_right = 100.0
 [node name="Option2" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_left = 106.0
 margin_right = 206.0
+my_x_col = 1
 
 [node name="Option3" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 16.0
 margin_right = 100.0
 margin_bottom = 30.0
+my_y_row = 1
 
 [node name="Option4" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_left = 106.0
 margin_top = 16.0
 margin_right = 206.0
 margin_bottom = 30.0
+my_x_col = 1
+my_y_row = 1
 
 [node name="Option5" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 32.0
 margin_right = 100.0
 margin_bottom = 46.0
+my_y_row = 2
 
 [node name="Option6" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_left = 106.0
 margin_top = 32.0
 margin_right = 206.0
 margin_bottom = 46.0
+my_x_col = 1
+my_y_row = 2
 
 [node name="Option7" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 48.0
 margin_right = 100.0
 margin_bottom = 62.0
+my_y_row = 3
 
 [node name="Option8" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_left = 106.0
 margin_top = 48.0
 margin_right = 206.0
 margin_bottom = 62.0
+my_x_col = 1
+my_y_row = 3
 
 [node name="UserPanel" type="PanelContainer" parent="PanelContainer/HB/VB/UpperHB"]
 visible = false

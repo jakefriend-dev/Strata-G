@@ -21,6 +21,9 @@ func _ready():
 	pass
 
 func load_moves():
+	selcol = 0
+	selrow = 0
+	
 	for moveopt in movegrid.get_children():
 		moveopt.move = null
 		moveopt.actor = batman.curr_actor
@@ -60,6 +63,9 @@ func load_moves():
 	var tooltip_text: String = ""
 	for moveopt in movegrid.get_children():
 		moveopt.update_against_new_move()
+		
+		moveopt.currently_highlighted = (moveopt.my_x_col == selcol and moveopt.my_y_row == selrow)
+		
 		if moveopt.currently_highlighted:
 			tooltip_text = moveopt.loaded_tooltip
 	
@@ -71,6 +77,7 @@ func refresh_all():
 	var tooltip_text: String = ""
 	
 	for moveopt in movegrid.get_children():
+		moveopt.currently_highlighted = (moveopt.my_x_col == selcol and moveopt.my_y_row == selrow)
 		moveopt.full_refresh()
 		if moveopt.currently_highlighted:
 			tooltip_text = moveopt.loaded_tooltip
@@ -79,6 +86,23 @@ func refresh_all():
 		movetooltip.text = tooltip_text
 	pass
 
+func change_selrow(amount: int):
+	selrow += amount
+	if selrow > 3:
+		selrow = 0
+	elif selrow < 0:
+		selrow = 3
+	
+	refresh_all()
+	pass
 
-
+func change_selcol(amount: int):
+	selcol += amount
+	if selcol > 1:
+		selcol = 0
+	elif selcol < 0:
+		selcol = 1
+	
+	refresh_all()
+	pass
 

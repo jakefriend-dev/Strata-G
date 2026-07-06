@@ -12,7 +12,8 @@ var nonmove_display_name: String # Loaded externally!
 var loaded_iconpar: HBoxContainer
 var loaded_value: String = ""
 
-
+export var my_x_col: int = 0
+export var my_y_row: int = 0
 
 #
 
