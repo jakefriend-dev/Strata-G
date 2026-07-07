@@ -59,7 +59,7 @@ func do_quiet_damage(attacker: Actor, defender: Actor, damage: int, flags: Array
 	# skip_own_faction: Typically FF is default-on; this would bypass that
 
 func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Array, is_quiet: bool):
-	if damage <= 0: return
+#	if damage <= 0: return # Moved this check to later, in case of damage-less effects like Cold
 	if !utils.actorpass(defender): return # Attacker is allowed to be null, though!
 	
 	var attacker_is_real: bool = false
@@ -216,7 +216,10 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	# When no damage is left, end the algorithm
 	if damage <= 0:
-		batman.update_action_log(str(defender.name,": Blocked ",shielded_damage," and took no damage"))
+		if shielded_damage > 0:
+			batman.update_action_log(str(defender.name,": Blocked ",shielded_damage," and took no damage"))
+		else:
+			batman.update_action_log(str(defender.name,": Took no damage"))
 		defender.update_bui()
 		return
 	
@@ -633,7 +636,7 @@ func TILE_started_on_HOT(actor: Actor, _coord: Vector2):
 	# Gain 1 AP - fire immunity doesn't matter here, you get the upside regardless
 	
 	quick_vfx(actor, "quick_good")
-	actor.add_bonus_actions(1)
+	actor.add_action_points(1)
 	pass
 
 # The moment you ENTER a tiletype MID-turn -------------------------------------

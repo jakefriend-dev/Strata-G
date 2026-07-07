@@ -46,7 +46,7 @@ var bui: Node2D
 
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
-var bonus_actions: int = 0 # Can be added to in buffs and the like!
+const MAX_action_points: int = 10 # Never let multi-turn overflow exceed this!
 
 var actions_completed_this_turn: int = 0 # An action is what we think of as an attack;
 										# like all 3 steps of Doggo's charge attack is 1 action
@@ -275,7 +275,7 @@ func choose_action():
 	pass
 
 func can_afford(cost: int) -> bool:
-	if (action_points + bonus_actions) >= cost:
+	if (action_points) >= cost:
 		return true
 	return false
 	pass
@@ -284,11 +284,11 @@ func spend(cost: int):
 	if cost <= 0: return
 	
 	var og_cost: int = cost
-	var og_actions: int = (action_points + bonus_actions)
+	var og_actions: int = action_points
 	
-	while bonus_actions > 0 and cost > 0:
-		bonus_actions -= 1
-		cost -= 1
+#	while bonus_actions > 0 and cost > 0:
+#		bonus_actions -= 1
+#		cost -= 1
 	
 	while action_points > 0 and cost > 0:
 		action_points -= 1
@@ -298,20 +298,21 @@ func spend(cost: int):
 		print(name,": ERROR, tried to spend ",og_cost," action points when only ",og_actions," we available!")
 	
 	if action_points < 0: action_points = 0
-	if bonus_actions < 0: bonus_actions = 0
+#	if bonus_actions < 0: bonus_actions = 0
 	
 	update_bui()
 	pass
 
-func add_bonus_actions(value: int):
-	bonus_actions += value
+func add_action_points(value: int):
+	action_points += value
 	update_bui()
 	pass
 
 func refresh_action_points():
-	action_points = base_action_points
-	if !check_status("keeps_bonus_actions"):
-		bonus_actions = 0
+	action_points += base_action_points
+	if action_points > MAX_action_points:
+		action_points = MAX_action_points
+#	action_points = base_action_points
 	
 	update_bui()
 	pass

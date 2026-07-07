@@ -100,7 +100,7 @@ func ACT_charge_forward():
 #	start_status("enrage", "Enrage", "good", 2, true)
 #	strife.quick_vfx(self, "quick_good")
 #	strife.quick_vfx(self, "buff")
-##	add_bonus_actions(1)
+##	add_action_points(1)
 #
 #	yield(utils.yt(0.5, self), "timeout")
 #	if !batman.is_my_action(self): return

@@ -27,7 +27,7 @@ func PREVIEW():
 func ACT():
 #	target = get_first_cell_by_MPD_type(ROWS.BAD)
 #	print("water lob ACT target: ",target)
-	strife.damage_actor_at_coord(actor, target, 1*batman.BASE_HP_FACTOR, ["cold"])
+	strife.damage_actor_at_coord(actor, target, 0, ["cold"])
 	support.change_tiletype_single(target, batman.tiletypes.ICE)
 	
 	end_action()
