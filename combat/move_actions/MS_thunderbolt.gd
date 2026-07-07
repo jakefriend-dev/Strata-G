@@ -3,9 +3,6 @@ extends MoveAction
 func PREVIEW():
 	
 	var check_vector: Vector2 = batman.loaded_variant
-#	var check_vector: Vector2 = actor.my_facing
-#	if variant == 2: check_vector += Vector2.UP
-#	if variant == 3: check_vector += Vector2.DOWN
 	
 	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
 	if !unoccupieds.empty():
@@ -40,9 +37,10 @@ func ACT():
 			dist += 1
 		pass
 	
-	# Distance is based off damage; adjacent to us is 0 damage and +1 per gap of space
-	if dist > 0: dmg = (dist - 1)
-	if dmg < 0: dmg = 0
+	# Distance is based off damage; adjacent to us is 1 damage and +1 per gap of space
+	# EDITED to make it min 1 damage
+	dmg = dist
+	if dmg < 1: dmg = 1
 #	print("longshot dist ",dist," so base dmg ",dmg)
 	dmg *= batman.BASE_HP_FACTOR
 	
