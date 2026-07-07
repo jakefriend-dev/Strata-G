@@ -13,8 +13,7 @@ export var path_apb: NodePath
 var apb: VBoxContainer
 
 #                             Valid           Invalid
-#var desccols: Array = [Color("fff6ae"), Color("8babbf")]
-var desccols: Array = [Color("fff6ae"), Color("ff94b3")]
+var desccols: Array = [Color("ffdba5"), Color("fdbaf2")]
 var warncols: Array = [Color("9cd8fc"), Color("ff94b3")]
 
 # ---

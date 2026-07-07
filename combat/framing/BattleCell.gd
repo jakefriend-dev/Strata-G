@@ -1,11 +1,11 @@
 extends Node2D
 
-var colset: Dictionary = {
-	batman.factions.PLAYER:  ["5e96dd"],
-	batman.factions.ENEMY:   ["bd1f3f"],
-}
+#var colset: Dictionary = {
+#	batman.factions.PLAYER:  ["5e96dd"],
+#	batman.factions.ENEMY:   ["bd1f3f"],
+#}
 
-var targetcol: Color = Color("ff9696")
+#var targetcol: Color = Color("ff9696")
 
 # Un-set; 0 is default
 var row: int = -1

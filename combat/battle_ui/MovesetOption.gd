@@ -31,18 +31,18 @@ var colsets: Dictionary = {
 	# Array indices are: Light colour, dark colour, unfill_height shader param
 	s.NOT_MOVE: {
 		0: [Color("8babbf"), Color("79808d"), 5],
-		1: [Color("ffffff"), Color("c9ec85"), 9],
-		"highlight_shape": Color("cce2e1"),
+		1: [Color("ffffff"), Color("ffda70"), 9],
+		"highlight_shape": Color("cfedd0"),
 	},
 	s.UNAVAILABLE: {
 		0: [Color("79808d"), Color("566a89"), 5],
-		1: [Color("cce2e1"), Color("8babbf"), 9],
+		1: [Color("cfedd0"), Color("8babbf"), 9],
 		"highlight_shape": Color("ff94b3"),
 	},
 	s.AVAILABLE: {
 		0: [Color("ffdba5"), Color("ffa468"), 5],
-		1: [Color("ffffff"), Color("8cffde"), 9],
-		"highlight_shape": Color("8cffde"),
+		1: [Color("ffffff"), Color("94eed4"), 9],
+		"highlight_shape": Color("94eed4"),
 	},
 }
 

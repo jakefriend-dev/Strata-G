@@ -170,7 +170,7 @@ custom_styles/panel = SubResource( 10 )
 [node name="ActionPointBar" type="VBoxContainer" parent="PanelContainer/HB/AimAndAP"]
 margin_top = 68.0
 margin_right = 48.0
-margin_bottom = 93.0
+margin_bottom = 96.0
 
 [node name="Text" type="HBoxContainer" parent="PanelContainer/HB/AimAndAP/ActionPointBar"]
 margin_left = 6.0

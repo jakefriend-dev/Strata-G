@@ -61,12 +61,12 @@ var variant: int # Shortcut that gets updated against batman.highlighted_subacto
 
 # Colours needed: 5 (bad, good, neutral, passthrough/pass, error)
 var colors: Dictionary = {
-	ROWS.BAD:      Color("e9148a"), # 0
-	ROWS.GOOD:     Color("00c84c"), # 1
-	ROWS.NEUTRAL:  Color("f4dd30"), # 2
-	ROWS.PASS:     Color("488a75"), # 3
-	ROWS.ERROR:    Color("595565"), # 4
-	ROWS.FALLBACK: Color("f3fcf0"), # 5
+	ROWS.BAD:      Color("c34b91"), # 0
+	ROWS.GOOD:     Color("45b8b3"), # 1
+	ROWS.NEUTRAL:  Color("ffa468"), # 2
+	ROWS.PASS:     Color("566a89"), # 3
+	ROWS.ERROR:    Color("4a3858"), # 4
+	ROWS.FALLBACK: Color("cfedd0"), # 5
 }
 var sets: Array2D
 

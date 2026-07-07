@@ -15,9 +15,9 @@ var colsets: Array = [
 	# Invalid
 	[Color("566a89"), Color("79808d"), Color("566a89")],
 	# Inert
-	[Color("9cd8fc"), Color("cce2e1"), Color("9cd8fc")],
+	[Color("9cd8fc"), Color("cfedd0"), Color("9cd8fc")],
 	# Selected
-	[Color("fdd18c"), Color("ffffff"), Color("f5b4ff")],
+	[Color("ffda70"), Color("ffffff"), Color("ff94b3")],
 ]
 
 #export var e_run_setup: bool = false setget run_editor_preview
