@@ -773,6 +773,12 @@ func is_fixes_jagged_on_contact(actor: Actor) -> bool:
 	if actor.weight == actor.weightclasses.HOVER: return false
 	return true
 
+func is_unmovable(actor: Actor) -> bool: # Like 'affected by force' but ALLOWS knockback, like for vine yank, which should move everything except rocks.
+	if !utils.actorpass(actor): return false
+	
+	if actor.is_unmovable: return false
+	return true
+
 func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback; not ice sliding - this is important because it DOESN'T fall privy to the is_on_ground or weightclasses.HOVER checks like the others!
 	if !utils.actorpass(actor): return false
 	
