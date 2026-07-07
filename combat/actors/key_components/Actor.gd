@@ -299,6 +299,7 @@ func spend(cost: int):
 	
 	if action_points < 0: action_points = 0
 	if bonus_actions < 0: bonus_actions = 0
+	
 	update_bui()
 	pass
 
@@ -684,6 +685,7 @@ func update_bui():
 		add_child(bui)
 		bui.set("owner", self)
 	
+	batman.field.movewindow.update_ap()
 	bui.refresh()
 	pass
 

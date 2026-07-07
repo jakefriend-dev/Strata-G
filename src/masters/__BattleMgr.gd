@@ -673,6 +673,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	moveselcol = 0
 	moveselrow = 0
 	field.movewindow.load_movewindow()
+	field.movewindow.update_ap()
 	
 	if curr_actor is ActorPlayer:
 		loaded_moveset = curr_actor.moveset.keys()

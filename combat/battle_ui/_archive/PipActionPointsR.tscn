@@ -4,7 +4,7 @@
 [ext_resource path="res://src/classes/_Sprite9Patch.gd" type="Script" id=2]
 [ext_resource path="res://art/bui/pips/_archive/PipsEdges-APV2.png" type="Texture" id=3]
 [ext_resource path="res://art/bui/pips/10x action pip.png" type="Texture" id=4]
-[ext_resource path="res://text/fonts/built/Font Testing 1.tres" type="DynamicFont" id=5]
+[ext_resource path="res://text/fonts/built/Font Menu Small 1x.tres" type="DynamicFont" id=5]
 
 
 

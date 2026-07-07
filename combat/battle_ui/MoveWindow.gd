@@ -9,6 +9,9 @@ var tooltip_par: VBoxContainer
 export var path_userpanel: NodePath
 var userpanel: PanelContainer
 
+export var path_apb: NodePath
+var apb: VBoxContainer
+
 #                             Valid           Invalid
 #var desccols: Array = [Color("fff6ae"), Color("8babbf")]
 var desccols: Array = [Color("fff6ae"), Color("ff94b3")]
@@ -20,6 +23,7 @@ func _ready():
 	movegrid = get_node(path_movegrid)
 	tooltip_par = get_node(path_tooltip_par)
 	userpanel = get_node(path_userpanel)
+	apb = get_node(path_apb)
 	
 	for moveopt in movegrid.get_children():
 		moveopt.window = self
@@ -134,6 +138,37 @@ func attempt_to_run_moveoption_custom_function() -> bool:
 	return false
 	pass
 
+func update_ap():
+	if !utils.actorpass(batman.curr_actor):
+		apb.modulate.a = 0.0
+		return
+	apb.modulate.a = 1.0
+	
+	var curr: int = batman.curr_actor.action_points
+	var total: int = batman.curr_actor.base_action_points
+	apb.get_node("Text/Curr").text = str(curr)
+	apb.get_node("Text/Total").text = str(total)
+	
+	var count: int = 0 # 1-based
+	for pip in apb.get_node("Pips").get_children():
+		if pip.name == "MinPanel": continue
+		count += 1
+		
+		var to_vis: bool = (curr >= count or total >= count)
+		if pip.visible != to_vis:
+			pip.visible = to_vis
+		
+		var frame: int = 2 # "Greyed out" by default
+		if curr >= count:
+			if count > total:
+				frame = 1
+			else:
+				frame = 0
+		pip.get_node("Sprite").frame = frame
+		
+	pass
+
+# ---
 
 func CUSTOM_check_bag():
 	print("Testing CUSTOM_check_bag()! Wow it worked!!")

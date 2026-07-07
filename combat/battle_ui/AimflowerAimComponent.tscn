@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://art/bui/aimflowers/aimflower components.png" type="Texture" id=1]
+[ext_resource path="res://art/bui/aimflowers/aimflower components v2.png" type="Texture" id=1]
 [ext_resource path="res://src/shaders/SHADER palette swap.tres" type="Shader" id=2]
 [ext_resource path="res://combat/battle_ui/AimflowerAimComponent.gd" type="Script" id=3]
 
@@ -30,7 +30,6 @@ shader_param/replacer_col_8 = Color( 1, 1, 1, 1 )
 script = ExtResource( 3 )
 
 [node name="Shadow" type="Sprite" parent="."]
-modulate = Color( 1, 1, 1, 0.196078 )
 self_modulate = Color( 0, 0, 0, 1 )
 position = Vector2( 1, 1 )
 texture = ExtResource( 1 )

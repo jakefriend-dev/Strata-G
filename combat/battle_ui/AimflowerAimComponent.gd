@@ -11,9 +11,9 @@ var state: int = -1
 # Order is always backing, arrow, arrow-edge
 var colsets: Array = [
 	# Disabled
-	[Color("4178bd"), Color("497a80"), Color("4178bd")],
+	[Color("7b424d"), Color("683c34"), Color("7b424d")],
 	# Invalid
-	[Color("67525f"), Color("8c9ca6"), Color("67525f")],
+	[Color("566a89"), Color("79808d"), Color("566a89")],
 	# Inert
 	[Color("9cd8fc"), Color("cce2e1"), Color("9cd8fc")],
 	# Selected
@@ -86,7 +86,7 @@ func update_visual(_na = null):
 	sm.set_shader_param("replacer_col_3", colsets[state][2])
 	
 	if state == states.ENABLED_SELECTED:
-		$Top.position = Vector2(-2, -2)
+		$Top.position = Vector2(-1, -1)
 	else:
 		$Top.position = Vector2.ZERO
 	pass
