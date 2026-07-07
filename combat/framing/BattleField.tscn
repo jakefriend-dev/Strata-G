@@ -1,12 +1,13 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://art/_placeholder/test play area bg.png" type="Texture" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
 [ext_resource path="res://combat/battle_ui/MoveWindow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://text/fonts/built/Font Readout.tres" type="DynamicFont" id=4]
+[ext_resource path="res://art/_placeholder/field floor.png" type="Texture" id=5]
 [ext_resource path="res://combat/battle_effects/Drawer.gd" type="Script" id=6]
+[ext_resource path="res://art/_placeholder/town bg.png" type="Texture" id=7]
 [ext_resource path="res://art/_placeholder/mc/castle wall unusable.png" type="Texture" id=12]
-[ext_resource path="res://art/_placeholder/mc/default_silver_sandstone_block RESIZED full.png" type="Texture" id=13]
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
 
 [sub_resource type="StyleBoxEmpty" id=32]
@@ -24,13 +25,22 @@ path_movewindow = NodePath("MenuOverlays/MoveWindow")
 
 [node name="BG" type="Node2D" parent="."]
 
+[node name="town" type="TextureRect" parent="BG"]
+margin_right = 640.0
+margin_bottom = 120.0
+texture = ExtResource( 7 )
+stretch_mode = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="floor" type="TextureRect" parent="BG"]
-visible = false
-margin_left = -38.0
-margin_top = 103.0
-margin_right = 728.0
-margin_bottom = 417.0
-texture = ExtResource( 13 )
+modulate = Color( 0.439216, 0.576471, 0.733333, 1 )
+margin_left = 1.0
+margin_top = 114.0
+margin_right = 639.0
+margin_bottom = 359.0
+texture = ExtResource( 5 )
 stretch_mode = 2
 __meta__ = {
 "_edit_use_anchors_": false
@@ -49,6 +59,7 @@ scale = Vector2( 3, 3 )
 texture = ExtResource( 14 )
 
 [node name="big3" type="Sprite" parent="BG"]
+visible = false
 texture = ExtResource( 1 )
 centered = false
 
