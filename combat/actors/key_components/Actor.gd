@@ -847,6 +847,18 @@ func set_damage_mod(mod_key: String, value: int):
 	damage_mods[mod_key] = value
 	pass
 
+func dmg(value: int, treat_as_quarters: bool = false) -> int:
+	var mod: int = get_damage_mod_total()
+	mod *= 4 # Always comes in as FULL pips
+	
+	if !treat_as_quarters:
+		value *= 4 # Also FULL pips by default
+	
+	value += mod
+	if value < 0: return 0
+	return value
+	pass
+
 func get_damage_mod_total() -> int:
 	var total: int = 0
 	

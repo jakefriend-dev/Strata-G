@@ -176,12 +176,10 @@ func ACT_bite():
 	# Bites to the left; we are dumb so if this gets called we're not worrying about if there's a target or friendly fire.
 #	print("Biting!")
 	
-	var damage: int = base_damage
-	if check_status("enrage"):
-		damage += batman.BASE_HP_FACTOR
-	strife.damage_actor_at_coord(self, coord + Vector2.LEFT, damage)
+	strife.damage_actor_at_coord(self, coord + Vector2.LEFT, dmg(2))
 	
 	clear_status("enrage") # Whether it's active of not
+	clear_damage_mod("enrage")
 	strife.end_vfx_on_actor(self, "buff", true)
 	if !batman.is_my_action(self): return
 	
@@ -190,6 +188,7 @@ func ACT_bite():
 
 func ACT_enrage():
 	start_status("enrage", "Enrage", "good", 2, true)
+	set_damage_mod("enrage", 1)
 	strife.quick_vfx(self, "quick_good")
 	strife.quick_vfx(self, "buff")
 #	add_action_points(1)
