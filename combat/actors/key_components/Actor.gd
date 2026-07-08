@@ -53,8 +53,8 @@ var actions_completed_this_turn: int = 0 # An action is what we think of as an a
 var turns_completed_this_round: int = 0 # Includes interruptions, just if you had a turn at all
 var turns_completed_total: int = 0
 
-export var base_damage: int = 1 # For attack shortcuts for simple mobs (gets auto-factored)
-var bonus_damage: int = 0
+#export var base_damage: int = 1 # For attack shortcuts for simple mobs (gets auto-factored)
+#var bonus_damage: int = 0
 
 enum factions { # Local copy of TurnMgr, must be an exact duplicate!
 	NEUTRAL,
@@ -217,14 +217,14 @@ func _ready():
 func perform_initial_data_setup():
 	
 	base_health_pips = max_health
-	max_health *= batman.BASE_HP_FACTOR
+	max_health *= 4
 	health = max_health
 	
-	max_shield *= batman.BASE_HP_FACTOR # Let the start of turn determine current shield
+	max_shield *= 4 # Let the start of turn determine current shield
 	shield = max_shield
 	
 	action_points = base_action_points
-	base_damage *= batman.BASE_HP_FACTOR
+#	base_damage *= batman.BASE_HP_FACTOR
 	
 	for term in ["unmovable", "immune_fire", "immune_shrub", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged", "immune_mud", "immune_piercing"]:
 		set( str("is_"+term), get(str("def_",term)) )
