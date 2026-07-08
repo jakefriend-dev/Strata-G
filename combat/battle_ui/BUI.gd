@@ -33,6 +33,13 @@ func _ready():
 
 func connect_pips():
 	actorname = get_node(path_actorname)
+	
+	var nm: ShaderMaterial = actorname.material
+	if actor.faction == batman.factions.PLAYER:
+		nm.set_shader_param("col_mid", Color("9cd8fc"))
+	elif actor.faction == batman.factions.ENEMY:
+		nm.set_shader_param("col_mid", Color("ff94b3"))
+	
 	midplate = get_node(path_midplate)
 	action = get_node(path_action)
 	shield = get_node(path_shield)
