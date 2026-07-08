@@ -8,7 +8,7 @@
 
 [node name="Status" type="HBoxContainer"]
 margin_right = 24.0
-margin_bottom = 13.0
+margin_bottom = 8.0
 theme = ExtResource( 2 )
 script = ExtResource( 3 )
 __meta__ = {
@@ -16,9 +16,8 @@ __meta__ = {
 }
 
 [node name="Buff" type="Panel" parent="."]
-margin_top = 2.0
 margin_right = 8.0
-margin_bottom = 10.0
+margin_bottom = 8.0
 rect_min_size = Vector2( 8, 8 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -31,9 +30,8 @@ hframes = 3
 
 [node name="Debuff" type="Panel" parent="."]
 margin_left = 8.0
-margin_top = 2.0
 margin_right = 16.0
-margin_bottom = 10.0
+margin_bottom = 8.0
 rect_min_size = Vector2( 8, 8 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -47,9 +45,8 @@ frame = 1
 
 [node name="Misc" type="Panel" parent="."]
 margin_left = 16.0
-margin_top = 2.0
 margin_right = 24.0
-margin_bottom = 10.0
+margin_bottom = 8.0
 rect_min_size = Vector2( 8, 8 )
 size_flags_horizontal = 4
 size_flags_vertical = 4

@@ -1,0 +1,75 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://combat/battle_ui/components/PipHBNumberless.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/pips/8x shield pip.png" type="Texture" id=2]
+[ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=4]
+
+[sub_resource type="StyleBoxEmpty" id=4]
+
+[node name="Shield" type="HBoxContainer"]
+margin_right = 32.0
+margin_bottom = 8.0
+theme = ExtResource( 4 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Icon1" type="Panel" parent="."]
+margin_right = 8.0
+margin_bottom = 8.0
+rect_min_size = Vector2( 8, 8 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="Icon1"]
+texture = ExtResource( 2 )
+centered = false
+hframes = 5
+frame = 4
+
+[node name="Icon2" type="Panel" parent="."]
+margin_left = 8.0
+margin_right = 16.0
+margin_bottom = 8.0
+rect_min_size = Vector2( 8, 8 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="Icon2"]
+texture = ExtResource( 2 )
+centered = false
+hframes = 5
+frame = 4
+
+[node name="Icon3" type="Panel" parent="."]
+margin_left = 16.0
+margin_right = 24.0
+margin_bottom = 8.0
+rect_min_size = Vector2( 8, 8 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="Icon3"]
+texture = ExtResource( 2 )
+centered = false
+hframes = 5
+frame = 4
+
+[node name="Icon4" type="Panel" parent="."]
+margin_left = 24.0
+margin_right = 32.0
+margin_bottom = 8.0
+rect_min_size = Vector2( 8, 8 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_styles/panel = SubResource( 4 )
+
+[node name="Sprite" type="Sprite" parent="Icon4"]
+texture = ExtResource( 2 )
+centered = false
+hframes = 5
+frame = 4
