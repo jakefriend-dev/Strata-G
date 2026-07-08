@@ -13,6 +13,7 @@ display_desc = "Heal in a cross-shape around you, granting affected units +2 HP.
 option_image = ExtResource( 2 )
 option_desc = "Affects angle of effect."
 cost = 2
+base_damage = 0
 motion_type = 0
 on_use_cooldown = 1
 initial_cooldown = 0

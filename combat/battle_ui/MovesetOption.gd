@@ -89,7 +89,7 @@ func validate():
 	if move == null: return
 	valid = true
 	loaded_display_name = move.display_name
-	loaded_tt_desc_text = move.short_desc
+	loaded_tt_desc_text = move.translate_desc(move.short_desc)
 	
 	if move.current_cooldown > 0:
 		state = s.UNAVAILABLE

@@ -13,6 +13,7 @@ export var option_image: Texture
 export (String, MULTILINE) var option_desc: String
 
 export (int, 0, 8) var cost: int = 1
+export (int, 0, 8) var base_damage: int = 0 # Partly just a shortcut, but used to calculate descriptions live by replacing any text reading "DMG" with a calculation of (base_damage + actor.get_damage_buff())
 
 #	NOT_MOVING,
 #	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
@@ -131,6 +132,24 @@ func is_usable(ignore_ap: bool = false) -> bool:
 		return false
 	
 	return true
+
+func translate_desc(desc: String) -> String:
+	var dmg: String = str(get_damage())
+	desc = desc.replace("DMG", dmg)
+	
+	return desc
+	pass
+
+func get_damage() -> int:
+	var damage: int = base_damage
+	
+	damage += actor.get_damage_mod_total()
+	
+	if damage < 0: return 0
+	return damage
+	pass
+
+# ---
 
 func prepare_actualized_variants():
 	actualized_variants.clear()

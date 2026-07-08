@@ -84,13 +84,9 @@ var concluded_statuses: Dictionary = {
 	# 5: ["enrage"],
 }
 
-#var template_action_preview: Dictionary = {
-#	"damaged":    [], # RED! Any cells where damage will occur
-#	"occupied":   [], # YELLOW! Any cells where occupation will change - this could be where you yank someone else to, or who you swap spots with, or a space for stepsword
-#	"buffed":     [], # LIGHT GREEN? Any cells that will receive an 'status, good or bad
-#	"unaffected": [], # DARK TURQUOISE? For line-of-travel, such as all the tiles between you and the enemy for "shoot first enemy in sight and explode in a 3x3 around them"
-#	"cancelled":  [], # GREY? For things that don't work, like trying to reposition an actor to a cell it can't exist in
-#}
+var damage_mods: Dictionary = {
+#	"example_tag_name": -1, # Would be a -1 FULL PIP damage buff, to a minimum of 0 of course
+}
 
 enum weightclasses {
 	HOVER,  # Flying; not affects by the ground beneath it at ALL. Allowed to enter pit tiles!
@@ -844,6 +840,30 @@ func get_multifactored_actor_name() -> String:
 
 func is_targeted() -> bool:
 	return batman.targeted_tiles.has(coord)
+
+# ---
+
+func set_damage_mod(mod_key: String, value: int):
+	damage_mods[mod_key] = value
+	pass
+
+func get_damage_mod_total() -> int:
+	var total: int = 0
+	
+	for key in damage_mods.keys():
+		total += damage_mods[key]
+	
+	return total
+func clear_damage_mod(mod_key: String):
+	if damage_mods.has(mod_key):
+		damage_mods.erase(mod_key)
+	pass
+
+func clear_all_damage_mods():
+	damage_mods.clear()
+	pass
+
+# ---
 
 func x_facing() -> int: # Shortcut for the X-facing dir
 	if faction == factions.PLAYER:

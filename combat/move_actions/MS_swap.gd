@@ -14,7 +14,6 @@ func LOAD_VARIANTS():
 						actualized_variants.append(vec)
 	pass
 
-
 func PREVIEW():
 	
 	var check_vector: Vector2 = batman.loaded_variant

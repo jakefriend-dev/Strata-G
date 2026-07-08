@@ -15,6 +15,7 @@ Units will receive knockback per tile charged."
 option_image = ExtResource( 2 )
 option_desc = "Attack angle cannot be changed."
 cost = 3
+base_damage = 0
 motion_type = 1
 on_use_cooldown = 0
 initial_cooldown = 0

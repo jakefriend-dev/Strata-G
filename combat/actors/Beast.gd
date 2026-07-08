@@ -220,7 +220,7 @@ func ACT_shoot():
 #	print("shoot")
 	
 	for target in targeted_tiles:
-		strife.damage_actor_at_coord(self, target, base_damage)
+		strife.damage_actor_at_coord(self, target, 1*4)
 	
 	release_targeted_tiles()
 	end_action()

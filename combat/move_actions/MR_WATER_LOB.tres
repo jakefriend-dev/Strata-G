@@ -7,10 +7,11 @@
 script = ExtResource( 1 )
 display_name = "Water Lob"
 short_desc = "Throw to erode shield & cause ice"
-display_desc = "Throw a sphere of water in an arc at the target roughly 3 tiles in front of you. Deals 0 cold (eroding) damage on impact and turns tile to Ice."
+display_desc = "Throw a sphere of water in an arc at the target roughly 3 tiles in front of you. Deals DMG cold (eroding) damage on impact and turns tile to Ice."
 option_image = ExtResource( 2 )
 option_desc = "Changes landing point of attack."
 cost = 1
+base_damage = 0
 motion_type = 0
 on_use_cooldown = 0
 initial_cooldown = 0

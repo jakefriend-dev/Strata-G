@@ -35,7 +35,7 @@ __meta__ = {
 }
 
 [node name="Highlight" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0.247059 )
+modulate = Color( 1, 1, 1, 0.498039 )
 
 [node name="Shape" type="NinePatchRect" parent="Highlight"]
 modulate = Color( 1, 0.580392, 0.701961, 1 )
@@ -247,7 +247,7 @@ material = SubResource( 2 )
 margin_left = 8.0
 margin_right = 15.0
 margin_bottom = 13.0
-custom_colors/font_color = Color( 1, 0.580392, 0.701961, 1 )
+custom_colors/font_color = Color( 0.811765, 0.929412, 0.815686, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_constants/shadow_offset_x = 1
 custom_constants/shadow_offset_y = 1

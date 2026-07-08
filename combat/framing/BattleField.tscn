@@ -6,7 +6,7 @@
 [ext_resource path="res://text/fonts/built/Font Readout.tres" type="DynamicFont" id=4]
 [ext_resource path="res://art/_placeholder/field floor.png" type="Texture" id=5]
 [ext_resource path="res://combat/battle_effects/Drawer.gd" type="Script" id=6]
-[ext_resource path="res://art/_placeholder/town bg.png" type="Texture" id=7]
+[ext_resource path="res://art/_placeholder/town bg2.png" type="Texture" id=7]
 [ext_resource path="res://art/_placeholder/mc/castle wall unusable.png" type="Texture" id=12]
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
 
@@ -35,7 +35,7 @@ __meta__ = {
 }
 
 [node name="floor" type="TextureRect" parent="BG"]
-modulate = Color( 0.717647, 0.823529, 0.945098, 1 )
+modulate = Color( 0.819608, 0.839216, 0.862745, 1 )
 margin_left = 1.0
 margin_top = 114.0
 margin_right = 639.0
