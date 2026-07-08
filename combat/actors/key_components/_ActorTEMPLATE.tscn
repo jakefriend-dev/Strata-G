@@ -27,6 +27,8 @@ shader_param/blend_mix_degree = 0.5
 shader_param/outline_enabled = false
 shader_param/outline_col = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
 shader_param/outline_shadow = Color( 0.15686, 0.15686, 0.15686, 0.197 )
+shader_param/outcol_white = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
+shader_param/outcol_red = Color( 0.94509, 0.38431, 0.2, 0.78431 )
 shader_param/shadows_enabled = false
 shader_param/light_direction = Vector2( 0, -1 )
 shader_param/shadow_tint = Color( 0.15686, 0.15686, 0.15686, 0.197 )
@@ -66,7 +68,7 @@ script = ExtResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )
-position = Vector2( -8, -53 )
+position = Vector2( 0, -39 )
 texture = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ArtMgr"]

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://combat/actors/Thrower.gd" type="Script" id=1]
-[ext_resource path="res://art/_placeholder/scrab/crankle-sheet.png" type="Texture" id=2]
+[ext_resource path="res://art/actors/Thrower.png" type="Texture" id=2]
 [ext_resource path="res://combat/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://combat/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
 
@@ -63,7 +63,6 @@ max_health = 3
 max_shield = 2
 ofc_name = "Thrower"
 base_action_points = 3
-base_damage = null
 def_weight = 3
 tile_walk_speed = 0.25
 def_immune_poison = true
@@ -78,8 +77,7 @@ margin_bottom = 5.0
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )
-position = Vector2( 3, -15 )
-scale = Vector2( 0.75, 0.75 )
+position = Vector2( 0, -39 )
 texture = ExtResource( 2 )
 hframes = 3
 

@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://combat/actors/Beast.gd" type="Script" id=1]
-[ext_resource path="res://art/_placeholder/scrab/ruins beast.png" type="Texture" id=2]
+[ext_resource path="res://art/actors/Beast.png" type="Texture" id=2]
 [ext_resource path="res://combat/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://combat/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
 
@@ -64,7 +64,6 @@ second_initiative = 4
 max_health = 27
 max_shield = 1
 base_action_points = 5
-base_damage = 2
 def_weight = 3
 tile_walk_speed = 0.75
 def_immune_jagged = true
@@ -77,13 +76,13 @@ margin_left = -38.0
 margin_top = -13.0
 margin_right = 41.0
 margin_bottom = 13.0
+color = Color( 0.156863, 0.156863, 0.156863, 0.654902 )
 
 [node name="HFlipper" type="Node2D" parent="ArtMgr"]
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )
-position = Vector2( -2, -45 )
-scale = Vector2( 0.75, 0.75 )
+position = Vector2( 0, -39 )
 texture = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ArtMgr"]

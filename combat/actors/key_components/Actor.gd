@@ -688,8 +688,8 @@ func update_bui():
 
 func update_outline(): # Should be called every time targeting changes
 	# No outline by default
-	var use_outline: bool = false
-	var to_col: Color
+	var use_outline: bool = true
+	var to_col: Color = Color("222a5c")
 	
 	# White outline if it's your turn
 	if batman.curr_actor == self:
@@ -699,7 +699,7 @@ func update_outline(): # Should be called every time targeting changes
 	# Red outline if you're being targeted by something at present
 	elif is_targeted():
 		use_outline = true
-		to_col = Color("d96bab")
+		to_col = Color("800c53")
 	
 	var sm: ShaderMaterial = $ArtMgr/HFlipper/Sprite.material
 	if use_outline:

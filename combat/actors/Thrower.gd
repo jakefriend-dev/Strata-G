@@ -15,7 +15,7 @@ func _ready():
 	pass
 
 func pre_combat_setup():
-	ACT_prep_rock()
+	ACT_pre_prep_rock()
 	pass
 
 func pre_turn_setup():
@@ -55,7 +55,7 @@ func on_shield_broken(_combat_package: Dictionary):
 
 # ---
 
-func ACT_prep_rock():
+func ACT_pre_prep_rock():
 	# Pick a PC!
 	var pcs: Array = batman.get_all_current_players()
 	pcs.shuffle()
@@ -68,6 +68,29 @@ func ACT_prep_rock():
 	
 	rockstate = HELD_ROCK
 	sprite.frame = rockstate
+	
+	end_action()
+	pass
+
+func ACT_prep_rock():
+	# Pick a PC!
+	var pcs: Array = batman.get_all_current_players()
+	pcs.shuffle()
+	for pc in pcs:
+		if !batman.targeted_tiles.has(pc.coord):
+			set_targeted_tiles([pc.coord])
+	# If there wasn't a 'free' PC, double-target
+	if targeted_tiles.empty():
+		set_targeted_tiles([pcs[0].coord])
+	
+	strife.quick_vfx(self, "spark_burst")
+	
+	yield(utils.yt(0.125, self), "timeout")
+	if !batman.is_my_action(self): return
+	
+	rockstate = HELD_ROCK
+	sprite.frame = rockstate
+	
 	end_action()
 	pass
 
@@ -77,6 +100,10 @@ func ACT_drop_rock(): # Shield break!
 		rockstate = DROPPED_ROCK
 		sprite.frame = rockstate
 		strife.damage_actor_at_coord(self, coord, dmg(1))
+	
+	yield(utils.yt(0.125, self), "timeout")
+	if !batman.is_my_action(self): return
+	
 	end_action()
 	pass
 
@@ -84,8 +111,16 @@ func ACT_throw_rock():
 	var target: Vector2 = targeted_tiles[0] # Just in case of accidental multiple
 	strife.damage_actor_at_coord(self, target, dmg(1))
 	
+	yield(utils.yt(0.125, self), "timeout")
+	if !batman.is_my_action(self): return
+	
+	strife.quick_vfx(self, "spark_burst")
 	rockstate = NO_ROCK
 	sprite.frame = rockstate
+	
+	yield(utils.yt(0.125, self), "timeout")
+	if !batman.is_my_action(self): return
+	
 	end_action()
 	pass
 
