@@ -44,9 +44,9 @@ __meta__ = {
 }
 
 [node name="PC" type="PanelContainer" parent="MC"]
-margin_top = 16.0
+margin_top = 23.0
 margin_right = 80.0
-margin_bottom = 46.0
+margin_bottom = 39.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_styles/panel = ExtResource( 1 )
@@ -55,7 +55,7 @@ custom_styles/panel = ExtResource( 1 )
 margin_left = 2.0
 margin_top = 3.0
 margin_right = 78.0
-margin_bottom = 30.0
+margin_bottom = 16.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
@@ -64,6 +64,7 @@ __meta__ = {
 }
 
 [node name="TopPlate" type="VBoxContainer" parent="MC/PC/VB"]
+visible = false
 margin_right = 76.0
 margin_bottom = 14.0
 
@@ -97,9 +98,7 @@ align = 1
 
 [node name="MidPlate" type="HBoxContainer" parent="MC/PC/VB"]
 margin_left = 38.0
-margin_top = 14.0
 margin_right = 38.0
-margin_bottom = 14.0
 size_flags_horizontal = 4
 
 [node name="10xSize" type="VBoxContainer" parent="MC/PC/VB/MidPlate"]
@@ -209,9 +208,8 @@ rect_min_size = Vector2( 6, 0 )
 custom_styles/panel = SubResource( 5 )
 
 [node name="BotPlate" type="HBoxContainer" parent="MC/PC/VB"]
-margin_top = 14.0
 margin_right = 76.0
-margin_bottom = 27.0
+margin_bottom = 13.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 3

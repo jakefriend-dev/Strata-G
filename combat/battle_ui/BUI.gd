@@ -54,17 +54,21 @@ func connect_pips():
 	status.bui = self
 	status.actor = actor
 	
-	if actor.base_health_pips <= 8:
-		health = midplate.get_node("10xSize")
-		res_hp = loader.res_hp_10
-		if actor.base_health_pips <= 5:
-			hp_row_size = 5
-		else:
-			hp_row_size = 4
-	elif actor.base_health_pips <= 12:
+#	if actor.base_health_pips <= 8:
+#		health = midplate.get_node("10xSize")
+#		res_hp = loader.res_hp_10
+#		if actor.base_health_pips <= 5:
+#			hp_row_size = 5
+#		else:
+#			hp_row_size = 4
+#	elif actor.base_health_pips <= 12:
+	if actor.base_health_pips <= 12:
 		res_hp = loader.res_hp_8
 		health = midplate.get_node("8xSize")
-		hp_row_size = 6
+		if actor.base_health_pips <= 8:
+			hp_row_size = 4
+		else:
+			hp_row_size = 6
 	elif actor.base_health_pips <= 27:
 		health = midplate.get_node("6xSize")
 		res_hp = loader.res_hp_6
