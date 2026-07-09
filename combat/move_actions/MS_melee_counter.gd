@@ -21,16 +21,11 @@ func ACT():
 func REACT(combat_package: Dictionary):
 	print("Melee Counter: REACT()!")
 	if !actor.check_status("melee_counter"): return
-	print("a")
 	
 	if !combat_package.has("attacker_is_real"): return
-	print("b")
 	if !combat_package["attacker_is_real"]: return
-	print("c")
 	var attacker: Actor = combat_package["attacker"]
-	print("d")
 	if !utils.actorpass(attacker): return
-	print("e")
 	
 	var offsets: Array = [
 		Vector2.ZERO,
@@ -47,7 +42,8 @@ func REACT(combat_package: Dictionary):
 			strife.do_impact_damage(actor, attacker, actor.dmg(base_damage))
 			strife.quick_vfx(attacker, "melee_slice")
 			return
-	print("f")
+	
+	# Must not be a melee attack!
 	pass
 
 
