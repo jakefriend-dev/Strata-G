@@ -198,9 +198,18 @@ void fragment() {
 //				texture(TEXTURE, UV + vec2(-2.0,  1.0) * ps).a  != 0.0 ||
 //				texture(TEXTURE, UV + vec2( 2.0, -1.0) * ps).a  != 0.0 ||
 //				texture(TEXTURE, UV + vec2( 2.0,  0.0) * ps).a  != 0.0 || // Doublethick ends, inclusive
-				texture(TEXTURE, UV + vec2( 0.0, -1.0) * ps).a  != 0.0)
+				texture(TEXTURE, UV + vec2( 0.0, -1.0) * ps).a  != 0.0){
 				// If proximity checks pass, render the pixel as the outline colour
 				pcol = outline_col;
+			}
+			else if (texture(TEXTURE, UV + vec2( 1.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0, -1.0) * ps).a  != 0.0) {
+			vec4 corner_col = outline_col;
+			corner_col.a = 0.5;
+			pcol = corner_col;
+			}
 		}
 		// Draw outline's shadow
 //		if (pcol.a == 0.0) { // If the pixel is empty, we need to check for proximity to other opaque pixels (again)

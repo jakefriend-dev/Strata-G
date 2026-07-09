@@ -657,8 +657,8 @@ func adjust_target_highlights():
 				to_col = Color.gray
 #				to_col.a = 0.75
 	
-	if modulate != to_col:
-		modulate = to_col
+	if $ArtMgr.modulate != to_col:
+		$ArtMgr.modulate = to_col
 	pass
 
 func sink_into_tile():
