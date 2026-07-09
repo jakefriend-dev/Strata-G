@@ -599,7 +599,7 @@ func monitor_position_as_coordinate():
 	
 	if coord == prev_tick_coord: return
 	
-	print("new coord for ",name,": ",coord)
+#	print("new coord for ",name,": ",coord)
 	
 	strife.TILE_event_exit(self, prev_tick_coord)
 	strife.TILE_event_entry(self, coord)
@@ -610,30 +610,6 @@ func monitor_position_as_coordinate():
 	
 	batman.change_actor_grid_coord(self, coord)
 	
-	pass
-
-func OLD_monitor_position_as_coordinate():
-	if last_pos == position: return
-
-	last_pos = position
-	var prev_tick_coord: Vector2 = coord
-
-	coord = batman.actorpos_to_tilecoord(position)
-
-
-	if coord == prev_tick_coord: return
-	
-	print("new coord for ",name,": ",coord)
-	
-	strife.TILE_event_exit(self, prev_tick_coord)
-	strife.TILE_event_entry(self, coord)
-
-	if is_ghost: return
-
-	# We always want to track our own coordinate personally, but don't want to manage the grid coord unless we're not a ghost
-
-	batman.change_actor_grid_coord(self, coord)
-
 	pass
 
 # ---

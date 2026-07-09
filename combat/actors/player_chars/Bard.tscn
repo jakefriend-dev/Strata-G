@@ -1,9 +1,12 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://combat/actors/Beast.gd" type="Script" id=1]
-[ext_resource path="res://art/actors/Beast.png" type="Texture" id=2]
-[ext_resource path="res://combat/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
-[ext_resource path="res://combat/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
+[ext_resource path="res://combat/actors/player_chars/Bard.gd" type="Script" id=1]
+[ext_resource path="res://art/actors/bird char mockups3b.png" type="Texture" id=2]
+[ext_resource path="res://combat/actors/_key_components/ActorShadow.tscn" type="PackedScene" id=3]
+[ext_resource path="res://combat/actors/_key_components/Actor Shader UMS.tres" type="Shader" id=4]
+[ext_resource path="res://combat/move_actions/MR_BASIC_ARROWLINE.tres" type="Resource" id=5]
+[ext_resource path="res://combat/move_actions/MR_CROSS_HEAL.tres" type="Resource" id=6]
+[ext_resource path="res://combat/move_actions/MR_LEAP.tres" type="Resource" id=7]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -57,32 +60,26 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="Beast" type="Node2D"]
+[node name="Bard" type="Node2D"]
 script = ExtResource( 1 )
-first_initiative = 2
-second_initiative = 4
-max_health = 27
-max_shield = 1
-base_action_points = 5
-def_weight = 3
-tile_walk_speed = 0.75
-def_immune_jagged = true
-def_immune_poison = true
+first_initiative = 7
+ofc_name = "Bard"
+base_action_points = 6
+faction = 1
+loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), null, null, null, null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
 [node name="Shadow" parent="ArtMgr" instance=ExtResource( 3 )]
-margin_left = -38.0
-margin_top = -13.0
-margin_right = 41.0
-margin_bottom = 13.0
-color = Color( 0.156863, 0.156863, 0.156863, 0.654902 )
+margin_left = -13.0
+margin_top = -6.0
+margin_right = 13.0
 
 [node name="HFlipper" type="Node2D" parent="ArtMgr"]
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )
-position = Vector2( 0, -39 )
+position = Vector2( -1, -24 )
 texture = ExtResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="ArtMgr"]

@@ -17,3 +17,7 @@ var res_hp_10 = preload("res://combat/battle_ui/components/Pip_10_Health.tscn")
 
 # Actors
 var res_vfx_particle = preload("res://combat/battle_effects/VFXParticle.tscn")
+
+var names_players: Array = ["Bard", "Knight", "Mage"]
+var names_objects: Array = ["Rock"]
+# Fallback is to assume enemy since that's most common

@@ -81,10 +81,10 @@ var grid_rects:    Array2D
 var grid_factions: Array2D
 var targeted_tiles: Array = [] # Just a list of Vector2 coords
 
-var default_party: Array = ["P2", "P1", "P3"] # Calls these scenes by name when initializing combat; the first one is always in the front and the last is always in the back.
+var default_party: Array = ["Knight", "Bard", "Mage"] # Calls these scenes by name when initializing combat; the first one is always in the front and the last is always in the back.
 
 signal set_up_board()
-signal populate_gpos_data()
+#signal populate_gpos_data()
 signal populate_actors()
 signal update_all_tiletypes()
 signal pre_turn_setup(actor)
@@ -311,15 +311,15 @@ func set_up_random_combat():
 	mage_options.shuffle()
 	var mage_y: int = mage_options[0]
 	# Then set (may need to reconsider this format)
-	pc_array.append([bard_x, bard_y, "P1"])
-	pc_array.append([tank_x, tank_y, "P2"])
-	pc_array.append([mage_x, mage_y, "P3"])
-	tb_players.set_cell(bard_x, bard_y, "P1")
-	tb_players.set_cell(tank_x, tank_y, "P2")
-	tb_players.set_cell(mage_x, mage_y, "P3")
-	tb_overall.set_cell(bard_x, bard_y, "P1")
-	tb_overall.set_cell(tank_x, tank_y, "P2")
-	tb_overall.set_cell(mage_x, mage_y, "P3")
+	pc_array.append([bard_x, bard_y, "Bard"])
+	pc_array.append([tank_x, tank_y, "Knight"])
+	pc_array.append([mage_x, mage_y, "Mage"])
+	tb_players.set_cell(bard_x, bard_y, "Bard")
+	tb_players.set_cell(tank_x, tank_y, "Knight")
+	tb_players.set_cell(mage_x, mage_y, "Mage")
+	tb_overall.set_cell(bard_x, bard_y, "Bard")
+	tb_overall.set_cell(tank_x, tank_y, "Knight")
+	tb_overall.set_cell(mage_x, mage_y, "Mage")
 	
 	
 	# Determine a 'spending cost' for this board's level of challenge
@@ -499,8 +499,8 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	math_out_board_cell_positions(w, h)
 	
 	emit_signal("set_up_board")
-	yield(VisualServer, "frame_post_draw") # Only exists to let Control-based nodes set their actual position data; bypass-able once we're sure values won't change though
-	emit_signal("populate_gpos_data")
+#	yield(VisualServer, "frame_post_draw") # Only exists to let Control-based nodes set their actual position data; bypass-able once we're sure values won't change though
+#	emit_signal("populate_gpos_data")
 	emit_signal("populate_actors")
 	print("TURN MGR: All actor data matched to nodes. Results:",grid_actors)
 	

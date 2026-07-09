@@ -47,7 +47,6 @@ func _ready():
 	
 	batman.connect("action_log_updated", self, "update_debuglog")
 	batman.connect("set_up_board", self, "set_up_board")
-	batman.connect("populate_gpos_data", self, "populate_gpos_data")
 	batman.connect("populate_actors", self, "populate_actors")
 	batman.connect("action_option_view_changed", self, "update_action_selector")
 	pass
@@ -62,7 +61,6 @@ func set_up_board():
 
 	var w: int = batman.battle_details["board_size"].x #Always even
 	var h: int = batman.battle_details["board_size"].y
-#	board.columns = w
 
 	for y in h:
 		for x in w:
@@ -86,24 +84,6 @@ func set_up_board():
 			cell.set_type(type)
 	pass
 
-func populate_gpos_data():# This happens AFTER yielding a draw frame, so it's reliable
-#
-#	board_offset = board.rect_global_position
-#
-#	var w: int = batman.battle_details["board_size"][0] # Always even
-#	var _h: int = batman.battle_details["board_size"][1]
-#
-#	var xcoord: int = 1
-#	var ycoord: int = 1
-#	for cell in board.get_children():
-#		batman.grid_gpos.set_cell(xcoord, ycoord, cell.get_center_gpos())
-#		xcoord += 1
-#		if xcoord > w:
-#			xcoord = 1 # Back to the leftmost column, onebased
-#			ycoord += 1
-#
-	pass
-
 func populate_actors():
 	# Clear any historical actors
 	while actors.get_child_count() > 0:
@@ -114,12 +94,23 @@ func populate_actors():
 	# Time to populate the board!
 	var actorset: Array = batman.grid_actors.get_dataset_with_coords()
 	
-	var path: String = "res://combat/actors/"
+	var og_path: String = "res://combat/actors/"
 	
 	for set in actorset: if set is Array:
 		var actor_scenename: String = set[0]
 		var coord: Vector2 = set[1]
 		var gpos: Vector2 = batman.grid_gpos.get_cellv(coord)
+		
+		var path: String = og_path
+		var midpath: String
+		if loader.names_players.has(actor_scenename):
+			midpath = "player_chars"
+		elif loader.names_objects.has(actor_scenename):
+			midpath = "objects"
+		else:
+			midpath = "enemies"
+		path += midpath
+		path += "/"
 		
 		var thispath: String = path + actor_scenename + ".tscn"
 		if !utils.does_file_exist(thispath):
@@ -131,12 +122,11 @@ func populate_actors():
 		var actor: Node2D = res_actor.instance()
 		
 		actor.set("position", gpos)
-#		actor.set("name", actorname)
 		if actor.get("ofc_name") == "--":
 			actor.set("ofc_name", actor.get("name"))
-		if ["P1", "P2", "P3"].has(actor_scenename):
+		if midpath == "player_chars":
 			actor.set("faction", batman.factions.PLAYER)
-		else:
+		elif midpath == "enemies":
 			actor.set("faction", batman.factions.ENEMY)
 		actor.set("coord", coord)
 		
@@ -145,11 +135,6 @@ func populate_actors():
 		batman.living_actors.append(actor)
 		batman.grid_actors.set_cellv(coord, actor) # Overwrites the "text" with the actual object
 	
-	# Manual step just to get test gameplay going
-#	batman.pc_actors.append(actors.get_node("P1"))
-#	batman.pc_actors.append(actors.get_node("P2"))
-#	batman.pc_actors.append(actors.get_node("P3"))
-#	batman.curr_actor = batman.pc_actors[0]
 	pass
 
 func update_targeting():

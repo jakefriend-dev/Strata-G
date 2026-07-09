@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://combat/actors/key_components/Actor.gd" type="Script" id=1]
-[ext_resource path="res://art/_placeholder/fight_guy temp.png" type="Texture" id=2]
-[ext_resource path="res://combat/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
-[ext_resource path="res://combat/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
+[ext_resource path="res://combat/actors/enemies/Doggo.gd" type="Script" id=1]
+[ext_resource path="res://art/actors/Doggo.png" type="Texture" id=2]
+[ext_resource path="res://combat/actors/_key_components/ActorShadow.tscn" type="PackedScene" id=3]
+[ext_resource path="res://combat/actors/_key_components/Actor Shader UMS.tres" type="Shader" id=4]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -57,14 +57,19 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="Actor" type="Node2D"]
+[node name="Doggo" type="Node2D"]
 script = ExtResource( 1 )
+first_initiative = 6
+tile_walk_speed = 0.5
+def_immune_poison = true
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
-[node name="HFlipper" type="Node2D" parent="ArtMgr"]
+[node name="Shadow" parent="ArtMgr" instance=ExtResource( 3 )]
+margin_left = -28.0
+margin_right = 28.0
 
-[node name="Shadow" parent="ArtMgr/HFlipper" instance=ExtResource( 3 )]
+[node name="HFlipper" type="Node2D" parent="ArtMgr"]
 
 [node name="Sprite" type="Sprite" parent="ArtMgr/HFlipper"]
 material = SubResource( 3 )

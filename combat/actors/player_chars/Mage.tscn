@@ -1,9 +1,9 @@
 [gd_scene load_steps=16 format=2]
 
-[ext_resource path="res://combat/actors/PlayerSniper.gd" type="Script" id=1]
+[ext_resource path="res://combat/actors/player_chars/Mage.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/bird char mockups1b.png" type="Texture" id=2]
-[ext_resource path="res://combat/actors/key_components/ActorShadow.tscn" type="PackedScene" id=3]
-[ext_resource path="res://combat/actors/key_components/Actor Shader UMS.tres" type="Shader" id=4]
+[ext_resource path="res://combat/actors/_key_components/ActorShadow.tscn" type="PackedScene" id=3]
+[ext_resource path="res://combat/actors/_key_components/Actor Shader UMS.tres" type="Shader" id=4]
 [ext_resource path="res://combat/move_actions/MR_BASIC_SPELLSHOT.tres" type="Resource" id=5]
 [ext_resource path="res://combat/move_actions/MR_VINE_YANK.tres" type="Resource" id=6]
 [ext_resource path="res://combat/move_actions/MR_THUNDERBOLT.tres" type="Resource" id=7]
@@ -112,7 +112,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=2]
 
-[node name="P3" type="Node2D"]
+[node name="Mage" type="Node2D"]
 material = SubResource( 3 )
 script = ExtResource( 1 )
 first_initiative = 5
