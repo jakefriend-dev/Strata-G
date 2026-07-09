@@ -93,7 +93,7 @@ func prep_moveset_on_turn_end():
 	for key in moveset:
 		var move: MoveAction = moveset[key]
 		if move.current_cooldown > 0:
-			move.current_cooldown -= 0
+			move.current_cooldown -= 1
 			print("Cooldown ticked down for ",move," to: ",move.current_cooldown)
 	pass
 
