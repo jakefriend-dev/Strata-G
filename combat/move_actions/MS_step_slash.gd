@@ -100,6 +100,7 @@ func move_back_and_pull():
 	if pullable_vic:
 		victim.ghost_mode(true)
 		victim.hotmove(step_cell, dur)
+		strife.quick_vfx(victim_cell, "dust")
 	
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return
