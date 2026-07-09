@@ -25,7 +25,7 @@ func ACT():
 	var victim: Actor = get_first_actor_by_MPD_type(ROWS.BAD)
 	
 	if utils.actorpass(victim):
-		strife.damage_actor_at_coord(actor, victim.coord, 3*batman.BASE_HP_FACTOR)
+		strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(base_damage))
 #		strife.quick_vfx(victim, "spark_burst")
 	
 	end_action()

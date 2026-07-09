@@ -74,6 +74,7 @@ var ongoing_statuses: Dictionary = {
 #		"display_name": "Example Status Name",
 #		"key_name": "example_status", # Convenient redundancy; harmless
 #		"icon_type": "good", # vs "bad" or "misc"
+#		"ending_function": "auto_clear_damage_mod", # The name of the function (if any) that is called upon the status ending
 #	},
 }
 # Concluded statuses are logged by the ROUND as a key, and an array of the statuses as a value
@@ -347,9 +348,10 @@ func end_turn():   batman.end_turn()
 #	"display_name": "Example Status Name",
 #	"key_name": "example_status", # Convenient redundancy; harmless
 #	"icon_type": "good", # vs "bad" or "misc"
+#	"ending_function": "auto_clear_damage_mod", # The name of the function (if any) that is called upon the status ending
 #}}
 
-func start_status(status_key: String, status_display_name: String, icon_type: String, ticks: int, until_end_of_turn: bool):
+func start_status(status_key: String, status_display_name: String, icon_type: String, ticks: int, until_end_of_turn: bool, ending_function: String = ""):
 	
 	# For existing statuses, re-up the tick count to the higher of the new-vs-current
 	if ongoing_statuses.has(status_key):
@@ -369,6 +371,7 @@ func start_status(status_key: String, status_display_name: String, icon_type: St
 		ongoing_statuses[status_key]["tick_style"] = "end"
 	else:
 		ongoing_statuses[status_key]["tick_style"] = "start"
+	ongoing_statuses[status_key]["ending_function"] = ending_function
 	
 	batman.update_action_log(str(name," statused with [",status_key,"] for ",ticks," ticks!"))
 	update_bui()
@@ -377,9 +380,16 @@ func start_status(status_key: String, status_display_name: String, icon_type: St
 func clear_status(status_key: String):
 	if !ongoing_statuses.has(status_key): return
 	
+	var ending_function: String = ongoing_statuses[status_key]["ending_function"]
+	if has_method(ending_function):
+		call(ending_function, status_key)
 	ongoing_statuses.erase(status_key)
 	log_ended_status(status_key, true)
 	update_bui()
+	pass
+
+func auto_clear_status(status_key: String):
+	clear_damage_mod(status_key)
 	pass
 
 func check_status(status_key: String) -> bool:
@@ -392,29 +402,32 @@ func tick_down_ongoing_statuses(is_turn_start: bool):
 #	var new_dict: Dictionary = {}
 	var newly_ended_status_keys: Array = []
 	
-	for key in ongoing_statuses.keys():
+	for status_key in ongoing_statuses.keys():
 		# Only tick the appropriate type at the appropriate time!
 		if is_turn_start:
-			if ongoing_statuses[key]["tick_style"] != "start": continue
+			if ongoing_statuses[status_key]["tick_style"] != "start": continue
 		else:
-			if ongoing_statuses[key]["tick_style"] != "end":   continue
+			if ongoing_statuses[status_key]["tick_style"] != "end":   continue
 		
-		var ticks: int = ongoing_statuses[key]["ticks_remaining"]
+		var ticks: int = ongoing_statuses[status_key]["ticks_remaining"]
 		ticks -= 1
 		
 		# If we've run out, log it in our records
 		if ticks <= 0:
-			newly_ended_status_keys.append(key)
+			newly_ended_status_keys.append(status_key)
 			continue
 		
 		# Otherwise, pass it to the new temp dict to carry forward
-		ongoing_statuses[key]["ticks_remaining"] = ticks
+		ongoing_statuses[status_key]["ticks_remaining"] = ticks
 		pass
 	
-	for key in newly_ended_status_keys:
-		if ongoing_statuses.has(key):
-			ongoing_statuses.erase(key)
-			log_ended_status(key, false)
+	for status_key in newly_ended_status_keys:
+		if ongoing_statuses.has(status_key):
+			var ending_function: String = ongoing_statuses[status_key]["ending_function"]
+			if has_method(ending_function):
+				call(ending_function, status_key)
+			ongoing_statuses.erase(status_key)
+			log_ended_status(status_key, false)
 	update_bui()
 #	ongoing_statuses.clear()
 #	ongoing_statuses = new_dict

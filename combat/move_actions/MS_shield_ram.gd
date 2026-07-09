@@ -143,7 +143,7 @@ func ACT():
 				if strife.is_affected_by_force(victim):
 					strife.do_impact_motion(actor, victim, Vector2(dist_2, 0), ["travel_damage"])
 				else:
-					strife.do_impact_damage(actor, victim, dist_2*batman.BASE_HP_FACTOR)
+					strife.do_impact_damage(actor, victim, actor.dmg(dist_2))
 			
 			if og_cell != actor.coord:
 				batman.append_action(actor, resource_name)

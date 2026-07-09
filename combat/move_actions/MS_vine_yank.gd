@@ -31,7 +31,7 @@ func PREVIEW(): # Options are 0, 1, 2
 #		print("Yank preview fail; victim can't traverse destination tile")
 		return
 	
-	if !strife.is_unmovable(victim):
+	if strife.is_unmovable(victim):
 		add_arrow(victim.coord, check_coord, ROWS.ERROR)
 #		print("Yank preview fail; victim is not affected by force")
 		return

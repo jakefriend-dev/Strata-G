@@ -47,7 +47,7 @@ func PREVIEW():
 func ACT():
 	for target in get_all_cells_by_MPD_type(ROWS.BAD, true):
 		print("poison at target ",target)
-		strife.damage_actor_at_coord(actor, target, 1*batman.BASE_HP_FACTOR, ["piercing", "poison"])
+		strife.damage_actor_at_coord(actor, target, actor.dmg(base_damage), ["piercing", "poison"])
 	
 	end_action()
 	pass

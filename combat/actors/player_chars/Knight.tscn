@@ -7,7 +7,7 @@
 [ext_resource path="res://combat/move_actions/MR_BASIC_SLASH.tres" type="Resource" id=5]
 [ext_resource path="res://combat/move_actions/MR_BIG_SLASH.tres" type="Resource" id=6]
 [ext_resource path="res://combat/move_actions/MR_SHOVE.tres" type="Resource" id=7]
-[ext_resource path="res://combat/move_actions/MR_SHIELD_RAM.tres" type="Resource" id=8]
+[ext_resource path="res://combat/move_actions/MR_ATTACK_BUFF.tres" type="Resource" id=8]
 [ext_resource path="res://combat/move_actions/MR_SWAP.tres" type="Resource" id=9]
 [ext_resource path="res://combat/move_actions/MR_STEP_SLASH.tres" type="Resource" id=10]
 
@@ -71,7 +71,7 @@ ofc_name = "Knight"
 base_action_points = 5
 faction = 1
 def_weight = 3
-loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), null ]
+loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 8 ), null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

@@ -27,7 +27,7 @@ func PREVIEW():
 		add_cell(step_cell, ROWS.ERROR)
 		return
 	
-	# We know we can move
+	# We know WE can move
 	add_cell(actor.coord, ROWS.NEUTRAL)
 	add_cell(step_cell, ROWS.NEUTRAL)
 	
