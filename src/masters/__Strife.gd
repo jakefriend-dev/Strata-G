@@ -235,8 +235,12 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	# Any remaining damage in the 'damage' var is overkill
 	
+	var pip_damage: int = round(float(impacted_damage)/4.0)
+	if pip_damage < 1:
+		pip_damage = 1
+	
 	if !is_quiet:
-		quick_vfx(defender, "damage", impacted_damage)
+		quick_vfx(defender, "damage", pip_damage)
 	
 	# The defender lives!
 	if defender.health > 0:
@@ -430,9 +434,10 @@ func heal_actor_at_coord(_attacker: Actor, exact_coord: Vector2, healing: int, _
 		victim.health = new_health
 	else:
 		victim.health = victim.max_health
-	var delta: int = new_health - before_health
+	var healed_value: int = new_health - before_health
+	var healed_pips: int = round(float(healed_value)/4.0)
 	
-	quick_vfx(victim, "heal", delta)
+	quick_vfx(victim, "heal", healed_pips)
 	victim.update_bui()
 	print("Healed ",victim," +",healing," HP from ",before_health," to ",victim.health,"!")
 	

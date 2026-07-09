@@ -60,7 +60,6 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="Doggo" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 6
-base_damage = 2
 tile_walk_speed = 0.5
 def_immune_poison = true
 
