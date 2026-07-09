@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://combat/actors/player_chars/Tank.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/bird char mockups2b.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://combat/move_actions/MR_SHOVE.tres" type="Resource" id=7]
 [ext_resource path="res://combat/move_actions/MR_SHIELD_RAM.tres" type="Resource" id=8]
 [ext_resource path="res://combat/move_actions/MR_SWAP.tres" type="Resource" id=9]
+[ext_resource path="res://combat/move_actions/MR_STEP_SLASH.tres" type="Resource" id=10]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -64,13 +65,13 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 
 [node name="Knight" type="Node2D"]
 script = ExtResource( 1 )
-first_initiative = 3
+first_initiative = 8
 max_shield = 1
 ofc_name = "Knight"
 base_action_points = 5
 faction = 1
 def_weight = 3
-loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), null, null ]
+loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ), ExtResource( 10 ), null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

@@ -197,10 +197,10 @@ func master_vet_actormove_optionset(actor: Actor, og_options: Array, is_relative
 	return valid_options
 	pass
 
-func is_tile_traversable_relative(actor: Actor, motion: Vector2, regardless_of_ghost: bool = false) -> bool:
-	return is_tile_traversable_exact(actor, actor.coord + motion, regardless_of_ghost)
+func is_tile_traversable_relative(actor: Actor, motion: Vector2, any_faction_override: bool = false) -> bool:
+	return is_tile_traversable_exact(actor, actor.coord + motion, any_faction_override)
 	
-func is_tile_traversable_exact(actor: Actor, target: Vector2, regardless_of_ghost: bool = false) -> bool:
+func is_tile_traversable_exact(actor: Actor, target: Vector2, any_faction_override: bool = false) -> bool:
 	var _start_coord: Vector2 = actor.coord
 	var end_coord: Vector2 = target
 	
@@ -213,7 +213,7 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2, regardless_of_ghos
 #		print("WOULD HAVE BEEN AN ISSUE HERE JFYI")
 	
 	# IN MOST CIRCUMSTANCES, you can't enter an unavailable space!
-	if !actor.is_ghost or regardless_of_ghost:
+	if !actor.is_ghost:
 		if !is_tile_available(end_coord):
 #			print("ACT: iamp[2] Cell is unavailable!")
 			return false
@@ -221,7 +221,7 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2, regardless_of_ghos
 	# Can't move on to other factions' cells
 		# (unless you're neutral? or a non-enemy like a missile?)
 		# Maybe make missiles etc Neutral to represent 'friendly fire'
-	if !actor.allowed_over_faction_lines:
+	if !actor.allowed_over_faction_lines and !any_faction_override:
 		if actor.faction == batman.factions.PLAYER:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.PLAYER:
 #				print("ACT: iamp[3a] Player cannot exit its faction area!")

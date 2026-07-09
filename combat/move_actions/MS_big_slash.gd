@@ -11,29 +11,32 @@ func PREVIEW():
 	slash_count = 0
 	# Don't worry about validations for if cells exist until the ACT()
 	
-	if batman.loaded_variant == actor.my_facing:
+	if batman.loaded_variant == actor.my_facing: # Straight ahead
 		slash_1_cells.append(actor.coord + actor.my_facing)
-		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.UP)
-		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.DOWN)
+		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.UP + Vector2.LEFT)
+		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.DOWN + Vector2.RIGHT)
 		
 		slash_2_cells.append(actor.coord + actor.my_facing)
-		slash_2_cells.append(actor.coord + (actor.my_facing*2))
+		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.UP + Vector2.RIGHT)
+		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.DOWN + Vector2.LEFT)
 	
 	elif batman.loaded_variant == (actor.my_facing + Vector2.UP):
 		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.UP)
-		slash_1_cells.append(actor.coord + (Vector2.UP*2))
-		slash_1_cells.append(actor.coord + (actor.my_facing*2))
+		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.UP + Vector2.RIGHT)
+		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.UP + Vector2.LEFT)
 		
 		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.UP)
-		slash_2_cells.append(actor.coord + (actor.my_facing*2) + (Vector2.UP*2))
+		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.UP + Vector2.DOWN)
+		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.UP + Vector2.UP)
 	
 	elif batman.loaded_variant == (actor.my_facing + Vector2.DOWN):
 		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.DOWN)
-		slash_1_cells.append(actor.coord + (Vector2.DOWN*2))
-		slash_1_cells.append(actor.coord + (actor.my_facing*2))
+		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.DOWN + Vector2.RIGHT)
+		slash_1_cells.append(actor.coord + actor.my_facing + Vector2.DOWN + Vector2.LEFT)
 		
 		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.DOWN)
-		slash_2_cells.append(actor.coord + (actor.my_facing*2) + (Vector2.DOWN*2))
+		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.DOWN + Vector2.DOWN)
+		slash_2_cells.append(actor.coord + actor.my_facing + Vector2.DOWN + Vector2.UP)
 	
 	add_cellset(slash_1_cells, ROWS.BAD)
 	add_cellset(slash_2_cells, ROWS.BAD)
@@ -54,7 +57,7 @@ func slash_1():
 	
 	for cell in slash_1_cells:
 		if !batman.grid_actors.has_cellv(cell): continue
-		strife.damage_actor_at_coord(actor, cell, 2*batman.BASE_HP_FACTOR)
+		strife.damage_actor_at_coord(actor, cell, actor.dmg(base_damage))
 		strife.quick_vfx(cell, "spark_burst")
 	
 	end_action()
@@ -66,7 +69,7 @@ func slash_2():
 	
 	for cell in slash_2_cells:
 		if !batman.grid_actors.has_cellv(cell): continue
-		strife.damage_actor_at_coord(actor, cell, 2*batman.BASE_HP_FACTOR)
+		strife.damage_actor_at_coord(actor, cell, actor.dmg(base_damage))
 		strife.quick_vfx(cell, "spark_burst")
 	
 	end_action()

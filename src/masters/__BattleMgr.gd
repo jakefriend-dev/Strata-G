@@ -223,7 +223,7 @@ func test_new_combat(test: String):
 			if !init_new_combat({
 				"halfboard_size": Vector2(3, 3),
 				"npc_positions": [
-					[4, 3, "Beast"],
+					[5, 2, "Beast"],
 #					[6, 2, "Beast"],
 #					[6, 4, "Beast"],
 					[4, 1, "Rock"],

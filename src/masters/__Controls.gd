@@ -181,6 +181,12 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 		# End of ALL modifier code
 		return
 	
+	if Input.is_action_just_pressed("dev_0"):
+		if utils.actorpass(batman.curr_actor):
+			batman.curr_actor.add_action_points(1)
+		multi_input_lock = true
+		return
+	
 	# Move selection (2D grid)
 	if Input.is_action_just_pressed("player_move_up"):
 		multi_input_lock = true
