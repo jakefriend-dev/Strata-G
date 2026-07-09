@@ -190,7 +190,7 @@ func ACT_enrage():
 	start_status("enrage", "Enrage", "good", 2, true)
 	set_damage_mod("enrage", 1)
 	strife.quick_vfx(self, "quick_good")
-	strife.quick_vfx(self, "buff")
+#	strife.quick_vfx(self, "buff")
 #	add_action_points(1)
 	
 	yield(utils.yt(0.5, self), "timeout")

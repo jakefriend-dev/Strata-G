@@ -99,7 +99,6 @@ func ACT_charge_forward():
 #func ACT_enrage():
 #	start_status("enrage", "Enrage", "good", 2, true)
 #	strife.quick_vfx(self, "quick_good")
-#	strife.quick_vfx(self, "buff")
 ##	add_action_points(1)
 #
 #	yield(utils.yt(0.5, self), "timeout")

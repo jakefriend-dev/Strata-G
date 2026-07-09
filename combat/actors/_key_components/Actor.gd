@@ -374,6 +374,7 @@ func start_status(status_key: String, status_display_name: String, icon_type: St
 	ongoing_statuses[status_key]["ending_function"] = ending_function
 	
 	batman.update_action_log(str(name," statused with [",status_key,"] for ",ticks," ticks!"))
+	on_any_status_change()
 	update_bui()
 	pass
 
@@ -385,6 +386,7 @@ func clear_status(status_key: String):
 		call(ending_function, status_key)
 	ongoing_statuses.erase(status_key)
 	log_ended_status(status_key, true)
+	on_any_status_change()
 	update_bui()
 	pass
 
@@ -394,6 +396,23 @@ func auto_clear_status(status_key: String):
 
 func check_status(status_key: String) -> bool:
 	return ongoing_statuses.has(status_key)
+	pass
+
+func on_any_status_change():
+	var icons: Array = get_status_icons_in_play() # Reminder: good, bad, misc
+	
+	# Good/Buff
+	if icons.has("good"):
+		if !strife.check_if_vfx_on_actor_is_in_play(self, "buff"):
+			strife.quick_vfx(self, "buff")
+	else:
+		if strife.check_if_vfx_on_actor_is_in_play(self, "buff"):
+			strife.end_vfx_on_actor(self, "buff")
+	
+	# Bad/Debuff
+	
+	# Misc
+	
 	pass
 
 func tick_down_ongoing_statuses(is_turn_start: bool):
@@ -428,6 +447,7 @@ func tick_down_ongoing_statuses(is_turn_start: bool):
 				call(ending_function, status_key)
 			ongoing_statuses.erase(status_key)
 			log_ended_status(status_key, false)
+			on_any_status_change()
 	update_bui()
 #	ongoing_statuses.clear()
 #	ongoing_statuses = new_dict

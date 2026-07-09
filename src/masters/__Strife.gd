@@ -518,6 +518,16 @@ func spawn_vfx_on_tile(coord: Vector2, vfx_name: String, intensity: float = 1.0,
 	# The EP begins itself via _ready()
 	pass
 
+func check_if_vfx_on_actor_is_in_play(actor: Actor, vfx_name: String) -> bool:
+	for ep in batman.field.vfx.get_children():
+		if ep.actor == actor:
+			if ep.vfx_name == vfx_name:
+				if !ep.dying:
+					return true
+	
+	return false
+	pass
+
 func end_vfx_on_actor(actor: Actor, vfx_name: String, immediate: bool = false):
 	for ep in batman.field.vfx.get_children():
 		if ep.actor == actor:
