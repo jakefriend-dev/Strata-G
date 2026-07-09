@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://combat/actors/player_chars/Tank.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/bird char mockups2b.png" type="Texture" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://combat/move_actions/MR_ATTACK_BUFF.tres" type="Resource" id=8]
 [ext_resource path="res://combat/move_actions/MR_SWAP.tres" type="Resource" id=9]
 [ext_resource path="res://combat/move_actions/MR_STEP_SLASH.tres" type="Resource" id=10]
+[ext_resource path="res://combat/move_actions/MR_MELEE_COUNTER.tres" type="Resource" id=11]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -30,7 +31,7 @@ shader_param/blend_type = 0
 shader_param/blend_uses_screen = false
 shader_param/blend_col = Color( 1, 1, 1, 1 )
 shader_param/blend_mix_degree = 0.5
-shader_param/outline_enabled = false
+shader_param/outline_enabled = true
 shader_param/outline_col = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
 shader_param/outline_shadow = Color( 0.15686, 0.15686, 0.15686, 0.197 )
 shader_param/outcol_white = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
@@ -71,7 +72,7 @@ ofc_name = "Knight"
 base_action_points = 5
 faction = 1
 def_weight = 3
-loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 8 ), null ]
+loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 8 ), ExtResource( 11 ) ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

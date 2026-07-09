@@ -180,45 +180,45 @@ void fragment() {
 		// Draw outline
 		if (pcol.a == 0.0) { // If the pixel is empty, we need to check for proximity to other opaque pixels
 			if (texture(TEXTURE, UV + vec2( 0.0,  1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 1.0,  1.0) * ps).a  != 0.0 || // Midcorner starts, inclusive
-//				texture(TEXTURE, UV + vec2(-1.0,  1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 1.0, -1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-1.0, -1.0) * ps).a  != 0.0 || // Midcorner ends, inclusive
+				texture(TEXTURE, UV + vec2( 1.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0,  1.0) * ps).a  != 0.0 ||
 				texture(TEXTURE, UV + vec2(-1.0,  0.0) * ps).a  != 0.0 ||
 				texture(TEXTURE, UV + vec2( 1.0,  0.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 0.0,  2.0) * ps).a  != 0.0 || // Doublethick starts, inclusive
-//				texture(TEXTURE, UV + vec2( 1.0,  2.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-1.0,  2.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 0.0, -2.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 1.0, -2.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 2.0,  1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-1.0, -2.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-2.0, -1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-2.0,  0.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-2.0,  1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 2.0, -1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 2.0,  0.0) * ps).a  != 0.0 || // Doublethick ends, inclusive
-				texture(TEXTURE, UV + vec2( 0.0, -1.0) * ps).a  != 0.0)
+				texture(TEXTURE, UV + vec2( 0.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 0.0,  2.0) * ps).a  != 0.0 || // Doublethick starts, inclusive
+				texture(TEXTURE, UV + vec2( 1.0,  2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0,  2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 0.0, -2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0, -2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 2.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0, -2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-2.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-2.0,  0.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-2.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 2.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 2.0,  0.0) * ps).a  != 0.0 || // Doublethick ends, inclusive
+				texture(TEXTURE, UV + vec2(-1.0, -1.0) * ps).a  != 0.0)
 				// If proximity checks pass, render the pixel as the outline colour
 				pcol = outline_col;
 		}
 		// Draw outline's shadow
-//		if (pcol.a == 0.0) { // If the pixel is empty, we need to check for proximity to other opaque pixels (again)
-//			if (
-//				texture(TEXTURE, UV + vec2(-4.0, -2.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-4.0, -1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-4.0,  0.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-4.0,  1.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-4.0,  2.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-2.0, -4.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-1.0, -4.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 0.0, -4.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 1.0, -4.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2( 2.0, -4.0) * ps).a  != 0.0 ||
-//				texture(TEXTURE, UV + vec2(-3.0, -3.0) * ps).a  != 0.0 
-//				)
-//				pcol = outline_shadow; // If proximity checks pass, render the pixel as the outline colour
-//		}
+		if (pcol.a == 0.0) { // If the pixel is empty, we need to check for proximity to other opaque pixels (again)
+			if (
+				texture(TEXTURE, UV + vec2(-4.0, -2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-4.0, -1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-4.0,  0.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-4.0,  1.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-4.0,  2.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-2.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-1.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 0.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 1.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2( 2.0, -4.0) * ps).a  != 0.0 ||
+				texture(TEXTURE, UV + vec2(-3.0, -3.0) * ps).a  != 0.0 
+				)
+				pcol = outline_shadow; // If proximity checks pass, render the pixel as the outline colour
+		}
 	}
 	
 	// Shift vertically, cut off bottom elements (inc outline), and shift some to water's-edge blue

@@ -176,6 +176,10 @@ func end_action():
 	actor.end_action()
 	pass
 
+func end_turn():
+	actor.end_turn()
+	pass
+
 var pref: String = "["
 var suff: String = "]"
 func _to_string() -> String:

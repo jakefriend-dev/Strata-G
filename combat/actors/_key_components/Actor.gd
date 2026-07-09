@@ -193,7 +193,7 @@ signal was_moved_by_external(motion) # Motion only; knockback separate
 signal was_knockback_damaged_by_external(knockback) # Damage only; motion separate
 
 # Any combat signals
-signal on_phys_combat_any_contact(combat_package) # Happens no matter what, as long as it wasn't "quiet" combat like poison damage.
+signal on_strife_any_contact_by_external(combat_package) # Happens no matter what, as long as it wasn't "quiet" combat like poison damage.
 
 # Other
 signal player_action_submitted() # Only pertinent to ActorPlayer subclasses but here nonetheless

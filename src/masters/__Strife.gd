@@ -62,9 +62,15 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 #	if damage <= 0: return # Moved this check to later, in case of damage-less effects like Cold
 	if !utils.actorpass(defender): return # Attacker is allowed to be null, though!
 	
+	var combat_package: Dictionary = {}
+	combat_package["defender"] = defender
+	combat_package["flags"] = flags
+	
 	var attacker_is_real: bool = false
 	if utils.actorpass(attacker):
 		attacker_is_real = true
+		combat_package["attacker"] = attacker
+	combat_package["attacker_is_real"] = attacker_is_real
 	
 	var friendly_fire: bool = true
 	if flags.has("skip_own_faction"): friendly_fire = false
@@ -95,7 +101,8 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			elem = flag_upper
 			break
 	
-#	print("damage element is: ",elem)
+	
+	combat_package["elem"] = elem
 	
 	#
 	# Now begin the damage management
@@ -105,7 +112,6 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	var _og_shield: int = defender.shield
 	
 	if !is_quiet:
-		defender.emit_signal("on_phys_combat_any_contact")
 		quick_vfx(defender, "spark_burst")
 	
 	#
@@ -143,6 +149,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	var piercing: bool = (flags.has("piercing") and !breaking)
 	if defender.is_immune_piercing: piercing = false # Override!
+	combat_package["piercing"] = piercing
 	var unbroken_shield: int = defender.shield
 	
 	# If NOT piercing, in this order:
@@ -155,67 +162,19 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			damage -= 1
 			unbroken_shield -= 1
 	
-	#
-	# In standard circumstances, we need to send out a bunch of signal hooks
-	# If we BROKE the last STANDARD shield this action, do the shield broken signal - we don't bother if it's just damaging (but not breaking) the shield, or if bonus shield is depleted.
-	# In fact, bonus shield shouldn't really trigger any signals at all in this combat algorithm approach.
-	# Let's also not bother with the is_melee tag in the signal; maybe instead we can send out a combat assessment package
-	#
-	
 	var _total_shield_left: int = defender.shield
 	var shielded_damage: int = og_damage - damage
-	var combat_package: Dictionary = {}
 	
-	if !is_quiet:
-		
-		# First, handle shield breaking
-		if did_shield_break_occur:
-			defender.emit_signal("on_shield_broken_any", combat_package)
-			if attacker_is_real: attacker.emit_signal("on_broke_someones_shield_any", combat_package)
-			
-			if were_all_shields_broken:
-				defender.emit_signal("on_shield_broken_through", combat_package)
-				if attacker_is_real: attacker.emit_signal("on_broke_someones_shield_total", combat_package)
-				quick_vfx(defender, "shield_broken")
-			else:
-				defender.emit_signal("on_shield_broken_held", combat_package)
-				if attacker_is_real: attacker.emit_signal("on_broke_someones_shield_partial", combat_package)
-		
-		# Second, piercing
-		if piercing:
-			defender.emit_signal("on_shield_pierced", combat_package)
-			if attacker_is_real: attacker.emit_signal("on_pierced_someones_shield", combat_package)
-		
-		# Third, blocked damage
-		if shielded_damage > 0:
-			defender.emit_signal("on_blocked_damage_any", combat_package)
-			if attacker_is_real: attacker.emit_signal("on_blocked_by_shield_any", combat_package)
-			quick_vfx(defender, "blocked")
-			
-			if damage == 0:
-				defender.emit_signal("on_blocked_damage_total", combat_package)
-				if attacker_is_real: attacker.emit_signal("on_blocked_by_shield_total", combat_package)
-		
-		# Fourth, actually received unblocked damage (or not)
-		if damage > 0:
-			defender.emit_signal("on_wounded", combat_package)
-			if attacker_is_real: attacker.emit_signal("on_wounded_someone", combat_package)
-		else:
-			defender.emit_signal("on_not_wounded", combat_package)
-			if attacker_is_real: attacker.emit_signal("on_failed_to_wound_someone", combat_package)
-		
-#		if total_shield_left < og_total_shield:
-#	#		print("Some quantity of shield consumed!")
-#			defender.emit_signal("on_shield_consumed", combat_package)
-#			if attacker_is_real: attacker.emit_signal("on_hit_someones_shield", combat_package)
-	
-		pass
-	# Unless things are quiet, in which case... nope, no signals!
-	
-	# The only unused signals here are killing, which should happen regardless of is_quiet
+	combat_package["shield_break_damage"] = break_damage # The amount that shields were broken
+	combat_package["shield_blocked_damage"] = shielded_damage # The amount blocked BY shields without being bypassed/broken
+	combat_package["og_damage"] = og_damage
+	combat_package["did_shield_break_occur"] = did_shield_break_occur
+	combat_package["were_all_shields_broken"] = were_all_shields_broken
 	
 	# When no damage is left, end the algorithm
 	if damage <= 0:
+		combat_package["inflicted_damage"] = 0
+		do_all_combat_signalling(attacker, defender, combat_package, attacker_is_real)
 		if shielded_damage > 0:
 			batman.update_action_log(str(defender.name,": Blocked ",shielded_damage," and took no damage"))
 		else:
@@ -227,40 +186,85 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	# Apply remnant damage to the defender's health!
 	#
 	
-	var impacted_damage: int = 0
+	var inflicted_damage: int = 0
 	while (defender.health > 0 and damage > 0):
 		damage -= 1
 		defender.health -= 1
-		impacted_damage += 1
+		inflicted_damage += 1
 	
 	# Any remaining damage in the 'damage' var is overkill
+	combat_package["inflicted_damage"] = inflicted_damage
 	
-	var pip_damage: int = round(float(impacted_damage)/4.0)
+	var pip_damage: int = round(float(inflicted_damage)/4.0)
 	if pip_damage < 1:
 		pip_damage = 1
 	
 	if !is_quiet:
 		quick_vfx(defender, "damage", pip_damage)
+		do_all_combat_signalling(attacker, defender, combat_package, attacker_is_real)
 	
 	# The defender lives!
 	if defender.health > 0:
 		if shielded_damage == 0:
 			batman.update_action_log(str(defender,": Took ",og_damage," damage"))
 		else:
-			batman.update_action_log(str(defender,": Blocked ",shielded_damage," and took ",impacted_damage," damage"))
+			batman.update_action_log(str(defender,": Blocked ",shielded_damage," and took ",inflicted_damage," damage"))
 		defender.update_bui()
 		return
 	
 	# The defender dies!
 	if shielded_damage == 0:
-		batman.update_action_log(str(defender.name,": Died from taking ",impacted_damage," damage"))
+		batman.update_action_log(str(defender.name,": Died from taking ",inflicted_damage," damage"))
 	else:
-		batman.update_action_log(str(defender.name,": Died from taking ",impacted_damage," damage (blocked ",shielded_damage,")"))
+		batman.update_action_log(str(defender.name,": Died from taking ",inflicted_damage," damage (blocked ",shielded_damage,")"))
 	
 	defender.emit_signal("on_killed", combat_package)
 	if attacker_is_real: attacker.emit_signal("on_killed_someone", combat_package)
 	
 	batman.kill_actor(defender)
+	pass
+
+func do_all_combat_signalling(attacker: Actor, defender: Actor, combat_package: Dictionary, attacker_is_real: bool):
+	
+	defender.emit_signal("on_strife_any_contact_by_external", combat_package)
+	quick_vfx(defender, "spark_burst")
+	
+	# First, handle shield breaking
+	if combat_package["did_shield_break_occur"]:
+		defender.emit_signal("on_shield_broken_any", combat_package)
+		if attacker_is_real: attacker.emit_signal("on_broke_someones_shield_any", combat_package)
+		
+		if combat_package["were_all_shields_broken"]:
+			defender.emit_signal("on_shield_broken_through", combat_package)
+			if attacker_is_real: attacker.emit_signal("on_broke_someones_shield_total", combat_package)
+			quick_vfx(defender, "shield_broken")
+		else:
+			defender.emit_signal("on_shield_broken_held", combat_package)
+			if attacker_is_real: attacker.emit_signal("on_broke_someones_shield_partial", combat_package)
+	
+	# Second, piercing
+	if combat_package["piercing"]:
+		defender.emit_signal("on_shield_pierced", combat_package)
+		if attacker_is_real: attacker.emit_signal("on_pierced_someones_shield", combat_package)
+	
+	# Third, blocked damage
+	if combat_package["shield_blocked_damage"] > 0:
+		defender.emit_signal("on_blocked_damage_any", combat_package)
+		if attacker_is_real: attacker.emit_signal("on_blocked_by_shield_any", combat_package)
+		quick_vfx(defender, "blocked")
+		
+		if combat_package["inflicted_damage"] == 0:
+			defender.emit_signal("on_blocked_damage_total", combat_package)
+			if attacker_is_real: attacker.emit_signal("on_blocked_by_shield_total", combat_package)
+	
+	# Fourth, actually received unblocked damage (or not)
+	if combat_package["inflicted_damage"] > 0:
+		defender.emit_signal("on_wounded", combat_package)
+		if attacker_is_real: attacker.emit_signal("on_wounded_someone", combat_package)
+	else:
+		defender.emit_signal("on_not_wounded", combat_package)
+		if attacker_is_real: attacker.emit_signal("on_failed_to_wound_someone", combat_package)
+	
 	pass
 
 # -
@@ -483,6 +487,13 @@ func quick_vfx(actor_or_coord, vfx_name: String, variant = null):
 				spawn_vfx_on_tile(actor_or_coord, "spark_burst")
 			elif actor_or_coord is Actor:
 				spawn_vfx_on_actor(actor_or_coord, "spark_burst", false)
+			pass
+		
+		"melee_slice":
+			if actor_or_coord is Vector2:
+				spawn_vfx_on_tile(actor_or_coord, "melee_slice")
+			elif actor_or_coord is Actor:
+				spawn_vfx_on_actor(actor_or_coord, "melee_slice", false)
 			pass
 		
 		"dust": # This one needs to be a tile coord

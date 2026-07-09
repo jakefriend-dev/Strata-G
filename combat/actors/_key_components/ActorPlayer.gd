@@ -72,6 +72,8 @@ func prep_moveset_on_battle_start():
 			move.current_cooldown = move.initial_cooldown
 		else:
 			move.current_cooldown = 0
+		if move.has_method("ONE_TIME_SETUP"):
+			move.call("ONE_TIME_SETUP")
 		pass
 	
 	pass

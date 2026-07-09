@@ -28,7 +28,7 @@ var MH: int
 func _ready():
 	connect_pips()
 	
-	actor.connect("on_phys_combat_any_contact", self, "check_bui_tier_on_hit")
+	actor.connect("on_strife_any_contact_by_external", self, "check_bui_tier_on_hit")
 	pass
 
 func connect_pips():
@@ -146,7 +146,7 @@ func ought_be_visible() -> bool:
 	
 	return false
 
-func check_bui_tier_on_hit():
+func check_bui_tier_on_hit(_ignore: Dictionary):
 	if actor.bui_level == actor.bui_tiers.INVIS_UNTIL_HIT:
 		actor.bui_level = actor.bui_tiers.JUST_HEALTH
 	pass

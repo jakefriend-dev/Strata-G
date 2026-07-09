@@ -58,7 +58,7 @@ func on_shield_broken(_combat_package: Dictionary):
 func PREFIGHT_prep_rock():
 	# Pick a PC!
 	var pcs: Array = batman.get_all_current_players()
-	print("pcs: ",pcs)
+#	print("pcs: ",pcs)
 	pcs.shuffle()
 	for pc in pcs:
 		if !batman.targeted_tiles.has(pc.coord):

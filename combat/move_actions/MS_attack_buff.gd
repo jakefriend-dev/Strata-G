@@ -22,7 +22,8 @@ func ACT():
 	for ally in get_all_actors_by_MPD_type(ROWS.GOOD):
 		strife.quick_vfx(ally, "quick_good")
 		ally.set_damage_mod("attack_buff", 1)
-		ally.start_status("attack_buff", "Cry of Valor", "good", 1, true, "auto_clear_status")
+		ally.start_status("attack_buff", "Cry of Valor", "good", 1, true)
+#		ally.start_status("attack_buff", "Cry of Valor", "good", 1, true, "auto_clear_status")
 	
 	end_action()
 	pass
