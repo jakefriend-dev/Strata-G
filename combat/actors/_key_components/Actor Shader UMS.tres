@@ -34,6 +34,7 @@ uniform vec4 outline_col: hint_color = vec4(0.95294, 0.98824, 0.94118, 0.78431);
 uniform vec4 outline_shadow: hint_color = vec4(0.15686, 0.15686, 0.15686, 0.197);
 uniform vec4 outcol_white: hint_color = vec4(0.95294, 0.98824, 0.94118, 0.78431);
 uniform vec4 outcol_red: hint_color = vec4(0.94509, 0.38431, 0.20000, 0.78431);
+uniform vec4 outcol_midcorner: hint_color = vec4(0.47451, 0.50196, 0.55294, 1.0);
 
 // Shadow-drawing, for simulating 'lighting'
 uniform bool shadows_enabled = false;
@@ -206,9 +207,9 @@ void fragment() {
 				texture(TEXTURE, UV + vec2(-1.0,  1.0) * ps).a  != 0.0 ||
 				texture(TEXTURE, UV + vec2( 1.0, -1.0) * ps).a  != 0.0 ||
 				texture(TEXTURE, UV + vec2(-1.0, -1.0) * ps).a  != 0.0) {
-			vec4 corner_col = outline_col;
-			corner_col.a = 0.5;
-			pcol = corner_col;
+//			vec4 corner_col = outline_col;
+//			corner_col.a = 0.5;
+			pcol = outcol_midcorner;
 			}
 		}
 		// Draw outline's shadow

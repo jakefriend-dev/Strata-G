@@ -29,6 +29,7 @@ shader_param/outline_col = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
 shader_param/outline_shadow = Color( 0.15686, 0.15686, 0.15686, 0.197 )
 shader_param/outcol_white = Color( 0.95294, 0.98824, 0.94118, 0.78431 )
 shader_param/outcol_red = Color( 0.94509, 0.38431, 0.2, 0.78431 )
+shader_param/outcol_midcorner = Color( 0.47451, 0.50196, 0.55294, 1 )
 shader_param/shadows_enabled = false
 shader_param/light_direction = Vector2( 0, -1 )
 shader_param/shadow_tint = Color( 0.15686, 0.15686, 0.15686, 0.197 )
