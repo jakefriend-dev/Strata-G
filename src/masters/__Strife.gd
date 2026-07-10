@@ -103,6 +103,11 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	combat_package["elem"] = elem
 	
+	if elem == "GROUND":
+		if !defender.is_on_ground:
+			print("STRIFE: No damage to defender because this is a ground attack and it's in the air!")
+			return
+	
 	# Review the relevance of whatever tiletype the defender is on
 	
 	var def_tiletype: int = batman.grid_tiles.get_cellv(defender.coord)
@@ -113,6 +118,10 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			def_tiletype = batman.tiletypes.NORMAL
 			damage += 4
 			print("STRIFE: Defender's Overgrowth tile INCREASED incoming damage, as it was burned away by fire!")
+		
+		elif elem == "GROUND":
+			print("STRIFE: Defender's Overgrowth benefits ignored due to ground-type damage")
+		
 		else:
 			damage -= 4
 			if damage < 0: damage = 0
@@ -164,6 +173,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	var pierce_depth: int = 0
 	var piercing: bool = (flags.has("piercing") and !breaking)
+	if elem == "FIRE": piercing = true
 	if defender.is_immune_piercing: piercing = false # Override!
 	if piercing: pierce_depth = 1
 	 # Have not yet implemented 'total shield bypass' aka higher piercing tiers.
