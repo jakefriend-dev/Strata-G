@@ -356,7 +356,7 @@ func start_status(status_key: String, status_display_name: String, icon_type: St
 	# For existing statuses, re-up the tick count to the higher of the new-vs-current
 	if ongoing_statuses.has(status_key):
 		var existing_ticks: int = ongoing_statuses[status_key]["ticks_remaining"]
-		if ticks > existing_ticks:
+		if ticks > existing_ticks or (ticks == -99 and existing_ticks != -99):
 			ongoing_statuses[status_key]["ticks_remaining"] = ticks
 			batman.update_action_log(str(name," RE-statused with [",status_key,"], topped up to ",ticks," ticks!"))
 		return
@@ -429,12 +429,12 @@ func tick_down_ongoing_statuses(is_turn_start: bool):
 			if ongoing_statuses[status_key]["tick_style"] != "end":   continue
 		
 		var ticks: int = ongoing_statuses[status_key]["ticks_remaining"]
-		ticks -= 1
-		
-		# If we've run out, log it in our records
-		if ticks <= 0:
-			newly_ended_status_keys.append(status_key)
-			continue
+		if ticks != -99: # -99 is 'infinite duration'
+			ticks -= 1
+			# If we've run out, log it in our records
+			if ticks <= 0:
+				newly_ended_status_keys.append(status_key)
+				continue
 		
 		# Otherwise, pass it to the new temp dict to carry forward
 		ongoing_statuses[status_key]["ticks_remaining"] = ticks
