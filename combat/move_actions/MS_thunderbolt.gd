@@ -24,7 +24,7 @@ func ACT():
 	var coord_path: Array = []
 	if utils.actorpass(victim):
 		
-		var check_vector: Vector2 = actor.coord + batman.loaded_variant
+		var check_vector: Vector2 = batman.loaded_variant
 #		var check_vector: Vector2 = actor.my_facing
 #		if variant == 2: check_vector += Vector2.UP
 #		if variant == 3: check_vector += Vector2.DOWN

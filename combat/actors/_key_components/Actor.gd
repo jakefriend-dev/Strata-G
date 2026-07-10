@@ -692,7 +692,7 @@ func update_bui():
 	if !has_node("BUI"):
 		bui = loader.res_bui.instance()
 		bui.set("actor", self)
-		bui.set("position", Vector2(0, 16))
+		bui.set("position", Vector2(0, 8))
 		add_child(bui)
 		bui.set("owner", self)
 	

@@ -15,7 +15,7 @@ var actor: Actor
 # ---
 
 func _ready():
-	label = $Count
+	label = $CountPanel/Count
 	sprite = $Icon/Sprite
 #	update_values() # BUI can do this
 	pass
