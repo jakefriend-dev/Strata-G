@@ -46,7 +46,7 @@ var bui: Node2D
 
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
-const MAX_action_points: int = 10 # Never let multi-turn overflow exceed this!
+const MAX_action_points: int = 9 # Never let multi-turn overflow exceed this!
 
 var actions_completed_this_turn: int = 0 # An action is what we think of as an attack;
 										# like all 3 steps of Doggo's charge attack is 1 action

@@ -7,7 +7,7 @@
 resource_local_to_scene = true
 resource_name = "CROSS_HEAL"
 script = ExtResource( 1 )
-display_name = "Cross Heal"
+display_name = "Rally Song"
 short_desc = "+2 HP to units on selected tiles"
 display_desc = "Heal in a cross-shape around you, granting affected units +2 HP. Does not affect yourself."
 option_image = ExtResource( 2 )

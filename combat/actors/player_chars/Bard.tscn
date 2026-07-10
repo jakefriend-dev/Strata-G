@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://combat/actors/player_chars/Bard.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/bird char mockups3b.png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://combat/move_actions/MR_LEAP.tres" type="Resource" id=7]
 [ext_resource path="res://combat/move_actions/MR_BASIC_ARROWARC.tres" type="Resource" id=8]
 [ext_resource path="res://combat/move_actions/MR_TRICK_SHOT.tres" type="Resource" id=9]
+[ext_resource path="res://combat/move_actions/MR_DUCK_BLIND.tres" type="Resource" id=10]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -69,7 +70,8 @@ first_initiative = 7
 ofc_name = "Bard"
 base_action_points = 6
 faction = 1
-loaded_moves = [ ExtResource( 5 ), ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 9 ), null, null ]
+def_immune_shrub = true
+loaded_moves = [ ExtResource( 5 ), ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 9 ), ExtResource( 10 ), null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

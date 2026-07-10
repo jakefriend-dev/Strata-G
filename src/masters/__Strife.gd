@@ -101,8 +101,23 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			elem = flag_upper
 			break
 	
-	
 	combat_package["elem"] = elem
+	
+	# Review the relevance of whatever tiletype the defender is on
+	
+	var def_tiletype: int = batman.grid_tiles.get_cellv(defender.coord)
+	if def_tiletype == batman.tiletypes.SHRUB:
+		
+		if elem == "FIRE":
+			support.change_tiletype_single(defender.coord, batman.tiletypes.NORMAL)
+			def_tiletype = batman.tiletypes.NORMAL
+			damage += 4
+			print("STRIFE: Defender's Overgrowth tile INCREASED incoming damage, as it was burned away by fire!")
+		else:
+			damage -= 4
+			if damage < 0: damage = 0
+			print("STRIFE: Defender's Overgrowth tile reduced incoming damage")
+	
 	
 	#
 	# Now begin the damage management
