@@ -893,6 +893,9 @@ func aimflower_vectors_from_key(key: String) -> Array:
 			results.append(Vector2.ZERO)
 			results.append(Vector2.RIGHT)
 			results.append(Vector2.LEFT)
+		"left_and_right":
+			results.append(Vector2.RIGHT)
+			results.append(Vector2.LEFT)
 		"north":
 			results.append(Vector2.UP)
 		"orthag":
@@ -928,8 +931,18 @@ func aimflower_vectors_from_key(key: String) -> Array:
 			results.append(Vector2.ZERO)
 		"south":
 			results.append(Vector2.DOWN)
+		"tops_and_bottoms":
+			results.append(Vector2.DOWN)
+			results.append(Vector2.UP)
+			results.append(Vector2.DOWN + Vector2.RIGHT)
+			results.append(Vector2.DOWN + Vector2.LEFT)
+			results.append(Vector2.UP + Vector2.RIGHT)
+			results.append(Vector2.UP + Vector2.LEFT)
 		"vline":
 			results.append(Vector2.ZERO)
+			results.append(Vector2.DOWN)
+			results.append(Vector2.UP)
+		"up_and_down":
 			results.append(Vector2.DOWN)
 			results.append(Vector2.UP)
 		"west":
