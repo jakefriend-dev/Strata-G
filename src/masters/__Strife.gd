@@ -147,8 +147,13 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	# Check for piercing or piercing immunity - you cannot break AND pierce; breaking means shields ARE interacted with and overrides piercing which means they aren't
 	#
 	
+	var pierce_depth: int = 0
 	var piercing: bool = (flags.has("piercing") and !breaking)
 	if defender.is_immune_piercing: piercing = false # Override!
+	if piercing: pierce_depth = 1
+	 # Have not yet implemented 'total shield bypass' aka higher piercing tiers.
+	
+	combat_package["pierce_depth"] = pierce_depth
 	combat_package["piercing"] = piercing
 	var unbroken_shield: int = defender.shield
 	
@@ -156,11 +161,16 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 		# 1. Deduct damage & unbroken_shield together (not ACTUAL LIVE SHIELD VALUE, just this int)
 		# 2. Deduct damage & health together
 	
-	if !piercing:
-		# Deduct damage and shield equally until either of them depletes fully
-		while unbroken_shield > 0 and damage > 0:
-			damage -= 1
+	if pierce_depth > 0:
+		var pierce_value_depth: int = pierce_depth*4
+		while unbroken_shield > 0 and pierce_value_depth > 0:
 			unbroken_shield -= 1
+			pierce_value_depth -= 1
+	
+	# Deduct damage and (non-pierced) shield equally until either of them depletes fully
+	while unbroken_shield > 0 and damage > 0:
+		damage -= 1
+		unbroken_shield -= 1
 	
 	var _total_shield_left: int = defender.shield
 	var shielded_damage: int = og_damage - damage

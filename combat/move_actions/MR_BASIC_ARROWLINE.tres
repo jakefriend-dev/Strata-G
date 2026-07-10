@@ -5,8 +5,8 @@
 
 [resource]
 script = ExtResource( 1 )
-display_name = "Bowshot"
-short_desc = "DMG damage, pierces 1 shield layer"
+display_name = "Lineshot"
+short_desc = "DMG piercing damage in LOS"
 display_desc = "Shoot the first unit in your line of sight for DMG damage. Pierces shields."
 option_image = ExtResource( 2 )
 option_desc = "Changes angle of attack."
