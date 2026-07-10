@@ -50,7 +50,7 @@ const MAX_action_points: int = 9 # Never let multi-turn overflow exceed this!
 var action_cracking: int = 0 # Iterates through 1 (partial), 2 (heavy), then breaks 1AP and reverts to 0 (uncracked)
 
 var actions_completed_this_turn: int = 0 # An action is what we think of as an attack;
-										# like all 3 steps of Doggo's charge attack is 1 action
+	# like all 3 steps of Doggo's charge attack is 1 action
 var turns_completed_this_round: int = 0 # Includes interruptions, just if you had a turn at all
 var turns_completed_total: int = 0
 
@@ -267,6 +267,7 @@ func choose_action():
 		call("prep_next_action")
 	
 	if !batman.action_queue.empty():
+		# It'd be empty if we failed to have assigned an action to the queue
 		actions_completed_this_turn += 1
 	
 	batman.progress_action_queue() # If empty when this is called (ie. we could not afford an action at all, or chose not to take one), consider the turn auto-over
