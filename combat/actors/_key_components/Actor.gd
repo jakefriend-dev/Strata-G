@@ -302,6 +302,9 @@ func spend(cost: int):
 
 func add_action_points(value: int):
 	action_points += value
+	if action_points > MAX_action_points:
+		action_points = MAX_action_points
+	batman.field.movewindow.refresh_all()
 	update_bui()
 	pass
 
