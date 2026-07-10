@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=30 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
 [ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=2]
@@ -12,7 +12,7 @@
 [ext_resource path="res://text/fonts/built/Font BUI Header ALT 1x.tres" type="DynamicFont" id=10]
 [ext_resource path="res://art/bui/pips/8x action pip.png" type="Texture" id=11]
 [ext_resource path="res://art/_placeholder/mage tuntaker head x48.png" type="Texture" id=12]
-[ext_resource path="res://text/fonts/built/Font Testing 2.tres" type="DynamicFont" id=13]
+[ext_resource path="res://combat/battle_ui/components/ActionPointBar.tscn" type="PackedScene" id=13]
 [ext_resource path="res://combat/battle_ui/MovesetOption.tscn" type="PackedScene" id=14]
 [ext_resource path="res://text/fonts/built/Font Menu Small 1x.tres" type="DynamicFont" id=15]
 [ext_resource path="res://art/general/9patch standard shapes1.png" type="Texture" id=17]
@@ -28,28 +28,6 @@ bg_color = Color( 0.482353, 0.258824, 0.301961, 1 )
 
 [sub_resource type="StyleBoxFlat" id=24]
 bg_color = Color( 0, 0, 0, 1 )
-
-[sub_resource type="StyleBoxEmpty" id=12]
-
-[sub_resource type="StyleBoxEmpty" id=13]
-
-[sub_resource type="StyleBoxEmpty" id=14]
-
-[sub_resource type="StyleBoxEmpty" id=15]
-
-[sub_resource type="StyleBoxEmpty" id=16]
-
-[sub_resource type="StyleBoxEmpty" id=17]
-
-[sub_resource type="StyleBoxEmpty" id=18]
-
-[sub_resource type="StyleBoxEmpty" id=19]
-
-[sub_resource type="StyleBoxEmpty" id=20]
-
-[sub_resource type="StyleBoxEmpty" id=21]
-
-[sub_resource type="StyleBoxEmpty" id=22]
 
 [sub_resource type="Theme" id=1]
 GridContainer/constants/hseparation = 5
@@ -82,9 +60,9 @@ modulate_color = Color( 0.588235, 0.423529, 0.603922, 1 )
 
 [node name="MoveWindow" type="Node2D"]
 script = ExtResource( 3 )
-path_movegrid = NodePath("PanelContainer/HB/VB/UpperHB/MoveGrid")
-path_tooltip_par = NodePath("PanelContainer/HB/VB/LowerHB/TTPar")
-path_userpanel = NodePath("PanelContainer/HB/VB/UpperHB/UserPanel")
+path_movegrid = NodePath("PanelContainer/HB/MoveSection/UpperHB/MoveGrid")
+path_tooltip_par = NodePath("PanelContainer/HB/MoveSection/LowerHB/TTPar")
+path_userpanel = NodePath("PanelContainer/HB/MoveSection/UpperHB/UserPanel")
 path_apb = NodePath("PanelContainer/HB/AimAndAP/ActionPointBar")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
@@ -100,9 +78,9 @@ __meta__ = {
 
 [node name="HB" type="HBoxContainer" parent="PanelContainer"]
 margin_left = 2.0
-margin_top = 3.0
+margin_top = 2.0
 margin_right = 292.0
-margin_bottom = 103.0
+margin_bottom = 102.0
 
 [node name="SpacerLeft" type="Panel" parent="PanelContainer/HB"]
 margin_right = 10.0
@@ -167,198 +145,7 @@ margin_bottom = 68.0
 rect_min_size = Vector2( 0, 2 )
 custom_styles/panel = SubResource( 10 )
 
-[node name="ActionPointBar" type="VBoxContainer" parent="PanelContainer/HB/AimAndAP"]
-margin_top = 68.0
-margin_right = 48.0
-margin_bottom = 96.0
-
-[node name="Text" type="HBoxContainer" parent="PanelContainer/HB/AimAndAP/ActionPointBar"]
-margin_left = 6.0
-margin_right = 42.0
-margin_bottom = 16.0
-size_flags_horizontal = 4
-custom_constants/separation = -1
-
-[node name="Curr" type="Label" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Text"]
-margin_right = 8.0
-margin_bottom = 16.0
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 0.854902, 0.439216, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = ExtResource( 13 )
-text = "5"
-align = 1
-
-[node name="Slash" type="Label" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Text"]
-margin_left = 7.0
-margin_right = 14.0
-margin_bottom = 16.0
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 0.643137, 0.407843, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = ExtResource( 13 )
-text = "/"
-align = 1
-
-[node name="Total" type="Label" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Text"]
-margin_left = 13.0
-margin_top = 1.0
-margin_right = 19.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 0.643137, 0.407843, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = ExtResource( 15 )
-text = "7"
-align = 1
-
-[node name="AP" type="Label" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Text"]
-margin_left = 18.0
-margin_top = 1.0
-margin_right = 36.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-custom_colors/font_color = Color( 1, 0.643137, 0.407843, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = ExtResource( 15 )
-text = " AP"
-align = 1
-
-[node name="Pips" type="HBoxContainer" parent="PanelContainer/HB/AimAndAP/ActionPointBar"]
-margin_left = 2.0
-margin_top = 16.0
-margin_right = 46.0
-margin_bottom = 28.0
-size_flags_horizontal = 4
-
-[node name="MinPanel" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_right = 4.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 12 )
-custom_styles/panel = SubResource( 12 )
-
-[node name="Panel1" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 4.0
-margin_right = 8.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 13 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel1"]
-position = Vector2( 0, 4 )
-texture = ExtResource( 11 )
-hframes = 6
-
-[node name="Panel2" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 8.0
-margin_right = 12.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 14 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel2"]
-position = Vector2( 0, 8 )
-texture = ExtResource( 11 )
-hframes = 6
-
-[node name="Panel3" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 12.0
-margin_right = 16.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 15 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel3"]
-position = Vector2( 0, 4 )
-texture = ExtResource( 11 )
-hframes = 6
-
-[node name="Panel4" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 16.0
-margin_right = 20.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 16 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel4"]
-position = Vector2( 0, 8 )
-texture = ExtResource( 11 )
-hframes = 6
-
-[node name="Panel5" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 20.0
-margin_right = 24.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 17 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel5"]
-position = Vector2( 0, 4 )
-texture = ExtResource( 11 )
-hframes = 6
-
-[node name="Panel6" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 24.0
-margin_right = 28.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 18 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel6"]
-position = Vector2( 0, 8 )
-texture = ExtResource( 11 )
-hframes = 6
-
-[node name="Panel7" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 28.0
-margin_right = 32.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 19 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel7"]
-position = Vector2( 0, 4 )
-texture = ExtResource( 11 )
-hframes = 6
-
-[node name="Panel8" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 32.0
-margin_right = 36.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 20 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel8"]
-position = Vector2( 0, 8 )
-texture = ExtResource( 11 )
-hframes = 6
-frame = 2
-
-[node name="Panel9" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 36.0
-margin_right = 40.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 21 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel9"]
-position = Vector2( 0, 4 )
-texture = ExtResource( 11 )
-hframes = 6
-frame = 2
-
-[node name="Panel10" type="Panel" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips"]
-margin_left = 40.0
-margin_right = 44.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 4, 0 )
-custom_styles/panel = SubResource( 22 )
-
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/AimAndAP/ActionPointBar/Pips/Panel10"]
-position = Vector2( 0, 8 )
-texture = ExtResource( 11 )
-hframes = 6
-frame = 2
+[node name="ActionPointBar" parent="PanelContainer/HB/AimAndAP" instance=ExtResource( 13 )]
 
 [node name="SpacerMid" type="Panel" parent="PanelContainer/HB"]
 margin_left = 58.0
@@ -367,24 +154,24 @@ margin_bottom = 100.0
 rect_min_size = Vector2( 10, 0 )
 custom_styles/panel = SubResource( 9 )
 
-[node name="VB" type="VBoxContainer" parent="PanelContainer/HB"]
+[node name="MoveSection" type="VBoxContainer" parent="PanelContainer/HB"]
 margin_left = 68.0
 margin_right = 282.0
 margin_bottom = 100.0
 
-[node name="SpacerTop" type="Panel" parent="PanelContainer/HB/VB"]
+[node name="SpacerTop" type="Panel" parent="PanelContainer/HB/MoveSection"]
 margin_right = 214.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 0, 10 )
 custom_styles/panel = SubResource( 10 )
 
-[node name="UpperHB" type="HBoxContainer" parent="PanelContainer/HB/VB"]
+[node name="UpperHB" type="HBoxContainer" parent="PanelContainer/HB/MoveSection"]
 margin_top = 10.0
 margin_right = 214.0
 margin_bottom = 74.0
 custom_constants/separation = 4
 
-[node name="MoveGrid" type="GridContainer" parent="PanelContainer/HB/VB/UpperHB"]
+[node name="MoveGrid" type="GridContainer" parent="PanelContainer/HB/MoveSection/UpperHB"]
 margin_right = 214.0
 margin_bottom = 64.0
 rect_min_size = Vector2( 214, 64 )
@@ -395,21 +182,21 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Option1" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option1" parent="PanelContainer/HB/MoveSection/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_right = 100.0
 
-[node name="Option2" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option2" parent="PanelContainer/HB/MoveSection/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_left = 106.0
 margin_right = 206.0
 my_x_col = 1
 
-[node name="Option3" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option3" parent="PanelContainer/HB/MoveSection/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 16.0
 margin_right = 100.0
 margin_bottom = 30.0
 my_y_row = 1
 
-[node name="Option4" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option4" parent="PanelContainer/HB/MoveSection/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_left = 106.0
 margin_top = 16.0
 margin_right = 206.0
@@ -417,13 +204,13 @@ margin_bottom = 30.0
 my_x_col = 1
 my_y_row = 1
 
-[node name="Option5" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option5" parent="PanelContainer/HB/MoveSection/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 32.0
 margin_right = 100.0
 margin_bottom = 46.0
 my_y_row = 2
 
-[node name="Option6" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option6" parent="PanelContainer/HB/MoveSection/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_left = 106.0
 margin_top = 32.0
 margin_right = 206.0
@@ -431,13 +218,13 @@ margin_bottom = 46.0
 my_x_col = 1
 my_y_row = 2
 
-[node name="Option7" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option7" parent="PanelContainer/HB/MoveSection/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 48.0
 margin_right = 100.0
 margin_bottom = 62.0
 my_y_row = 3
 
-[node name="Option8" parent="PanelContainer/HB/VB/UpperHB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option8" parent="PanelContainer/HB/MoveSection/UpperHB/MoveGrid" instance=ExtResource( 14 )]
 margin_left = 106.0
 margin_top = 48.0
 margin_right = 206.0
@@ -445,26 +232,26 @@ margin_bottom = 62.0
 my_x_col = 1
 my_y_row = 3
 
-[node name="UserPanel" type="PanelContainer" parent="PanelContainer/HB/VB/UpperHB"]
+[node name="UserPanel" type="PanelContainer" parent="PanelContainer/HB/MoveSection/UpperHB"]
 visible = false
 margin_left = 218.0
 margin_right = 282.0
 margin_bottom = 64.0
 custom_styles/panel = SubResource( 7 )
 
-[node name="HB" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel"]
+[node name="HB" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel"]
 margin_left = 4.0
 margin_top = 2.0
 margin_right = 60.0
 margin_bottom = 62.0
 
-[node name="actionpips" type="VBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB"]
+[node name="actionpips" type="VBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB"]
 margin_top = 3.0
 margin_right = 8.0
 margin_bottom = 56.0
 size_flags_vertical = 4
 
-[node name="Count" type="Label" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips"]
+[node name="Count" type="Label" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips"]
 material = SubResource( 2 )
 margin_right = 8.0
 margin_bottom = 13.0
@@ -479,7 +266,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Icon" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips"]
+[node name="Icon" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips"]
 margin_top = 13.0
 margin_right = 8.0
 margin_bottom = 21.0
@@ -491,13 +278,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips/Icon"]
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips/Icon"]
 texture = ExtResource( 11 )
 centered = false
 hframes = 6
 frame = 2
 
-[node name="Icon2" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips"]
+[node name="Icon2" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips"]
 margin_top = 21.0
 margin_right = 8.0
 margin_bottom = 29.0
@@ -509,13 +296,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips/Icon2"]
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips/Icon2"]
 texture = ExtResource( 11 )
 centered = false
 hframes = 6
 frame = 2
 
-[node name="Icon3" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips"]
+[node name="Icon3" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips"]
 margin_top = 29.0
 margin_right = 8.0
 margin_bottom = 37.0
@@ -527,13 +314,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips/Icon3"]
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips/Icon3"]
 texture = ExtResource( 11 )
 centered = false
 hframes = 6
 frame = 2
 
-[node name="Icon4" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips"]
+[node name="Icon4" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips"]
 margin_top = 37.0
 margin_right = 8.0
 margin_bottom = 45.0
@@ -545,12 +332,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips/Icon4"]
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips/Icon4"]
 texture = ExtResource( 11 )
 centered = false
 hframes = 6
 
-[node name="Icon5" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips"]
+[node name="Icon5" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips"]
 margin_top = 45.0
 margin_right = 8.0
 margin_bottom = 53.0
@@ -562,12 +349,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/actionpips/Icon5"]
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/actionpips/Icon5"]
 texture = ExtResource( 11 )
 centered = false
 hframes = 6
 
-[node name="BUI" type="MarginContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB"]
+[node name="BUI" type="MarginContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB"]
 margin_left = 8.0
 margin_right = 56.0
 margin_bottom = 60.0
@@ -577,7 +364,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VB" type="VBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI"]
+[node name="VB" type="VBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI"]
 margin_right = 48.0
 margin_bottom = 60.0
 size_flags_horizontal = 4
@@ -587,11 +374,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TopPlate" type="VBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB"]
+[node name="TopPlate" type="VBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB"]
 margin_right = 48.0
 margin_bottom = 60.0
 
-[node name="Head48x" type="TextureRect" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/TopPlate"]
+[node name="Head48x" type="TextureRect" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/TopPlate"]
 margin_right = 48.0
 margin_bottom = 48.0
 size_flags_horizontal = 4
@@ -599,7 +386,7 @@ size_flags_vertical = 4
 texture = ExtResource( 12 )
 stretch_mode = 3
 
-[node name="Head48x2" type="TextureRect" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/TopPlate/Head48x"]
+[node name="Head48x2" type="TextureRect" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/TopPlate/Head48x"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 margin_left = 1.0
@@ -614,7 +401,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NamePlate" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/TopPlate"]
+[node name="NamePlate" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/TopPlate"]
 margin_left = 7.0
 margin_top = 48.0
 margin_right = 41.0
@@ -624,7 +411,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="Name" type="Label" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/TopPlate/NamePlate"]
+[node name="Name" type="Label" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/TopPlate/NamePlate"]
 margin_right = 34.0
 margin_bottom = 12.0
 size_flags_horizontal = 3
@@ -633,7 +420,7 @@ custom_fonts/font = ExtResource( 10 )
 text = "Beast"
 align = 1
 
-[node name="MidPlate" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB"]
+[node name="MidPlate" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB"]
 visible = false
 margin_left = 1.0
 margin_top = 60.0
@@ -641,69 +428,69 @@ margin_right = 46.0
 margin_bottom = 79.0
 size_flags_horizontal = 4
 
-[node name="10xSize" type="VBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate"]
+[node name="10xSize" type="VBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate"]
 margin_right = 45.0
 margin_bottom = 19.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = -1
 
-[node name="R1" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize"]
+[node name="R1" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize"]
 margin_right = 45.0
 margin_bottom = 10.0
 custom_constants/separation = 0
 
-[node name="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R1" instance=ExtResource( 8 )]
+[node name="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R1" instance=ExtResource( 8 )]
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel2" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R1" instance=ExtResource( 8 )]
+[node name="Panel2" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R1" instance=ExtResource( 8 )]
 margin_left = 10.0
 margin_right = 20.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel3" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R1" instance=ExtResource( 8 )]
+[node name="Panel3" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R1" instance=ExtResource( 8 )]
 margin_left = 20.0
 margin_right = 30.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel4" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R1" instance=ExtResource( 8 )]
+[node name="Panel4" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R1" instance=ExtResource( 8 )]
 margin_left = 30.0
 margin_right = 40.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="R2" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize"]
+[node name="R2" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize"]
 margin_top = 9.0
 margin_right = 45.0
 margin_bottom = 19.0
 custom_constants/separation = 0
 
-[node name="LEFT_SPACER" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2"]
+[node name="LEFT_SPACER" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2"]
 margin_right = 5.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 5, 0 )
 custom_styles/panel = SubResource( 6 )
 
-[node name="Panel5" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2" instance=ExtResource( 8 )]
+[node name="Panel5" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2" instance=ExtResource( 8 )]
 margin_left = 5.0
 margin_right = 15.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel6" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2" instance=ExtResource( 8 )]
+[node name="Panel6" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2" instance=ExtResource( 8 )]
 margin_left = 15.0
 margin_right = 25.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel7" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2" instance=ExtResource( 8 )]
+[node name="Panel7" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2" instance=ExtResource( 8 )]
 margin_left = 25.0
 margin_right = 35.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel8" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2" instance=ExtResource( 8 )]
+[node name="Panel8" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/10xSize/R2" instance=ExtResource( 8 )]
 margin_left = 35.0
 margin_right = 45.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="8xSize" type="VBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate"]
+[node name="8xSize" type="VBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate"]
 margin_left = 45.0
 margin_top = 9.0
 margin_right = 45.0
@@ -712,20 +499,20 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = -2
 
-[node name="R1" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/8xSize"]
+[node name="R1" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/8xSize"]
 custom_constants/separation = 0
 
-[node name="R2" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/8xSize"]
+[node name="R2" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/8xSize"]
 visible = false
 margin_right = 4.0
 custom_constants/separation = 0
 
-[node name="LEFT_SPACER" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/8xSize/R2"]
+[node name="LEFT_SPACER" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/8xSize/R2"]
 margin_right = 4.0
 rect_min_size = Vector2( 4, 0 )
 custom_styles/panel = SubResource( 5 )
 
-[node name="6xSize" type="VBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate"]
+[node name="6xSize" type="VBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate"]
 margin_left = 45.0
 margin_top = 9.0
 margin_right = 45.0
@@ -734,34 +521,34 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = -1
 
-[node name="R1" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize"]
+[node name="R1" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize"]
 custom_constants/separation = 0
 
-[node name="R2" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize"]
+[node name="R2" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize"]
 visible = false
 margin_top = -1.0
 margin_right = 6.0
 margin_bottom = -1.0
 custom_constants/separation = 0
 
-[node name="LEFT_SPACER" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize/R2"]
+[node name="LEFT_SPACER" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize/R2"]
 margin_right = 3.0
 rect_min_size = Vector2( 3, 0 )
 custom_styles/panel = SubResource( 5 )
 
-[node name="R3" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize"]
+[node name="R3" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize"]
 visible = false
 margin_top = -2.0
 margin_right = 6.0
 margin_bottom = -2.0
 custom_constants/separation = 0
 
-[node name="LEFT_SPACER_WIDE" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize/R3"]
+[node name="LEFT_SPACER_WIDE" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/6xSize/R3"]
 margin_right = 6.0
 rect_min_size = Vector2( 6, 0 )
 custom_styles/panel = SubResource( 5 )
 
-[node name="4xSize" type="VBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate"]
+[node name="4xSize" type="VBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate"]
 margin_left = 45.0
 margin_top = 9.0
 margin_right = 45.0
@@ -770,40 +557,40 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="R1" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize"]
+[node name="R1" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize"]
 custom_constants/separation = 0
 
-[node name="R2" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize"]
+[node name="R2" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize"]
 visible = false
 margin_right = 2.0
 custom_constants/separation = 0
 
-[node name="LEFT_SPACER" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize/R2"]
+[node name="LEFT_SPACER" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize/R2"]
 margin_right = 2.0
 rect_min_size = Vector2( 2, 0 )
 custom_styles/panel = SubResource( 5 )
 
-[node name="R3" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize"]
+[node name="R3" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize"]
 visible = false
 margin_right = 4.0
 custom_constants/separation = 0
 
-[node name="LEFT_SPACER_WIDE" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize/R3"]
+[node name="LEFT_SPACER_WIDE" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize/R3"]
 margin_right = 4.0
 rect_min_size = Vector2( 4, 0 )
 custom_styles/panel = SubResource( 5 )
 
-[node name="R4" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize"]
+[node name="R4" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize"]
 visible = false
 margin_right = 6.0
 custom_constants/separation = 0
 
-[node name="LEFT_SPACER_WIDEST" type="Panel" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize/R4"]
+[node name="LEFT_SPACER_WIDEST" type="Panel" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/MidPlate/4xSize/R4"]
 margin_right = 6.0
 rect_min_size = Vector2( 6, 0 )
 custom_styles/panel = SubResource( 5 )
 
-[node name="BotPlate" type="HBoxContainer" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB"]
+[node name="BotPlate" type="HBoxContainer" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB"]
 visible = false
 margin_top = 79.0
 margin_right = 58.0
@@ -812,31 +599,31 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 3
 
-[node name="AP" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/BotPlate" instance=ExtResource( 6 )]
+[node name="AP" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/BotPlate" instance=ExtResource( 6 )]
 
-[node name="Shield" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/BotPlate" instance=ExtResource( 5 )]
+[node name="Shield" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/BotPlate" instance=ExtResource( 5 )]
 margin_left = 17.0
 margin_right = 31.0
 
-[node name="Status" parent="PanelContainer/HB/VB/UpperHB/UserPanel/HB/BUI/VB/BotPlate" instance=ExtResource( 7 )]
+[node name="Status" parent="PanelContainer/HB/MoveSection/UpperHB/UserPanel/HB/BUI/VB/BotPlate" instance=ExtResource( 7 )]
 
-[node name="LowerHB" type="HBoxContainer" parent="PanelContainer/HB/VB"]
+[node name="LowerHB" type="HBoxContainer" parent="PanelContainer/HB/MoveSection"]
 margin_top = 74.0
 margin_right = 214.0
 margin_bottom = 100.0
 
-[node name="SpacerL" type="Panel" parent="PanelContainer/HB/VB/LowerHB"]
+[node name="SpacerL" type="Panel" parent="PanelContainer/HB/MoveSection/LowerHB"]
 margin_right = 16.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 16, 0 )
 custom_styles/panel = SubResource( 8 )
 
-[node name="TTPar" type="VBoxContainer" parent="PanelContainer/HB/VB/LowerHB"]
+[node name="TTPar" type="VBoxContainer" parent="PanelContainer/HB/MoveSection/LowerHB"]
 margin_left = 16.0
 margin_right = 201.0
 margin_bottom = 26.0
 
-[node name="DescTooltip" type="Label" parent="PanelContainer/HB/VB/LowerHB/TTPar"]
+[node name="DescTooltip" type="Label" parent="PanelContainer/HB/MoveSection/LowerHB/TTPar"]
 margin_right = 185.0
 margin_bottom = 13.0
 custom_colors/font_color = Color( 0.8, 0.886275, 0.882353, 1 )
@@ -847,7 +634,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="WarnTooltip" type="Label" parent="PanelContainer/HB/VB/LowerHB/TTPar"]
+[node name="WarnTooltip" type="Label" parent="PanelContainer/HB/MoveSection/LowerHB/TTPar"]
 margin_top = 13.0
 margin_right = 185.0
 margin_bottom = 26.0

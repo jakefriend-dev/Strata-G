@@ -15,11 +15,11 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 1 )
 text = "This is a placeholder landing page!
 
-Press 1 to load the first pre-set test fight (1 Beast)
+Press 1 to load the FIRST pre-set test fight (1 Beast)
 
-Press 2 to load the second pre-set test fight (1 Doggo, 2 Throwers)
+Press 2 to load the SECOND pre-set test fight (1 Doggo, 2 Throwers)
 
-Press 3 to randomly generate a fight
+Press 3 to RANDOMLY generate a fight
 
 When in a fight, press Escape to return to this page and reset"
 align = 1

@@ -165,6 +165,11 @@ func update_ap():
 				frame = 0
 		pip.get_node("Sprite").frame = frame
 		
+		var crack_frame: int = 0
+		if curr == count and curr > 0:
+			crack_frame = batman.curr_actor.action_cracking
+		pip.get_node("Sprite/Cracking").frame = crack_frame
+		
 	pass
 
 # ---

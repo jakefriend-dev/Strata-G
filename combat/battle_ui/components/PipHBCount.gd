@@ -15,7 +15,10 @@ var actor: Actor
 # ---
 
 func _ready():
-	label = $CountPanel/Count
+	if has_node("CountPanel"): # Deprecate when ready; kind of just historical. CountPanel is needed for showing AP cost
+		label = $CountPanel/Count
+	else:
+		label = $Count
 	sprite = $Icon/Sprite
 #	update_values() # BUI can do this
 	pass
@@ -52,6 +55,7 @@ func refresh():
 				spriteframe_value = 0
 			else:
 				spriteframe_value = 2
+		$Icon/Sprite/Cracking.frame = actor.action_cracking
 	
 	# Close off by updating everything
 	

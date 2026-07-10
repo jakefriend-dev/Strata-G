@@ -47,6 +47,7 @@ var bui: Node2D
 export var base_action_points: int = 4 # Used for movement AND attacks!
 var action_points: int = 0 # Refreshed at the top of each turn! And start of combat
 const MAX_action_points: int = 9 # Never let multi-turn overflow exceed this!
+var action_cracking: int = 1 # Iterates through 1 (partial), 2 (heavy), then breaks 1AP and reverts to 0 (uncracked)
 
 var actions_completed_this_turn: int = 0 # An action is what we think of as an attack;
 										# like all 3 steps of Doggo's charge attack is 1 action
@@ -271,6 +272,8 @@ func choose_action():
 	batman.progress_action_queue() # If empty when this is called (ie. we could not afford an action at all, or chose not to take one), consider the turn auto-over
 	pass
 
+# ---
+
 func can_afford(cost: int) -> bool:
 	if (action_points) >= cost:
 		return true
@@ -297,6 +300,9 @@ func spend(cost: int):
 	if action_points < 0: action_points = 0
 #	if bonus_actions < 0: bonus_actions = 0
 	
+	if action_points == 0:
+		action_cracking = 0
+	
 	update_bui()
 	pass
 
@@ -316,6 +322,21 @@ func refresh_action_points():
 	
 	update_bui()
 	pass
+
+func inc_action_cracking():
+	action_cracking += 1
+	if action_cracking > 2:
+		action_cracking = 0
+		spend(1)
+	update_bui()
+	pass
+
+func clear_action_cracking():
+	action_cracking = 0
+	update_bui()
+	pass
+
+# ---
 
 func master_pre_round_setup():
 	turns_completed_this_round = 0
