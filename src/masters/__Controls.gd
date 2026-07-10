@@ -23,7 +23,7 @@ var stick_right_gangle: Vector2
 
 func _process(_d):
 	monitor_gamepad_sticks()
-	monitor_inputs()
+	monitor_inputs_CORE()
 func _physics_process(_delta):
 	multi_input_lock = false
 
@@ -124,7 +124,7 @@ func monitor_R_stick():
 	stick_right_vangle = Vector2(vecstep_x, vecstep_y)
 	pass
 
-func monitor_inputs():
+func monitor_inputs_CORE():
 	if multi_input_lock: return
 	
 	# Test setups

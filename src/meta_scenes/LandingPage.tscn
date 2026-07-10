@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://text/fonts/built/Font Readout.tres" type="DynamicFont" id=1]
+
+[node name="LandingPage" type="Node2D"]
+
+[node name="Label" type="Label" parent="."]
+margin_top = 1.0
+margin_right = 640.0
+margin_bottom = 361.0
+rect_min_size = Vector2( 640, 360 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 1 )
+text = "This is a placeholder landing page!
+
+Press 1 to load the first pre-set test fight (1 Beast)
+
+Press 2 to load the second pre-set test fight (1 Doggo, 2 Throwers)
+
+Press 3 to randomly generate a fight
+
+When in a fight, press Escape to return to this page and reset"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}

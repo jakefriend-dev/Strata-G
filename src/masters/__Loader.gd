@@ -1,5 +1,7 @@
 extends Node
 
+# GameRoot's viable master scenes are stored in ITS script, not here!
+
 # Battlefield
 var res_battlecell = preload("res://combat/framing/BattleCell.tscn")
 

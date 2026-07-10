@@ -4,6 +4,8 @@ tool
 var tween: Tween
 var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
+var root: Node2D # GameRoot.tscn!
+
 # ---
 
 func _ready():
@@ -41,6 +43,14 @@ func get_resource_name(r: Resource) -> String:
 	
 	return "ERROR"
 	pass
+
+# -
+
+func change_master_scene(to_scene: String):
+	root.change_master_scene(to_scene)
+	pass
+
+# -
 
 func yt(dur: float, caller, disrespect_pause: bool = false) -> YTimer:
 

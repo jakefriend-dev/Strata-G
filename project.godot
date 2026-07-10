@@ -75,7 +75,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Strata-G"
-run/main_scene="res://src/masters/GameRoot.tscn"
+run/main_scene="res://src/meta_scenes/GameRoot.tscn"
 boot_splash/bg_color=Color( 0, 0, 0, 1 )
 config/icon="res://art/bui/aimflowers/3x3 - plus.png"
 

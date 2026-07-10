@@ -220,7 +220,7 @@ func test_new_combat(test: String):
 	match test:
 		
 		"1": # Manual battle 1
-			if !init_new_combat({
+			init_new_combat({
 				"halfboard_size": Vector2(3, 3),
 				"npc_positions": [
 					[5, 2, "Beast"],
@@ -234,12 +234,10 @@ func test_new_combat(test: String):
 					Vector2(4, 3): tiletypes.HOT,
 #					Vector2(2, 4): tiletypes.POISON,
 				},
-			}):
-				print("TURN MGR: test_new_combat(",test,") failed!")
-				return
+			})
 		
 		"2": # Manual battle 2
-			if !init_new_combat({
+			init_new_combat({
 				"halfboard_size": Vector2(4, 4),
 				"npc_positions": [
 					[5, 1, "Thrower"],
@@ -247,13 +245,12 @@ func test_new_combat(test: String):
 					[8, 2, "Thrower"],
 					[6, 3, "Rock"],
 				],
-			}):
-				return
+			})
 		
 		"3": # Randomizer!
 			set_up_random_combat()
 	
-#	print("TURN MGR: test_new_combat(",test,") succeeded!")
+#	print("BATMAN: test_new_combat(",test,") succeeded!")
 	pass
 
 func set_up_random_combat():
@@ -340,7 +337,7 @@ func set_up_random_combat():
 	var enemy_values: Dictionary = {
 		"Thrower": 2,
 		"Doggo": 3,
-		"Beast": 4,
+		"Beast": 6,
 	}
 	var enemy_options: Array = enemy_values.keys()
 	while enemy_quota > 0:
@@ -378,22 +375,40 @@ func set_up_random_combat():
 	init_new_combat(new_battle_details)
 	pass
 
-func init_new_combat(new_battle_details: Dictionary) -> bool:
-	
+func init_new_combat(new_battle_details: Dictionary):
 	if !DETERMINISTIC: randomize()
 	
-	# Validations!
-	if !new_battle_details.has("npc_positions"):
-#		return false
-		print("BATMAN: fyi, init_new_combat() has no NPCs")
-		new_battle_details["npc_positions"] = []
-	
 	print("---\nTURN MGR: Initializing new combat!")
+	combatstate = C_BATTLE_SETUP
+	flush_all_combat_details()
+	
+	battle_details = new_battle_details
+	load_battle_details()
+	math_out_board_gpos_cells()
+	
+	load_battle_field()
+	
+	roll_initiative()
+	perform_local_pre_combat_setup()
+	cycle_to_next_turn() # This ACTUALLY STARTS the fight!
+	
+#	print("TURN: GPos data is:",grid_gpos)
+	pass
+
+func flush_all_combat_details():
 	curr_actor = null
 	curr_turndata.clear()
+	battle_details = {}
+	flush_actionqueue(false)
+	pass
+
+func load_battle_details():
 	
-	combatstate = C_BATTLE_SETUP
-	battle_details = new_battle_details
+	# Non-dealbreaker validations!
+	if !battle_details.has("npc_positions"):
+#		return false
+		print("BATMAN: fyi, battle_details had no NPCs")
+		battle_details["npc_positions"] = []
 	
 	# Set up our board size!
 	var local_board_size: Vector2 = default_halfboard_size
@@ -409,13 +424,12 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	print("local_board_size ",local_board_size)
 	
 	battle_details["board_size"] = local_board_size
-	
 	# Set up all our Array2Ds
+	
 	for grid in ["grid_tiles", "grid_actors", "grid_gpos", "grid_factions", "grid_claims", "grid_rects"]:
 		set(grid, Array2D.new())
 		get(grid).resizev(local_board_size)
 		get(grid).onebased = true
-	flush_actionqueue() # Save this until AFTER the claims grid exists
 	
 	# Set up our tile data!
 	var tile_default: int = tiletypes.NORMAL
@@ -456,21 +470,19 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 	# IF battle details involve custom party starting positions, use those. Otherwise, use defaults.
 	var use_custom_pc_positions: bool = false
 	if battle_details.has("pc_positions"):
-		print("a")
 		if battle_details["pc_positions"].size() == 3:
-			print("b")
 			use_custom_pc_positions = true
 			var pc_count: int = 0
 			for set in battle_details["pc_positions"]: if set is Array: # It's an array of three-value arrays: [X, Y, name]
 				var pc: String = set[2]
 				if !grid_actors.has_cell(set[0], set[1]):
-					print("TURN MGR: Failed to place PC ",pc," because cell ",set[0],", ",set[1]," does not exist")
+					print("BATMAN: Failed to place PC ",pc," because cell ",set[0],", ",set[1]," does not exist")
 				if grid_actors.get_cell(set[0], set[1]) == null:
 					grid_actors.set_cell(set[0], set[1], pc)
 				else:
-					print("TURN MGR: Failed to place PC ",pc," because cell ",set[0],", ",set[1]," was already occupied")
+					print("BATMAN: Failed to place PC ",pc," because cell ",set[0],", ",set[1]," was already occupied")
 				pc_count += 1
-			print("TURN MGR: Total of ",pc_count," PCs custom-placed")
+			print("BATMAN: Total of ",pc_count," PCs custom-placed")
 	
 	if !use_custom_pc_positions:
 		# Default is just standing in a row
@@ -478,7 +490,7 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 		grid_actors.set_cell(3, 2, default_party[0])
 		grid_actors.set_cell(2, 2, default_party[1])
 		grid_actors.set_cell(1, 2, default_party[2])
-		print("TURN MGR: 3 PCs default-placed")
+		print("BATMAN: 3 PCs default-placed")
 	
 	# DATA-PLACE ENEMIES (AND KEY OBSTACLES)
 	
@@ -488,33 +500,18 @@ func init_new_combat(new_battle_details: Dictionary) -> bool:
 		if grid_actors.get_cell(set[0], set[1]) == null:
 			grid_actors.set_cell(set[0], set[1], set[2])
 		else:
-			print("TURN MGR: Failed to place NPC ",set[2]," because cell ",set[0],", ",set[1]," was already occupied")
+			print("BATMAN: Failed to place NPC ",set[2]," because cell ",set[0],", ",set[1]," was already occupied")
 			error_count += 1
 		npc_count += 1
 		pass
 	
-	print("TURN MGR: ",npc_count-error_count," NPCs placed, ",error_count," errors")
-#	print("TURN MGR: All actors (by name). Results:",grid_actors)
-	
-	math_out_board_cell_positions(w, h)
-	
-	emit_signal("set_up_board")
-#	yield(VisualServer, "frame_post_draw") # Only exists to let Control-based nodes set their actual position data; bypass-able once we're sure values won't change though
-#	emit_signal("populate_gpos_data")
-	emit_signal("populate_actors")
-	print("TURN MGR: All actor data matched to nodes. Results:",grid_actors)
-	
-	roll_initiative()
-	perform_local_pre_combat_setup()
-	cycle_to_next_turn() # This ACTUALLY STARTS the fight!
-	
-#	print("TURN: GPos data is:",grid_gpos)
-	
-	return true
+	print("BATMAN: ",npc_count-error_count," NPCs placed, ",error_count," errors")
+#	print("BATMAN: All actors (by name). Results:",grid_actors)
 	pass
 
-func math_out_board_cell_positions(colcount: int, rowcount: int):
-#	var total_cells: int = colcount * rowcount
+func math_out_board_gpos_cells():
+	var colcount: int = battle_details["board_size"].x
+	var rowcount: int = battle_details["board_size"].y
 	
 	var total_size: Vector2
 	total_size.y = CELL_SIZE.y * rowcount
@@ -546,6 +543,12 @@ func math_out_board_cell_positions(colcount: int, rowcount: int):
 			
 			var rect: Rect2 = Rect2(cell_topleft + Vector2(12, 0), CELL_SIZE)
 			grid_rects.set_cellv(coord, rect)
+	pass
+
+func load_battle_field():
+	utils.change_master_scene("battlefield")
+	emit_signal("set_up_board") # Places BattleCell scenes in BattleField
+	emit_signal("populate_actors")
 	pass
 
 func roll_initiative():
@@ -1225,8 +1228,9 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 	progress_action_queue()
 	pass
 
-func flush_actionqueue(): # Run to wipe any stored-between-turns data
-	release_most_claims()
+func flush_actionqueue(also_release_claims: bool = true): # Run to wipe any stored-between-turns data
+	if also_release_claims:
+		release_most_claims()
 	
 	acting_actor = null
 	action_queue.clear()
