@@ -42,7 +42,7 @@ func ACT():
 	dmg = dist
 	if dmg < 1: dmg = 1
 #	print("longshot dist ",dist," so base dmg ",dmg)
-	dmg *= batman.BASE_HP_FACTOR
+#	dmg *= batman.BASE_HP_FACTOR
 	
 	for cell in coord_path:
 		strife.quick_vfx(cell, "spark_burst")
