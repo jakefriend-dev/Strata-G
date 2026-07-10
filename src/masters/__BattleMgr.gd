@@ -403,10 +403,30 @@ func init_new_combat(new_battle_details: Dictionary):
 
 func flush_all_combat_details():
 	curr_actor = null
+	acting_actor = null
 	curr_turndata.clear()
 	turnqueue.clear()
 	battle_details = {}
 	flush_actionqueue(false)
+	living_actors.clear()
+	slain_actors.clear()
+	ghost_actors.clear()
+	round_count = 0
+	total_turns_taken = 0
+	unique_actornames_observed.clear()
+	turncount = 0
+	loaded_moveset.clear()
+	loaded_move = null
+	loaded_m_index = 0
+	loaded_variant = Vector2.ZERO
+	targeted_tiles.clear()
+	
+	last_execution_frame = -1
+	action_queue.clear()
+	curr_action.clear()
+	prev_action.clear()
+	actions_are_processing = false
+	action_processing_time = 0.0
 	pass
 
 func load_battle_details():
@@ -701,6 +721,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		curr_actor.prep_moveset_on_turn_start()
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
+	if !is_game_live(): return
 	
 	combatstate = C_TURN
 	emit_signal("action_option_view_changed", true)
@@ -1464,5 +1485,10 @@ func must_battle_be_won() -> bool: # Asked after any enemy is damaged/defeated
 func must_battle_be_lost() -> bool: # Asked after any PC is damaged/defeated
 	return false
 
-
+func is_game_live() -> bool:
+	if combatstate == C_OOC: return false
+	if combatstate == C_BATTLE_SETUP: return false
+	if combatstate == C_BATTLE_LOST: return false
+	if combatstate == C_BATTLE_WON: return false
+	return true
 

@@ -566,6 +566,8 @@ func release_targeted_tiles():
 	pass
 
 func _process(_delta):
+	if !batman.is_game_live(): return
+	
 	manage_z_height()
 	monitor_position_as_coordinate()
 	if just_exited_ghost_mode: just_exited_ghost_mode = false

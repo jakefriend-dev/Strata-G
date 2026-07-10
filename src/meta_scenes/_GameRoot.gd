@@ -17,6 +17,7 @@ func change_master_scene(to_scene: String):
 	# We're valid, let's clear existing scenes then load!
 	for child in $ViewportContainer/Viewport/SceneOwner.get_children():
 		$ViewportContainer/Viewport/SceneOwner.remove_child(child)
+		child.queue_free()
 	
 	var scene = get(varname).instance()
 	$ViewportContainer/Viewport/SceneOwner.add_child(scene)
