@@ -125,7 +125,7 @@ func array_from_intmin_to_intmax(mini: int, maxi: int) -> Array:
 		results.append(real_mini+counter)
 		counter += 1
 	
-	print("array_from_intmin_to_intmax(",mini,", ",maxi,") = ",results)
+#	print("UTILS: array_from_intmin_to_intmax(",mini,", ",maxi,") = ",results)
 	
 	return results
 	pass

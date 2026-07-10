@@ -265,11 +265,11 @@ func set_up_random_combat():
 	boardwidth.shuffle()
 	var size_x: int = boardwidth[0]
 	if size_x == 3: boardheight.erase(3)
-#	if size_x == 5: boardheight.erase(6)
 	boardheight.shuffle()
 	var size_y: int = boardheight[0]
 	var halfboard: Vector2 = Vector2(size_x, size_y)
 	new_battle_details["halfboard_size"] = halfboard
+	
 	
 	
 	# Set up temp-board Array2Ds for the purpose of non-overlapping placement
@@ -319,10 +319,12 @@ func set_up_random_combat():
 	tb_overall.set_cell(mage_x, mage_y, "Mage")
 	
 	
+	
 	# Determine a 'spending cost' for this board's level of challenge
 	var budget: int = size_x * size_y # Anywhere from 12 to 30
 	# This is allowed to drop below 0; we'll just stop being able to 'buy' things then
 	var npc_positions: Array = []
+	
 	
 	
 	# Now generate enemies
@@ -337,7 +339,7 @@ func set_up_random_combat():
 	var enemy_values: Dictionary = {
 		"Thrower": 2,
 		"Doggo": 3,
-		"Beast": 6,
+		"Beast": 8,
 	}
 	var enemy_options: Array = enemy_values.keys()
 	while enemy_quota > 0:
@@ -356,6 +358,7 @@ func set_up_random_combat():
 		npc_positions.append([x+size_x, y, this_enemy_name])
 	
 	
+	
 	# Now place obstacles
 	# Add a few rocks at random
 	while budget > 5:
@@ -365,6 +368,7 @@ func set_up_random_combat():
 		var y: int = utils.randi_bw(1, size_y)
 		if tb_overall.get_cell(x, y) != null: continue
 		npc_positions.append([x, y, "Rock"])
+	
 	
 	
 	# Now place tiletypes (avoiding detrimental ones directly underneath anyone not immune to that type)
@@ -378,7 +382,7 @@ func set_up_random_combat():
 func init_new_combat(new_battle_details: Dictionary):
 	if !DETERMINISTIC: randomize()
 	
-	print("---\nTURN MGR: Initializing new combat!")
+	print("---\nBATMAN: Initializing new combat!")
 	combatstate = C_BATTLE_SETUP
 	flush_all_combat_details()
 	
@@ -390,14 +394,17 @@ func init_new_combat(new_battle_details: Dictionary):
 	
 	roll_initiative()
 	perform_local_pre_combat_setup()
-	cycle_to_next_turn() # This ACTUALLY STARTS the fight!
 	
-#	print("TURN: GPos data is:",grid_gpos)
+	# This ACTUALLY STARTS the fight!
+	cycle_to_next_turn() 
+	
+#	print("BATMAN: GPos data is:",grid_gpos)
 	pass
 
 func flush_all_combat_details():
 	curr_actor = null
 	curr_turndata.clear()
+	turnqueue.clear()
 	battle_details = {}
 	flush_actionqueue(false)
 	pass
@@ -421,7 +428,7 @@ func load_battle_details():
 	# And quickref
 	var w: int = local_board_size.x
 	var h: int = local_board_size.y
-	print("local_board_size ",local_board_size)
+#	print("local_board_size ",local_board_size)
 	
 	battle_details["board_size"] = local_board_size
 	# Set up all our Array2Ds
@@ -448,7 +455,7 @@ func load_battle_details():
 			else:
 				grid_tiles.set_cellv(coord, tile_default)
 	
-#	print("TURN: Grid tiles set as ",grid_tiles)
+#	print("BATMAN: Grid tiles set as ",grid_tiles)
 	
 	# Set up our faction data (disabling custom factions for now)
 	var use_custom_factions: bool = false
@@ -482,7 +489,8 @@ func load_battle_details():
 				else:
 					print("BATMAN: Failed to place PC ",pc," because cell ",set[0],", ",set[1]," was already occupied")
 				pc_count += 1
-			print("BATMAN: Total of ",pc_count," PCs custom-placed")
+#			print("BATMAN: Total of ",pc_count," PCs custom-placed")
+			pass
 	
 	if !use_custom_pc_positions:
 		# Default is just standing in a row
@@ -490,7 +498,7 @@ func load_battle_details():
 		grid_actors.set_cell(3, 2, default_party[0])
 		grid_actors.set_cell(2, 2, default_party[1])
 		grid_actors.set_cell(1, 2, default_party[2])
-		print("BATMAN: 3 PCs default-placed")
+#		print("BATMAN: 3 PCs default-placed")
 	
 	# DATA-PLACE ENEMIES (AND KEY OBSTACLES)
 	
@@ -505,7 +513,7 @@ func load_battle_details():
 		npc_count += 1
 		pass
 	
-	print("BATMAN: ",npc_count-error_count," NPCs placed, ",error_count," errors")
+#	print("BATMAN: ",npc_count-error_count," NPCs placed, ",error_count," errors")
 #	print("BATMAN: All actors (by name). Results:",grid_actors)
 	pass
 
@@ -517,7 +525,7 @@ func math_out_board_gpos_cells():
 	total_size.y = CELL_SIZE.y * rowcount
 	total_size.x = (CELL_SIZE.x * colcount) + (CELL_ROW_OFFSET * rowcount)
 	
-	print("For XY board size ",colcount,":",rowcount,", total_size is ",total_size)
+#	print("For XY board size ",colcount,":",rowcount,", total_size is ",total_size)
 	
 	board_topleft = BOARD_CENTERPOINT - (total_size/2.0)
 	
@@ -548,7 +556,7 @@ func math_out_board_gpos_cells():
 func load_battle_field():
 	utils.change_master_scene("battlefield")
 	emit_signal("set_up_board") # Places BattleCell scenes in BattleField
-	emit_signal("populate_actors")
+	emit_signal("populate_actors") # Actually puts the actor scenes on the board
 	pass
 
 func roll_initiative():
@@ -590,6 +598,7 @@ func roll_initiative():
 			turndata["numeration"] = count_of_type
 			turndata["turncount_of_this_actor"] = initcount # Typically 1, could be 2 or 3 for bosses
 			
+			print("BATMAN: Initially appending turndata: ",turndata)
 			turnqueue.append(turndata)
 		pass
 	

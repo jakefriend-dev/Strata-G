@@ -2,7 +2,6 @@ extends MoveAction
 
 
 func ONE_TIME_SETUP():
-	print("Melee Counter: ONE_TIME_SETUP()!")
 	actor.connect("on_strife_any_contact_by_external", self, "REACT")
 	pass
 

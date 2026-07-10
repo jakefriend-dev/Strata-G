@@ -142,6 +142,13 @@ func monitor_inputs_CORE():
 			batman.test_new_combat("3")
 			return
 		return
+	elif (batman.combatstate != batman.C_BATTLE_SETUP and batman.combatstate != batman.C_OOC):
+		# We are DEFINITELY *in* battle
+		if Input.is_action_just_pressed("ui_cancel"):
+			multi_input_lock = true
+			print("---\nCONTROLS: Resetting combat to landing page!")
+			utils.change_master_scene("landing")
+			return
 	
 	# Misc dev things
 	pass

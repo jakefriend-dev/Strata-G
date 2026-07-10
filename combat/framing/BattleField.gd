@@ -85,6 +85,7 @@ func set_up_board():
 	pass
 
 func populate_actors():
+	
 	# Clear any historical actors
 	while actors.get_child_count() > 0:
 		var c = actors.get_child(0)
@@ -182,7 +183,7 @@ func update_turn_display():
 	var currtext: String = ""
 	var nexttext: String = ""
 	
-	if batman.combatstate == batman.C_OOC:
+	if batman.combatstate == batman.C_OOC: # I think this should... never happen anymore?
 		push_turn_display_changes(currtext, nexttext)
 		return
 	
@@ -191,7 +192,14 @@ func update_turn_display():
 	var prev: Array = []
 	var next: Array = []
 	
+	var count: int = -1 # 0-based
 	for turndata in batman.turnqueue: if turndata is Dictionary:
+		count += 1
+		if turndata.empty():
+			print("BATTLEFIELD: Error, 0-based index ",count," in turnqueue is not valid turndata? Breakpoint!")
+			
+			continue
+		
 		var actor: Actor = turndata["actor"]
 		var n: String = actor.get_multifactored_actor_name()
 		if actor.faction == batman.factions.PLAYER:
