@@ -1,20 +1,10 @@
 extends MoveAction
 
-#var DIST: int = 3
-
-#func PREPARE_TOGGLE_OPTIONS():
-#
-#	# Orthag then diag
-#	toggle_cell_options.append(support.get_adj_orthagonal_tiles(actor.coord, true))
-#	toggle_cell_options.append(support.get_adj_diagonal_tiles(actor.coord, true))
-#	pass
-
-# Only uncomment this method if you want to bypass "normal" variant loading
-#func LOAD_VARIANTS():
-#	for vec in plausible_variants:
-#		if batman.grid_actors.has_cellv(actor.coord + vec + Vector2(DIST, 0)):
-#			actualized_variants.append(vec)
-#	pass
+func LOAD_VARIANTS():
+	# Fake toggle via two different V2s
+	actualized_variants.append(Vector2.RIGHT)
+	actualized_variants.append(Vector2.ZERO)
+	pass
 
 func PREVIEW():
 	

@@ -44,11 +44,11 @@ export var req_successful_preview: bool = false
 enum inputstyles {
 	RELATIVE,	# Treats 3x3 grid as positions to move between
 	EXACT,		# Exact input is selected (can't reach middle tile!)
-	TOGGLE,		# Toggles exclusively back and forth between states A and B; must be a binary!
+	CYCLE,		# Preloads a set of Vector2 options within an array and cycles between those exclusively! For 'Toggle' style, just load 2 options.
 }
 export (inputstyles) var selection_style: int = 0
-#var toggle_cell_options: Array = [] # Can hold either exact cells, or subarrays of exact cells
-#var toggle_index: int = 0 # Current position within the toggle_options array
+#var cycle_cell_options: Array = [] # Can hold either exact cells, or relative cells - must be Vector2s!
+var cycle_index: int = 0 # Current position within the toggle_options array
 
 #export var use_exact_input_vector: bool = false # If false, it's relative (almost always)
 export var override_global_variant_on_move_load: bool = false # If true, when selecting this move we ALWAYS the batman var back to this starting var.
@@ -155,10 +155,11 @@ func get_damage() -> int:
 func prepare_actualized_variants():
 	error_text = ""
 	actualized_variants.clear()
-#	starting_variant = Vector2.ZERO
 	
 	# Custom path, if custom logic is desired
 	if has_method("LOAD_VARIANTS"):
+		if selection_style == inputstyles.CYCLE:
+			starting_variant = Vector2(-99, -99) # We want to FORCE starting at the 'fornt of the line' so to speak!
 		call("LOAD_VARIANTS")
 	else: # Default path otherwise
 		for vec in plausible_variants:
@@ -171,7 +172,7 @@ func prepare_actualized_variants():
 		if !actualized_variants.has(starting_variant):
 			starting_variant = actualized_variants.front()
 	
-#	print("actualized_variants for ",self," now: ",actualized_variants)
+#	print("actualized_variants for ",self," now: ",actualized_variants," when starting_variant: ",starting_variant)
 	pass
 
 func end_action():

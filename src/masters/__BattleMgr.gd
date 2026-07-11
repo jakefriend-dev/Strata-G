@@ -68,7 +68,7 @@ var turnqueue: Array = [
 		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
 		# turnpos					Int; managed by batman but 
 ]
-var living_actors: Array = [] # Does not count things like rocks that have no turns
+var living_actors: Array = [] # DOES count things like rocks that have no turns, since they have health
 var slain_actors: Array = [] # When turndata is deleted from turnqueue it goes here, to track things like XP and to keep turnqueue clear for living turntakers only.
 
 var ghost_actors: Array = []
@@ -712,14 +712,6 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	if curr_actor is ActorPlayer:
 		loaded_moveset = curr_actor.moveset.keys()
 		loaded_move = field.movewindow.get_loaded_move() # Allowed to return null even when 'scripted' function
-		
-#		if !loaded_moveset.empty():
-#			var movename: String = loaded_moveset[loaded_m_index]
-#			loaded_move = curr_actor.moveset[movename]
-#			print("first move ",loaded_move)
-#		else:
-#			print("player char ",curr_actor.name," has literally no set moveset!")
-		
 		curr_actor.prep_moveset_on_turn_start()
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
@@ -990,20 +982,23 @@ func attempt_to_change_player_variant(tilt: Vector2, treat_as_exact_override: bo
 	# Then determine if it's possible to take 1 step in that direction FROM our CURRENT variant vec // OR, if we use exact coords, just check if we can use this one
 	
 	var selection_style: int = loaded_move.selection_style
-	if treat_as_exact_override: selection_style = MoveAction.inputstyles.EXACT
+	if treat_as_exact_override: 
+		if selection_style != MoveAction.inputstyles.CYCLE:
+			selection_style = MoveAction.inputstyles.EXACT
 	
 	# EXACT vectors, or some numpad inputs
 	if selection_style == MoveAction.inputstyles.EXACT:
 		if loaded_move.actualized_variants.has(IB_vec):
 			loaded_variant = IB_vec
 	
-	# TOGGLE between two possibilities, to be treated as a bool
-	elif selection_style == MoveAction.inputstyles.TOGGLE:
-		var diag: Vector2 = (Vector2.RIGHT + Vector2.DOWN)
-		if loaded_variant == Vector2.RIGHT:
-			loaded_variant = diag
-		else:
-			loaded_variant = Vector2.RIGHT
+	# CYCLE between possibilities (an Array of 0-to-infinite Vector2s)
+	elif selection_style == MoveAction.inputstyles.CYCLE:
+		loaded_move.cycle_index += 1
+		if loaded_move.cycle_index >= (loaded_move.actualized_variants.size()):
+			loaded_move.cycle_index = 0
+		
+		if !loaded_move.actualized_variants.empty():
+			loaded_variant = loaded_move.actualized_variants[loaded_move.cycle_index]
 		pass
 	
 	# RELATIVE vectors (the 'default' and fallback)
@@ -1425,6 +1420,27 @@ func get_all_current_enemies() -> Array:
 			results.append(actor)
 	return results
 	pass
+
+func get_all_opposing_actor_units(calling_actor: Actor) -> Array:
+	var same_faction: int = calling_actor.faction
+	var results: Array = []
+	
+	for actor in living_actors: if actor is Actor: if utils.actorpass(actor):
+		if actor.faction != same_faction:
+			if actor.faction != factions.NEUTRAL:
+				results.append(actor)
+	
+	return results
+
+func get_all_allied_actor_units(calling_actor: Actor) -> Array:
+	var same_faction: int = calling_actor.faction
+	var results: Array = []
+	
+	for actor in living_actors: if actor is Actor: if utils.actorpass(actor):
+		if actor.faction == same_faction:
+			results.append(actor)
+	
+	return results
 
 # ---
 

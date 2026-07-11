@@ -7,6 +7,7 @@ export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null
 
 const pstring: String = "PREVIEW"
 const astring: String = "ACT"
+const lvstring: String = "LOAD_VARIANTS"
 
 # ---
 
@@ -43,6 +44,10 @@ func load_moves():
 		if move.option_image == null:
 			print(name," can't load move ",move,", no option_image!")
 			continue
+		if move.selection_style == move.inputstyles.CYCLE:
+			if !move.has_method(lvstring):
+				print(name," can't load move ",move,", it's CYCLE type but no LOAD_VARIANTS() method!")
+				continue
 		
 		# Pass!
 		moveset[move.resource_name] = move
@@ -83,7 +88,8 @@ func prep_moveset_on_turn_start():
 	for key in moveset:
 		var move: MoveAction = moveset[key]
 		if move.current_turn_uses > 0 and move.uses_per_turn > 0:
-			print(move," unlocked as per-turn uses resets")
+#			print(move," unlocked as per-turn uses resets")
+			pass
 		move.current_turn_uses = 0
 #		print("reset ",move," current_turn_uses")
 		pass
