@@ -180,6 +180,30 @@ func get_max_lifetime_from_particle(p: Particles2D) -> float:
 	return lifetime
 	pass
 
+func get_all_vectordirs() -> Array:
+	return [
+		Vector2.LEFT,
+		Vector2.LEFT + Vector2.DOWN,
+		Vector2.DOWN,
+		Vector2.RIGHT + Vector2.DOWN,
+		Vector2.RIGHT,
+		Vector2.RIGHT + Vector2.UP,
+		Vector2.UP,
+		Vector2.LEFT + Vector2.UP,
+	]
+	pass
 
+func get_chess_horse_vectors() -> Array:
+	return [
+		Vector2( 1,  2),
+		Vector2(-1,  2),
+		Vector2( 1, -2),
+		Vector2(-1, -2),
+		Vector2( 2, -1),
+		Vector2( 2,  1),
+		Vector2(-2, -1),
+		Vector2(-2,  1),
+	]
+	pass
 
 
