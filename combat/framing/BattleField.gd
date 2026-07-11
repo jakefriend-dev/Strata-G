@@ -254,6 +254,9 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 # -
 
 func update_action_selector(_tf: bool):
+	if !utils.actorpass(batman.curr_actor):
+		push_action_selector_changes()
+		return
 	if not batman.curr_actor is ActorPlayer:
 		push_action_selector_changes()
 		return
