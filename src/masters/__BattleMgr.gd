@@ -618,7 +618,7 @@ func roll_initiative():
 			turndata["numeration"] = count_of_type
 			turndata["turncount_of_this_actor"] = initcount # Typically 1, could be 2 or 3 for bosses
 			
-			print("BATMAN: Initially appending turndata: ",turndata)
+#			print("BATMAN: Initially appending turndata: ",turndata)
 			turnqueue.append(turndata)
 		pass
 	

@@ -415,7 +415,7 @@ func clear_status(status_key: String):
 	update_bui()
 	pass
 
-func auto_clear_status(status_key: String):
+func generic_clear_status(status_key: String):
 	clear_damage_mod(status_key)
 	pass
 
