@@ -84,7 +84,6 @@ func move_back_and_pull():
 	yield(utils.yt(delay, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
-	
 	var pullable_vic: bool = false
 #	print("a")
 	if utils.actorpass(victim): # They might already be dead!

@@ -39,10 +39,8 @@ func ACT():
 	var og_tile: Vector2 = actor.coord
 	var victim: Actor = support.get_actor_at_cellv(target)
 	
-	actor.ghost_mode(true)
-	victim.ghost_mode(true)
-	actor.claim_tile(victim.coord)
-	victim.claim_tile(actor.coord)
+	actor.ghost_mode(true, victim.coord)
+	victim.ghost_mode(true, actor.coord)
 	
 	var delay: float = 0.1
 	var dur: float = 0.3
