@@ -1,5 +1,7 @@
 extends Node
 
+const USE_ACTION_CRACKING: bool = true # Disable or enable functionality
+
 var default_halfboard_size: Vector2 = Vector2(3, 5)
 const DETERMINISTIC: bool = false # When true, randomness is not initiated
 const CELL_SIZE: Vector2 = Vector2(64.0, 48.0)

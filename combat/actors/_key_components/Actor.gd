@@ -49,7 +49,6 @@ var action_points: int = 0 # Refreshed at the top of each turn! And start of com
 const MAX_action_points: int = 9 # Never let multi-turn overflow exceed this!
 var action_cracking: int = 0 # Iterates through 1 (partial), 2 (heavy), then breaks 1AP and reverts to 0 (uncracked)
 const MAX_action_cracking: int = 1 # Could change to 1 for testing if ya wants
-const USE_ACTION_CRACKING: bool = false # Disable or enable functionality
 
 var actions_completed_this_turn: int = 0 # An action is what we think of as an attack;
 	# like all 3 steps of Doggo's charge attack is 1 action
@@ -327,7 +326,7 @@ func refresh_action_points():
 	pass
 
 func walk_spend_check():
-	if USE_ACTION_CRACKING:
+	if batman.USE_ACTION_CRACKING:
 		inc_action_cracking()
 	else:
 		spend(COST_WALK)
