@@ -28,6 +28,7 @@ func LOAD_VARIANTS():
 
 func PREVIEW():
 	if batman.loaded_variant == Vector2.ZERO:
+		error_text = "No shoveable units adjacent"
 		return
 	
 	var check_vector: Vector2 = batman.loaded_variant
@@ -38,13 +39,14 @@ func PREVIEW():
 	var far_occupant: Actor = batman.grid_actors.get_cellv(far_coord)
 	var blocked: bool = utils.actorpass(far_occupant)
 	
-	if !strife.is_affected_by_force(victim):
+	if strife.is_unmovable(victim):
 		add_cell(near_coord, ROWS.ERROR)
 		add_arrow(near_coord, far_coord, ROWS.PASS)
 		if blocked:
 			add_cell(far_coord, ROWS.ERROR)
 		else:
 			add_cell(far_coord, ROWS.PASS)
+		error_text = "Target is unmovable"
 		return
 	
 	add_cell(near_coord, ROWS.NEUTRAL) # We're sure the victim is valid at this point
@@ -53,12 +55,14 @@ func PREVIEW():
 		add_cell(far_coord, ROWS.ERROR)
 		add_arrow(near_coord, far_coord, ROWS.PASS)
 #		add_arrow(near_coord, far_coord, ROWS.ERROR)
+		error_text = "Target has something behind it"
 		return
 	
 	if !support.is_tile_traversable_exact(victim, far_coord):
 		add_cell(far_coord, ROWS.PASS) # It's blocked, but NOT by an actor
 		add_arrow(near_coord, far_coord, ROWS.PASS)
 #		add_arrow(near_coord, far_coord, ROWS.ERROR)
+		error_text = "Target can't move into tile behind it"
 		return
 	
 	add_cell(far_coord, ROWS.NEUTRAL)

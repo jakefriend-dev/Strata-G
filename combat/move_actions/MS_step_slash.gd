@@ -16,14 +16,18 @@ func PREVIEW():
 	victim_cell = step_cell + check_vector
 	
 	if !batman.grid_actors.has_cellv(step_cell):
+		error_text = "Move angling off battlefield"
 		return
 	if !batman.grid_actors.has_cellv(victim_cell):
+		error_text = "Move angling off battlefield"
 		return
 	
 	if !support.is_tile_available(step_cell):
 		add_cell(step_cell, ROWS.ERROR)
+		error_text = "Can't step into middle tile"
 		return
 	if !support.is_tile_traversable_exact(actor, step_cell, true):
+		error_text = "Can't step into middle tile"
 		add_cell(step_cell, ROWS.ERROR)
 		return
 	
@@ -34,6 +38,7 @@ func PREVIEW():
 	victim = batman.grid_actors.get_cellv(victim_cell)
 	if !utils.actorpass(victim):
 		add_cell(victim_cell, ROWS.PASS)
+		error_text = "No unit to attack"
 		return
 	
 	# At this point, we can assume the victim exists

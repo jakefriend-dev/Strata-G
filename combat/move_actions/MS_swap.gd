@@ -20,13 +20,18 @@ func PREVIEW():
 	var target: Vector2 = actor.coord + check_vector
 	
 	var victim: Actor = support.get_actor_at_cellv(target)
-	if !utils.actorpass(victim): return
-	if victim.faction != actor.faction: return
+	if !utils.actorpass(victim):
+		error_text = "No target to swap with"
+		return
+	if victim.faction != actor.faction:
+		error_text = "Can only swap with allies"
+		return
 	
 	add_actor(self, ROWS.NEUTRAL)
 	
 	if victim.is_ghost: # Don't try swapping already-ghost allies; that's a messy road to go down
 		add_actor(victim, ROWS.ERROR)
+		error_text = "Target is in ghost mode"
 		return
 	
 	add_actor(victim, ROWS.NEUTRAL)

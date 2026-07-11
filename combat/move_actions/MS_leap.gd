@@ -15,7 +15,9 @@ func PREVIEW():
 	var check_vector: Vector2 = batman.loaded_variant
 	var check_cell: Vector2 = actor.coord + (DIST * check_vector)
 	
-	if !support.is_tile_traversable_exact(actor, check_cell): return
+	if !support.is_tile_traversable_exact(actor, check_cell):
+		error_text = "No clear landing option"
+		return
 	
 	add_cell(check_cell, ROWS.NEUTRAL)
 	passfail = true

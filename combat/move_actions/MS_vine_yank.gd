@@ -16,7 +16,7 @@ func PREVIEW(): # Options are 0, 1, 2
 	
 	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, actor.my_facing, DIST)
 	if !utils.actorpass(victim):
-#		print("Yank preview fail; no victim")
+		error_text = "No target in range"
 		return
 	
 	# If victim is within 3 tiles...
@@ -29,11 +29,13 @@ func PREVIEW(): # Options are 0, 1, 2
 	if !support.is_tile_traversable_exact(victim, check_coord):
 		add_arrow(victim.coord, check_coord, ROWS.ERROR)
 #		print("Yank preview fail; victim can't traverse destination tile")
+		error_text = "Target can't be pulled to dest"
 		return
 	
 	if strife.is_unmovable(victim):
 		add_arrow(victim.coord, check_coord, ROWS.ERROR)
 #		print("Yank preview fail; victim is not affected by force")
+		error_text = "Target is unmovable"
 		return
 	
 	# Success case!
@@ -50,10 +52,10 @@ func ACT():
 	var motion: Vector2 = batman.loaded_variant
 	
 	var dest_coord: Vector2 = victim.coord + motion
-	print("dest_coord A: ",dest_coord)
+#	print("dest_coord A: ",dest_coord)
 	if !support.is_tile_traversable_exact(victim, dest_coord):
 		dest_coord = victim.coord
-		print("dest_coord B: ",dest_coord)
+#		print("dest_coord B: ",dest_coord)
 	
 	# Visuals!
 	strife.quick_vfx(victim, "spark_burst")
@@ -62,7 +64,7 @@ func ACT():
 	if !batman.is_my_action(actor): return
 	
 	strife.quick_vfx(victim, "dust")
-	print("dest_coord C: ",dest_coord," and victim.coord: ",victim.coord," and motion: ",motion)
+#	print("dest_coord C: ",dest_coord," and victim.coord: ",victim.coord," and motion: ",motion)
 	if dest_coord != victim.coord:
 		victim.ACT_be_external_motioned(motion, 0, actor, false)
 	

@@ -101,6 +101,7 @@ var plausible_variants: Array = [] # ALL the plausible variant vectots, regardle
 var affected_actors: Array = [] # All of em! Just for reference.
 var unique_cells: Array = []
 var passfail: bool = false # Default false; only mark it true when, you know, true
+var error_text: String = "" # When failing a passfail, provide text that MoveWindow can use!
 var ready_to_use: bool = false # Default false; only mark it true when it is VALID TO PICK AND USE
 
 # ------------------------------------------------------------------------------
@@ -152,6 +153,7 @@ func get_damage() -> int:
 # ---
 
 func prepare_actualized_variants():
+	error_text = ""
 	actualized_variants.clear()
 #	starting_variant = Vector2.ZERO
 	

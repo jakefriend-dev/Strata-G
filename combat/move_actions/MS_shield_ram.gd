@@ -54,6 +54,7 @@ func PREVIEW():
 	if frontmost_cell == backmost_cell:
 		# We aren't able to charge, at all - no action to undertake!
 		add_cell(actor.coord, ROWS.ERROR)
+		error_text = "No room to charge forward"
 		return
 	
 	##################

@@ -15,6 +15,7 @@ func PREVIEW():
 	for relvec in actualized_variants:
 		var cell: Vector2 = actor.coord + (actor.my_facing*DIST) + relvec
 		if !batman.grid_actors.has_cellv(cell):
+			error_text = "Move target not on battlefield"
 			return
 		if cell == target:
 			add_cell(cell, ROWS.BAD)
