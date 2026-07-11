@@ -124,6 +124,9 @@ func update_error_text_only():
 	
 	if wtt.text != error_text:
 		wtt.text = error_text
+	var tt_warn_col: Color = warncols[1]
+	if wtt.get("custom_colors/font_color") != tt_warn_col:
+		wtt.set("custom_colors/font_color", tt_warn_col)
 	pass
 
 func get_loaded_move() -> MoveAction: # Assumes validations have ALREADY happened

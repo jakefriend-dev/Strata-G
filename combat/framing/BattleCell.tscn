@@ -104,7 +104,7 @@ material = SubResource( 5 )
 texture = ExtResource( 7 )
 
 [node name="Highlights" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0.498039 )
+modulate = Color( 1, 1, 1, 0.196078 )
 
 [node name="Big" type="NinePatchRect" parent="Highlights"]
 visible = false
