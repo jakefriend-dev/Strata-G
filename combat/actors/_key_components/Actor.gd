@@ -319,7 +319,7 @@ func refresh_action_points():
 	action_points += base_action_points
 	if action_points > MAX_action_points:
 		action_points = MAX_action_points
-#	action_points = base_action_points
+	action_cracking = 0
 	
 	update_bui()
 	pass

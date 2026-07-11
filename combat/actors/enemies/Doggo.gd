@@ -60,7 +60,8 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		# *Otherwise*, if we can move towards the target, do that.
 		elif can_afford(COST_WALK):
 			if can_charge_left:
-				spend(COST_WALK)
+#				spend(COST_WALK)
+				inc_action_cracking()
 				batman.append_action(self, "walk", [Vector2.LEFT])
 				return
 		# If we can see the target but can't do ANYTHING else, just end the turn.
@@ -92,7 +93,8 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# Move up or down if able (prioritizing your last direction)
 	var movedir: Vector2 = Vector2(0, last_movedir_y)
 	if support.is_tile_traversable_relative(self, movedir):
-		spend(COST_WALK)
+#		spend(COST_WALK)
+		inc_action_cracking()
 		batman.append_action(self, "walk", [movedir])
 		return
 	
@@ -100,7 +102,8 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	last_movedir_y *= -1
 	movedir = Vector2(0, last_movedir_y)
 	if support.is_tile_traversable_relative(self, movedir):
-		spend(COST_WALK)
+#		spend(COST_WALK)
+		inc_action_cracking()
 		batman.append_action(self, "walk", [movedir])
 		return
 	
@@ -108,7 +111,8 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	var moptions: Array = support.vet_actormove_optionset_relative(self, [Vector2.LEFT, Vector2.RIGHT])
 	if !moptions.empty():
 		moptions.shuffle()
-		spend(COST_WALK)
+#		spend(COST_WALK)
+		inc_action_cracking()
 		batman.append_action(self, "walk", [moptions[0]])
 		return
 	

@@ -146,6 +146,9 @@ rect_min_size = Vector2( 0, 2 )
 custom_styles/panel = SubResource( 10 )
 
 [node name="ActionPointBar" parent="PanelContainer/HB/AimAndAP" instance=ExtResource( 13 )]
+margin_top = 68.0
+margin_right = 48.0
+margin_bottom = 96.0
 
 [node name="SpacerMid" type="Panel" parent="PanelContainer/HB"]
 margin_left = 58.0
