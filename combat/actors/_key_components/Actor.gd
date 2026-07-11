@@ -384,7 +384,14 @@ func end_turn():   batman.end_turn()
 #	"ending_function": "auto_clear_damage_mod", # The name of the function (if any) that is called upon the status ending
 #}}
 
-func start_status(status_key: String, status_display_name: String, icon_type: String, ticks: int, until_end_of_turn: bool, ending_function: String = ""):
+var partial_predeffed_statuses: Dictionary = {
+	"poisoned": {
+		"icon_type": "bad",
+		"desc": "Receive 1/4 poison damage each rest.",
+		"tags": ["rest", "poison"],
+	},}
+
+func start_status(status_key: String, status_display_name: String, status_desc: String, icon_type: String, ticks: int, until_end_of_turn: bool = true, tags: Array = [], ending_function: String = ""):
 	
 	# For existing statuses, re-up the tick count to the higher of the new-vs-current
 	if ongoing_statuses.has(status_key):

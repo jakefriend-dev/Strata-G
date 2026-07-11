@@ -188,7 +188,7 @@ func ACT_bite():
 	pass
 
 func ACT_enrage():
-	start_status("enrage", "Enrage", "good", 2, true)
+	start_status("enrage", "Enrage", "Damage increased by 1", "good", 2)
 	set_damage_mod("enrage", 1)
 	strife.quick_vfx(self, "quick_good")
 #	strife.quick_vfx(self, "buff")

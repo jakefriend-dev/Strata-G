@@ -23,7 +23,8 @@ func ACT():
 		strife.quick_vfx(ally, "quick_good")
 		ally.set_damage_mod("attack_buff", 1)
 #		ally.start_status("attack_buff", "Cry of Valor", "good", 1, true)
-		ally.start_status("attack_buff", "Cry of Valor", "good", 1, true, "generic_clear_status")
+#		ally.start_status("attack_buff", "Cry of Valor", "good", 1, true, "generic_clear_status")
+		ally.start_status("attack_buff", "Cry of Valor", "+1 damage until end of next turn.", "good", 1, true, [], "generic_clear_status")
 	
 	end_action()
 	pass

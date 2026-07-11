@@ -12,7 +12,7 @@ func PREVIEW():
 func ACT():
 	
 	strife.quick_vfx(actor, "quick_good")
-	actor.start_status("melee_counter", "Counter Stance", "good", 1, false)
+	actor.start_status("melee_counter", "Counter Stance", "Until next turn, deals melee damage as a reaction to being hit.", "good", 1, false, ["reaction"])
 	
 	end_turn()
 	pass
