@@ -179,8 +179,7 @@ func attempt_player_char_move(motion: Vector2):
 	if !support.is_tile_traversable_relative(self, motion): return
 	
 	# Should be valid, then!
-#	spend(COST_WALK)
-	inc_action_cracking()
+	walk_spend_check()
 	batman.append_action(self, "walk", [motion])
 	submit_player_action(false)
 	pass

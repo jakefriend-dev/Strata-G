@@ -152,8 +152,7 @@ func prep_next_action():
 			if repo_normal_conditions_met:
 				var walkpref: bool = (rand_range(0.0, 3.0) <= 2.0)
 				if walkpref:
-#					spend(COST_WALK)
-					inc_action_cracking()
+					walk_spend_check()
 					batman.append_action(self, "walk", [walk_vector])
 					return
 				else:
@@ -161,8 +160,7 @@ func prep_next_action():
 					batman.append_action(self, "repo_jump", [repo_coord])
 					return
 			# Otherwise, just default to walking
-#			spend(COST_WALK)
-			inc_action_cracking()
+			walk_spend_check()
 			batman.append_action(self, "walk", [walk_vector])
 			return
 		
