@@ -12,6 +12,18 @@ func _ready():
 	pass
 
 func update_visual(_na = null):
+	var to_vis: bool = false
+	if utils.actorpass(batman.curr_actor):
+		if batman.curr_actor is ActorPlayer:
+			to_vis = true
+	
+	if visible != to_vis:
+		visible = to_vis
+	
+	if !to_vis: return
+	
+	#
+	
 	for afc in $ObjPar.get_children():
 		afc.update_visual()
 	
