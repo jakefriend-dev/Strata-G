@@ -33,7 +33,11 @@ enum moves { # WAYS of moving, for the purpose of things like determining ice sl
 	DNU
 }
 
+signal actor_rest_event(which_actor)
 
+func _ready():
+	connect("actor_rest_event", self, "rest_event")
+	pass
 
 # COMBAT PROCESSING! -----------------------------------------------------------
 
@@ -78,11 +82,6 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 		if attacker_is_real:
 			if attacker.faction == defender.faction:
 				return
-	
-	# This bit is probably quite replaceable; it's just for early prototype state text logging
-#	var is_melee: bool = support.are_actors_adjacent(attacker, defender)
-#	var desctext: String = " melee"
-#	if !is_melee: desctext = " ranged"
 	
 	#
 	# Apply any elemental modifiers here! Increase the damage for hitting a weakness eg.
@@ -172,10 +171,12 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	#
 	
 	var pierce_depth: int = 0
-	var piercing: bool = (flags.has("piercing") and !breaking)
+	var piercing: bool = (
+		(flags.has("piercing") or flags.has("shield_bypass")) and !breaking)
 	if elem == "FIRE": piercing = true
 	if defender.is_immune_piercing: piercing = false # Override!
 	if piercing: pierce_depth = 1
+	if flags.has("shield_bypass"): pierce_depth = 99
 	 # Have not yet implemented 'total shield bypass' aka higher piercing tiers.
 	
 	combat_package["pierce_depth"] = pierce_depth
@@ -591,7 +592,15 @@ func end_all_vfx_on_actor(actor: Actor):
 			ep.quick_clear()
 	pass
 
+# -
 
+func rest_event(actor: Actor):
+	if actor.check_status("poisoned"):
+		if !actor.is_immune_poison:
+			do_quiet_damage(null, actor, 1, ["shield_bypass", "elem_POISON"])
+	
+	TILE_event_rest(actor, actor.coord)
+	pass
 
 # TILE CROSSOVER EFFECTS AND IMPACTS -------------------------------------------
 
@@ -758,7 +767,7 @@ func TILE_rested_on_POISON(actor: Actor, _coord: Vector2):
 	if actor.is_immune_poison: return
 	
 	# Immediately take 1 damage
-	do_quiet_damage(null, actor, 1, ["piercing"])
+	do_quiet_damage(null, actor, 1, ["shield_bypass", "elem_POISON"])
 	pass
 
 func TILE_check_MAGNET(actor: Actor) -> bool:

@@ -731,6 +731,8 @@ func end_turn(): # Includes post-turn; assumes NO interruption
 	emit_signal("on_turn_ended_naturally")
 	
 	# Do post-turn effects here
+	if curr_actor.action_points > 0:
+		strife.emit_signal("actor_rest_event", curr_actor)
 	strife.TILE_event_turn_ended_on(curr_actor, curr_actor.coord)
 	
 	# ^^^
@@ -752,7 +754,6 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 	flush_actionqueue()
 	
 	if utils.valid(curr_actor):
-		
 		curr_actor.master_post_turn_teardown()
 		if curr_actor.has_method("post_turn_teardown"):
 			curr_actor.call("post_turn_teardown")

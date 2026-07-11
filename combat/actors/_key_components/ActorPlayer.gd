@@ -213,7 +213,8 @@ func submit_player_action(is_rest: bool):
 		yield(batman, "action_step_complete")
 		if !batman.is_my_action(self): return
 		
-		strife.TILE_event_rest(self, coord)
+		strife.emit_signal("actor_rest_event", self)
+#		strife.TILE_event_rest(self, coord)
 	pass
 
 # ---
