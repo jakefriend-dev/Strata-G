@@ -1201,8 +1201,8 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
 	pass
 
-func get_actionstep_method_name():
-	pass
+#func get_actionstep_method_name():
+#	pass
 
 func update_action_log(new_logline: String):
 	actionlog.insert(0, new_logline)

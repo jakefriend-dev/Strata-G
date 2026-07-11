@@ -34,12 +34,6 @@ func _ready():
 	for child in get_children(): if child is Sprite:
 		child.frame = grid_angle
 	map_int_to_vec()
-	update_visual()
-	batman.connect("action_option_view_changed", self, "update_visual")
-	batman.connect("new_action_preview_data_readied", self, "update_visual")
-	batman.connect("on_turn_ended_naturally", self, "update_visual")
-	batman.connect("on_turn_ended_via_interruption", self, "update_visual")
-	batman.connect("pre_turn_setup", self, "update_visual")
 	pass
 
 func map_int_to_vec():
@@ -64,12 +58,19 @@ func map_int_to_vec():
 			grid_vec = Vector2.DOWN + Vector2.RIGHT
 	pass
 
-func update_visual(_na = null):
+func update_visual():
 	if batman.loaded_move == null: return
 	
 	var last_state: int = state
+	var auto_invalid: bool = false
+	if batman.loaded_move == null:
+		auto_invalid = true
+	elif batman.loaded_move.selection_style == MoveAction.inputstyles.CYCLE:
+		auto_invalid = true
 	
-	if batman.loaded_variant == grid_vec:
+	if auto_invalid:
+		state = states.DISABLED
+	elif batman.loaded_variant == grid_vec:
 		state = states.ENABLED_SELECTED
 	elif batman.loaded_move.actualized_variants.has(grid_vec):
 		state = states.ENABLED_INERT

@@ -1,7 +1,5 @@
 extends MoveAction
 
-#var DIST: int = 3
-
 # Only uncomment this method if you want to bypass "normal" variant loading
 func LOAD_VARIANTS():
 	for enemy in batman.get_all_opposing_actor_units(actor):
@@ -10,7 +8,6 @@ func LOAD_VARIANTS():
 
 
 func PREVIEW():
-	
 	if actualized_variants.empty():
 		error_text = "No possible targets"
 		return
