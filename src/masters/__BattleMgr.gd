@@ -501,6 +501,7 @@ func load_battle_details():
 	if battle_details.has("pc_positions"):
 		if battle_details["pc_positions"].size() == 3:
 			use_custom_pc_positions = true
+# warning-ignore:unused_variable
 			var pc_count: int = 0
 			for set in battle_details["pc_positions"]: if set is Array: # It's an array of three-value arrays: [X, Y, name]
 				var pc: String = set[2]
@@ -524,7 +525,9 @@ func load_battle_details():
 	
 	# DATA-PLACE ENEMIES (AND KEY OBSTACLES)
 	
+# warning-ignore:unused_variable
 	var npc_count: int = 0
+# warning-ignore:unused_variable
 	var error_count: int = 0
 	for set in battle_details["npc_positions"]: if set is Array: # It's an array of three-value arrays: name X and Y
 		if grid_actors.get_cell(set[0], set[1]) == null:

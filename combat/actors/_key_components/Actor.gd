@@ -405,6 +405,8 @@ func start_status(status_key: String, status_display_name: String, status_desc: 
 	ongoing_statuses[status_key] = {}
 	ongoing_statuses[status_key]["key_name"] = status_key
 	ongoing_statuses[status_key]["display_name"] = status_display_name
+	ongoing_statuses[status_key]["display_desc"] = status_desc
+	ongoing_statuses[status_key]["tags"] = tags
 	ongoing_statuses[status_key]["icon_type"] = icon_type
 	ongoing_statuses[status_key]["ticks_remaining"] = ticks
 	if until_end_of_turn:
