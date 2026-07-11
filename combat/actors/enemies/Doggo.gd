@@ -28,7 +28,7 @@ func pre_turn_setup():
 
 func prep_next_action(): # This func should END with setting up one or multiple actions!
 	allowed_over_faction_lines = false
-	var can_charge_left: bool = support.is_tile_traversable_relative(self, my_facing, true)
+	var can_charge_left: bool = support.is_tile_traversable_relative(self, my_facing)
 #	print("doggo can charge left? ",can_charge_left)
 	
 	# Can we see a victim?

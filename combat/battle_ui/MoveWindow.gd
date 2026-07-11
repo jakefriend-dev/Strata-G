@@ -109,6 +109,23 @@ func refresh_all():
 		tooltip_par.get_node("WarnTooltip").set("custom_colors/font_color", tt_warn_col)
 	pass
 
+func update_error_text_only():
+	var error_text: String = ""
+	for moveopt in movegrid.get_children():
+		if moveopt.currently_highlighted:
+			if moveopt.move != null:
+				error_text = moveopt.move.error_text
+				break
+	
+	if error_text == "": return
+	
+	var wtt: Label = tooltip_par.get_node("WarnTooltip")
+	if wtt.text != "": return
+	
+	if wtt.text != error_text:
+		wtt.text = error_text
+	pass
+
 func get_loaded_move() -> MoveAction: # Assumes validations have ALREADY happened
 	for moveopt in movegrid.get_children():
 		if moveopt.currently_highlighted:

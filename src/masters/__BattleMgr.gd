@@ -942,8 +942,6 @@ func change_movewindow_selrow(amount: int):
 	emit_signal("action_option_view_changed", true)
 	
 	if loaded_move == null: emit_signal("new_action_preview_data_readied", null)
-#	if loaded_move == null: if curr_actor is ActorPlayer:
-#		curr_actor.clear_all_move_previews()
 	pass
 
 func change_movewindow_selcol(amount: int):
@@ -958,8 +956,6 @@ func change_movewindow_selcol(amount: int):
 	loaded_move = field.movewindow.get_loaded_move() # Allowed to return null even when 'scripted' function
 	emit_signal("action_option_view_changed", true)
 	if loaded_move == null: emit_signal("new_action_preview_data_readied", null)
-#	if loaded_move == null: if curr_actor is ActorPlayer:
-#		curr_actor.clear_all_move_previews()
 	pass
 
 func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_selected: bool):

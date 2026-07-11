@@ -217,6 +217,7 @@ func clear_MPD():
 
 # Determines all relevant cells for the MPD, including priorities
 func generate_cell_highlights():
+	
 	unique_cells.clear()
 	
 	# First, loop through and quickly get all cells

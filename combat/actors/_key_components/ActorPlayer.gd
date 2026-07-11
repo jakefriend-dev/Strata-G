@@ -120,7 +120,7 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 	if move.has_method(pstring):
 #		print("  --  New Preview  --")
 		move.call(pstring)
-		
+		batman.field.movewindow.update_error_text_only()
 		move.generate_cell_highlights()
 		pass
 	
