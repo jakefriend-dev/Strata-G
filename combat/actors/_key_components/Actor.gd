@@ -543,7 +543,7 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 	# Return to gridlocked mortal form
 	else:
 		# We should always be tracking our own coord fwiw, even while ghosted, so this should still be up to date
-		if !support.is_tile_available(coord, self):
+		if !support.is_tile_available(coord, [self]):
 			print(name," ERROR: Attempted to return from ghost mode while our current coord was unavailable!")
 			return false
 		if batman.ghost_actors.has(self):
@@ -561,7 +561,7 @@ func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
 	batman.release_actor_claims(self)
 	claimed_tile = Vector2.ZERO
 	
-	if support.is_tile_available(claiming_coord, self):
+	if support.is_tile_available(claiming_coord, [self]):
 		batman.grid_claims.set_cellv(claiming_coord, self)
 		claimed_tile = claiming_coord
 		return true

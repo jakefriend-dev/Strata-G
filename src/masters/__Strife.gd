@@ -530,6 +530,14 @@ func validate_CAMs(): # Actually runs the check loops!
 		loop_count += 1
 		last_CAM_score = this_CAM_score # Log it before updating against 'this'
 		
+		# Quick pre-loop to determine who is allowed to be an exception from the 'is tile available' check
+		var exception_actors: Array = []
+		for key in CAMsteps.keys():
+			var actor: Actor = CAMsteps[key]["actor"]
+			var outcome: String = CAMsteps[key]["outcome"]
+			if outcome == "success":
+				exception_actors.append(actor)
+		
 		#
 		# PROCESSING
 		#
@@ -599,7 +607,7 @@ func validate_CAMs(): # Actually runs the check loops!
 					# If there IS, THEN we increase the dest to check there - otherwise, we risk 'total failure' outcome when moving ONTO the ice is perfectly valid
 					var far_dest: Vector2 = target_dest + CAMsteps[key]["single_step"]
 					if batman.grid_actors.has_cellv(far_dest):
-						if support.is_tile_available(far_dest, actor):
+						if support.is_tile_available(far_dest, exception_actors):
 							if support.is_tile_traversable_exact(actor, far_dest, CAM_admin["allowed_over_faction_lines"]):
 								# KEEP us at soft_fail, just loop again to use the new dest next time, since moving past the ice is valid!
 								relvec += CAMsteps[key]["single_step"]
@@ -608,7 +616,7 @@ func validate_CAMs(): # Actually runs the check loops!
 								continue
 			
 			# If there's another actor in our way, soft fail
-			if !support.is_tile_available(target_dest, actor):
+			if !support.is_tile_available(target_dest, exception_actors):
 				if do_debug: print(actor.name," SOFT fail: actor at our dest pos")
 				continue
 			
@@ -725,10 +733,14 @@ func execute_CAMs(attacker: Actor, per_cell_dur: float):
 	
 	yield(utils.yt(total_dur - 0.001, self), "timeout")
 	
+	batman.release_most_claims()
+	
 	for key in CAMsteps.keys():
 		var actor: Actor = CAMsteps[key]["actor"]
-		actor.ghost_mode(false)
-	batman.release_most_claims()
+		var outcome: String = CAMsteps[key]["outcome"]
+		if outcome == "success":
+			actor.claim_tile(actor.coord)
+			actor.ghost_mode(false)
 	pass
 
 

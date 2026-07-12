@@ -266,7 +266,7 @@ func ACT_lunge_forward():
 		if target == coord: # Center tile
 			strife.damage_actor_at_coord(self, target, dmg(2))
 			strife.quick_vfx(target, "dust")
-			if support.is_tile_available(target, self):
+			if support.is_tile_available(target, [self]):
 				support.change_tiletype_single(target, batman.tiletypes.JAGGED)
 		else: # Adjacent tiles
 			# For testing! Disables orthagonal damage, but instead pushes actors away!

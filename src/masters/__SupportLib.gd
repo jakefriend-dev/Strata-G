@@ -88,21 +88,17 @@ func list_all_traversible_tiles_in_set(exact_coords: Array, actor: Actor) -> Arr
 	return traversible_cells
 	pass
 
-func is_tile_available(exact_coord: Vector2, exception_actor: Actor = null) -> bool:
+func is_tile_available(exact_coord: Vector2, exception_actors: Array = []) -> bool:
 	# When and ONLY when exception_actor is populated, we'll allow it to return itself.
 	
 	var found_actor: Actor = batman.grid_actors.get_cellv(exact_coord)
 	if found_actor != null:
-		if exception_actor == null:
-			return false
-		elif exception_actor != found_actor:
+		if !exception_actors.has(found_actor):
 			return false
 	
 	var found_claimant: Actor = batman.grid_claims.get_cellv(exact_coord)
 	if found_claimant != null:
-		if exception_actor == null:
-			return false
-		elif exception_actor != found_claimant:
+		if !exception_actors.has(found_claimant):
 			return false
 	
 	return true
