@@ -232,7 +232,8 @@ func test_new_combat(test: String):
 				],
 				"tile_exceptions": {
 					Vector2(3, 3): tiletypes.MAGIC,
-					Vector2(2, 1): tiletypes.HOT,
+					Vector2(2, 1): tiletypes.ICE,
+					Vector2(2, 2): tiletypes.ICE,
 					Vector2(4, 3): tiletypes.HOT,
 #					Vector2(2, 4): tiletypes.POISON,
 				},

@@ -70,7 +70,7 @@ func list_all_traversible_tiles_in_dir(dir: Vector2, actor: Actor) -> Array:
 
 # Returns successfully-claimed tiles IN ORDER, breaking on first issue
 func list_all_traversible_tiles_in_set(exact_coords: Array, actor: Actor) -> Array:
-	var claimed_cells: Array = []
+	var traversible_cells: Array = []
 	
 	for exact_coord in exact_coords:
 		# Break if it's a non-empty cell that ISN'T US
@@ -82,10 +82,10 @@ func list_all_traversible_tiles_in_set(exact_coords: Array, actor: Actor) -> Arr
 			break
 		
 		# Otherwise, it's good!
-		batman.grid_claims.set_cellv(exact_coord, actor)
-		claimed_cells.append(exact_coord)
+#		batman.grid_claims.set_cellv(exact_coord, actor) # why tf was THIS here??
+		traversible_cells.append(exact_coord)
 	
-	return claimed_cells
+	return traversible_cells
 	pass
 
 func is_tile_available(exact_coord: Vector2, exception_actor: Actor = null) -> bool:

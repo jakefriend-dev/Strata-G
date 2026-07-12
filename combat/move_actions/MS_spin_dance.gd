@@ -43,6 +43,7 @@ func PREVIEW():
 	
 	strife.reset_CAMs()
 	strife.set_CAM_admin("pushes_heavy", true)
+	strife.set_CAM_admin("knockback", true)
 	
 	for set in sets:
 		var origin: Vector2 = actor.coord + set[0]
@@ -68,12 +69,13 @@ func PREVIEW():
 	pass
 
 func ACT():
-#	# Shoot a target in your line-of-sight; higher damage per tile travelled
-#	var victim: Actor = get_first_actor_by_MPD_type(ROWS.BAD)
-#
-#	if utils.actorpass(victim):
-#		strife.damage_actor_at_coord(actor, victim.coord, 2*batman.BASE_HP_FACTOR, ["piercing"])
-#		strife.quick_vfx(victim, "spark_burst")
+	var per_tile_dur: float = 0.2
+	var total_dur: float = strife.get_total_CAM_dur(per_tile_dur)
+	
+	strife.execute_CAMs(actor, per_tile_dur)
+	
+	yield(utils.yt(total_dur, actor), "timeout")
+	if !batman.is_my_action(actor): return
 	
 	end_action()
 	pass

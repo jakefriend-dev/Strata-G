@@ -768,6 +768,36 @@ func hotmove(to_coord: Vector2, dur: float):
 	tween.start()
 	pass
 
+func hotpushed(to_coord: Vector2, dur: float):
+	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_QUINT, Tween.EASE_OUT)
+	tween.start()
+	pass
+
+func hotknockbacked(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_value: int):
+	print(name,": hotknockbacked(",attacker,", ",relvec,", ",dur,", ",total_kb_dmg_value,")")
+	
+	relvec = relvec.normalized()
+	var dur1_3: float = dur/3.0
+	var dur2_3: float = dur1_3 * 2.0
+	
+	var og_pos: Vector2 = position
+	var kb_pos: Vector2 = position + (relvec*10.0)
+	
+	tween.interpolate_property(self, "position", null, kb_pos, dur1_3, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	tween.start()
+	
+	yield(utils.yt(dur1_3, self), "timeout")
+	
+	# Take the hit before moving back!
+	if total_kb_dmg_value > 0:
+		strife.do_impact_damage(attacker, self, total_kb_dmg_value)
+	if !utils.actorpass(self): return
+	
+	tween.interpolate_property(self, "position", kb_pos, og_pos, dur2_3, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	tween.start()
+	
+	pass
+
 func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
 	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	

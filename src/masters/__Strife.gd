@@ -35,7 +35,11 @@ enum moves { # WAYS of moving, for the purpose of things like determining ice sl
 
 signal actor_rest_event(which_actor)
 
+var tween: Tween
+
 func _ready():
+	tween = Tween.new()
+	add_child(tween)
 	connect("actor_rest_event", self, "rest_event")
 	pass
 
@@ -444,10 +448,10 @@ var CAM_default_admin: Dictionary = {
 	"motion_type": MoveAction.motionchecks.TRAVEL,
 	"pushes_heavy": false,
 	"allowed_over_faction_lines": false,
-	"knockback_damage": false,
+	"knockback": false,
 }
 var CAM_admin: Dictionary = {}
-var CAMsteps: Dictionary = {
+var CAMsteps: Dictionary = { # With example!
 #	Actor: {
 #		"actor": Actor, # Duplicate ref
 #		"relvec": Vector2(whatever), # Total relative motion
@@ -512,9 +516,11 @@ func store_CAMstep_by_actor(actor: Actor, relvec: Vector2, is_exact: bool = fals
 	pass
 
 func validate_CAMs(): # Actually runs the check loops!
-	var this_CAM_score: int = 0
+	var this_CAM_score: int = -1
 	var loop_count: int = 0 # 1-based
 	var scores_in_order: Array = []
+	
+	var do_debug: bool = true
 	
 	while true:
 		#
@@ -535,19 +541,23 @@ func validate_CAMs(): # Actually runs the check loops!
 			var attempts: int = CAMsteps[key]["attempts"]
 			
 			# Don't bother with anyone already decided
-			if outcome == "success" or outcome == "hard_fail": continue
+			if outcome == "success" or outcome == "hard_fail":
+				continue
+				if do_debug: print(actor.name," skipping b/c predecided: ",outcome)
 			
 			# Log an attempt so long as we're still in flux
 			CAMsteps[key]["attempts"] = (attempts + 1)
 			
 			# If we're ghost mode, hard fail! Don't mess with ghosts externally!
 			if actor.is_ghost:
+				if do_debug: print(actor.name," FAIL: is ghost")
 				CAMsteps[key]["outcome"] = "hard_fail"
 				continue
 			
 			# If the relvec puts us off the grid, hard fail! (We've already validated against same-coord dests by accident)
 			var target_dest: Vector2 = actor.coord + relvec
 			if !batman.grid_actors.has_cellv(target_dest):
+				if do_debug: print(actor.name," FAIL: dest not on battlefield")
 				CAMsteps[key]["outcome"] = "hard_fail"
 				continue
 			
@@ -555,17 +565,20 @@ func validate_CAMs(): # Actually runs the check loops!
 			if !CAM_admin["allowed_over_faction_lines"]:
 				if actor.faction != batman.factions.NEUTRAL: # Rocks are allowed to be moved over lines regardless
 					if actor.faction != batman.grid_factions.get_cellv(target_dest):
+						if do_debug: print(actor.name," FAIL: can't cross factions")
 						CAMsteps[key]["outcome"] = "hard_fail"
 						continue
 			
 			# If we're heavy and that's not valid, hard fail!
 			if !CAM_admin["pushes_heavy"]:
 				if !is_affected_by_force(actor):
+					if do_debug: print(actor.name," FAIL: can't move heavy")
 					CAMsteps[key]["outcome"] = "hard_fail"
 					continue
 			# If we're UNMOVABLE and that's not valid, hard fail!
 			else:
 				if is_unmovable(actor):
+					if do_debug: print(actor.name," FAIL: is unmovable")
 					CAMsteps[key]["outcome"] = "hard_fail"
 					continue
 			
@@ -574,23 +587,34 @@ func validate_CAMs(): # Actually runs the check loops!
 			# If pit and not hovering, hard fail
 			if dest_tiletype == batman.tiletypes.PIT:
 				if actor.weight != actor.weightclasses.HOVER:
+					if do_debug: print(actor.name," FAIL: pit, and I can't hover")
 					CAMsteps[key]["outcome"] = "hard_fail"
 					continue
 			
 			# If the relvec puts us on ice, update the relvec to the far side of the ice (unless we're immune) and keep us logged as soft_fail for this go-round
 			elif dest_tiletype == batman.tiletypes.ICE:
 				if is_affected_by_ice(actor):
-					relvec += CAMsteps[key]["single_step"]
-					CAMsteps[key]["relvec"] = relvec
-					# KEEP us at soft_fail, just loop again to use the new dest next time
-					continue
+					
+					# Check if there's even a valid cell on the far side of the ice first
+					# If there IS, THEN we increase the dest to check there - otherwise, we risk 'total failure' outcome when moving ONTO the ice is perfectly valid
+					var far_dest: Vector2 = target_dest + CAMsteps[key]["single_step"]
+					if batman.grid_actors.has_cellv(far_dest):
+						if support.is_tile_available(far_dest, actor):
+							if support.is_tile_traversable_exact(actor, far_dest, CAM_admin["allowed_over_faction_lines"]):
+								# KEEP us at soft_fail, just loop again to use the new dest next time, since moving past the ice is valid!
+								relvec += CAMsteps[key]["single_step"]
+								CAMsteps[key]["relvec"] = relvec
+								if do_debug: print(actor.name," SOFT fail: Increasing relvec to ",relvec," for next time due to ice!")
+								continue
 			
 			# If there's another actor in our way, soft fail
 			if !support.is_tile_available(target_dest, actor):
+				if do_debug: print(actor.name," SOFT fail: actor at our dest pos")
 				continue
 			
 			# And, uh... if we made it this far... we must have succeeded, right?!?
 			CAMsteps[key]["outcome"] = "success"
+			if do_debug: print(actor.name," success!")
 			continue
 		
 		#
@@ -623,14 +647,15 @@ func are_there_CAM_stragglers() -> bool:
 	return false
 
 func get_total_CAM_dur(per_cell_dur: float) -> float:
-	var total_dur: float = per_cell_dur # Assume 1 tile to start
+	var total_dur: float = per_cell_dur/2.0 # Assume half-time (a failure) to start
 	
 	for key in CAMsteps.keys():
 		if CAMsteps[key]["outcome"] == "success":
 			var relvec: Vector2 = CAMsteps[key]["relvec"]
-			var celldist: float = relvec.length()
-			if celldist > total_dur:
-				total_dur = celldist
+			var length: float = relvec.length()
+			var this_dur = per_cell_dur * length
+			if this_dur > total_dur:
+				total_dur = this_dur
 	
 	return total_dur
 	pass
@@ -658,11 +683,52 @@ func get_CAM_results() -> Dictionary: # Don't reach for CAMsteps directly; use t
 	return CAMsteps.duplicate(true)
 	pass
 
-func execute_CAMs(per_cell_dur: float):
+func execute_CAMs(attacker: Actor, per_cell_dur: float):
 	if last_CAM_score == -1: # Hasn't been 'run' since the last population
 		validate_CAMs()
 	
+	var total_dur: float = get_total_CAM_dur(per_cell_dur)
 	
+	for key in CAMsteps.keys():
+		var actor: Actor = CAMsteps[key]["actor"]
+		var relvec: Vector2 = CAMsteps[key]["relvec"]
+		var outcome: String = CAMsteps[key]["outcome"]
+		var motion_type: int = CAM_admin["motion_type"]
+		
+		if outcome == "success":
+			var dest_coord: Vector2 = actor.coord + relvec
+			var length: float = relvec.length()
+			var dur: float = per_cell_dur * length
+			
+			actor.claim_tile(dest_coord)
+			actor.ghost_mode(true)
+			
+			match motion_type:
+				MoveAction.motionchecks.TRAVEL:
+					actor.hotpushed(dest_coord, dur)
+				MoveAction.motionchecks.JUMP:
+					actor.hotjump(dest_coord, dur)
+			pass
+		
+		else: # Any failure
+			if is_unmovable(actor): # Nothing happens to truly unmovable victims
+				continue
+			
+			var knockback_damage_pips: int = ceil(relvec.length())
+			if !CAM_admin["knockback"]: knockback_damage_pips = 0
+			
+			var dur: float = per_cell_dur/2.0
+			actor.hotknockbacked(attacker, relvec, dur, knockback_damage_pips*4)
+			pass
+	
+	# Clean up by deghosting and declaiming!
+	
+	yield(utils.yt(total_dur - 0.001, self), "timeout")
+	
+	for key in CAMsteps.keys():
+		var actor: Actor = CAMsteps[key]["actor"]
+		actor.ghost_mode(false)
+	batman.release_most_claims()
 	pass
 
 
@@ -1063,6 +1129,7 @@ func TILE_ended_on_GLOWING(actor: Actor, coord: Vector2):
 
 func is_affected_by_jagged(actor: Actor) -> bool:
 	if !TILE_any_event_precheck(actor): return false
+	
 	if actor.is_immune_jagged: return false
 	if actor.weight == actor.weightclasses.HEAVY: return false
 	if actor.weight == actor.weightclasses.HOVER: return false
@@ -1084,17 +1151,23 @@ func is_affected_by_force(actor: Actor) -> bool: # Wind AND knockback; not ice s
 	if !utils.actorpass(actor): return false
 	
 	if actor.is_unmovable: return false
-	if actor.weight == actor.weightclasses.HEAVY: return false
+	if actor.weight == actor.weightclasses.HEAVY:
+		var tiletype: int = batman.grid_tiles.get_cellv(actor.coord)
+		if tiletype == batman.tiletypes.ICE:
+			return is_affected_by_ice(actor)
+		else:
+			return false
 	return true
 
 func is_affected_by_shrub(actor: Actor) -> bool: # Overgrowth! Does it slow you down?
-	if !utils.actorpass(actor): return false
+	if !TILE_any_event_precheck(actor): return false
 	
 	if actor.is_immune_shrub: return false
 	return true
 
 func is_affected_by_ice(actor: Actor) -> bool:
 	if !TILE_any_event_precheck(actor): return false
+	
 	if actor.weight == actor.weightclasses.LIGHT: return false
 	if actor.is_unmovable: return false
 	if actor.is_immune_ice: return false
@@ -1102,6 +1175,7 @@ func is_affected_by_ice(actor: Actor) -> bool:
 
 func is_affected_by_sinking(actor: Actor) -> bool:
 	if !TILE_any_event_precheck(actor): return false
+	
 	if actor.weight == actor.weightclasses.LIGHT: return false
 	return true
 
