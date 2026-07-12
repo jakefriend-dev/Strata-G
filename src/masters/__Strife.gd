@@ -436,6 +436,237 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 		])
 	pass
 
+
+
+# "CAMS" AKA CONCURRENT ACTOR MOVEMENTS! ---------------------------------------
+
+var CAM_default_admin: Dictionary = {
+	"motion_type": MoveAction.motionchecks.TRAVEL,
+	"pushes_heavy": false,
+	"allowed_over_faction_lines": false,
+	"knockback_damage": false,
+}
+var CAM_admin: Dictionary = {}
+var CAMsteps: Dictionary = {
+#	Actor: {
+#		"actor": Actor, # Duplicate ref
+#		"relvec": Vector2(whatever), # Total relative motion
+#		"single_step": Vector2(whatever), # Relative motion, 1 cell at a time
+#		"outcome": "success", # vs "hard_fail" or "soft_fail"
+#		"attempts": 3, # Starts at 0 pre-trying
+#	},
+}
+var last_CAM_score: int = -1
+
+func reset_CAMs():
+	CAMsteps = {}
+	CAM_admin = {}
+	CAM_admin = CAM_default_admin.duplicate(true)
+	last_CAM_score = -1
+	pass
+
+# Not needed IF you're using the defaults!
+func set_CAM_admin(param: String, value):
+	if !CAM_admin.has(param):
+		print("STRIFE: Can't set_CAM_admin(",param,", ",value,") because param is not in CAM_admin!")
+		return
+	
+	CAM_admin[param] = value
+	pass
+
+# Use this if we're being lazy and don't care whether or not an actor even exists
+func store_CAMstep_by_coord(start_coord: Vector2, relvec: Vector2, is_exact: bool = false):
+	if !batman.grid_actors.has_cellv(start_coord): return
+	var actor: Actor = batman.grid_actors.get_cellv(start_coord)
+	
+	store_CAMstep_by_actor(actor, relvec, is_exact)
+	pass
+
+func store_CAMstep_by_actor(actor: Actor, relvec: Vector2, is_exact: bool = false):
+	if !utils.actorpass(actor): return
+	if CAMsteps.keys().has(actor):
+		print("STRIFE: store_CAMstep() already has actor ",actor,"! Aborting")
+		return
+	
+	if is_exact:
+		relvec = relvec - actor.coord
+		is_exact = false
+	
+	if relvec.is_equal_approx(Vector2.ZERO):
+		print("STRIFE: store_CAMstep()'s relvec is ZERO, dummy! Aborting!")
+		return
+	
+	if !support.is_motion_a_line(relvec):
+		print("STRIFE: store_CAMstep()'s relvec ",relvec," is not a line! Aborting!")
+		return
+	
+	# Both actor and dest are valid (don't perform movement validations until later for consistency) so let's add em
+	CAMsteps[actor] = {}
+	CAMsteps[actor]["actor"] = actor
+	CAMsteps[actor]["relvec"] = relvec
+	CAMsteps[actor]["single_step"] = relvec.normalized()
+	CAMsteps[actor]["outcome"] = "soft_fail"
+	CAMsteps[actor]["attempts"] = 0
+	
+	# Done!
+	pass
+
+func validate_CAMs(): # Actually runs the check loops!
+	var this_CAM_score: int = 0
+	var loop_count: int = 0 # 1-based
+	var scores_in_order: Array = []
+	
+	while true:
+		#
+		# PREP
+		#
+		
+		loop_count += 1
+		last_CAM_score = this_CAM_score # Log it before updating against 'this'
+		
+		#
+		# PROCESSING
+		#
+		
+		for key in CAMsteps.keys():
+			var actor: Actor = CAMsteps[key]["actor"]
+			var relvec: Vector2 = CAMsteps[key]["relvec"]
+			var outcome: String = CAMsteps[key]["outcome"]
+			var attempts: int = CAMsteps[key]["attempts"]
+			
+			# Don't bother with anyone already decided
+			if outcome == "success" or outcome == "hard_fail": continue
+			
+			# Log an attempt so long as we're still in flux
+			CAMsteps[key]["attempts"] = (attempts + 1)
+			
+			# If we're ghost mode, hard fail! Don't mess with ghosts externally!
+			if actor.is_ghost:
+				CAMsteps[key]["outcome"] = "hard_fail"
+				continue
+			
+			# If the relvec puts us off the grid, hard fail! (We've already validated against same-coord dests by accident)
+			var target_dest: Vector2 = actor.coord + relvec
+			if !batman.grid_actors.has_cellv(target_dest):
+				CAMsteps[key]["outcome"] = "hard_fail"
+				continue
+			
+			# If the relvec puts us into another factional side and that's not allowed, hard fail!
+			if !CAM_admin["allowed_over_faction_lines"]:
+				if actor.faction != batman.factions.NEUTRAL: # Rocks are allowed to be moved over lines regardless
+					if actor.faction != batman.grid_factions.get_cellv(target_dest):
+						CAMsteps[key]["outcome"] = "hard_fail"
+						continue
+			
+			# If we're heavy and that's not valid, hard fail!
+			if !CAM_admin["pushes_heavy"]:
+				if !is_affected_by_force(actor):
+					CAMsteps[key]["outcome"] = "hard_fail"
+					continue
+			# If we're UNMOVABLE and that's not valid, hard fail!
+			else:
+				if is_unmovable(actor):
+					CAMsteps[key]["outcome"] = "hard_fail"
+					continue
+			
+			var dest_tiletype: int = batman.grid_tiles.get_cellv(target_dest)
+			
+			# If pit and not hovering, hard fail
+			if dest_tiletype == batman.tiletypes.PIT:
+				if actor.weight != actor.weightclasses.HOVER:
+					CAMsteps[key]["outcome"] = "hard_fail"
+					continue
+			
+			# If the relvec puts us on ice, update the relvec to the far side of the ice (unless we're immune) and keep us logged as soft_fail for this go-round
+			elif dest_tiletype == batman.tiletypes.ICE:
+				if is_affected_by_ice(actor):
+					relvec += CAMsteps[key]["single_step"]
+					CAMsteps[key]["relvec"] = relvec
+					# KEEP us at soft_fail, just loop again to use the new dest next time
+					continue
+			
+			# If there's another actor in our way, soft fail
+			if !support.is_tile_available(target_dest, actor):
+				continue
+			
+			# And, uh... if we made it this far... we must have succeeded, right?!?
+			CAMsteps[key]["outcome"] = "success"
+			continue
+		
+		#
+		# REVIEW
+		#
+		
+		this_CAM_score = get_CAM_score()
+		scores_in_order.append(this_CAM_score)
+		
+		if this_CAM_score == last_CAM_score:
+			# This is our 1st exit condition: When there's no difference between this run and the last run
+			break
+		
+		if !are_there_CAM_stragglers():
+			# This is our 2nd exit condition: When all actorsteps are either success or hard fails, and may not further possibly change.
+			break
+		
+		# END THIS LOOP (CONTINUING B/C WE FAILED TO MEET BREAK CONDITIONS; THINGS ARE STILL CHANGING *AND* STILL HAVE ROOM TO CHANGE)
+		pass
+	
+	
+	print("STRIFE: validate_CAMs() ended after ",loop_count," loops, with logged scores of ",scores_in_order)
+	pass
+
+func are_there_CAM_stragglers() -> bool:
+	for key in CAMsteps.keys():
+		var outcome: String = CAMsteps[key]["outcome"]
+		if outcome == "soft_fail": return true
+	
+	return false
+
+func get_total_CAM_dur(per_cell_dur: float) -> float:
+	var total_dur: float = per_cell_dur # Assume 1 tile to start
+	
+	for key in CAMsteps.keys():
+		if CAMsteps[key]["outcome"] == "success":
+			var relvec: Vector2 = CAMsteps[key]["relvec"]
+			var celldist: float = relvec.length()
+			if celldist > total_dur:
+				total_dur = celldist
+	
+	return total_dur
+	pass
+
+func get_CAM_score() -> int:
+	var score: int = 0
+	
+	for key in CAMsteps.keys():
+		match CAMsteps[key]["outcome"]:
+			"success":
+				score += 100
+			"hard_fail":
+				score += 1
+			# Ignore soft_fail; it's 0
+	
+	return score
+	pass
+
+func get_CAM_results() -> Dictionary: # Don't reach for CAMsteps directly; use this func to make sure the validation has been run first!
+	# For things like MoveAction previews, where we want to know the outcome data *without* executing it
+	
+	if last_CAM_score == -1: # Hasn't been 'run' since the last population
+		validate_CAMs()
+	
+	return CAMsteps.duplicate(true)
+	pass
+
+func execute_CAMs(per_cell_dur: float):
+	if last_CAM_score == -1: # Hasn't been 'run' since the last population
+		validate_CAMs()
+	
+	
+	pass
+
+
+
 # Holdovers below, need updating!
 
 func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, flags: Array = []):

@@ -3,11 +3,10 @@ extends MoveAction
 #var DIST: int = 3
 
 # Only uncomment this method if you want to bypass "normal" variant loading
-#func LOAD_VARIANTS():
-#	for vec in plausible_variants:
-#		if batman.grid_actors.has_cellv(actor.coord + vec + Vector2(DIST, 0)):
-#			actualized_variants.append(vec)
-#	pass
+func LOAD_VARIANTS():
+	actualized_variants.append(Vector2( 9,  9))
+	actualized_variants.append(Vector2(-9, -9))
+	pass
 
 # First the check position relative to our actor, then ITS relative check position
 
@@ -35,35 +34,37 @@ var ccw_set: Array = [
 
 
 func PREVIEW():
-	
-	var model_cw: bool = (batman.loaded_variant == Vector2.RIGHT)
+	var model_cw: bool = (batman.loaded_variant == Vector2( 9,  9))
 	var sets: Array
 	if model_cw:
 		sets = cw_set.duplicate(true)
 	else:
 		sets = ccw_set.duplicate(true)
 	
-	var blocked_positions: Array = [] # Relative to this actor
+	strife.reset_CAMs()
+	strife.set_CAM_admin("pushes_heavy", true)
 	
-	# On the first pass, we should see which units cannot move - this blocks their tile, AND the tile which would move to that position in theirs
+	for set in sets:
+		var origin: Vector2 = actor.coord + sets[0]
+		var reldest: Vector2 = sets[1]
+		strife.store_CAMstep_by_coord(origin, reldest)
 	
-	# After that, we will need to loop BACKWARDS through the cycle checking those blocked positions to see if that blocks another actor....
+	var results: Dictionary = strife.get_CAM_results() # Also runs validation!
+	if results.empty():
+		error_text = "No actors in range"
+		return
 	
-	# this is getting complicated and idk if it is overall a good idea haha
-	# but let's try a little more...
-	
-	
-	var check_vector: Vector2 = batman.loaded_variant
-	
-	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
-	if !unoccupieds.empty():
-		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
-	
-	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, check_vector)
-	if !utils.actorpass(victim): return
-	
-	add_actor(victim, ROWS.BAD)
 	passfail = true
+	
+	for key in results:
+		var victim: Actor = results[key]["actor"]
+		if results[key]["outcome"] == "success":
+			var relvec: Vector2 = results[key]["relvec"]
+			var target_dest: Vector2 = victim.coord + relvec
+			add_actor(victim, ROWS.NEUTRAL)
+			add_arrow(victim.coord, target_dest, ROWS.NEUTRAL)
+		else:
+			add_actor(victim, ROWS.ERROR)
 	pass
 
 func ACT():
