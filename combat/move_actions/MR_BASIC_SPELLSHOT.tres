@@ -6,7 +6,7 @@
 [resource]
 resource_local_to_scene = true
 script = ExtResource( 1 )
-display_name = "Magic Dart"
+display_name = "Magickdart"
 short_desc = "DMG damage in line of sight"
 display_desc = "Shoot the first unit in your line of sight for DMG damage. Weak, but convenient."
 option_image = ExtResource( 2 )
