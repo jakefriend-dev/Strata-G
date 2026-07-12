@@ -45,8 +45,8 @@ func PREVIEW():
 	strife.set_CAM_admin("pushes_heavy", true)
 	
 	for set in sets:
-		var origin: Vector2 = actor.coord + sets[0]
-		var reldest: Vector2 = sets[1]
+		var origin: Vector2 = actor.coord + set[0]
+		var reldest: Vector2 = set[1]
 		strife.store_CAMstep_by_coord(origin, reldest)
 	
 	var results: Dictionary = strife.get_CAM_results() # Also runs validation!
