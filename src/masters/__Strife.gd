@@ -660,6 +660,10 @@ func are_there_CAM_stragglers() -> bool:
 	
 	return false
 
+func are_CAMs_loaded() -> bool:
+	return !CAMsteps.empty()
+	pass
+
 func get_total_CAM_dur(per_cell_dur: float) -> float:
 	var total_dur: float = per_cell_dur/2.0 # Assume half-time (a failure) to start
 	

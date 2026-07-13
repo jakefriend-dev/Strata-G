@@ -43,7 +43,7 @@ func PREVIEW():
 	
 	strife.reset_CAMs()
 	strife.set_CAM_admin("pushes_heavy", true)
-	strife.set_CAM_admin("knockback", true)
+#	strife.set_CAM_admin("knockback", true) # Just for testing :upside_down:
 	
 	for set in sets:
 		var origin: Vector2 = actor.coord + set[0]

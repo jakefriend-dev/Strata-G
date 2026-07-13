@@ -518,7 +518,7 @@ func get_status_icons_in_play() -> Array:
 
 # ---
 
-func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99)) -> bool:
+func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99), allow_claiming_occupied_tiles: bool = false) -> bool:
 	# Ignore status quo
 	if (to_ghost and is_ghost):
 		return false
@@ -536,13 +536,13 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 		is_ghost = true
 		if newly_claimed_tile == Vector2(-99, -99): # We HAVE to claim something if we're going ghost mode, to ensure we have somewhere to come back to
 #			print(name," at coord ",coord," is claiming SAME coord ",newly_claimed_tile)
-			if !claim_tile(coord):
+			if !claim_tile(coord, allow_claiming_occupied_tiles):
 				print(name," ERROR: Attempted claim new tile during a ghost_mode(true) call but could not claim tile ",coord,"! Breakpoint!")
 				
 				return false
 		else:
 #			print(name," at coord ",coord," is claiming OTHER coord ",newly_claimed_tile)
-			if !claim_tile(newly_claimed_tile):
+			if !claim_tile(newly_claimed_tile, allow_claiming_occupied_tiles):
 				print(name," ERROR: Attempted claim new tile during a ghost_mode(true) call but could not claim tile ",coord,"! Breakpoint!")
 				
 				return false
@@ -564,7 +564,7 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 		return true
 	pass
 
-func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
+func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99), allow_claiming_occupied_tiles = false) -> bool:
 #	print("claiming_coord coming in at: ",claiming_coord)
 	if claiming_coord == Vector2(-99, -99):
 		claiming_coord = coord
@@ -574,11 +574,20 @@ func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
 	batman.release_actor_claims(self)
 	claimed_tile = Vector2.ZERO
 	
-	if support.is_tile_available(claiming_coord, [self]):
-#		print("and here's the fallout, claiming: ",claiming_coord)
-		batman.grid_claims.set_cellv(claiming_coord, self)
-		claimed_tile = claiming_coord
-		return true
+	if allow_claiming_occupied_tiles:
+		if batman.grid_claims.has_cellv(claiming_coord):
+			var existing_tile_claim = batman.grid_claims.get_cellv(claiming_coord)
+			if !utils.actorpass(existing_tile_claim) or existing_tile_claim == self:
+				batman.grid_claims.set_cellv(claiming_coord, self)
+				claimed_tile = claiming_coord
+				return true
+	
+	else: # Normal
+		if support.is_tile_available(claiming_coord, [self]):
+	#		print("and here's the fallout, claiming: ",claiming_coord)
+			batman.grid_claims.set_cellv(claiming_coord, self)
+			claimed_tile = claiming_coord
+			return true
 	
 	return false
 	pass

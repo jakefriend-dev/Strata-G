@@ -259,7 +259,11 @@ func ACT_lunge_forward():
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_action(self): return
 	
-	var moved_actor_count: int = 0 # We want to SKIP our delay if we cause someone else's impact
+#	var moved_actor_count: int = 0 # We want to SKIP our delay if we cause someone else's impact
+	
+	strife.reset_CAMs()
+#	strife.set_CAM_admin("pushes_heavy", true)
+	strife.set_CAM_admin("knockback", true)
 	
 	# Damage impact! All adjacent cells take 1 base, our cell takes 2 base
 	for target in targeted_tiles:
@@ -273,16 +277,24 @@ func ACT_lunge_forward():
 			var motion: Vector2 = target - coord
 			var victim: Actor = batman.grid_actors.get_cellv(target)
 			if utils.actorpass(victim):
-				if !support.is_tile_traversable_relative(victim, motion):
-					moved_actor_count += 1
+				strife.store_CAMstep_by_actor(victim, motion)
+#				if !support.is_tile_traversable_relative(victim, motion):
+#					moved_actor_count += 1
 			
-			strife.extmotion_actor_at_coord(self, target, motion, ["travel_damage"])
+#			strife.extmotion_actor_at_coord(self, target, motion, ["travel_damage"])
 			strife.quick_vfx(target, "dust")
+	
+	var per_tile_dur: float = 0.15
+	var total_dur: float = strife.get_total_CAM_dur(per_tile_dur)
+	strife.execute_CAMs(self, per_tile_dur)
+	
 	release_targeted_tiles()
 	
-	if moved_actor_count == 0:
+	if strife.are_CAMs_loaded():
+		yield(utils.yt(total_dur, self), "timeout")
+	else:
 		yield(utils.yt(post_jump_rumble_time, self), "timeout")
-		if !batman.is_my_action(self): return
+	if !batman.is_my_action(self): return
 	
 	end_action()
 	pass
