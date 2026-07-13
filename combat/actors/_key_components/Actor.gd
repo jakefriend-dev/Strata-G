@@ -470,6 +470,12 @@ func on_any_status_change():
 			strife.end_vfx_on_actor(self, "buff")
 	
 	# Bad/Debuff
+	if icons.has("bad"):
+		if !strife.check_if_vfx_on_actor_is_in_play(self, "debuff"):
+			strife.quick_vfx(self, "debuff")
+	else:
+		if strife.check_if_vfx_on_actor_is_in_play(self, "debuff"):
+			strife.end_vfx_on_actor(self, "debuff")
 	
 	# Misc
 	

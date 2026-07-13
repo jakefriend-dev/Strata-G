@@ -40,7 +40,7 @@ Tile types
 	tile_type	ice_tile	Ice	Slippery! Any unit that ends an action/movement on an ice tile via [travel] will slide to the far side of it, if possible. [Lightweight] units are too light to be affected.	travel, lightweight	
 	tile_type	puddle_tile	Puddle	Puddle tiles will break 1/4 [shield] each time a unit [rests] in it. Units in puddles also receive +1 damage from [elec] attacks, and -1 from [fire] attacks.	resting, shield, elec_elem, fire_elem	
 	tile_type	static_tile	Static	Static tiles lock the joints of units on them. Units must [rest] to clear the static, and cannot leave the tile or use non-[rest] actions until they have done so.	resting	
-	tile_type	blood_tile	Blood	On its own, a blood tile has no effect; however, certain powerful moves require blood tiles to be usable. Typically, any unit capable of dealing [bleed] damage has moves taking advantage of blood tiles.	bleed	
+	tile_type	blood_tile	Blood	On its own, a blood tile has no effect; however, certain powerful moves require blood tiles to be usable. Typically, any unit capable of dealing [bleed] damage has moves taking advantage of blood tiles.	bleed_elem	
 	tile_type	wind_tunnel_tile	Wind Tunnel	When standard-weight units [rest] in a wind tunnel, they are moved off of it in a specific, fixed direction. [Heavy] units are unaffected, while [lightweight] units are moved *immediately* upon entering the tile.	resting, heavy, lightweight	
 	tile_type	lodestone_tile	Lodestone	When a unit is [rests] next to an unoccupied lodestone tile, it is pulled onto it. This effect is resisted if the unit is next to multiple lodestones at once, or already on a lodestone.	resting	
 						

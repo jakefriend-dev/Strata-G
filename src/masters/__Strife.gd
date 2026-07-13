@@ -876,6 +876,7 @@ func quick_vfx(actor_or_coord, vfx_name: String, variant = null):
 			spawn_vfx_on_actor(actor_or_coord, "buff", true)
 		
 		"debuff": # Implies somewhat persistent
+			spawn_vfx_on_actor(actor_or_coord, "debuff", true)
 			pass
 		
 		"spark_burst":

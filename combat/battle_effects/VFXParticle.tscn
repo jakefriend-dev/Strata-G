@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=2]
+[gd_scene load_steps=67 format=2]
 
 [ext_resource path="res://combat/battle_effects/ETool_ParticleTester.gd" type="Script" id=1]
 [ext_resource path="res://combat/battle_effects/VFXParticle.gd" type="Script" id=2]
@@ -324,7 +324,7 @@ emission_sphere_radius = 32.0
 flag_disable_z = true
 direction = Vector3( 0, -1, 0 )
 spread = 8.73
-gravity = Vector3( 0, -25, 0 )
+gravity = Vector3( 0, -20, 0 )
 initial_velocity = 15.0
 angular_velocity = 12.0
 angular_velocity_random = 0.52
@@ -337,6 +337,37 @@ angle_random = 1.0
 scale = 0.01
 scale_random = 0.06
 color_ramp = SubResource( 37 )
+
+[sub_resource type="CanvasItemMaterial" id=51]
+blend_mode = 1
+
+[sub_resource type="Gradient" id=49]
+offsets = PoolRealArray( 0, 0.274725, 1 )
+colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=50]
+gradient = SubResource( 49 )
+
+[sub_resource type="ParticlesMaterial" id=48]
+emission_shape = 2
+emission_box_extents = Vector3( 16, 8, 1 )
+flag_disable_z = true
+direction = Vector3( 0, 1, 0 )
+spread = 5.0
+gravity = Vector3( 0, -10, 0 )
+initial_velocity = 20.0
+initial_velocity_random = 0.25
+angular_velocity = 38.57
+angular_velocity_random = 0.76
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+radial_accel = 5.0
+angle = 720.0
+angle_random = 1.0
+scale = 0.25
+scale_random = 0.05
+color = Color( 0.713726, 0.0862745, 0.443137, 1 )
+color_ramp = SubResource( 50 )
 
 [node name="VFXParticle" type="Node2D"]
 script = ExtResource( 2 )
@@ -574,7 +605,22 @@ script = ExtResource( 1 )
 material = SubResource( 35 )
 position = Vector2( 0, 12 )
 emitting = false
-lifetime = 2.0
+amount = 6
+lifetime = 1.5
 draw_order = 1
 process_material = SubResource( 38 )
 texture = ExtResource( 7 )
+
+[node name="debuff" type="Node2D" parent="ZPar"]
+script = ExtResource( 1 )
+
+[node name="Particles2D" type="Particles2D" parent="ZPar/debuff"]
+modulate = Color( 1, 1, 1, 0.109804 )
+material = SubResource( 51 )
+position = Vector2( 0, 12 )
+emitting = false
+amount = 6
+lifetime = 2.0
+speed_scale = 0.5
+process_material = SubResource( 48 )
+texture = ExtResource( 4 )
