@@ -5,7 +5,6 @@ func LOAD_VARIANTS():
 		actualized_variants.append(enemy.coord)
 	pass
 
-
 func PREVIEW():
 	if actualized_variants.empty():
 		error_text = "No possible targets"
@@ -19,6 +18,10 @@ func PREVIEW():
 		error_text = "Target is invalid"
 		return
 	
+	if victim.check_status("calcified"):
+		error_text = "Target is already calcified"
+		return
+	
 	add_actor(victim, ROWS.BAD)
 	passfail = true
 	pass
@@ -27,13 +30,9 @@ func ACT():
 	var victim: Actor = get_first_actor_by_MPD_type(ROWS.BAD)
 	
 	if utils.actorpass(victim):
+		# Again, shouldn't be possible, but w/e
 		strife.quick_vfx(victim, "quick_bad")
-		victim.spend(2)
-	
-	var allies: Array = batman.get_all_allied_actor_units(actor)
-	for ally in allies:
-		strife.quick_vfx(ally, "quick_good")
-		ally.add_action_points(1)
+		victim.start_status("calcified", "Calcified", "Cannot move willingly during its turn.", "bad", 1)
 	
 	end_action()
 	pass

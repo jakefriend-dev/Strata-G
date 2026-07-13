@@ -161,7 +161,7 @@ signal on_z_begin_fall()
 signal on_z_jumped() # Even a non-"jump" counts as long as it becomes airborne
 signal on_z_landed()
 
-var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
+#var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
 
 # Attacker combat signals
 signal on_blocked_by_shield_any(combat_package) # Connected with a shield *at all*

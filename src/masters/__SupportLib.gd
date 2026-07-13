@@ -1,6 +1,96 @@
 extends Node
 
-# AVAILABILITY & TRAVERSABILITY --------------------------------------------------------------------
+# TAGS -------------------------------------------------------------------------
+
+var tags: Dictionary = {
+	"heavy": {
+		"display_name": "Heavy",
+		"display_desc": "Units that cannot be easily moved by others.",
+		"subtags": [],
+	},
+	"lightweight": {
+		"display_name": "Lightweight",
+		"display_desc": "Units that are unaffected by [ice] tiles.",
+		"subtags": ["ice_tile"],
+	},
+	"piercing": {
+		"display_name": "Piercing",
+		"display_desc": "Damage which will bypass 1 layer of [shield].",
+		"subtags": ["shield"],
+	},
+	"shield_bypass": {
+		"display_name": "Shield Bypass",
+		"display_desc": "Damage which will bypass *all* layers of [shield].",
+		"subtags": ["shield"],
+	},
+	"water": {
+		"display_name": "Water (element)",
+		"display_desc": "Water moves will always destroy 1/4 of a [shield] on impact, even when dealing 0 damage. Cools & erases [ember] tiles.",
+		"subtags": ["shield", "ember_tile"],
+	},
+	"fire": {
+		"display_name": "Fire (element)",
+		"display_desc": "Fire damage is always [piercing], does 1 extra damage to units on [overgrowth] tiles, and destroys impacted [overgrowth] tiles.",
+		"subtags": ["piercing", "overgrowth_tile"],
+	},
+	"overgrowth_tile": {
+		"display_name": "Overgrowth (tile)",
+		"display_desc": "Overgrowth tiles cost 1 AP to enter (unless unit is [woodland]), but lessens damage by 1 while within it. Receives 1 extra damage and is destroyed by [fire] damage.",
+		"subtags": ["woodland", "fire"],
+	},
+	"shield": {
+		"display_name": "Shield",
+		"display_desc": "Shields lessen incoming damage by the total amount of shields a unit has, unless the incoming attack is [piercing] or [bypassing].",
+		"subtags": ["piercing", "shield_bypass"],
+	},
+	"ember_tile": {
+		"display_name": "Ember (tile)",
+		"display_desc": "ffffffffffffffffff",
+		"subtags": [],
+	},
+	"rest": {
+		"display_name": "Resting",
+		"display_desc": "A 'rest' is counted when a unit uses a Move in which they stand still, or when a unit ends their turn while still having AP. Some statuses and tile effects only trigger on each rest, like [poison] tiles.",
+		"subtags": ["poison_tile"],
+	},
+	"poison_tile": {
+		"display_name": "Poison (tile)",
+		"display_desc": "ffffffffffffffffff",
+		"subtags": [],
+	},
+#	"example": {
+#		"display_name": "ffffffffffffffffff",
+#		"display_desc": "ffffffffffffffffff",
+#		"subtags": [],
+#	},
+#	"example": {
+#		"display_name": "ffffffffffffffffff",
+#		"display_desc": "ffffffffffffffffff",
+#		"subtags": [],
+#	},
+#	"example": {
+#		"display_name": "ffffffffffffffffff",
+#		"display_desc": "ffffffffffffffffff",
+#		"subtags": [],
+#	},
+#	"example": {
+#		"display_name": "ffffffffffffffffff",
+#		"display_desc": "ffffffffffffffffff",
+#		"subtags": [],
+#	},
+#	"example": {
+#		"display_name": "ffffffffffffffffff",
+#		"display_desc": "ffffffffffffffffff",
+#		"subtags": [],
+#	},
+#	"example": {
+#		"display_name": "ffffffffffffffffff",
+#		"display_desc": "ffffffffffffffffff",
+#		"subtags": [],
+#	},
+}
+
+# AVAILABILITY & TRAVERSABILITY ------------------------------------------------
 
 	# (ghosts are not considered in these checks)
 	

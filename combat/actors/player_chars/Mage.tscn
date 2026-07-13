@@ -8,7 +8,7 @@
 [ext_resource path="res://combat/move_actions/MR_DISMISS.tres" type="Resource" id=6]
 [ext_resource path="res://combat/move_actions/MR_THUNDERBOLT.tres" type="Resource" id=7]
 [ext_resource path="res://combat/move_actions/MR_FIREBALL.tres" type="Resource" id=8]
-[ext_resource path="res://combat/move_actions/MR_POISON_SPRAY.tres" type="Resource" id=9]
+[ext_resource path="res://combat/move_actions/MR_CALCIFY.tres" type="Resource" id=9]
 [ext_resource path="res://combat/move_actions/MR_WATER_LOB.tres" type="Resource" id=10]
 [ext_resource path="res://combat/move_actions/MR_WIND_STEP.tres" type="Resource" id=11]
 

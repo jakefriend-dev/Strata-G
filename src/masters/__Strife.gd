@@ -22,16 +22,19 @@ enum hitrange {CONTACT, DISTANT} # Not used anywhere atm
 enum impacts {PHYSICAL, ABSTRACT} # Not use anywhere atm
 
 # For actors, to help handle things like ice or conveyor effect motion
-enum moves { # WAYS of moving, for the purpose of things like determining ice slippy-ness.
-	NOT_MOVING,
-	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
-	BY_JUMP,
-	BY_WARP,
-	BY_SPECIAL_TRAVEL, # A cartwheel might be immune to slipping, for instance
-	MOVED_EXTERNALLY, # Similar to BY_TRAVEL but helps separate external forces from ourselves
-		# If someone else warps our position, we'll just use BY_WARP rather than make another WARPED_EXTERNALLY
-	DNU
-}
+#enum moves { # WAYS of moving, for the purpose of things like determining ice slippy-ness.
+#	NOT_MOVING,
+#	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
+#	BY_JUMP,
+#	BY_WARP,
+#	BY_SPECIAL_TRAVEL, # A cartwheel might be immune to slipping, for instance
+#	MOVED_EXTERNALLY, # Similar to BY_TRAVEL but helps separate external forces from ourselves
+#		# If someone else warps our position, we'll just use BY_WARP rather than make another WARPED_EXTERNALLY
+#	DNU
+#}
+
+# Loads all status RESOURCES on boot-up, using their status key as dict keys and the entire resource as the value. Single point of reference so that everyone else can simply use the key!
+var statusdict: Dictionary = {}
 
 signal actor_rest_event(which_actor)
 

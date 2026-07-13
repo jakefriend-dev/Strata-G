@@ -24,7 +24,13 @@ export (int, 0, 8) var base_damage: int = 0 # Partly just a shortcut, but used t
 #		# If someone else warps our position, we'll just use BY_WARP rather than make another WARPED_EXTERNALLY
 #	DNU
 
-enum motionchecks {REST, TRAVEL, JUMP, WARP}
+enum motionchecks {
+	REST,
+	TRAVEL,
+	JUMP,
+	WARP,
+	SPECIAL_TRAVEL, # Something like "A cartwheel which bypasses Travel rules"
+	DNU}
 export (motionchecks) var motion_type: int = motionchecks.REST
 
 export (int, 0, 8) var on_use_cooldown: int = 0
