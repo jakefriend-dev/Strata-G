@@ -1,0 +1,46 @@
++	Type	Key	Display Name	Display Desc	Subtags
+Core concepts					
+	mechanic	resting	Resting	A 'rest' is counted when a unit uses a Move in which they stand still, or when a unit ends their turn while still having AP. Some statuses and tile effects only trigger on each rest, like [poison] tiles.	poison_tile
+	mechanic	travel	Travel	Linear ground-based movement from one adjacent tile to another. Standard 'walking' movement is travel, but jumping/teleporting are not. Travel incurs things like [ice] tile slipperiness, while teleporting on to an ice tile would not.	ice_tile
+	mechanic	fracture	AP Fracture	Some minor actions/penalties cause Action Point crystals to receive a fracture line, but not immediately break (ie. AP is not expended). AP crystals can be fractured twice safely, but on their 3rd fracture, break and are expended. This makes some minor actions, such as standard unit 'walking' movement, 'free' or very low-cost. [Elec] damage always causes AP fracture.	elec_elem
+					
+Shields, piercing, and general strife					
+	mechanic	shield	Shield	Shields lessen incoming damage by the total amount of shields a unit has, unless the incoming attack is [piercing] or [bypassing].	piercing, shield_bypass
+	mechanic	piercing	Piercing	Damage which will bypass 1 layer of [shield].	shield
+	mechanic	shield_bypass	Shield Bypass	Damage which will bypass *all* layers of [shield].	shield
+	mechanic	knockback	Knockback	A type of [travel] movement which causes damage when it *cannot* be fully completed. If a unit would be shoved 2 tiles away but a rock is in the way, the 2 tiles of motion are received as 2 damage instead. Not all externally-caused movement is knockback; usually knockback is only applied if the movement is violent or abrupt.	travel
+					
+Weightclasses					
+	unit_property	hovering	Hovering	Units that are hovering in the air are not at all affected by tile types, nor take [ground] attack damage/effects.	ground_elem
+	unit_property	lightweight	Lightweight	Units that are too light to be affected by certain ground effects, like [ice] tiles, but are easily move by winds, like [air tunnels].	ice_tile, air_tunnel_tile
+	unit_property	heavy	Heavy	Units that cannot be easily moved by others. Notably, a heavy unit on an [ice] tile behaves like a standard non-heavy unit.	ice_tile
+					
+Misc immuniuties/properties					
+	unit_property	woodland	Woodland	Woodland units bypass the entry penalty of [overgrowth] tiles, but still receive the benefits.	overgrowth_tile
+	unit_property	smasher	Smasher	Units of immense physical force; their attacks are always [bludgeoning]. Smashers also treat [jagged] tiles as standard, neither being penalized nor resetting it.	bludgeon_elem, jagged_tile
+					
+Damage elements/types					
+	damage_element	wood_elem	Sprout	Wild damage always turns any impacted tiles into [overgrowth].	overgrowth_tile
+	damage_element	water_elem	Water	Water moves will always break 1/4 of a [shield] on impact, even when dealing 0 damage. Cools & erases [ember] tiles.	shield, ember_tile
+	damage_element	ice_elem	Ice	Ice attacks always cause the [Frigid] status to impacted units. If an ice attack hits an [ember] tile, it will convert the tile to [puddle].	status_frigid, ember_tile, puddle_tile
+	damage_element	fire_elem	Fire	Fire damage is always [piercing]. Fire also does 1 extra damage to units on [overgrowth] tiles and burns it away, or converts [ice] tiles to [puddles]. Units already on a [puddle] tile will receive -1 damage, and the [puddle] will evaporate.	piercing, overgrowth_tile, ice_tile, puddle_tile
+	damage_element	poison_elem	Poison	Poison attacks always cause the [Poisoned] status to impacted units.	status_poisoned
+	damage_element	ground_elem	Ground	Ground attacks do not affect [hovering] units; they commonly also ignore cover and line of sight.	hovering
+	damage_element	elec_elem	Elec	Always turns the tile below the impacted unit to [static]. If the unit was on a [puddle] tile, does +1 damage to them first.	static_tile, puddle_tile
+	damage_element	bludgeon_elem	Bludgeoning	Bludgeoning damage always expends 1 AP of the impacted unit.	
+	damage_element	bleed_elem	Bleed	Bleed damage turns the tile below the impacted unit to [blood].	blood_tile
+					
+Tile types					
+	tile_type	magic_tile	Enchanted	Enchanted tiles can never be altered into a different tile type.	
+	tile_type	jagged_tile	Jagged	Jagged tiles deal 1 damage and penalize 1 AP upon a unit entering them, after which they revert to a standard tile. [Smasher] units treat these like regular tiles.	smasher
+	tile_type	overgrowth_tile	Overgrowth	Overgrowth tiles cost 1 AP to enter (unless the unit is [woodland]), but lessens incoming damage by 1 while within it. Receives +1 extra damage and is destroyed by [fire] attacks.	woodland, fire_elem
+	tile_type	ember_tile	Ember	Ending your turn on an ember tile incurs 1 [fire] damage, but *starting* your turn on an ember tile confers +1 AP.	fire_elem
+	tile_type	poison_tile	Poison	Both entering and [resting] on a poison tile causes 1/4 [shield-bypassing] damage.	shield_bypass
+	tile_type	ice_tile	Ice	Slippery! Any unit that ends an action/movement on an ice tile via [travel] will slide to the far side of it, if possible. [Lightweight] units are too light to be affected.	travel, lightweight
+	tile_type	puddle_tile	Puddle	Puddle tiles will break 1/4 [shield] each time a unit [rests] in it. Units in puddles also receive +1 damage from [elec] attacks, and -1 from [fire] attacks.	resting, shield, elec_elem, fire_elem
+	tile_type	static_tile	Static	Static tiles lock the joints of units on them. Units must [rest] to clear the static, and cannot leave the tile or use non-[rest] actions until they have done so.	resting
+	tile_type	blood_tile	Blood	On its own, a blood tile has no effect; however, certain powerful moves require blood tiles to be usable. Typically, any unit capable of dealing [bleed] damage has moves taking advantage of blood tiles.	bleed
+	tile_type	wind_tunnel_tile	Wind Tunnel	When standard-weight units [rest] in a wind tunnel, they are moved off of it in a specific, fixed direction. [Heavy] units are unaffected, while [lightweight] units are moved *immediately* upon entering the tile.	resting, heavy, lightweight
+	tile_type	lodestone_tile	Lodestone	When a unit is [rests] next to an unoccupied lodestone tile, it is pulled onto it. This effect is resisted if the unit is next to multiple lodestones at once, or already on a lodestone.	resting
+					
+TBD					
