@@ -1,5 +1,59 @@
 extends Node
 
+var tags: Dictionary = {}
+
+func _ready():
+	import_tags_tsv()
+	pass
+
+func import_tags_tsv():
+	tags.clear()
+	
+	# Prep the file
+	var tsvpath = "res://tsv/Tags.tsv"
+	var file: File = File.new()
+	file.open(tsvpath, File.READ)
+	var line: int = -1 # 0-based; FILE line whether valid or not
+	
+	while !file.eof_reached():
+		line += 1
+#		if line == 0: continue # Ignore header
+		
+		var row: Array = file.get_line().split("\t")
+		
+		var dnu: String = str(row[0])
+		if dnu != "": continue # No organization GSheet data
+		
+		var type: String = str(row[1])
+		var key: String = str(row[2])
+		var display_name: String = str(row[3])
+		var display_desc: String = str(row[4])
+		var subtags_text: String = str(row[5])
+		
+		if (type == "" or key == "" or display_name == "" or display_desc == ""):
+			# Invalid line; either intentionally blank or data is not completely filled in
+			continue
+		
+		subtags_text = subtags_text.replace(" ", "")
+		var subtags: Array = subtags_text.split(",")
+		
+		var entry: Dictionary = {}
+		entry["key"] = key # Redundancy, I know
+		entry["type"] = type
+		entry["display_name"] = display_name
+		entry["display_desc"] = display_desc
+		entry["subtags"] = []
+		entry["subtags"] = subtags
+		
+		tags[key] = {}
+		tags[key] = entry
+		# Great work! Next line!
+		continue
+	
+	file.close()
+	
+#	print("SUPPORT: Tags are ",tags)
+	pass
 
 # AVAILABILITY & TRAVERSABILITY ------------------------------------------------
 
