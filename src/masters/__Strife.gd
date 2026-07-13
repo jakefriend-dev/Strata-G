@@ -504,6 +504,10 @@ func store_CAMstep_by_actor(actor: Actor, relvec: Vector2, is_exact: bool = fals
 		print("STRIFE: store_CAMstep()'s relvec ",relvec," is not a line! Aborting!")
 		return
 	
+	if actor.is_ghost:
+		print("STRIFE: store_CAMstep()'s actor ",actor," is already in ghost mode! Aborting!")
+		return
+	
 	# Both actor and dest are valid (don't perform movement validations until later for consistency) so let's add em
 	CAMsteps[actor] = {}
 	CAMsteps[actor]["actor"] = actor
@@ -531,12 +535,12 @@ func validate_CAMs(): # Actually runs the check loops!
 		last_CAM_score = this_CAM_score # Log it before updating against 'this'
 		
 		# Quick pre-loop to determine who is allowed to be an exception from the 'is tile available' check
-		var exception_actors: Array = []
-		for key in CAMsteps.keys():
-			var actor: Actor = CAMsteps[key]["actor"]
-			var outcome: String = CAMsteps[key]["outcome"]
-			if outcome == "success":
-				exception_actors.append(actor)
+#		var exception_actors: Array = []
+#		for key in CAMsteps.keys():
+#			var actor: Actor = CAMsteps[key]["actor"]
+#			var outcome: String = CAMsteps[key]["outcome"]
+#			if outcome == "success":
+#				exception_actors.append(actor)
 		
 		#
 		# PROCESSING
@@ -556,11 +560,12 @@ func validate_CAMs(): # Actually runs the check loops!
 			# Log an attempt so long as we're still in flux
 			CAMsteps[key]["attempts"] = (attempts + 1)
 			
-			# If we're ghost mode, hard fail! Don't mess with ghosts externally!
-			if actor.is_ghost:
-				if do_debug: print(actor.name," FAIL: is ghost")
-				CAMsteps[key]["outcome"] = "hard_fail"
-				continue
+			# REMOVED this line! We shouldn't mess with ghosts EARLIER in validation, but we intentionally ghost out actors here!
+#			# If we're ghost mode, hard fail! Don't mess with ghosts externally!
+#			if actor.is_ghost:
+#				if do_debug: print(actor.name," FAIL: is ghost")
+#				CAMsteps[key]["outcome"] = "hard_fail"
+#				continue
 			
 			# If the relvec puts us off the grid, hard fail! (We've already validated against same-coord dests by accident)
 			var target_dest: Vector2 = actor.coord + relvec
@@ -607,7 +612,7 @@ func validate_CAMs(): # Actually runs the check loops!
 					# If there IS, THEN we increase the dest to check there - otherwise, we risk 'total failure' outcome when moving ONTO the ice is perfectly valid
 					var far_dest: Vector2 = target_dest + CAMsteps[key]["single_step"]
 					if batman.grid_actors.has_cellv(far_dest):
-						if support.is_tile_available(far_dest, exception_actors):
+						if support.is_tile_available(far_dest, [self]):
 							if support.is_tile_traversable_exact(actor, far_dest, CAM_admin["allowed_over_faction_lines"]):
 								# KEEP us at soft_fail, just loop again to use the new dest next time, since moving past the ice is valid!
 								relvec += CAMsteps[key]["single_step"]
@@ -616,12 +621,13 @@ func validate_CAMs(): # Actually runs the check loops!
 								continue
 			
 			# If there's another actor in our way, soft fail
-			if !support.is_tile_available(target_dest, exception_actors):
-				if do_debug: print(actor.name," SOFT fail: actor at our dest pos")
+			if !support.is_tile_available(target_dest, [self]):
+				if do_debug: print(actor.name," SOFT fail: actor at our dest pos ",target_dest)
 				continue
 			
 			# And, uh... if we made it this far... we must have succeeded, right?!?
 			CAMsteps[key]["outcome"] = "success"
+			actor.ghost_mode(true, target_dest) # Go ghost so we're not in each others' way, but also claim the dest tile to block double-arrival (like the ice gif)
 			if do_debug: print(actor.name," success!")
 			continue
 		
@@ -708,8 +714,7 @@ func execute_CAMs(attacker: Actor, per_cell_dur: float):
 			var length: float = relvec.length()
 			var dur: float = per_cell_dur * length
 			
-			actor.claim_tile(dest_coord)
-			actor.ghost_mode(true)
+			actor.ghost_mode(true, dest_coord)
 			
 			match motion_type:
 				MoveAction.motionchecks.TRAVEL:

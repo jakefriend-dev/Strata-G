@@ -675,7 +675,7 @@ func cycle_to_next_turn():
 		field.update_targeting()
 		emit_signal("new_round_started")
 		update_action_log(str("ROUND [",round_count,"] - BEGIN!"))
-		yield(utils.yt(0.75, self), "timeout")
+		yield(utils.yt(0.03, self), "timeout")
 	else:
 		turncount += 1
 	
@@ -701,6 +701,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	field.update_targeting()
 	flush_actionqueue()
 	field.update_turn_display()
+	support.de_ghost_all_actors()
 	
 	combatstate = C_PRE_TURN
 	emit_signal("pre_turn_setup", curr_actor)
@@ -754,8 +755,9 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 		emit_signal("on_turn_ended_via_interruption")
 	emit_signal("on_turn_exited")
 	
-	# Wipe out the current actionqueue
+	# Wipe out the current actionqueue and de-ghost everyone
 	flush_actionqueue()
+	support.de_ghost_all_actors()
 	
 	if utils.valid(curr_actor):
 		curr_actor.master_post_turn_teardown()

@@ -107,6 +107,7 @@ func prep_moveset_on_turn_end():
 
 func clear_all_move_previews():
 	if batman.curr_actor != self: return
+	support.de_ghost_all_actors()
 	
 	for key in moveset.keys():
 		moveset[key].clear_MPD()
@@ -115,6 +116,7 @@ func clear_all_move_previews():
 func run_move_preview(is_brand_new_move_selected: bool = false):
 	if batman.curr_actor != self: return
 	if !batman.player_input_validation_checks(): return
+	support.de_ghost_all_actors()
 	
 	var move: MoveAction = batman.loaded_move
 	if move == null: return

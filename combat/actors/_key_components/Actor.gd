@@ -535,16 +535,26 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 			batman.ghost_actors.append(self)
 		is_ghost = true
 		if newly_claimed_tile == Vector2(-99, -99): # We HAVE to claim something if we're going ghost mode, to ensure we have somewhere to come back to
-			claimed_tile = coord
+#			print(name," at coord ",coord," is claiming SAME coord ",newly_claimed_tile)
+			if !claim_tile(coord):
+				print(name," ERROR: Attempted claim new tile during a ghost_mode(true) call but could not claim tile ",coord,"! Breakpoint!")
+				
+				return false
 		else:
-			claimed_tile = newly_claimed_tile
+#			print(name," at coord ",coord," is claiming OTHER coord ",newly_claimed_tile)
+			if !claim_tile(newly_claimed_tile):
+				print(name," ERROR: Attempted claim new tile during a ghost_mode(true) call but could not claim tile ",coord,"! Breakpoint!")
+				
+				return false
 		return true
 	
 	# Return to gridlocked mortal form
 	else:
-		# We should always be tracking our own coord fwiw, even while ghosted, so this should still be up to date
-		if !support.is_tile_available(coord, [self]):
-			print(name," ERROR: Attempted to return from ghost mode while our current coord was unavailable!")
+		# We don't actually want to look at CLAIMS here, perhaps? This is a hard override; if someone else has claimed this tile that is going to be a them issue. Claims influence behaviour but are a crutch; actors take precedence for purposes like a thory CAM preview.
+		if utils.actorpass(batman.grid_actors.get_cellv(coord)):
+#		if !support.is_tile_available(coord, [self]):
+			print(name," ERROR: Attempted to return from ghost mode while our current coord was unavailable! BREAKPOINT!")
+			
 			return false
 		if batman.ghost_actors.has(self):
 			batman.ghost_actors.erase(self)
@@ -555,13 +565,17 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99))
 	pass
 
 func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99)) -> bool:
-	if Vector2(-99, -99): claiming_coord = coord
+#	print("claiming_coord coming in at: ",claiming_coord)
+	if claiming_coord == Vector2(-99, -99):
+		claiming_coord = coord
+#	print("claiming_coord still? at: ",claiming_coord)
 	
 	# Only one claim is ever allowed at a time!
 	batman.release_actor_claims(self)
 	claimed_tile = Vector2.ZERO
 	
 	if support.is_tile_available(claiming_coord, [self]):
+#		print("and here's the fallout, claiming: ",claiming_coord)
 		batman.grid_claims.set_cellv(claiming_coord, self)
 		claimed_tile = claiming_coord
 		return true

@@ -94,11 +94,13 @@ func is_tile_available(exact_coord: Vector2, exception_actors: Array = []) -> bo
 	var found_actor: Actor = batman.grid_actors.get_cellv(exact_coord)
 	if found_actor != null:
 		if !exception_actors.has(found_actor):
+			print("SUPPORT: is_tile_available(",exact_coord,") found actor: ",found_actor)
 			return false
 	
 	var found_claimant: Actor = batman.grid_claims.get_cellv(exact_coord)
 	if found_claimant != null:
 		if !exception_actors.has(found_claimant):
+			print("SUPPORT: is_tile_available(",exact_coord,") found claim by actor: ",found_claimant)
 			return false
 	
 	return true
@@ -475,6 +477,12 @@ func step_vector_int_towards_zero(vector: Vector2, step: int = 1) -> Vector2:
 	return new_vector
 	pass
 
+func de_ghost_all_actors():
+	for actor in batman.living_actors: if actor is Actor:
+		if actor.is_ghost:
+			actor.ghost_mode(false)
+			actor.release_claims()
+	pass
 
 
 
