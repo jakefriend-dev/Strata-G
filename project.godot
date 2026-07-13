@@ -49,6 +49,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/classes/_Sprite9Patch.gd"
 }, {
+"base": "Resource",
+"class": "StatusCondition",
+"language": "GDScript",
+"path": "res://src/classes/_StatusCondition.gd"
+}, {
 "base": "Node",
 "class": "YPing",
 "language": "GDScript",
@@ -68,6 +73,7 @@ _global_script_class_icons={
 "MoveAction": "",
 "PipSet": "",
 "Sprite9Patch": "",
+"StatusCondition": "",
 "YPing": "",
 "YTimer": ""
 }

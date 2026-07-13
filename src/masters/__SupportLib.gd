@@ -22,7 +22,7 @@ func import_tags_tsv():
 		var row: Array = file.get_line().split("\t")
 		
 		var dnu: String = str(row[0])
-		if dnu != "": continue # No organization GSheet data
+		if dnu != "": continue # No organization GSheet data!
 		
 		var type: String = str(row[1])
 		var key: String = str(row[2])

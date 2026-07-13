@@ -325,7 +325,7 @@ func do_quiet_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: A
 	pass
 
 # Common MOTION flags:
-	# travel_damage: For each cell the defender is *unable* to travel, deal 1 base damage
+	# knockback: For each cell the defender is *unable* to travel, deal 1 base damage
 	# skip_own_faction: Typically FF is default-on; this would bypass that
 
 func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array, is_quiet: bool):
@@ -423,9 +423,9 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	# At this point, we should now know our destination tile and how far we *couldn't* move
 	#
 	
-	var do_travel_damage: bool = flags.has("travel_damage")
+	var do_knockback: bool = flags.has("knockback")
 	var knockback_damage: int = 0
-	if do_travel_damage:
+	if do_knockback:
 		knockback_damage = (tilemove_failures * batman.BASE_HP_FACTOR)
 	
 	# No motion??

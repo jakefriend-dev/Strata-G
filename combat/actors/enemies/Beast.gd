@@ -281,7 +281,7 @@ func ACT_lunge_forward():
 #				if !support.is_tile_traversable_relative(victim, motion):
 #					moved_actor_count += 1
 			
-#			strife.extmotion_actor_at_coord(self, target, motion, ["travel_damage"])
+#			strife.extmotion_actor_at_coord(self, target, motion, ["knockback"])
 			strife.quick_vfx(target, "dust")
 	
 	var per_tile_dur: float = 0.15

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://src/classes/_StatusCondition.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+key = "enrage"
+display_name = "Enrage"
+display_desc = "+1 damage on next attack."
+icon_type = "good"
+default_tick_duration = 2
+tick_point = "End of turn"
+listed_subtags = ""
+custom_start_function = ""
+custom_clear_function = ""
+base_value = 0

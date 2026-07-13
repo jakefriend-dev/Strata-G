@@ -15,15 +15,6 @@ export (String, MULTILINE) var option_desc: String
 export (int, 0, 8) var cost: int = 1
 export (int, 0, 8) var base_damage: int = 0 # Partly just a shortcut, but used to calculate descriptions live by replacing any text reading "DMG" with a calculation of (base_damage + actor.get_damage_buff())
 
-#	NOT_MOVING,
-#	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
-#	BY_JUMP,
-#	BY_WARP,
-#	BY_SPECIAL_TRAVEL, # A cartwheel might be immune to slipping, for instance
-#	MOVED_EXTERNALLY, # Similar to BY_TRAVEL but helps separate external forces from ourselves
-#		# If someone else warps our position, we'll just use BY_WARP rather than make another WARPED_EXTERNALLY
-#	DNU
-
 enum motionchecks {
 	REST,
 	TRAVEL,

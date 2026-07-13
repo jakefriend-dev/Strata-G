@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://src/classes/_StatusCondition.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+key = "melee_counter"
+display_name = "Counter Stance"
+display_desc = "Deals DMG melee damage as a reaction to being hit."
+icon_type = "good"
+default_tick_duration = 1
+tick_point = ""
+listed_subtags = ""
+custom_start_function = ""
+custom_clear_function = ""
+base_value = 3

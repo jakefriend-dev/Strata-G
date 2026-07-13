@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://src/classes/_StatusCondition.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+key = "poisoned"
+display_name = "Poisoned"
+display_desc = "Receive 1/4 [shield-bypassing] damage each [rest]."
+icon_type = "bad"
+default_tick_duration = 99
+tick_point = ""
+listed_subtags = "shield_bypass, resting"
+custom_start_function = ""
+custom_clear_function = ""
+base_value = 0
