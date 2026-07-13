@@ -138,7 +138,7 @@ func ACT_charge_forward():
 		batman.skip_action()
 		return
 	
-	# We're clear! Mark the endpoint and claim before moving
+	# We're clear! Mark the endpoint and claim our og coord before moving
 	claim_tile()
 	var dest_coord: Vector2 = chargies.back()
 	
