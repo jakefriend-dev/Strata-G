@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource( 1 )
-display_name = "Wind Step"
+display_name = "Quickstep"
 short_desc = "Move diag to get around obstacles"
 display_desc = "Move 1 tile diagonally. Allows user to conveniently move around an obstacle or hazard."
 option_image = ExtResource( 2 )
