@@ -177,17 +177,22 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	# Check for piercing or piercing immunity - you cannot break AND pierce; breaking means shields ARE interacted with and overrides piercing which means they aren't
 	#
 	
-	var pierce_depth: int = 0
-	var piercing: bool = (
-		(flags.has("piercing") or flags.has("shield_bypass")) and !breaking)
-	if elem == "FIRE": piercing = true
-	if defender.is_immune_piercing: piercing = false # Override!
-	if piercing: pierce_depth = 1
-	if flags.has("shield_bypass"): pierce_depth = 99
+	var pierce_depth: int = int(flags.has("piercing"))
+	var shield_bypass: bool = flags.has("shield_bypass")
+	
+	if shield_bypass:
+		pierce_depth = 99
+	if elem == "FIRE":
+		pierce_depth += 1
+	
+	if defender.is_immune_piercing:
+		pierce_depth = 0
+	
 	 # Have not yet implemented 'total shield bypass' aka higher piercing tiers.
 	
 	combat_package["pierce_depth"] = pierce_depth
-	combat_package["piercing"] = piercing
+	combat_package["piercing"] = flags.has("piercing")
+	combat_package["shield_bypass"] = shield_bypass
 	var unbroken_shield: int = defender.shield
 	
 	# If NOT piercing, in this order:
