@@ -13,10 +13,10 @@ func import_tags_tsv():
 	var tsvpath = "res://tsv/Tags.tsv"
 	var file: File = File.new()
 	file.open(tsvpath, File.READ)
-	var line: int = -1 # 0-based; FILE line whether valid or not
+#	var line: int = -1 # 0-based; FILE line whether valid or not
 	
 	while !file.eof_reached():
-		line += 1
+#		line += 1
 #		if line == 0: continue # Ignore header
 		
 		var row: Array = file.get_line().split("\t")
