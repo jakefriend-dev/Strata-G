@@ -32,7 +32,7 @@ func ACT():
 	if utils.actorpass(victim):
 		# Again, shouldn't be possible, but w/e
 		strife.quick_vfx(victim, "quick_bad")
-		victim.start_status("calcified", "Calcified", "Cannot move willingly during its turn.", "bad", 1)
+		victim.start_status("calcified")
 	
 	end_action()
 	pass

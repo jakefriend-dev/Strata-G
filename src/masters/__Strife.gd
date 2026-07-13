@@ -13,6 +13,8 @@ extends Node
 	# Tile entry/exit effects
 	# Global checks for if a given actor is 'allowed' to move to a given tile
 
+var status_db: Dictionary = {}
+
 enum elements {NORMAL, COLD, FIRE, WOOD, GROUND, AIR, MAGIC, ELEC, POISON, BLOOD, LIGHT}
 # Ones I'm unsure of being an 'element' so much as just a flag:
 	# BREAKING
@@ -43,8 +45,40 @@ var tween: Tween
 func _ready():
 	tween = Tween.new()
 	add_child(tween)
+	
+	load_status_conditions_as_dict()
+	
 	connect("actor_rest_event", self, "rest_event")
 	pass
+
+func load_status_conditions_as_dict():
+	var folderpath: String = "res://combat/status_conditions/"
+	var dir: Directory = Directory.new()
+	dir.open(folderpath)
+	dir.list_dir_begin(true)
+	
+	status_db.clear()
+	
+	while true:
+		var f = dir.get_next()
+#		print("STRIFE: load_status_conditions_as_dict() --> [",f,"]")
+		if f == "": break
+		
+		var sc: StatusCondition = load(str(folderpath, f))
+		var key = sc.key
+		if status_db.has(key):
+			print("STRIFE: load_status_conditions_as_dict() already has duplicate key [",key,"]! Skipping!")
+			continue
+		status_db[key] = sc
+		sc.runtime_setup()
+		
+		continue
+	
+#	print("Status DB: ",status_db)
+	pass
+
+
+
 
 # COMBAT PROCESSING! -----------------------------------------------------------
 
@@ -532,7 +566,7 @@ func validate_CAMs(): # Actually runs the check loops!
 	var loop_count: int = 0 # 1-based
 	var scores_in_order: Array = []
 	
-	var do_debug: bool = true
+	var do_debug: bool = false
 	
 	while true:
 		#
@@ -636,7 +670,7 @@ func validate_CAMs(): # Actually runs the check loops!
 			# And, uh... if we made it this far... we must have succeeded, right?!?
 			CAMsteps[key]["outcome"] = "success"
 			actor.ghost_mode(true, target_dest) # Go ghost so we're not in each others' way, but also claim the dest tile to block double-arrival (like the ice gif)
-			if do_debug: print(actor.name," success!")
+			if do_debug: print(actor.name," validate_CAMs() success!")
 			continue
 		
 		#
@@ -658,7 +692,7 @@ func validate_CAMs(): # Actually runs the check loops!
 		pass
 	
 	
-	print("STRIFE: validate_CAMs() ended after ",loop_count," loops, with logged scores of ",scores_in_order)
+	if do_debug: print("STRIFE: validate_CAMs() ended after ",loop_count," loops, with logged scores of ",scores_in_order)
 	pass
 
 func are_there_CAM_stragglers() -> bool:

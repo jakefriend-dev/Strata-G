@@ -111,8 +111,10 @@ func refresh_all():
 
 func update_error_text_only():
 	var error_text: String = ""
+	var is_moveopt_available: bool = false
 	for moveopt in movegrid.get_children():
 		if moveopt.currently_highlighted:
+			is_moveopt_available = (moveopt.state == moveopt.s.AVAILABLE)
 			if moveopt.move != null:
 				error_text = moveopt.move.error_text
 				break
@@ -120,7 +122,9 @@ func update_error_text_only():
 	if error_text == "": return
 	
 	var wtt: Label = tooltip_par.get_node("WarnTooltip")
-	if wtt.text != "": return
+	# This is where if there is a 'base' error (like on a cooldown) the existing texts would be preserved - but we don't want to do that if the move is ultimately available!
+	if wtt.text != "" and !is_moveopt_available: return
+#	if wtt.text != "": return
 	
 	if wtt.text != error_text:
 		wtt.text = error_text

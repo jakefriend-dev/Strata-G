@@ -19,3 +19,16 @@ export var custom_clear_function: String  # If populated, tries to run this Acto
 
 export var base_value: int = 0 # Can be used for damage, healing, etc.
 
+# ---
+
+func runtime_setup():
+	listed_subtags = listed_subtags.replace(" ", "")
+	subtags = listed_subtags.split(",")
+	pass
+
+
+
+
+
+
+

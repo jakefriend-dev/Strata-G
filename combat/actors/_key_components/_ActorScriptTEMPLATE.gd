@@ -97,7 +97,7 @@ func ACT_charge_forward():
 #	pass
 #
 #func ACT_enrage():
-#	start_status("enrage", "Enrage", "good", 2, true)
+#	start_status("enrage")
 #	strife.quick_vfx(self, "quick_good")
 ##	add_action_points(1)
 #

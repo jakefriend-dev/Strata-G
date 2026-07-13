@@ -391,31 +391,49 @@ var partial_predeffed_statuses: Dictionary = {
 		"tags": ["rest", "poison"],
 	},}
 
-func start_status(status_key: String, status_display_name: String, status_desc: String, icon_type: String, ticks: int, until_end_of_turn: bool = true, tags: Array = [], ending_function: String = ""):
+func start_status(status_key: String, override_ticks: int = 0):
 	
+	if !strife.status_db.has(status_key):
+		print(name,".start_status(",status_key,") - key doesn't exist in strife.status_db!")
+		return
+	
+	var sc: StatusCondition = strife.status_db[status_key]
+	
+	var new_ticks: int = sc.default_tick_duration
+	if override_ticks > 0: new_ticks = override_ticks
+
 	# For existing statuses, re-up the tick count to the higher of the new-vs-current
 	if ongoing_statuses.has(status_key):
 		var existing_ticks: int = ongoing_statuses[status_key]["ticks_remaining"]
-		if ticks > existing_ticks:
-			ongoing_statuses[status_key]["ticks_remaining"] = ticks
-			batman.update_action_log(str(name," RE-statused with [",status_key,"], topped up to ",ticks," ticks!"))
+		if new_ticks > existing_ticks:
+			ongoing_statuses[status_key]["ticks_remaining"] = new_ticks
+			batman.update_action_log(str(name," RE-statused with [",status_key,"], topped up to ",new_ticks," ticks!"))
 		return
 	
 	# Otherwise, it's a new status!
 	ongoing_statuses[status_key] = {}
 	ongoing_statuses[status_key]["key_name"] = status_key
-	ongoing_statuses[status_key]["display_name"] = status_display_name
-	ongoing_statuses[status_key]["display_desc"] = status_desc
-	ongoing_statuses[status_key]["tags"] = tags
-	ongoing_statuses[status_key]["icon_type"] = icon_type
-	ongoing_statuses[status_key]["ticks_remaining"] = ticks
-	if until_end_of_turn:
+	ongoing_statuses[status_key]["ticks_remaining"] = new_ticks
+	
+	var tick_point: String = sc.tick_point
+	if tick_point == "End of turn":
 		ongoing_statuses[status_key]["tick_style"] = "end"
 	else:
 		ongoing_statuses[status_key]["tick_style"] = "start"
-	ongoing_statuses[status_key]["ending_function"] = ending_function
 	
-	batman.update_action_log(str(name," statused with [",status_key,"] for ",ticks," ticks!"))
+	if sc.custom_start_function != "":
+		if has_method(sc.custom_start_function):
+			call(sc.custom_start_function)
+	
+	var ending_function: String = ""
+	if sc.custom_clear_function != "":
+		if has_method(sc.custom_clear_function):
+			ending_function = sc.custom_clear_function
+	if ending_function == "":
+		ending_function = "generic_clear_status"
+	ongoing_statuses[status_key]["ending_function"] = ending_function
+
+	batman.update_action_log(str(name," statused with [",status_key,"] for ",new_ticks," ticks!"))
 	on_any_status_change()
 	update_bui()
 	pass
@@ -511,8 +529,8 @@ func get_status_icons_in_play() -> Array:
 	var results: Array = []
 	
 	for key in ongoing_statuses.keys():
-		if !results.has(ongoing_statuses[key]["icon_type"]):
-			results.append(ongoing_statuses[key]["icon_type"])
+		if !results.has(strife.status_db[key].icon_type):
+			results.append(strife.status_db[key].icon_type)
 	
 	return results
 
@@ -804,7 +822,7 @@ func hotknockbacked(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_v
 	var dur2_3: float = dur1_3 * 2.0
 	
 	var og_pos: Vector2 = position
-	var kb_pos: Vector2 = position + (relvec*10.0)
+	var kb_pos: Vector2 = position + (relvec*6.0)
 	
 	tween.interpolate_property(self, "position", null, kb_pos, dur1_3, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
