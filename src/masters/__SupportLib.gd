@@ -137,7 +137,6 @@ func list_all_traversible_tiles_in_set(exact_coords: Array, actor: Actor) -> Arr
 			break
 		
 		# Otherwise, it's good!
-#		batman.grid_claims.set_cellv(exact_coord, actor) # why tf was THIS here??
 		traversible_cells.append(exact_coord)
 	
 	return traversible_cells

@@ -598,7 +598,7 @@ func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99), allow_claiming_occu
 	batman.release_actor_claims(self)
 	claimed_tile = Vector2.ZERO
 	
-	if allow_claiming_occupied_tiles:
+	if allow_claiming_occupied_tiles: # Generally, should ONLY be used by Strife's CAMstep system
 		if batman.grid_claims.has_cellv(claiming_coord):
 			var existing_tile_claim = batman.grid_claims.get_cellv(claiming_coord)
 			if !utils.actorpass(existing_tile_claim) or existing_tile_claim == self:

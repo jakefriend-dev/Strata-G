@@ -410,7 +410,7 @@ func flush_all_combat_details():
 	curr_turndata.clear()
 	turnqueue.clear()
 	battle_details = {}
-	flush_actionqueue(false)
+	flush_actionqueue()
 	living_actors.clear()
 	slain_actors.clear()
 	ghost_actors.clear()
@@ -1258,9 +1258,8 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 	progress_action_queue()
 	pass
 
-func flush_actionqueue(also_release_claims: bool = true): # Run to wipe any stored-between-turns data
-	if also_release_claims:
-		release_most_claims()
+func flush_actionqueue(): # Run to wipe any stored-between-turns data
+	release_most_claims()
 	
 	acting_actor = null
 	action_queue.clear()
@@ -1348,13 +1347,26 @@ func remove_actor_from_actorgrid(actor):
 			batman.grid_actors.set_cellv(set[1], null)
 	pass
 
-func release_all_claims():
+# SO QUICK DEBRIEF ON THE CLAIMS SYSTEM, AFTER REVIEWING MID JULY...
+	# Claims are ALWAYS* released at the start/end of turns
+	#	*(the ONLY exception is actors flagged to 'keep claims on EOT')
+	# Their only purpose is for GHOSTS - no one not needing ghost mode should manually use them!
+	# The Strife CAMstep system also carefully uses them, but that's automated.
+	#
+	# There is basically no circumstance we want to leave claims/ghosting on between turns; it's meant to always be temporary for ghost actions that should also be planned to end/revert to non-ghost.
+	# And most importantly, it should not be used/touched when ghost mode isn't in play!
+
+func release_all_claims(): # At present, not called anywhere - typically you want release_most_claims()
+	if grid_claims == null: return
+	
 	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
 	for set in dataset:
 		batman.grid_claims.set_cellv(set[1], null)
 	pass
 
 func release_most_claims(): # Allows SOME actors to keep their claims
+	# Auto-called each flush, and by strife's CAMstep execution
+	if grid_claims == null: return
 	
 	var dataset: Array = batman.grid_claims.get_dataset_with_coords()
 	for set in dataset:
@@ -1450,20 +1462,6 @@ func get_all_allied_actor_units(calling_actor: Actor) -> Array:
 	return results
 
 # ---
-
-# Deprecated because we weren't using it!
-#func can_player_input() -> bool:
-##	if inputstate != istates.PLAYER_CONTROL:
-##		return false
-#	if combatstate != C_TURN:
-#		return false
-#	if curr_actor == null:
-#		return false
-#	if curr_actor.faction != factions.PLAYER:
-#		return false
-#
-#	return true
-#	pass
 
 func get_board_size() -> Vector2:
 	if battle_details.has("board_size"):
