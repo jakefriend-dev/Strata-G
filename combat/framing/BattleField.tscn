@@ -37,7 +37,7 @@ width = 2
 [sub_resource type="ShaderMaterial" id=38]
 shader = ExtResource( 17 )
 shader_param/active = true
-shader_param/unfill_height = 5
+shader_param/unfill_height = 9
 shader_param/col_body = Color( 0.847059, 0.776471, 0.835294, 1 )
 shader_param/col_mid = Color( 1, 0.580392, 0.701961, 1 )
 shader_param/col_shadow = Color( 0, 0, 0, 1 )
@@ -296,12 +296,12 @@ __meta__ = {
 }
 
 [node name="MoveWindow" parent="MenuOverlays" instance=ExtResource( 3 )]
-visible = false
 
 [node name="NPCFocusWindow" type="Node2D" parent="MenuOverlays"]
+visible = false
 
 [node name="TurntakerPanel" type="Node2D" parent="MenuOverlays/NPCFocusWindow"]
-position = Vector2( 286, 0 )
+position = Vector2( 299, 0 )
 
 [node name="PanelContainer" type="PanelContainer" parent="MenuOverlays/NPCFocusWindow/TurntakerPanel"]
 margin_left = -5.0
@@ -322,13 +322,14 @@ margin_bottom = 67.0
 size_flags_vertical = 1
 
 [node name="MiscPanel" type="Node2D" parent="MenuOverlays/NPCFocusWindow"]
+visible = false
 
 [node name="PanelContainer" type="PanelContainer" parent="MenuOverlays/NPCFocusWindow/MiscPanel"]
 margin_left = -4.0
 margin_top = -9.0
 margin_right = 281.0
-margin_bottom = 18.0
-rect_min_size = Vector2( 285, 0 )
+margin_bottom = 29.0
+rect_min_size = Vector2( 285, 49 )
 theme = ExtResource( 10 )
 custom_styles/panel = ExtResource( 11 )
 __meta__ = {
@@ -339,57 +340,71 @@ __meta__ = {
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 283.0
-margin_bottom = 26.0
+margin_bottom = 48.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Panel" type="Panel" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer/HB"]
-margin_right = 7.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 7, 0 )
+margin_right = 9.0
+margin_bottom = 46.0
+rect_min_size = Vector2( 9, 0 )
 custom_styles/panel = SubResource( 36 )
 
 [node name="VB" type="VBoxContainer" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer/HB"]
-margin_left = 7.0
-margin_right = 97.0
-margin_bottom = 24.0
+margin_left = 9.0
+margin_right = 99.0
+margin_bottom = 46.0
 
 [node name="Panel" type="Panel" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer/HB/VB"]
 margin_right = 90.0
-margin_bottom = 10.0
-rect_min_size = Vector2( 0, 10 )
+margin_bottom = 12.0
+rect_min_size = Vector2( 0, 12 )
 custom_styles/panel = SubResource( 37 )
 
 [node name="Label" type="Label" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer/HB/VB"]
 material = SubResource( 38 )
-margin_top = 10.0
+margin_top = 12.0
 margin_right = 90.0
-margin_bottom = 24.0
+margin_bottom = 26.0
 custom_fonts/font = ExtResource( 13 )
 text = "Enemy's turn!"
 
 [node name="TurnQueueDisplay" type="Node2D" parent="MenuOverlays"]
-modulate = Color( 1, 1, 1, 0.560784 )
-position = Vector2( 335, 2 )
+position = Vector2( 346, 0 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay"]
-margin_right = 40.0
+[node name="TQHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay"]
+
+[node name="BackPanel" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder"]
+margin_top = -8.0
+margin_right = 237.0
 margin_bottom = 40.0
+theme = ExtResource( 10 )
+custom_styles/panel = ExtResource( 11 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TTPortrait" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+[node name="TQ" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder"]
+modulate = Color( 0.741176, 0.741176, 0.741176, 0.741176 )
+margin_left = 8.0
+margin_top = 2.0
+margin_right = 172.0
+margin_bottom = 41.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TTPortrait" type="Panel" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ"]
 margin_right = 24.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 rect_min_size = Vector2( 24, 39 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 28 )
 
-[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait"]
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait"]
 
-[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder"]
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait/PortraitHolder"]
 margin_left = -4.0
 margin_right = 28.0
 margin_bottom = 39.0
@@ -399,7 +414,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB"]
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait/PortraitHolder/VB"]
 self_modulate = Color( 1, 1, 1, 0.690196 )
 margin_left = 4.0
 margin_right = 28.0
@@ -408,7 +423,7 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 25 )
 
-[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/PortraitArt"]
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait/PortraitHolder/VB/PortraitArt"]
 margin_right = 24.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
@@ -416,7 +431,7 @@ size_flags_vertical = 4
 texture = ExtResource( 18 )
 stretch_mode = 3
 
-[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/PortraitArt/Head48x"]
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait/PortraitHolder/VB/PortraitArt/Head48x"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 margin_left = 1.0
@@ -431,11 +446,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/PortraitArt"]
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait/PortraitHolder/VB/PortraitArt"]
 show_behind_parent = true
 position = Vector2( 1, 1 )
 
-[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/PortraitArt/Shadow"]
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait/PortraitHolder/VB/PortraitArt/Shadow"]
 modulate = Color( 0, 0, 0, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
@@ -446,7 +461,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB"]
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait/PortraitHolder/VB"]
 visible = false
 margin_top = 24.0
 margin_right = 32.0
@@ -456,7 +471,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/NamePlate"]
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait/PortraitHolder/VB/NamePlate"]
 margin_right = 32.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 0, 15 )
@@ -466,17 +481,17 @@ custom_fonts/font = ExtResource( 8 )
 text = "Mage"
 align = 1
 
-[node name="TTPortrait2" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+[node name="TTPortrait2" type="Panel" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ"]
 margin_left = 28.0
 margin_right = 52.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 rect_min_size = Vector2( 24, 39 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 28 )
 
-[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2"]
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2"]
 
-[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder"]
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2/PortraitHolder"]
 margin_left = -4.0
 margin_right = 28.0
 margin_bottom = 39.0
@@ -486,7 +501,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB"]
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2/PortraitHolder/VB"]
 self_modulate = Color( 1, 1, 1, 0.690196 )
 margin_left = 4.0
 margin_right = 28.0
@@ -495,7 +510,7 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 25 )
 
-[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/PortraitArt"]
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2/PortraitHolder/VB/PortraitArt"]
 margin_right = 24.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
@@ -503,7 +518,7 @@ size_flags_vertical = 4
 texture = ExtResource( 18 )
 stretch_mode = 3
 
-[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/PortraitArt/Head48x"]
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2/PortraitHolder/VB/PortraitArt/Head48x"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 margin_left = 1.0
@@ -518,11 +533,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/PortraitArt"]
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2/PortraitHolder/VB/PortraitArt"]
 show_behind_parent = true
 position = Vector2( 1, 1 )
 
-[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/PortraitArt/Shadow"]
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2/PortraitHolder/VB/PortraitArt/Shadow"]
 modulate = Color( 0, 0, 0, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
@@ -533,7 +548,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB"]
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2/PortraitHolder/VB"]
 visible = false
 margin_top = 24.0
 margin_right = 32.0
@@ -543,7 +558,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/NamePlate"]
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait2/PortraitHolder/VB/NamePlate"]
 margin_right = 32.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 0, 15 )
@@ -553,17 +568,17 @@ custom_fonts/font = ExtResource( 8 )
 text = "Mage"
 align = 1
 
-[node name="TTPortrait3" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+[node name="TTPortrait3" type="Panel" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ"]
 margin_left = 56.0
 margin_right = 80.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 rect_min_size = Vector2( 24, 39 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 28 )
 
-[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3"]
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3"]
 
-[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder"]
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3/PortraitHolder"]
 margin_left = -4.0
 margin_right = 28.0
 margin_bottom = 39.0
@@ -573,7 +588,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB"]
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3/PortraitHolder/VB"]
 self_modulate = Color( 1, 1, 1, 0.690196 )
 margin_left = 4.0
 margin_right = 28.0
@@ -582,7 +597,7 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 25 )
 
-[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/PortraitArt"]
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3/PortraitHolder/VB/PortraitArt"]
 margin_right = 24.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
@@ -590,7 +605,7 @@ size_flags_vertical = 4
 texture = ExtResource( 18 )
 stretch_mode = 3
 
-[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/PortraitArt/Head48x"]
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3/PortraitHolder/VB/PortraitArt/Head48x"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 margin_left = 1.0
@@ -605,11 +620,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/PortraitArt"]
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3/PortraitHolder/VB/PortraitArt"]
 show_behind_parent = true
 position = Vector2( 1, 1 )
 
-[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/PortraitArt/Shadow"]
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3/PortraitHolder/VB/PortraitArt/Shadow"]
 modulate = Color( 0, 0, 0, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
@@ -620,7 +635,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB"]
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3/PortraitHolder/VB"]
 visible = false
 margin_top = 24.0
 margin_right = 32.0
@@ -630,7 +645,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/NamePlate"]
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait3/PortraitHolder/VB/NamePlate"]
 margin_right = 32.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 0, 15 )
@@ -640,17 +655,17 @@ custom_fonts/font = ExtResource( 8 )
 text = "Mage"
 align = 1
 
-[node name="TTPortrait4" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+[node name="TTPortrait4" type="Panel" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ"]
 margin_left = 84.0
 margin_right = 108.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 rect_min_size = Vector2( 24, 39 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 28 )
 
-[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4"]
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4"]
 
-[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder"]
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4/PortraitHolder"]
 margin_left = -4.0
 margin_right = 28.0
 margin_bottom = 39.0
@@ -660,7 +675,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB"]
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4/PortraitHolder/VB"]
 self_modulate = Color( 1, 1, 1, 0.690196 )
 margin_left = 4.0
 margin_right = 28.0
@@ -669,7 +684,7 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 25 )
 
-[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/PortraitArt"]
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4/PortraitHolder/VB/PortraitArt"]
 margin_right = 24.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
@@ -677,7 +692,7 @@ size_flags_vertical = 4
 texture = ExtResource( 18 )
 stretch_mode = 3
 
-[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/PortraitArt/Head48x"]
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4/PortraitHolder/VB/PortraitArt/Head48x"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 margin_left = 1.0
@@ -692,11 +707,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/PortraitArt"]
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4/PortraitHolder/VB/PortraitArt"]
 show_behind_parent = true
 position = Vector2( 1, 1 )
 
-[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/PortraitArt/Shadow"]
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4/PortraitHolder/VB/PortraitArt/Shadow"]
 modulate = Color( 0, 0, 0, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
@@ -707,7 +722,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB"]
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4/PortraitHolder/VB"]
 visible = false
 margin_top = 24.0
 margin_right = 32.0
@@ -717,7 +732,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/NamePlate"]
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait4/PortraitHolder/VB/NamePlate"]
 margin_right = 32.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 0, 15 )
@@ -727,17 +742,17 @@ custom_fonts/font = ExtResource( 8 )
 text = "Mage"
 align = 1
 
-[node name="TTPortrait5" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+[node name="TTPortrait5" type="Panel" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ"]
 margin_left = 112.0
 margin_right = 136.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 rect_min_size = Vector2( 24, 39 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 28 )
 
-[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5"]
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5"]
 
-[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder"]
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5/PortraitHolder"]
 margin_left = -4.0
 margin_right = 28.0
 margin_bottom = 39.0
@@ -747,7 +762,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB"]
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5/PortraitHolder/VB"]
 self_modulate = Color( 1, 1, 1, 0.690196 )
 margin_left = 4.0
 margin_right = 28.0
@@ -756,7 +771,7 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 25 )
 
-[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/PortraitArt"]
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5/PortraitHolder/VB/PortraitArt"]
 margin_right = 24.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
@@ -764,7 +779,7 @@ size_flags_vertical = 4
 texture = ExtResource( 18 )
 stretch_mode = 3
 
-[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/PortraitArt/Head48x"]
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5/PortraitHolder/VB/PortraitArt/Head48x"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 margin_left = 1.0
@@ -779,11 +794,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/PortraitArt"]
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5/PortraitHolder/VB/PortraitArt"]
 show_behind_parent = true
 position = Vector2( 1, 1 )
 
-[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/PortraitArt/Shadow"]
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5/PortraitHolder/VB/PortraitArt/Shadow"]
 modulate = Color( 0, 0, 0, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
@@ -794,7 +809,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB"]
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5/PortraitHolder/VB"]
 visible = false
 margin_top = 24.0
 margin_right = 32.0
@@ -804,7 +819,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/NamePlate"]
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait5/PortraitHolder/VB/NamePlate"]
 margin_right = 32.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 0, 15 )
@@ -814,17 +829,17 @@ custom_fonts/font = ExtResource( 8 )
 text = "Mage"
 align = 1
 
-[node name="TTPortrait6" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+[node name="TTPortrait6" type="Panel" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ"]
 margin_left = 140.0
 margin_right = 164.0
-margin_bottom = 40.0
+margin_bottom = 39.0
 rect_min_size = Vector2( 24, 39 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 28 )
 
-[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6"]
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6"]
 
-[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder"]
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6/PortraitHolder"]
 margin_left = -4.0
 margin_right = 28.0
 margin_bottom = 39.0
@@ -834,7 +849,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB"]
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6/PortraitHolder/VB"]
 self_modulate = Color( 1, 1, 1, 0.690196 )
 margin_left = 4.0
 margin_right = 28.0
@@ -843,7 +858,7 @@ rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
 custom_styles/panel = SubResource( 25 )
 
-[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/PortraitArt"]
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6/PortraitHolder/VB/PortraitArt"]
 margin_right = 24.0
 margin_bottom = 24.0
 size_flags_horizontal = 4
@@ -851,7 +866,7 @@ size_flags_vertical = 4
 texture = ExtResource( 18 )
 stretch_mode = 3
 
-[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/PortraitArt/Head48x"]
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6/PortraitHolder/VB/PortraitArt/Head48x"]
 self_modulate = Color( 0, 0, 0, 1 )
 show_behind_parent = true
 margin_left = 1.0
@@ -866,11 +881,11 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/PortraitArt"]
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6/PortraitHolder/VB/PortraitArt"]
 show_behind_parent = true
 position = Vector2( 1, 1 )
 
-[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/PortraitArt/Shadow"]
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6/PortraitHolder/VB/PortraitArt/Shadow"]
 modulate = Color( 0, 0, 0, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
@@ -881,7 +896,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB"]
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6/PortraitHolder/VB"]
 visible = false
 margin_top = 24.0
 margin_right = 32.0
@@ -891,7 +906,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 0
 
-[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/NamePlate"]
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait6/PortraitHolder/VB/NamePlate"]
 margin_right = 32.0
 margin_bottom = 15.0
 rect_min_size = Vector2( 0, 15 )
@@ -900,3 +915,190 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 8 )
 text = "Mage"
 align = 1
+
+[node name="TTPortrait7" type="Panel" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ"]
+margin_left = 168.0
+margin_right = 192.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7"]
+
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7/PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7/PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7/PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7/PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7/PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7/PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7/PortraitHolder/VB"]
+visible = false
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait7/PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Mage"
+align = 1
+
+[node name="TTPortrait8" type="Panel" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ"]
+margin_left = 196.0
+margin_right = 220.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8"]
+
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8/PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8/PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8/PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8/PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8/PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8/PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8/PortraitHolder/VB"]
+visible = false
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder/TQ/TTPortrait8/PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Mage"
+align = 1
+
+[node name="Label" type="Label" parent="MenuOverlays/TurnQueueDisplay/TQHolder"]
+margin_left = 9.0
+margin_top = 26.0
+margin_right = 129.0
+margin_bottom = 40.0
+custom_colors/font_color = Color( 0.788235, 0.764706, 0.619608, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Upcoming turn queue . . ."
+__meta__ = {
+"_edit_use_anchors_": false
+}

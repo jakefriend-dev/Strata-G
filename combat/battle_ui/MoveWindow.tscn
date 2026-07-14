@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
 [ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=2]
@@ -27,6 +27,10 @@ GridContainer/constants/vseparation = 2
 HBoxContainer/constants/separation = 0
 VBoxContainer/constants/separation = 0
 
+[sub_resource type="StyleBoxEmpty" id=25]
+
+[sub_resource type="StyleBoxEmpty" id=26]
+
 [sub_resource type="StyleBoxEmpty" id=8]
 
 [node name="MoveWindow" type="Node2D"]
@@ -50,7 +54,7 @@ __meta__ = {
 [node name="HB" type="HBoxContainer" parent="PanelContainer"]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 336.0
+margin_right = 349.0
 margin_bottom = 102.0
 
 [node name="S_Left" type="Panel" parent="PanelContainer/HB"]
@@ -130,13 +134,13 @@ custom_styles/panel = SubResource( 9 )
 
 [node name="EverythingElse" type="VBoxContainer" parent="PanelContainer/HB"]
 margin_left = 68.0
-margin_right = 334.0
+margin_right = 347.0
 margin_bottom = 100.0
 
 [node name="UpperHB" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse"]
-margin_right = 266.0
+margin_right = 279.0
 margin_bottom = 74.0
-custom_constants/separation = 4
+custom_constants/separation = 0
 
 [node name="MoveVB" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB"]
 margin_right = 214.0
@@ -210,25 +214,39 @@ margin_bottom = 62.0
 my_x_col = 1
 my_y_row = 3
 
-[node name="Turntaker" parent="PanelContainer/HB/EverythingElse/UpperHB" instance=ExtResource( 5 )]
+[node name="SpacerReg" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB"]
+margin_left = 214.0
+margin_right = 218.0
+margin_bottom = 74.0
+rect_min_size = Vector2( 4, 0 )
+custom_styles/panel = SubResource( 25 )
+
+[node name="SpacerExtra" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB"]
 margin_left = 218.0
-margin_right = 266.0
+margin_right = 231.0
+margin_bottom = 74.0
+rect_min_size = Vector2( 13, 0 )
+custom_styles/panel = SubResource( 26 )
+
+[node name="Turntaker" parent="PanelContainer/HB/EverythingElse/UpperHB" instance=ExtResource( 5 )]
+margin_left = 231.0
+margin_right = 279.0
 margin_bottom = 74.0
 
 [node name="LowerHB" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse"]
 margin_top = 74.0
-margin_right = 266.0
+margin_right = 279.0
 margin_bottom = 100.0
 
 [node name="SpacerL" type="Panel" parent="PanelContainer/HB/EverythingElse/LowerHB"]
-margin_right = 16.0
+margin_right = 8.0
 margin_bottom = 26.0
-rect_min_size = Vector2( 16, 0 )
+rect_min_size = Vector2( 8, 0 )
 custom_styles/panel = SubResource( 8 )
 
 [node name="TTPar" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/LowerHB"]
-margin_left = 16.0
-margin_right = 244.0
+margin_left = 8.0
+margin_right = 236.0
 margin_bottom = 26.0
 
 [node name="DescTooltip" type="Label" parent="PanelContainer/HB/EverythingElse/LowerHB/TTPar"]

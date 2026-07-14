@@ -13,7 +13,7 @@ display_desc = "Ends your turn; any unit that attacks or forcibly moves you from
 
 * (unless they are behind you!)"
 option_image = ExtResource( 2 )
-option_desc = ""
+option_desc = "n/a"
 cost = 1
 base_damage = 3
 motion_type = 0
