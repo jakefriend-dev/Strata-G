@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
 [ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://combat/battle_ui/components/Pip_8_Shield_Count.tscn" type="PackedScene" id=5]
 [ext_resource path="res://combat/battle_ui/components/Pip_4_Health.tscn" type="PackedScene" id=6]
 [ext_resource path="res://combat/battle_ui/components/PipStatus.tscn" type="PackedScene" id=7]
+[ext_resource path="res://combat/battle_ui/components/PipPanel.gd" type="Script" id=8]
+[ext_resource path="res://art/bui/pips/4x shield pip.png" type="Texture" id=9]
 [ext_resource path="res://art/_placeholder/mage tuntaker head x24.png" type="Texture" id=11]
 [ext_resource path="res://combat/battle_ui/components/ActionPointBar.tscn" type="PackedScene" id=13]
 [ext_resource path="res://combat/battle_ui/MovesetOption.tscn" type="PackedScene" id=14]
@@ -44,6 +46,12 @@ margin_top = 2.0
 margin_bottom = 2.0
 modulate_color = Color( 0.545098, 0.670588, 0.74902, 1 )
 
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=26]
+
+[sub_resource type="StyleBoxEmpty" id=27]
+
 [sub_resource type="StyleBoxEmpty" id=8]
 
 [node name="MoveWindow" type="Node2D"]
@@ -68,18 +76,18 @@ __meta__ = {
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 336.0
-margin_bottom = 119.0
+margin_bottom = 102.0
 
 [node name="S_Left" type="Panel" parent="PanelContainer/HB"]
 margin_right = 10.0
-margin_bottom = 117.0
+margin_bottom = 100.0
 rect_min_size = Vector2( 10, 0 )
 custom_styles/panel = SubResource( 9 )
 
 [node name="AimAndAP" type="VBoxContainer" parent="PanelContainer/HB"]
 margin_left = 10.0
 margin_right = 58.0
-margin_bottom = 117.0
+margin_bottom = 100.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -141,23 +149,23 @@ margin_bottom = 96.0
 [node name="S_Mid" type="Panel" parent="PanelContainer/HB"]
 margin_left = 58.0
 margin_right = 68.0
-margin_bottom = 117.0
+margin_bottom = 100.0
 rect_min_size = Vector2( 10, 0 )
 custom_styles/panel = SubResource( 9 )
 
 [node name="EverythingElse" type="VBoxContainer" parent="PanelContainer/HB"]
 margin_left = 68.0
 margin_right = 334.0
-margin_bottom = 117.0
+margin_bottom = 100.0
 
 [node name="UpperHB" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse"]
 margin_right = 266.0
-margin_bottom = 91.0
+margin_bottom = 74.0
 custom_constants/separation = 4
 
 [node name="MoveVB" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB"]
 margin_right = 214.0
-margin_bottom = 91.0
+margin_bottom = 74.0
 
 [node name="S_Top" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB"]
 margin_right = 214.0
@@ -230,7 +238,8 @@ my_y_row = 3
 [node name="Turntaker" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB"]
 margin_left = 218.0
 margin_right = 266.0
-margin_bottom = 91.0
+margin_bottom = 74.0
+rect_min_size = Vector2( 48, 0 )
 
 [node name="S_Top2" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker"]
 margin_right = 48.0
@@ -289,7 +298,7 @@ __meta__ = {
 [node name="BUI" type="MarginContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker"]
 margin_top = 32.0
 margin_right = 48.0
-margin_bottom = 62.0
+margin_bottom = 65.0
 size_flags_vertical = 4
 theme = ExtResource( 1 )
 __meta__ = {
@@ -297,20 +306,20 @@ __meta__ = {
 }
 
 [node name="VB" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI"]
-margin_left = 3.0
-margin_right = 44.0
-margin_bottom = 30.0
+margin_left = 2.0
+margin_right = 46.0
+margin_bottom = 33.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-custom_constants/separation = 0
+custom_constants/separation = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="NamePlate" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB"]
-margin_left = 4.0
-margin_right = 36.0
-margin_bottom = 13.0
+margin_left = 6.0
+margin_right = 38.0
+margin_bottom = 14.0
 rect_min_size = Vector2( 32, 0 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -318,64 +327,183 @@ custom_constants/separation = 0
 
 [node name="Name" type="Label" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/NamePlate"]
 margin_right = 32.0
-margin_bottom = 13.0
+margin_bottom = 14.0
+rect_min_size = Vector2( 0, 14 )
 size_flags_horizontal = 3
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 15 )
 text = "Mage"
 align = 1
 
-[node name="HealthBar" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB"]
-margin_top = 13.0
+[node name="MidPlate" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB"]
+margin_top = 15.0
+margin_right = 44.0
+margin_bottom = 19.0
+size_flags_horizontal = 4
+
+[node name="HealthBar" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate"]
 margin_right = 31.0
-margin_bottom = 17.0
+margin_bottom = 4.0
 size_flags_horizontal = 0
 custom_constants/separation = -1
 
-[node name="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 
-[node name="Panel2" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel2" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 3.0
 margin_right = 7.0
 
-[node name="Panel3" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel3" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 6.0
 margin_right = 10.0
 
-[node name="Panel4" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel4" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 9.0
 margin_right = 13.0
 
-[node name="Panel5" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel5" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 12.0
 margin_right = 16.0
 
-[node name="Panel6" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel6" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 15.0
 margin_right = 19.0
 
-[node name="Panel7" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel7" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 18.0
 margin_right = 22.0
 
-[node name="Panel8" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel8" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 21.0
 margin_right = 25.0
 
-[node name="Panel9" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Sprite" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar/Panel8" index="0"]
+frame = 2
+
+[node name="Panel9" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 24.0
 margin_right = 28.0
 
-[node name="Panel10" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar" instance=ExtResource( 6 )]
+[node name="Sprite" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar/Panel9" index="0"]
+frame = 0
+
+[node name="Panel10" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 27.0
 margin_right = 31.0
 
-[node name="Node2D" type="Node2D" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar"]
+[node name="Sprite" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar/Panel10" index="0"]
+frame = 0
+
+[node name="Node2D" type="Node2D" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar"]
 position = Vector2( 32, -5 )
 
-[node name="HP_Count" type="Label" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/HealthBar/Node2D"]
-margin_right = 14.0
+[node name="ShieldBar" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate"]
+margin_left = 31.0
+margin_right = 44.0
+margin_bottom = 4.0
+size_flags_horizontal = 0
+custom_constants/separation = -1
+
+[node name="Panel" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/ShieldBar"]
+margin_right = 4.0
+margin_bottom = 4.0
+rect_min_size = Vector2( 4, 4 )
+custom_styles/panel = SubResource( 3 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/ShieldBar/Panel"]
+texture = ExtResource( 9 )
+centered = false
+hframes = 5
+frame = 4
+
+[node name="Panel2" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/ShieldBar"]
+margin_left = 3.0
+margin_right = 7.0
+margin_bottom = 4.0
+rect_min_size = Vector2( 4, 4 )
+custom_styles/panel = SubResource( 3 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/ShieldBar/Panel2"]
+texture = ExtResource( 9 )
+centered = false
+hframes = 5
+frame = 4
+
+[node name="Panel3" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/ShieldBar"]
+margin_left = 6.0
+margin_right = 10.0
+margin_bottom = 4.0
+rect_min_size = Vector2( 4, 4 )
+custom_styles/panel = SubResource( 3 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/ShieldBar/Panel3"]
+texture = ExtResource( 9 )
+centered = false
+hframes = 5
+frame = 4
+
+[node name="Panel4" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/ShieldBar"]
+margin_left = 9.0
+margin_right = 13.0
+margin_bottom = 4.0
+rect_min_size = Vector2( 4, 4 )
+custom_styles/panel = SubResource( 3 )
+script = ExtResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Sprite" type="Sprite" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/ShieldBar/Panel4"]
+texture = ExtResource( 9 )
+centered = false
+hframes = 5
+frame = 3
+
+[node name="BotPlate" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB"]
+margin_left = 1.0
+margin_top = 20.0
+margin_right = 43.0
+margin_bottom = 33.0
+rect_min_size = Vector2( 0, 13 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 3
+
+[node name="HealthNum" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/BotPlate"]
+margin_right = 15.0
 margin_bottom = 13.0
+
+[node name="PanelPip" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/BotPlate/HealthNum" instance=ExtResource( 6 )]
+margin_top = 4.0
+margin_bottom = 8.0
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/BotPlate/HealthNum"]
+margin_left = 4.0
+margin_right = 15.0
+margin_bottom = 13.0
+custom_constants/separation = -1
+
+[node name="NegSpacer" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/BotPlate/HealthNum/VBoxContainer"]
+margin_right = 11.0
+custom_styles/panel = SubResource( 26 )
+
+[node name="HP_Count" type="Label" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/BotPlate/HealthNum/VBoxContainer"]
+margin_top = -1.0
+margin_right = 11.0
+margin_bottom = 12.0
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 0.580392, 0.933333, 0.831373, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -385,25 +513,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BotPlate" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB"]
-margin_top = 17.0
-margin_right = 41.0
-margin_bottom = 30.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_constants/separation = 3
-
 [node name="Shield" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/BotPlate" instance=ExtResource( 5 )]
+visible = false
 
 [node name="Status" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/BotPlate" instance=ExtResource( 7 )]
-margin_left = 17.0
-margin_right = 41.0
+margin_left = 18.0
+margin_right = 42.0
 margin_bottom = 13.0
 
 [node name="DivLineH2" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker"]
-margin_top = 62.0
+visible = false
+margin_top = 65.0
 margin_right = 48.0
-margin_bottom = 63.0
+margin_bottom = 66.0
 rect_min_size = Vector2( 48, 1 )
 custom_styles/panel = SubResource( 23 )
 
@@ -418,15 +540,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ActionPointBar" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker" instance=ExtResource( 13 )]
-margin_top = 63.0
+[node name="SpacerUnderDiv" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker"]
+margin_top = 65.0
 margin_right = 48.0
-margin_bottom = 91.0
+margin_bottom = 67.0
+rect_min_size = Vector2( 0, 2 )
+custom_styles/panel = SubResource( 27 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionPointBar" parent="PanelContainer/HB/EverythingElse/UpperHB/Turntaker" instance=ExtResource( 13 )]
+visible = false
+margin_top = 68.0
+margin_right = 48.0
+margin_bottom = 96.0
 
 [node name="LowerHB" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse"]
-margin_top = 91.0
+margin_top = 74.0
 margin_right = 266.0
-margin_bottom = 117.0
+margin_bottom = 100.0
 
 [node name="SpacerL" type="Panel" parent="PanelContainer/HB/EverythingElse/LowerHB"]
 margin_right = 16.0
@@ -436,23 +569,23 @@ custom_styles/panel = SubResource( 8 )
 
 [node name="TTPar" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/LowerHB"]
 margin_left = 16.0
-margin_right = 201.0
+margin_right = 244.0
 margin_bottom = 26.0
 
 [node name="DescTooltip" type="Label" parent="PanelContainer/HB/EverythingElse/LowerHB/TTPar"]
-margin_right = 185.0
+margin_right = 228.0
 margin_bottom = 13.0
 custom_colors/font_color = Color( 0.8, 0.886275, 0.882353, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 15 )
-text = "Throw weak attack that erodes shield"
+text = "Throw weak attack that erodes shield wawawa"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="WarnTooltip" type="Label" parent="PanelContainer/HB/EverythingElse/LowerHB/TTPar"]
 margin_top = 13.0
-margin_right = 185.0
+margin_right = 228.0
 margin_bottom = 26.0
 custom_colors/font_color = Color( 1, 0.964706, 0.682353, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
@@ -461,3 +594,7 @@ text = "2 per-battle uses remain."
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[editable path="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar/Panel8"]
+[editable path="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar/Panel9"]
+[editable path="PanelContainer/HB/EverythingElse/UpperHB/Turntaker/BUI/VB/MidPlate/HealthBar/Panel10"]
