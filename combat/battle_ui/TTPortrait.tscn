@@ -1,0 +1,107 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://text/fonts/built/Font Menu Small 1x.tres" type="DynamicFont" id=1]
+[ext_resource path="res://art/general/9patch standard shapes1.png" type="Texture" id=2]
+[ext_resource path="res://art/_placeholder/mage tuntaker head x24.png" type="Texture" id=3]
+
+[sub_resource type="StyleBoxEmpty" id=28]
+
+[sub_resource type="StyleBoxTexture" id=25]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource( 2 )
+region_rect = Rect2( 0, 0, 12, 12 )
+margin_left = 2.0
+margin_right = 2.0
+margin_top = 2.0
+margin_bottom = 2.0
+modulate_color = Color( 0.545098, 0.670588, 0.74902, 1 )
+
+[node name="TTPortrait" type="Panel"]
+margin_left = 12.0
+margin_top = 8.0
+margin_right = 36.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="."]
+
+[node name="VB" type="VBoxContainer" parent="PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 3 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 3 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="PortraitHolder/VB"]
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 1 )
+text = "Mage"
+align = 1

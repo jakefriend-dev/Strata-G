@@ -33,14 +33,14 @@ VBoxContainer/constants/separation = 0
 script = ExtResource( 3 )
 path_movegrid = NodePath("PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid")
 path_tooltip_par = NodePath("PanelContainer/HB/EverythingElse/LowerHB/TTPar")
-path_userpanel = NodePath("PanelContainer/HB/EverythingElse/UpperHB/Turntaker/UserPanel")
+path_turntaker = NodePath("PanelContainer/HB/EverythingElse/UpperHB/Turntaker")
 path_apb = NodePath("PanelContainer/HB/AimAndAP/ActionPointBar")
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-margin_left = -4.0
-margin_top = -9.0
-margin_right = 290.0
-margin_bottom = 81.0
+margin_left = -5.0
+margin_top = -8.0
+margin_right = 333.0
+margin_bottom = 95.0
 theme = ExtResource( 1 )
 custom_styles/panel = ExtResource( 2 )
 __meta__ = {
@@ -51,18 +51,18 @@ __meta__ = {
 margin_left = 2.0
 margin_top = 2.0
 margin_right = 336.0
-margin_bottom = 124.0
+margin_bottom = 102.0
 
 [node name="S_Left" type="Panel" parent="PanelContainer/HB"]
 margin_right = 10.0
-margin_bottom = 122.0
+margin_bottom = 100.0
 rect_min_size = Vector2( 10, 0 )
 custom_styles/panel = SubResource( 9 )
 
 [node name="AimAndAP" type="VBoxContainer" parent="PanelContainer/HB"]
 margin_left = 10.0
 margin_right = 58.0
-margin_bottom = 122.0
+margin_bottom = 100.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -124,23 +124,23 @@ margin_bottom = 96.0
 [node name="S_Mid" type="Panel" parent="PanelContainer/HB"]
 margin_left = 58.0
 margin_right = 68.0
-margin_bottom = 122.0
+margin_bottom = 100.0
 rect_min_size = Vector2( 10, 0 )
 custom_styles/panel = SubResource( 9 )
 
 [node name="EverythingElse" type="VBoxContainer" parent="PanelContainer/HB"]
 margin_left = 68.0
 margin_right = 334.0
-margin_bottom = 122.0
+margin_bottom = 100.0
 
 [node name="UpperHB" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse"]
 margin_right = 266.0
-margin_bottom = 96.0
+margin_bottom = 74.0
 custom_constants/separation = 4
 
 [node name="MoveVB" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB"]
 margin_right = 214.0
-margin_bottom = 96.0
+margin_bottom = 74.0
 
 [node name="S_Top" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB"]
 margin_right = 214.0
@@ -213,12 +213,12 @@ my_y_row = 3
 [node name="Turntaker" parent="PanelContainer/HB/EverythingElse/UpperHB" instance=ExtResource( 5 )]
 margin_left = 218.0
 margin_right = 266.0
-margin_bottom = 96.0
+margin_bottom = 74.0
 
 [node name="LowerHB" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse"]
-margin_top = 96.0
+margin_top = 74.0
 margin_right = 266.0
-margin_bottom = 122.0
+margin_bottom = 100.0
 
 [node name="SpacerL" type="Panel" parent="PanelContainer/HB/EverythingElse/LowerHB"]
 margin_right = 16.0

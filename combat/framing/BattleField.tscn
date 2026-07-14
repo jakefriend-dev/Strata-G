@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=28 format=2]
 
 [ext_resource path="res://art/_placeholder/test play area bg.png" type="Texture" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
@@ -14,8 +14,10 @@
 [ext_resource path="res://art/_placeholder/mc/castle wall unusable.png" type="Texture" id=12]
 [ext_resource path="res://text/fonts/raw/assigned/Font - StandardBitmap.fnt" type="BitmapFont" id=13]
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
+[ext_resource path="res://art/general/9patch standard shapes1.png" type="Texture" id=15]
 [ext_resource path="res://combat/battle_ui/TurntakerCurrentWindow.tscn" type="PackedScene" id=16]
 [ext_resource path="res://text/TextShader1.gdshader" type="Shader" id=17]
+[ext_resource path="res://art/_placeholder/mage tuntaker head x24.png" type="Texture" id=18]
 
 [sub_resource type="StyleBoxEmpty" id=32]
 
@@ -39,6 +41,21 @@ shader_param/unfill_height = 5
 shader_param/col_body = Color( 0.847059, 0.776471, 0.835294, 1 )
 shader_param/col_mid = Color( 1, 0.580392, 0.701961, 1 )
 shader_param/col_shadow = Color( 0, 0, 0, 1 )
+
+[sub_resource type="StyleBoxEmpty" id=28]
+
+[sub_resource type="StyleBoxTexture" id=25]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+texture = ExtResource( 15 )
+region_rect = Rect2( 0, 0, 12, 12 )
+margin_left = 2.0
+margin_right = 2.0
+margin_top = 2.0
+margin_bottom = 2.0
+modulate_color = Color( 0.545098, 0.670588, 0.74902, 1 )
 
 [node name="BattleField" type="Node2D"]
 script = ExtResource( 2 )
@@ -279,18 +296,18 @@ __meta__ = {
 }
 
 [node name="MoveWindow" parent="MenuOverlays" instance=ExtResource( 3 )]
+visible = false
 
 [node name="NPCFocusWindow" type="Node2D" parent="MenuOverlays"]
-visible = false
 
 [node name="TurntakerPanel" type="Node2D" parent="MenuOverlays/NPCFocusWindow"]
 position = Vector2( 286, 0 )
 
 [node name="PanelContainer" type="PanelContainer" parent="MenuOverlays/NPCFocusWindow/TurntakerPanel"]
-margin_left = -4.0
-margin_top = -9.0
-margin_right = 48.0
-margin_bottom = 59.0
+margin_left = -5.0
+margin_top = -8.0
+margin_right = 47.0
+margin_bottom = 60.0
 theme = ExtResource( 10 )
 custom_styles/panel = ExtResource( 11 )
 __meta__ = {
@@ -309,9 +326,9 @@ size_flags_vertical = 1
 [node name="PanelContainer" type="PanelContainer" parent="MenuOverlays/NPCFocusWindow/MiscPanel"]
 margin_left = -4.0
 margin_top = -9.0
-margin_right = 282.0
+margin_right = 281.0
 margin_bottom = 18.0
-rect_min_size = Vector2( 286, 0 )
+rect_min_size = Vector2( 285, 0 )
 theme = ExtResource( 10 )
 custom_styles/panel = ExtResource( 11 )
 __meta__ = {
@@ -321,7 +338,7 @@ __meta__ = {
 [node name="HB" type="HBoxContainer" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer"]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 284.0
+margin_right = 283.0
 margin_bottom = 26.0
 __meta__ = {
 "_edit_use_anchors_": false
@@ -351,3 +368,535 @@ margin_right = 90.0
 margin_bottom = 24.0
 custom_fonts/font = ExtResource( 13 )
 text = "Enemy's turn!"
+
+[node name="TurnQueueDisplay" type="Node2D" parent="MenuOverlays"]
+modulate = Color( 1, 1, 1, 0.560784 )
+position = Vector2( 335, 2 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay"]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TTPortrait" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+margin_right = 24.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait"]
+
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB"]
+visible = false
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait/PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Mage"
+align = 1
+
+[node name="TTPortrait2" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+margin_left = 28.0
+margin_right = 52.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2"]
+
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB"]
+visible = false
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait2/PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Mage"
+align = 1
+
+[node name="TTPortrait3" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+margin_left = 56.0
+margin_right = 80.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3"]
+
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB"]
+visible = false
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait3/PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Mage"
+align = 1
+
+[node name="TTPortrait4" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+margin_left = 84.0
+margin_right = 108.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4"]
+
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB"]
+visible = false
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait4/PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Mage"
+align = 1
+
+[node name="TTPortrait5" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+margin_left = 112.0
+margin_right = 136.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5"]
+
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB"]
+visible = false
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait5/PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Mage"
+align = 1
+
+[node name="TTPortrait6" type="Panel" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer"]
+margin_left = 140.0
+margin_right = 164.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 24, 39 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 28 )
+
+[node name="PortraitHolder" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6"]
+
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder"]
+margin_left = -4.0
+margin_right = 28.0
+margin_bottom = 39.0
+size_flags_horizontal = 4
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="PortraitArt" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB"]
+self_modulate = Color( 1, 1, 1, 0.690196 )
+margin_left = 4.0
+margin_right = 28.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+
+[node name="Head48x" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/PortraitArt"]
+margin_right = 24.0
+margin_bottom = 24.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+
+[node name="HeadShadow" type="TextureRect" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/PortraitArt/Head48x"]
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 25.0
+margin_bottom = 25.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource( 18 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Node2D" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/PortraitArt"]
+show_behind_parent = true
+position = Vector2( 1, 1 )
+
+[node name="PanelShadow" type="PanelContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/PortraitArt/Shadow"]
+modulate = Color( 0, 0, 0, 1 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NamePlate" type="HBoxContainer" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB"]
+visible = false
+margin_top = 24.0
+margin_right = 32.0
+margin_bottom = 39.0
+rect_min_size = Vector2( 32, 0 )
+size_flags_horizontal = 4
+size_flags_vertical = 4
+custom_constants/separation = 0
+
+[node name="Name" type="Label" parent="MenuOverlays/TurnQueueDisplay/HBoxContainer/TTPortrait6/PortraitHolder/VB/NamePlate"]
+margin_right = 32.0
+margin_bottom = 15.0
+rect_min_size = Vector2( 0, 15 )
+size_flags_horizontal = 3
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Mage"
+align = 1

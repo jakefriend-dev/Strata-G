@@ -1,30 +1,16 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://combat/battle_ui/components/PipStatus.tscn" type="PackedScene" id=1]
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=2]
 [ext_resource path="res://combat/battle_ui/components/PipPanel.gd" type="Script" id=3]
+[ext_resource path="res://combat/battle_ui/TTPortrait.tscn" type="PackedScene" id=4]
 [ext_resource path="res://combat/battle_ui/components/Pip_4_Health.tscn" type="PackedScene" id=6]
 [ext_resource path="res://combat/battle_ui/components/Pip_8_Shield_Count.tscn" type="PackedScene" id=7]
 [ext_resource path="res://combat/battle_ui/components/ActionPointBar.tscn" type="PackedScene" id=8]
 [ext_resource path="res://text/fonts/built/Font Menu Small 1x.tres" type="DynamicFont" id=9]
-[ext_resource path="res://art/general/9patch standard shapes1.png" type="Texture" id=10]
-[ext_resource path="res://art/_placeholder/mage tuntaker head x24.png" type="Texture" id=11]
 [ext_resource path="res://art/bui/pips/4x shield pip.png" type="Texture" id=12]
 
 [sub_resource type="StyleBoxEmpty" id=10]
-
-[sub_resource type="StyleBoxTexture" id=25]
-content_margin_left = 0.0
-content_margin_right = 0.0
-content_margin_top = 0.0
-content_margin_bottom = 0.0
-texture = ExtResource( 10 )
-region_rect = Rect2( 0, 0, 12, 12 )
-margin_left = 2.0
-margin_right = 2.0
-margin_top = 2.0
-margin_bottom = 2.0
-modulate_color = Color( 0.545098, 0.670588, 0.74902, 1 )
 
 [sub_resource type="StyleBoxEmpty" id=3]
 
@@ -54,56 +40,10 @@ margin_bottom = 8.0
 rect_min_size = Vector2( 0, 8 )
 custom_styles/panel = SubResource( 10 )
 
-[node name="UserPanel" type="PanelContainer" parent="."]
-self_modulate = Color( 1, 1, 1, 0.690196 )
-margin_left = 12.0
-margin_top = 8.0
-margin_right = 36.0
-margin_bottom = 32.0
-rect_min_size = Vector2( 24, 24 )
-size_flags_horizontal = 4
-custom_styles/panel = SubResource( 25 )
+[node name="TTPortrait" parent="." instance=ExtResource( 4 )]
 
-[node name="Head48x" type="TextureRect" parent="UserPanel"]
-margin_right = 24.0
-margin_bottom = 24.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 11 )
-stretch_mode = 3
-
-[node name="HeadShadow" type="TextureRect" parent="UserPanel/Head48x"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 25.0
-margin_bottom = 25.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-texture = ExtResource( 11 )
-stretch_mode = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Shadow" type="Node2D" parent="UserPanel"]
-show_behind_parent = true
-position = Vector2( 1, 1 )
-
-[node name="PanelShadow" type="PanelContainer" parent="UserPanel/Shadow"]
-modulate = Color( 0, 0, 0, 1 )
-margin_right = 24.0
-margin_bottom = 24.0
-rect_min_size = Vector2( 24, 24 )
-size_flags_horizontal = 4
-custom_styles/panel = SubResource( 25 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="BUI" type="MarginContainer" parent="."]
-margin_top = 32.0
+[node name="TTUI" type="MarginContainer" parent="."]
+margin_top = 47.0
 margin_right = 48.0
 margin_bottom = 65.0
 size_flags_vertical = 4
@@ -112,10 +52,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VB" type="VBoxContainer" parent="BUI"]
+[node name="VB" type="VBoxContainer" parent="TTUI"]
 margin_left = 2.0
 margin_right = 46.0
-margin_bottom = 33.0
+margin_bottom = 18.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 1
@@ -123,93 +63,73 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="NamePlate" type="HBoxContainer" parent="BUI/VB"]
-margin_left = 6.0
-margin_right = 38.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 32, 0 )
-size_flags_horizontal = 4
-size_flags_vertical = 4
-custom_constants/separation = 0
-
-[node name="Name" type="Label" parent="BUI/VB/NamePlate"]
-margin_right = 32.0
-margin_bottom = 14.0
-rect_min_size = Vector2( 0, 14 )
-size_flags_horizontal = 3
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_fonts/font = ExtResource( 9 )
-text = "Mage"
-align = 1
-
-[node name="MidPlate" type="HBoxContainer" parent="BUI/VB"]
-margin_top = 15.0
+[node name="MidPlate" type="HBoxContainer" parent="TTUI/VB"]
 margin_right = 44.0
-margin_bottom = 19.0
+margin_bottom = 4.0
 size_flags_horizontal = 4
 
-[node name="HealthBar" type="HBoxContainer" parent="BUI/VB/MidPlate"]
+[node name="HealthBar" type="HBoxContainer" parent="TTUI/VB/MidPlate"]
 margin_right = 31.0
 margin_bottom = 4.0
 size_flags_horizontal = 0
 custom_constants/separation = -1
 
-[node name="Panel" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel2" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel2" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 3.0
 margin_right = 7.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel3" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel3" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 6.0
 margin_right = 10.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel4" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel4" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 9.0
 margin_right = 13.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel5" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel5" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 12.0
 margin_right = 16.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel6" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel6" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 15.0
 margin_right = 19.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel7" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel7" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 18.0
 margin_right = 22.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel8" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel8" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 21.0
 margin_right = 25.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel9" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel9" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 24.0
 margin_right = 28.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="Panel10" parent="BUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
+[node name="Panel10" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 27.0
 margin_right = 31.0
 custom_styles/panel = SubResource( 3 )
 
-[node name="ShieldBar" type="HBoxContainer" parent="BUI/VB/MidPlate"]
+[node name="ShieldBar" type="HBoxContainer" parent="TTUI/VB/MidPlate"]
 margin_left = 31.0
 margin_right = 44.0
 margin_bottom = 4.0
 size_flags_horizontal = 0
 custom_constants/separation = -1
 
-[node name="Panel1" type="Panel" parent="BUI/VB/MidPlate/ShieldBar"]
+[node name="Panel1" type="Panel" parent="TTUI/VB/MidPlate/ShieldBar"]
 margin_right = 4.0
 margin_bottom = 4.0
 rect_min_size = Vector2( 4, 4 )
@@ -219,13 +139,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="BUI/VB/MidPlate/ShieldBar/Panel1"]
+[node name="Sprite" type="Sprite" parent="TTUI/VB/MidPlate/ShieldBar/Panel1"]
 texture = ExtResource( 12 )
 centered = false
 hframes = 5
 frame = 4
 
-[node name="Panel2" type="Panel" parent="BUI/VB/MidPlate/ShieldBar"]
+[node name="Panel2" type="Panel" parent="TTUI/VB/MidPlate/ShieldBar"]
 margin_left = 3.0
 margin_right = 7.0
 margin_bottom = 4.0
@@ -236,13 +156,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="BUI/VB/MidPlate/ShieldBar/Panel2"]
+[node name="Sprite" type="Sprite" parent="TTUI/VB/MidPlate/ShieldBar/Panel2"]
 texture = ExtResource( 12 )
 centered = false
 hframes = 5
 frame = 4
 
-[node name="Panel3" type="Panel" parent="BUI/VB/MidPlate/ShieldBar"]
+[node name="Panel3" type="Panel" parent="TTUI/VB/MidPlate/ShieldBar"]
 margin_left = 6.0
 margin_right = 10.0
 margin_bottom = 4.0
@@ -253,13 +173,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="BUI/VB/MidPlate/ShieldBar/Panel3"]
+[node name="Sprite" type="Sprite" parent="TTUI/VB/MidPlate/ShieldBar/Panel3"]
 texture = ExtResource( 12 )
 centered = false
 hframes = 5
 frame = 4
 
-[node name="Panel4" type="Panel" parent="BUI/VB/MidPlate/ShieldBar"]
+[node name="Panel4" type="Panel" parent="TTUI/VB/MidPlate/ShieldBar"]
 margin_left = 9.0
 margin_right = 13.0
 margin_bottom = 4.0
@@ -270,43 +190,43 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Sprite" type="Sprite" parent="BUI/VB/MidPlate/ShieldBar/Panel4"]
+[node name="Sprite" type="Sprite" parent="TTUI/VB/MidPlate/ShieldBar/Panel4"]
 texture = ExtResource( 12 )
 centered = false
 hframes = 5
 frame = 3
 
-[node name="BotPlate" type="HBoxContainer" parent="BUI/VB"]
+[node name="BotPlate" type="HBoxContainer" parent="TTUI/VB"]
 margin_left = 1.0
-margin_top = 20.0
+margin_top = 5.0
 margin_right = 43.0
-margin_bottom = 33.0
+margin_bottom = 18.0
 rect_min_size = Vector2( 0, 13 )
 size_flags_horizontal = 4
 size_flags_vertical = 4
 custom_constants/separation = 3
 
-[node name="HealthNum" type="HBoxContainer" parent="BUI/VB/BotPlate"]
+[node name="HealthNum" type="HBoxContainer" parent="TTUI/VB/BotPlate"]
 margin_right = 15.0
 margin_bottom = 13.0
 
-[node name="PanelPip" parent="BUI/VB/BotPlate/HealthNum" instance=ExtResource( 6 )]
+[node name="PanelPip" parent="TTUI/VB/BotPlate/HealthNum" instance=ExtResource( 6 )]
 margin_top = 4.0
 margin_bottom = 8.0
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 3 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="BUI/VB/BotPlate/HealthNum"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TTUI/VB/BotPlate/HealthNum"]
 margin_left = 4.0
 margin_right = 15.0
 margin_bottom = 13.0
 custom_constants/separation = -1
 
-[node name="NegSpacer" type="Panel" parent="BUI/VB/BotPlate/HealthNum/VBoxContainer"]
+[node name="NegSpacer" type="Panel" parent="TTUI/VB/BotPlate/HealthNum/VBoxContainer"]
 margin_right = 11.0
 custom_styles/panel = SubResource( 26 )
 
-[node name="HP_Count" type="Label" parent="BUI/VB/BotPlate/HealthNum/VBoxContainer"]
+[node name="HP_Count" type="Label" parent="TTUI/VB/BotPlate/HealthNum/VBoxContainer"]
 margin_top = -1.0
 margin_right = 11.0
 margin_bottom = 12.0
@@ -319,28 +239,28 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Shield" parent="BUI/VB/BotPlate" instance=ExtResource( 7 )]
+[node name="Shield" parent="TTUI/VB/BotPlate" instance=ExtResource( 7 )]
 visible = false
 
-[node name="Status" parent="BUI/VB/BotPlate" instance=ExtResource( 1 )]
+[node name="Status" parent="TTUI/VB/BotPlate" instance=ExtResource( 1 )]
 margin_left = 18.0
 margin_right = 42.0
 margin_bottom = 13.0
 
-[node name="NPC_AP_Section" type="VBoxContainer" parent="."]
+[node name="NPC_AP_Section_DNU" type="VBoxContainer" parent="."]
 visible = false
 margin_top = 65.0
 margin_right = 48.0
 margin_bottom = 96.0
 custom_constants/separation = 0
 
-[node name="DivLineH2" type="Panel" parent="NPC_AP_Section"]
+[node name="DivLineH2" type="Panel" parent="NPC_AP_Section_DNU"]
 margin_right = 48.0
 margin_bottom = 1.0
 rect_min_size = Vector2( 48, 1 )
 custom_styles/panel = SubResource( 23 )
 
-[node name="Shadow" type="Panel" parent="NPC_AP_Section/DivLineH2"]
+[node name="Shadow" type="Panel" parent="NPC_AP_Section_DNU/DivLineH2"]
 margin_left = 1.0
 margin_top = 1.0
 margin_right = 45.0
@@ -351,7 +271,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SpacerUnderDiv" type="Panel" parent="NPC_AP_Section"]
+[node name="SpacerUnderDiv" type="Panel" parent="NPC_AP_Section_DNU"]
 margin_top = 1.0
 margin_right = 48.0
 margin_bottom = 3.0
@@ -361,7 +281,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ActionPointBar" parent="NPC_AP_Section" instance=ExtResource( 8 )]
+[node name="ActionPointBar" parent="NPC_AP_Section_DNU" instance=ExtResource( 8 )]
 margin_top = 3.0
 margin_right = 48.0
 margin_bottom = 31.0

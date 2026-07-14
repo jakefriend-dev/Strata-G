@@ -6,8 +6,8 @@ var movegrid: GridContainer
 export var path_tooltip_par: NodePath
 var tooltip_par: VBoxContainer
 
-export var path_userpanel: NodePath
-var userpanel: PanelContainer
+export var path_turntaker: NodePath
+var turntaker: VBoxContainer
 
 export var path_apb: NodePath
 var apb: VBoxContainer
@@ -21,7 +21,7 @@ var warncols: Array = [Color("9cd8fc"), Color("ff94b3")]
 func _ready():
 	movegrid = get_node(path_movegrid)
 	tooltip_par = get_node(path_tooltip_par)
-	userpanel = get_node(path_userpanel)
+	turntaker = get_node(path_turntaker)
 	apb = get_node(path_apb)
 	
 	for moveopt in movegrid.get_children():
