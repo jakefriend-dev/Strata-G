@@ -85,6 +85,8 @@ centered = false
 
 [node name="Misc" type="YSort" parent="FieldObjects"]
 
+[node name="FactionLines" type="YSort" parent="FieldObjects/Misc"]
+
 [node name="Threats" type="YSort" parent="FieldObjects"]
 
 [node name="FieldFore" type="Node2D" parent="."]

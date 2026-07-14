@@ -4,6 +4,7 @@ extends Node
 
 # Battlefield
 var res_battlecell = preload("res://combat/framing/BattleCell.tscn")
+var res_factionline = preload("res://combat/framing/FactionLineOwner.tscn")
 
 # Battle UI
 var res_bui = preload("res://combat/battle_ui/BUI.tscn")

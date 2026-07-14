@@ -52,36 +52,43 @@ func _ready():
 	pass
 
 func set_up_board():
-
+	
 	# Clear the board
 	while board.get_child_count() > 0:
 		var c = board.get_child(0)
 		board.remove_child(c)
 		c.queue_free()
-
+	
 	var w: int = batman.battle_details["board_size"].x #Always even
 	var h: int = batman.battle_details["board_size"].y
-
+	
+	var first_enemy_col: int = (w/2)+1
+	
 	for y in h:
 		for x in w:
 			var cell: Node2D = loader.res_battlecell.instance()
 			cell.set("field", self)
 			cell.set("position", batman.grid_gpos.get_cell(x+1, y+1))
 			board.add_child(cell)
-
+			
 			var coord: Vector2 = Vector2(x+1, y+1)
 			cell.coord = coord
 			cell.col = coord.x
 			cell.row = coord.y
-
+			
 			cell.set_faction()
-
+			
 			cell.set_depth_tint(h)
-
+			
 			cell.detach_battle_threat()
-
+			
 			var type: int = batman.grid_tiles.get_cellv(coord)
 			cell.set_type(type)
+			
+			if cell.col == first_enemy_col:
+				var flo: YSort = loader.res_factionline.instance()
+				flo.set("position", cell.position)
+				$FieldObjects/Misc/FactionLines.add_child(flo)
 	pass
 
 func populate_actors():
