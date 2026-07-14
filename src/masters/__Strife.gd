@@ -137,8 +137,9 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	var elemkeys: Array = elements.keys()
 	for flag in flags: if flag is String:
 		var flag_upper: String = flag.to_upper()
-		if elemkeys.has(flag_upper):
-			elem = flag_upper
+		var flag_elem: String = flag_upper.replace("_ELEM", "")
+		if flag_elem != flag_upper: # Means there WAS a '_elem' suffix and now it's gone!
+			elem = flag_elem
 			break
 	
 	combat_package["elem"] = elem
@@ -186,7 +187,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	var break_damage: int = 0
 	var break_spends: int = 0 # Goes up by 1 per break_damage applied
 	if breaking: break_damage = damage
-	if elem == "COLD":
+	if elem == "WATER":
 		break_damage += 1
 		break_spends -= 1 # The cold pip is "free"
 	

@@ -34,7 +34,7 @@ func PREVIEW():
 func ACT():
 	for victim in get_all_actors_by_MPD_type(ROWS.BAD):
 		if utils.actorpass(victim):
-			strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(base_damage), ["elem_FIRE"])
+			strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(base_damage), ["fire_elem"])
 			strife.quick_vfx(victim, "spark_burst")
 	
 	end_action()
