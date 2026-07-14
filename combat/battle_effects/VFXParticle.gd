@@ -11,6 +11,7 @@ var par_node: Node2D
 var persistent: bool = false # If true and has actor, it'll follow them until the actor dies or releases them
 var actor: Actor = null # Set for non-temporary effects
 
+var readied: bool = false
 var dying: bool = false
 var final_death: bool = false
 
@@ -29,6 +30,7 @@ func _ready():
 	prep_custom_details()
 	
 	play_effect()
+	readied = true
 	pass
 
 func validate_or_die() -> bool:
@@ -119,11 +121,13 @@ func die(instant: bool = false):
 # ---
 
 func _process(_d): # Basic position tracking, for persistent effects only
+	if !readied: return
 	if dying: return
 	if !persistent: return
 	if !utils.valid(actor): return
 	
 	var apos: Vector2 = actor.position
+	apos.y -= actor.z
 	if position != apos:
 		position = apos
 	pass
