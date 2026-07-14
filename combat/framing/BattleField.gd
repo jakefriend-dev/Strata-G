@@ -41,9 +41,7 @@ func _ready():
 	update_debuglog()
 	update_turn_display()
 	
-#	$BoardOwner/MC.rect_size = Vector2(
-#		ProjectSettings.get_setting("display/window/size/width"),
-#		ProjectSettings.get_setting("display/window/size/height"))
+	$BG/TestOverlay.visible = false
 	
 	batman.connect("action_log_updated", self, "update_debuglog")
 	batman.connect("set_up_board", self, "set_up_board")

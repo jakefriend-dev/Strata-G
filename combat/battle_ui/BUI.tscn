@@ -6,7 +6,7 @@
 [ext_resource path="res://combat/battle_ui/components/Pip_8_Shield_Numberless.tscn" type="PackedScene" id=4]
 [ext_resource path="res://combat/battle_ui/components/Pip_8_Action_Count.tscn" type="PackedScene" id=5]
 [ext_resource path="res://combat/battle_ui/components/PipStatus.tscn" type="PackedScene" id=6]
-[ext_resource path="res://text/fonts/raw/assigned/SERAPHIM BITMAP 1.fnt" type="BitmapFont" id=7]
+[ext_resource path="res://text/fonts/raw/assigned/Font - StandardBitmap.fnt" type="BitmapFont" id=7]
 [ext_resource path="res://art/_placeholder/mage tuntaker head x48.png" type="Texture" id=8]
 [ext_resource path="res://text/TextShader1.gdshader" type="Shader" id=9]
 
