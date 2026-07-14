@@ -44,8 +44,9 @@ __meta__ = {
 }
 
 [node name="PC" type="PanelContainer" parent="MC"]
+margin_left = -9.0
 margin_top = 25.0
-margin_right = 80.0
+margin_right = 71.0
 margin_bottom = 36.0
 size_flags_horizontal = 4
 size_flags_vertical = 4

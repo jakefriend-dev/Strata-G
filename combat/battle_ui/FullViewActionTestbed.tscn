@@ -1,89 +1,103 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://text/fonts/built/Font BUI Body 1x.tres" type="DynamicFont" id=1]
-[ext_resource path="res://text/fonts/built/Font MoveCard Header 1x.tres" type="DynamicFont" id=2]
-[ext_resource path="res://art/bui/pips/_archive/Pip AP - Single.png" type="Texture" id=3]
+[ext_resource path="res://text/fonts/raw/assigned/Font - StandardBitmap.fnt" type="BitmapFont" id=2]
+[ext_resource path="res://text/fonts/built/Font Menu Small 1x.tres" type="DynamicFont" id=3]
 [ext_resource path="res://art/bui/aimflowers/3x3 - fronts.png" type="Texture" id=4]
+[ext_resource path="res://art/general/9patch standard shapes4.png" type="Texture" id=5]
+[ext_resource path="res://text/TextShader1.gdshader" type="Shader" id=6]
+[ext_resource path="res://combat/battle_ui/AP_Cost_Indicator_HB.tscn" type="PackedScene" id=7]
 
 [sub_resource type="Theme" id=33]
 default_font = ExtResource( 1 )
 HBoxContainer/constants/separation = 0
 VBoxContainer/constants/separation = 0
 
+[sub_resource type="StyleBoxTexture" id=36]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 2.0
+content_margin_bottom = 1.0
+texture = ExtResource( 5 )
+region_rect = Rect2( 0, 0, 12, 12 )
+margin_left = 3.0
+margin_right = 3.0
+margin_top = 3.0
+margin_bottom = 3.0
+modulate_color = Color( 0.168627, 0.121569, 0.188235, 0.662745 )
+
+[sub_resource type="ShaderMaterial" id=35]
+shader = ExtResource( 6 )
+shader_param/active = true
+shader_param/unfill_height = 5
+shader_param/col_body = Color( 1, 1, 1, 1 )
+shader_param/col_mid = Color( 1, 0.643137, 0.407843, 1 )
+shader_param/col_shadow = Color( 0, 0, 0, 1 )
+
 [sub_resource type="StyleBoxEmpty" id=34]
 
 [node name="FullViewActionTestbed" type="Node2D"]
 
 [node name="Node2D" type="Node2D" parent="."]
-position = Vector2( -342, 10 )
 
 [node name="PanelContainer" type="PanelContainer" parent="Node2D"]
 margin_right = 268.0
 margin_bottom = 156.0
 theme = SubResource( 33 )
+custom_styles/panel = SubResource( 36 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Node2D/PanelContainer"]
-margin_left = 7.0
-margin_top = 7.0
-margin_right = 261.0
-margin_bottom = 171.0
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 266.0
+margin_bottom = 159.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_right = 254.0
-margin_bottom = 16.0
+[node name="Title" type="HBoxContainer" parent="Node2D/PanelContainer/VBoxContainer"]
+margin_right = 264.0
+margin_bottom = 14.0
 
-[node name="Title" type="Label" parent="Node2D/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_right = 58.0
-margin_bottom = 16.0
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+[node name="AP" parent="Node2D/PanelContainer/VBoxContainer/Title" instance=ExtResource( 7 )]
+
+[node name="Title" type="Label" parent="Node2D/PanelContainer/VBoxContainer/Title"]
+material = SubResource( 35 )
+margin_left = 16.0
+margin_right = 84.0
+margin_bottom = 14.0
 custom_constants/shadow_offset_x = 2
 custom_constants/shadow_offset_y = 2
 custom_fonts/font = ExtResource( 2 )
 text = "Heat Wave"
 
-[node name="CostIcon" type="TextureRect" parent="Node2D/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_left = 58.0
-margin_right = 72.0
-margin_bottom = 16.0
-texture = ExtResource( 3 )
-stretch_mode = 3
-
-[node name="CostIcon2" type="TextureRect" parent="Node2D/PanelContainer/VBoxContainer/HBoxContainer"]
-margin_left = 72.0
-margin_right = 86.0
-margin_bottom = 16.0
-texture = ExtResource( 3 )
-stretch_mode = 3
-
 [node name="Spacer4" type="Panel" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_top = 16.0
-margin_right = 254.0
-margin_bottom = 24.0
+margin_top = 14.0
+margin_right = 264.0
+margin_bottom = 22.0
 rect_min_size = Vector2( 0, 8 )
 custom_styles/panel = SubResource( 34 )
 
 [node name="MainDesc" type="Label" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_top = 24.0
-margin_right = 254.0
-margin_bottom = 72.0
-custom_colors/font_color = Color( 1, 1, 1, 1 )
+margin_top = 22.0
+margin_right = 264.0
+margin_bottom = 70.0
+custom_colors/font_color = Color( 0.8, 0.886275, 0.882353, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 text = "Deals 1 fire damage to ALL units in a straight line, ignoring cover and piercing shields."
 autowrap = true
 
 [node name="Spacer3" type="Panel" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_top = 72.0
-margin_right = 254.0
-margin_bottom = 80.0
+margin_top = 70.0
+margin_right = 264.0
+margin_bottom = 78.0
 rect_min_size = Vector2( 0, 8 )
 custom_styles/panel = SubResource( 34 )
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_top = 80.0
-margin_right = 254.0
-margin_bottom = 103.0
+margin_top = 78.0
+margin_right = 264.0
+margin_bottom = 101.0
 custom_constants/separation = 4
 
 [node name="Panel" type="Panel" parent="Node2D/PanelContainer/VBoxContainer/HBoxContainer2"]
@@ -98,15 +112,18 @@ centered = false
 
 [node name="OptionDesc" type="Label" parent="Node2D/PanelContainer/VBoxContainer/HBoxContainer2"]
 margin_left = 27.0
-margin_top = 4.0
-margin_right = 187.0
+margin_top = 5.0
+margin_right = 148.0
 margin_bottom = 18.0
+custom_colors/font_color = Color( 0.8, 0.886275, 0.882353, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 3 )
 text = "Changes angle of attack."
 
 [node name="Spacer2" type="Panel" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_top = 103.0
-margin_right = 254.0
-margin_bottom = 111.0
+margin_top = 101.0
+margin_right = 264.0
+margin_bottom = 109.0
 rect_min_size = Vector2( 0, 8 )
 custom_styles/panel = SubResource( 34 )
 
@@ -118,10 +135,12 @@ margin_bottom = 100.0
 text = "Cooldown for 2 turns after use"
 
 [node name="UPT" type="Label" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_top = 111.0
-margin_right = 254.0
-margin_bottom = 125.0
-text = "Uses per turn remaining: [1]"
+margin_top = 109.0
+margin_right = 264.0
+margin_bottom = 123.0
+custom_colors/font_color = Color( 0.8, 0.886275, 0.882353, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+text = "2/3 per-turn uses remain."
 
 [node name="UPB" type="Label" parent="Node2D/PanelContainer/VBoxContainer"]
 visible = false
@@ -131,15 +150,19 @@ margin_bottom = 100.0
 text = "Uses per battle remaining: [1]"
 
 [node name="Spacer" type="Panel" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_top = 125.0
-margin_right = 254.0
-margin_bottom = 133.0
+margin_top = 123.0
+margin_right = 264.0
+margin_bottom = 131.0
 rect_min_size = Vector2( 0, 8 )
 custom_styles/panel = SubResource( 34 )
 
 [node name="Tags" type="Label" parent="Node2D/PanelContainer/VBoxContainer"]
-margin_top = 133.0
-margin_right = 254.0
-margin_bottom = 164.0
+margin_top = 131.0
+margin_right = 264.0
+margin_bottom = 157.0
+custom_colors/font_color = Color( 0.886275, 0.882353, 0.8, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/line_spacing = 0
+custom_fonts/font = ExtResource( 3 )
 text = "Fire: 2x damage to treeboys
 Piercing: Damage bypasses shields"
