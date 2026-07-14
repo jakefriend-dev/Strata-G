@@ -37,8 +37,8 @@ curve = SubResource( 4 )
 [sub_resource type="ParticlesMaterial" id=6]
 lifetime_randomness = 0.38
 emission_shape = 5
-emission_ring_radius = 16.0
-emission_ring_inner_radius = 16.0
+emission_ring_radius = 12.0
+emission_ring_inner_radius = 12.0
 emission_ring_height = 1.0
 emission_ring_axis = Vector3( 0, 0, 1 )
 flag_disable_z = true
@@ -53,8 +53,8 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 angle = 720.0
 angle_random = 1.0
-scale = 0.3
-scale_random = 0.31
+scale = 0.05
+scale_random = 0.2
 scale_curve = SubResource( 5 )
 color_ramp = SubResource( 3 )
 
@@ -67,8 +67,8 @@ gradient = SubResource( 7 )
 [sub_resource type="ParticlesMaterial" id=9]
 lifetime_randomness = 0.38
 emission_shape = 5
-emission_ring_radius = 24.0
-emission_ring_inner_radius = 24.0
+emission_ring_radius = 8.0
+emission_ring_inner_radius = 8.0
 emission_ring_height = 1.0
 emission_ring_axis = Vector3( 0, 0, 1 )
 flag_disable_z = true
@@ -83,7 +83,7 @@ orbit_velocity = 0.0
 orbit_velocity_random = 0.0
 angle = 720.0
 angle_random = 1.0
-scale = 0.15
+scale = 0.1
 scale_random = 0.2
 scale_curve = SubResource( 5 )
 color_ramp = SubResource( 8 )
@@ -407,6 +407,7 @@ position = Vector2( 0, 12 )
 script = ExtResource( 1 )
 
 [node name="DarkBoom" type="Particles2D" parent="ZPar/damage"]
+modulate = Color( 1, 1, 1, 0.313726 )
 material = SubResource( 1 )
 emitting = false
 amount = 1
@@ -417,6 +418,7 @@ process_material = SubResource( 6 )
 texture = ExtResource( 3 )
 
 [node name="LightBoom" type="Particles2D" parent="ZPar/damage"]
+modulate = Color( 1, 1, 1, 0.792157 )
 material = SubResource( 1 )
 emitting = false
 amount = 1
