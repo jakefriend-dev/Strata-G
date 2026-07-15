@@ -43,7 +43,7 @@ viewport_path = NodePath("ViewportContainer/Viewport")
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
 shader = SubResource( 1 )
-shader_param/active = false
+shader_param/active = true
 shader_param/palette = ExtResource( 2 )
 shader_param/screen_texture = SubResource( 2 )
 
