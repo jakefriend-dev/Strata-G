@@ -17,6 +17,9 @@ var turndisplay_par: VBoxContainer
 #var actionsel_par: VBoxContainer
 var movewindow: Node2D
 
+export var path_curr_turntaker: NodePath
+var curr_turntaker: Node2D
+
 var board_offset: Vector2
 
 const CELL_SIZE: Vector2 = Vector2(64, 48)
@@ -32,6 +35,7 @@ func _ready():
 	turndisplay_par = get_node(path_turndisplay_par)
 #	actionsel_par = get_node(path_actionsel_par)
 	movewindow = get_node(path_movewindow)
+	curr_turntaker = get_node(path_curr_turntaker)
 	
 	batman.field = self
 	batman.drawer = $FieldFore/Drawer

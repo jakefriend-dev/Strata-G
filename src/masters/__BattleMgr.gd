@@ -96,6 +96,7 @@ signal on_turn_ended_via_interruption()
 signal on_turn_exited()
 signal targeted_tiles_updated()
 signal update_all_preview_drawing()
+signal this_actor_any_bui_update(which_actor)
 
 enum factions {
 	NEUTRAL,
@@ -685,6 +686,7 @@ func cycle_to_next_turn():
 			found_next_actor = true
 			curr_turndata = turndata
 			curr_actor = turndata["actor"]
+			field.curr_turntaker.set_actor(curr_actor)
 			break
 	
 	if !found_next_actor:

@@ -190,7 +190,11 @@ func inputcheck_player_combat_turn(actor: ActorPlayer):
 	
 	if Input.is_action_just_pressed("dev_0"):
 		if utils.actorpass(batman.curr_actor):
-			batman.curr_actor.add_action_points(1)
+			if batman.curr_actor.shield > 0:
+				batman.curr_actor.shield -= 1
+				batman.emit_signal("this_actor_any_bui_update", batman.curr_actor)
+#			strife.do_quiet_damage(null, batman.curr_actor, 1, ["shield_bypass"])
+#			batman.curr_actor.add_action_points(1)
 		multi_input_lock = true
 		return
 	

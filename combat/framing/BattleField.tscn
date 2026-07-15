@@ -15,7 +15,7 @@
 [ext_resource path="res://art/_placeholder/Texturelabs_Grunge_140S.jpg" type="Texture" id=13]
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
 [ext_resource path="res://art/general/9patch standard shapes1.png" type="Texture" id=15]
-[ext_resource path="res://combat/battle_ui/TurntakerCurrentWindow.tscn" type="PackedScene" id=16]
+[ext_resource path="res://combat/battle_ui/Turntaker.tscn" type="PackedScene" id=16]
 [ext_resource path="res://art/_placeholder/mage tuntaker head x24.png" type="Texture" id=18]
 [ext_resource path="res://combat/battle_ui/FullViewActionTestbed.tscn" type="PackedScene" id=19]
 
@@ -54,6 +54,7 @@ path_misc = NodePath("FieldObjects/Misc")
 path_debuglog_par = NodePath("MenuOverlays/DebugLog/VB")
 path_turndisplay_par = NodePath("MenuOverlays/OLD_TurnDisplay/VB")
 path_movewindow = NodePath("MenuOverlays/MoveWindow")
+path_curr_turntaker = NodePath("MenuOverlays/TurntakerPanel/Turntaker")
 
 [node name="BG" type="Node2D" parent="."]
 
@@ -237,7 +238,6 @@ texture = ExtResource( 13 )
 centered = false
 
 [node name="BackingPanel" type="PanelContainer" parent="MenuOverlays/TurntakerPanel"]
-visible = false
 margin_left = -5.0
 margin_top = -8.0
 margin_right = 47.0
@@ -249,11 +249,7 @@ __meta__ = {
 }
 
 [node name="Turntaker" parent="MenuOverlays/TurntakerPanel" instance=ExtResource( 16 )]
-margin_left = -3.0
-margin_top = -6.0
-margin_right = 45.0
-margin_bottom = 59.0
-size_flags_vertical = 1
+position = Vector2( 9, 2 )
 
 [node name="TurnQueueDisplay" type="Node2D" parent="MenuOverlays"]
 position = Vector2( 346, 0 )

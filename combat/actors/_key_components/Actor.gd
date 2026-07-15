@@ -34,7 +34,7 @@ export (int, 1, 52) var max_health: int = 4 # Pre-factoring
 var health: int = 4 # Pre-factoring
 var base_health_pips: int = 4 # Updated ONCE by max health and that's it!
 
-export var max_shield: int = 0
+export var max_shield: int = 0 # Actually "base/starting" shield; max is 16 (4 pips) no matter what for all actors.
 var shield: int = 0
 
 export var ofc_name: String = "--"
@@ -782,6 +782,7 @@ func update_bui():
 		add_child(bui)
 		bui.set("owner", self)
 	
+	batman.emit_signal("this_actor_any_bui_update", self)
 	batman.field.movewindow.update_ap()
 	bui.refresh()
 	pass

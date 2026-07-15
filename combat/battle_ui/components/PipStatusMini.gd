@@ -1,6 +1,9 @@
 extends HBoxContainer
 
+# Owned by one OR the other
 var bui: Node2D
+var turntaker: Node2D
+
 var actor: Actor
 
 # ---

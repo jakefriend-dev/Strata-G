@@ -1,10 +1,9 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
 [ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=2]
 [ext_resource path="res://combat/battle_ui/MoveWindow.gd" type="Script" id=3]
 [ext_resource path="res://combat/battle_ui/Aimflower.tscn" type="PackedScene" id=4]
-[ext_resource path="res://combat/battle_ui/TurntakerCurrentWindow.tscn" type="PackedScene" id=5]
 [ext_resource path="res://art/general/9patch standard shapes4.png" type="Texture" id=6]
 [ext_resource path="res://art/_placeholder/Texturelabs_Paper_183S.jpg" type="Texture" id=7]
 [ext_resource path="res://combat/battle_ui/components/ActionPointBar.tscn" type="PackedScene" id=13]
@@ -55,7 +54,6 @@ VBoxContainer/constants/separation = 0
 script = ExtResource( 3 )
 path_movegrid = NodePath("FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid")
 path_tooltip_par = NodePath("FRAME/HB/EverythingElse/LowerHB/TTPar")
-path_turntaker = NodePath("FRAME/HB/EverythingElse/UpperHB/Turntaker")
 path_apb = NodePath("FRAME/HB/AimAndAP/ActionPointBar")
 
 [node name="BackingPane" type="Panel" parent="."]
@@ -265,12 +263,6 @@ margin_right = 239.0
 margin_bottom = 74.0
 rect_min_size = Vector2( 13, 0 )
 custom_styles/panel = SubResource( 26 )
-
-[node name="Turntaker" parent="FRAME/HB/EverythingElse/UpperHB" instance=ExtResource( 5 )]
-visible = false
-margin_left = 239.0
-margin_right = 287.0
-margin_bottom = 74.0
 
 [node name="LowerHB" type="HBoxContainer" parent="FRAME/HB/EverythingElse"]
 margin_top = 74.0
