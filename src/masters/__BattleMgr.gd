@@ -94,6 +94,9 @@ signal new_round_started()
 signal on_turn_ended_naturally()
 signal on_turn_ended_via_interruption()
 signal on_turn_exited()
+signal turnqueue_constructed()
+signal turnqueue_updated()
+
 signal targeted_tiles_updated()
 signal update_all_preview_drawing()
 signal this_actor_any_bui_update(which_actor)
@@ -638,6 +641,8 @@ func roll_initiative():
 		count += 1
 		turndata["turnpos"] = count
 	
+	emit_signal("turnqueue_constructed")
+	
 	field.update_turn_display()
 	for actor in actors.get_children():
 		actor.update_bui()
@@ -686,7 +691,6 @@ func cycle_to_next_turn():
 			found_next_actor = true
 			curr_turndata = turndata
 			curr_actor = turndata["actor"]
-			field.curr_turntaker.set_actor(curr_actor)
 			break
 	
 	if !found_next_actor:
@@ -694,6 +698,7 @@ func cycle_to_next_turn():
 		return
 	
 	# Final setup! We've cleared validations!
+	emit_signal("turnqueue_updated")
 	
 #	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
 	pre_prep_new_turn()
@@ -780,6 +785,8 @@ func clean_up_turnqueue(): # Ensures any eg. null actors are removed; refreshes 
 	var prev_turndata: Dictionary = curr_turndata
 	var new_turncount: int = turncount
 	
+	var has_a_change_been_observed: bool = false
+	
 	var turnpos: int = 0
 	for turndata in turnqueue: if turndata is Dictionary:
 		
@@ -788,8 +795,10 @@ func clean_up_turnqueue(): # Ensures any eg. null actors are removed; refreshes 
 		var actor: Actor = turndata["actor"]
 		if !utils.valid(actor):
 			if current_flag: new_turncount = (turnpos + 1)
+			has_a_change_been_observed = true
 			continue
-		if !actor.active:
+		if !actor.alive_check():
+			has_a_change_been_observed = true
 			if current_flag: new_turncount = (turnpos + 1)
 			continue
 		turnpos += 1
@@ -798,11 +807,15 @@ func clean_up_turnqueue(): # Ensures any eg. null actors are removed; refreshes 
 		new_turnqueue.append(turndata)
 	
 	if new_turncount != turncount:
+		has_a_change_been_observed = true
 		print("BATMAN: Turncount updated from ",turncount," to ",new_turncount," during clean_up_turnqueue()")
 	turncount = new_turncount
 	
 	turnqueue = []
 	turnqueue = new_turnqueue
+	
+	if has_a_change_been_observed:
+		emit_signal("turnqueue_updated")
 	pass
 
 func insert_turndata(new_turndata: Dictionary, to_position: int):
@@ -837,6 +850,7 @@ func insert_turndata(new_turndata: Dictionary, to_position: int):
 	for actor in actors.get_children():
 		actor.update_bui()
 	
+	emit_signal("turnqueue_updated")
 	pass
 
 func get_first_turndata_by_actor(actor: Actor) -> Dictionary:
@@ -861,12 +875,15 @@ func remove_all_turns_of_actor(actor: Actor):
 	var prev_turndata: Dictionary = curr_turndata
 	var new_turncount: int = turncount
 	
+	var has_a_change_been_observed: bool = false
+	
 	var turnpos: int = 0
 	for turndata in turnqueue: if turndata is Dictionary:
 		
 		var current_flag: bool = (turndata == prev_turndata)
 		
 		if turndata["actor"] == actor:
+			has_a_change_been_observed = true
 			if current_flag: new_turncount = (turnpos + 1)
 			continue
 		
@@ -876,11 +893,15 @@ func remove_all_turns_of_actor(actor: Actor):
 		new_turnqueue.append(turndata)
 	
 	if new_turncount != turncount:
+		has_a_change_been_observed = true
 		print("BATMAN: Turncount updated from ",turncount," to ",new_turncount," during remove_all_turns_of_actor()")
 	turncount = new_turncount
 	
 	turnqueue = []
 	turnqueue = new_turnqueue
+	
+	if has_a_change_been_observed:
+		emit_signal("turnqueue_updated")
 	pass
 
 func is_my_turn(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!

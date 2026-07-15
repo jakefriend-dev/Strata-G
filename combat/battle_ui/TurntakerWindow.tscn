@@ -1,0 +1,101 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
+[ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=2]
+[ext_resource path="res://text/fonts/built/Font Menu Small 1x.tres" type="DynamicFont" id=3]
+[ext_resource path="res://art/_placeholder/Texturelabs_Grunge_140S.jpg" type="Texture" id=4]
+[ext_resource path="res://combat/battle_ui/TurntakerWindow.gd" type="Script" id=5]
+
+[sub_resource type="CanvasItemMaterial" id=36]
+
+[node name="TurntakerWindow" type="Node2D"]
+script = ExtResource( 5 )
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="CurrentPanel" type="Node2D" parent="."]
+
+[node name="Texture" type="Sprite" parent="CurrentPanel"]
+modulate = Color( 0.564706, 0.784314, 0.827451, 0.635294 )
+material = SubResource( 36 )
+position = Vector2( -5, -18 )
+rotation = 1.5708
+scale = Vector2( 0.0405932, -0.0405932 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="BackingPanel" type="PanelContainer" parent="CurrentPanel"]
+margin_left = -5.0
+margin_top = -8.0
+margin_right = 47.0
+margin_bottom = 60.0
+theme = ExtResource( 1 )
+custom_styles/panel = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="QueuePanel" type="Node2D" parent="."]
+
+[node name="BackPanel" type="PanelContainer" parent="QueuePanel"]
+margin_left = 47.0
+margin_top = -8.0
+margin_right = 284.0
+margin_bottom = 40.0
+theme = ExtResource( 1 )
+custom_styles/panel = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="QueuePanel"]
+margin_left = 56.0
+margin_top = 26.0
+margin_right = 176.0
+margin_bottom = 40.0
+custom_colors/font_color = Color( 0.788235, 0.764706, 0.619608, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_fonts/font = ExtResource( 3 )
+text = "Upcoming turn queue . . ."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="All_TT" type="Node2D" parent="."]
+
+[node name="All_POS" type="Node2D" parent="."]
+
+[node name="Order1" type="Position2D" parent="All_POS"]
+position = Vector2( 9, 2 )
+
+[node name="Order2" type="Position2D" parent="All_POS"]
+position = Vector2( 55, 2 )
+
+[node name="Order3" type="Position2D" parent="All_POS"]
+position = Vector2( 83, 2 )
+
+[node name="Order4" type="Position2D" parent="All_POS"]
+position = Vector2( 111, 2 )
+
+[node name="Order5" type="Position2D" parent="All_POS"]
+position = Vector2( 139, 2 )
+
+[node name="Order6" type="Position2D" parent="All_POS"]
+position = Vector2( 167, 2 )
+
+[node name="Order7" type="Position2D" parent="All_POS"]
+position = Vector2( 195, 2 )
+
+[node name="Order8" type="Position2D" parent="All_POS"]
+position = Vector2( 223, 2 )
+
+[node name="Order9" type="Position2D" parent="All_POS"]
+position = Vector2( 251, 2 )
+
+[node name="OffscreenGuide" type="ColorRect" parent="."]
+margin_top = -1.0
+margin_right = 40.0
+color = Color( 1, 0, 0, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

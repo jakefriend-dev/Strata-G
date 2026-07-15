@@ -23,6 +23,8 @@ var apb: VBoxContainer
 enum {ZERO, PORTRAIT, NAME, HEALTH, STATUS, ACTIONS, MAXIMUM} # In progressive order; typically STATUS for current turntaker and PORTRAIT for non-currents
 var vis_state: int = STATUS
 
+var order: int = -1 # Treat -1 as invalid; numbers >0 as valid
+
 # ---
 
 func _ready():
