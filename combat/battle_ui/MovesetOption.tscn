@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://art/general/9patch standard shapes6.png" type="Texture" id=1]
 [ext_resource path="res://text/fonts/raw/assigned/Font - StandardBitmap.fnt" type="BitmapFont" id=2]
@@ -11,6 +11,7 @@
 [ext_resource path="res://art/bui/pips/8x holup icon.png" type="Texture" id=9]
 [ext_resource path="res://text/TextShader1.gdshader" type="Shader" id=10]
 [ext_resource path="res://art/bui/pips/16x8 select arrow icon.png" type="Texture" id=11]
+[ext_resource path="res://art/_placeholder/Texturelabs_Paper_370S - white.png" type="Texture" id=12]
 
 [sub_resource type="StyleBoxEmpty" id=4]
 
@@ -30,24 +31,25 @@ shader_param/col_mid = Color( 0.772549, 0.772549, 0.772549, 1 )
 shader_param/col_shadow = Color( 0, 0, 0, 1 )
 
 [node name="Option" type="HBoxContainer"]
-margin_right = 86.0
+margin_right = 104.0
 margin_bottom = 14.0
-rect_min_size = Vector2( 100, 0 )
+rect_min_size = Vector2( 108, 0 )
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Highlight" type="Node2D" parent="."]
-modulate = Color( 1, 1, 1, 0.498039 )
+modulate = Color( 1, 0.580392, 0.701961, 1 )
 
 [node name="Shape" type="NinePatchRect" parent="Highlight"]
-modulate = Color( 1, 0.580392, 0.701961, 1 )
+visible = false
+modulate = Color( 1, 1, 1, 0.498039 )
 margin_left = -2.0
 margin_top = -2.0
-margin_right = 98.0
+margin_right = 110.0
 margin_bottom = 15.0
-rect_min_size = Vector2( 104, 17 )
+rect_min_size = Vector2( 112, 17 )
 texture = ExtResource( 1 )
 patch_margin_left = 4
 patch_margin_top = 4
@@ -56,6 +58,14 @@ patch_margin_bottom = 4
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Streak" type="Sprite" parent="Highlight"]
+self_modulate = Color( 1, 1, 1, 0.498039 )
+position = Vector2( -2.84141, -2.01351 )
+scale = Vector2( 0.130208, 0.033871 )
+texture = ExtResource( 12 )
+centered = false
+offset = Vector2( -54.978, -58.6486 )
 
 [node name="AllIcons" type="HBoxContainer" parent="."]
 margin_right = 16.0

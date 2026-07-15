@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=2]
+[gd_scene load_steps=25 format=2]
 
 [ext_resource path="res://art/_placeholder/test play area bg.png" type="Texture" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
@@ -12,11 +12,10 @@
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=10]
 [ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=11]
 [ext_resource path="res://art/_placeholder/mc/castle wall unusable.png" type="Texture" id=12]
-[ext_resource path="res://text/fonts/raw/assigned/Font - StandardBitmap.fnt" type="BitmapFont" id=13]
+[ext_resource path="res://art/_placeholder/Texturelabs_Grunge_140S.jpg" type="Texture" id=13]
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
 [ext_resource path="res://art/general/9patch standard shapes1.png" type="Texture" id=15]
 [ext_resource path="res://combat/battle_ui/TurntakerCurrentWindow.tscn" type="PackedScene" id=16]
-[ext_resource path="res://text/TextShader1.gdshader" type="Shader" id=17]
 [ext_resource path="res://art/_placeholder/mage tuntaker head x24.png" type="Texture" id=18]
 [ext_resource path="res://combat/battle_ui/FullViewActionTestbed.tscn" type="PackedScene" id=19]
 
@@ -29,17 +28,7 @@ width = 2
 
 [sub_resource type="StyleBoxEmpty" id=33]
 
-[sub_resource type="StyleBoxEmpty" id=36]
-
-[sub_resource type="StyleBoxEmpty" id=37]
-
-[sub_resource type="ShaderMaterial" id=38]
-shader = ExtResource( 17 )
-shader_param/active = true
-shader_param/unfill_height = 9
-shader_param/col_body = Color( 0.847059, 0.776471, 0.835294, 1 )
-shader_param/col_mid = Color( 1, 0.580392, 0.701961, 1 )
-shader_param/col_shadow = Color( 0, 0, 0, 1 )
+[sub_resource type="CanvasItemMaterial" id=36]
 
 [sub_resource type="StyleBoxEmpty" id=28]
 
@@ -63,7 +52,7 @@ path_actors = NodePath("FieldObjects/Actors")
 path_vfx = NodePath("FieldObjects/VFX")
 path_misc = NodePath("FieldObjects/Misc")
 path_debuglog_par = NodePath("MenuOverlays/DebugLog/VB")
-path_turndisplay_par = NodePath("MenuOverlays/TurnDisplay/VB")
+path_turndisplay_par = NodePath("MenuOverlays/OLD_TurnDisplay/VB")
 path_movewindow = NodePath("MenuOverlays/MoveWindow")
 
 [node name="BG" type="Node2D" parent="."]
@@ -136,10 +125,10 @@ script = ExtResource( 6 )
 [node name="MenuOverlays" type="Node2D" parent="."]
 z_index = 1
 
-[node name="TurnDisplay" type="Node2D" parent="MenuOverlays"]
+[node name="OLD_TurnDisplay" type="Node2D" parent="MenuOverlays"]
 position = Vector2( 635, 115 )
 
-[node name="VB" type="VBoxContainer" parent="MenuOverlays/TurnDisplay"]
+[node name="VB" type="VBoxContainer" parent="MenuOverlays/OLD_TurnDisplay"]
 margin_left = -640.0
 margin_bottom = 65.0
 rect_min_size = Vector2( 640, 0 )
@@ -148,7 +137,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Curr" type="Label" parent="MenuOverlays/TurnDisplay/VB"]
+[node name="Curr" type="Label" parent="MenuOverlays/OLD_TurnDisplay/VB"]
 margin_right = 640.0
 margin_bottom = 14.0
 custom_colors/font_color = Color( 0.870588, 1, 1, 1 )
@@ -160,7 +149,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Next" type="Label" parent="MenuOverlays/TurnDisplay/VB"]
+[node name="Next" type="Label" parent="MenuOverlays/OLD_TurnDisplay/VB"]
 margin_top = 17.0
 margin_right = 640.0
 margin_bottom = 82.0
@@ -235,13 +224,20 @@ __meta__ = {
 
 [node name="MoveWindow" parent="MenuOverlays" instance=ExtResource( 3 )]
 
-[node name="NPCFocusWindow" type="Node2D" parent="MenuOverlays"]
-visible = false
-
-[node name="TurntakerPanel" type="Node2D" parent="MenuOverlays/NPCFocusWindow"]
+[node name="TurntakerPanel" type="Node2D" parent="MenuOverlays"]
 position = Vector2( 299, 0 )
 
-[node name="PanelContainer" type="PanelContainer" parent="MenuOverlays/NPCFocusWindow/TurntakerPanel"]
+[node name="Texture" type="Sprite" parent="MenuOverlays/TurntakerPanel"]
+modulate = Color( 0.564706, 0.784314, 0.827451, 0.635294 )
+material = SubResource( 36 )
+position = Vector2( -5, -18 )
+rotation = 1.5708
+scale = Vector2( 0.0405932, -0.0405932 )
+texture = ExtResource( 13 )
+centered = false
+
+[node name="BackingPanel" type="PanelContainer" parent="MenuOverlays/TurntakerPanel"]
+visible = false
 margin_left = -5.0
 margin_top = -8.0
 margin_right = 47.0
@@ -252,61 +248,12 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Turntaker" parent="MenuOverlays/NPCFocusWindow/TurntakerPanel/PanelContainer" instance=ExtResource( 16 )]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 50.0
-margin_bottom = 67.0
+[node name="Turntaker" parent="MenuOverlays/TurntakerPanel" instance=ExtResource( 16 )]
+margin_left = -3.0
+margin_top = -6.0
+margin_right = 45.0
+margin_bottom = 59.0
 size_flags_vertical = 1
-
-[node name="MiscPanel" type="Node2D" parent="MenuOverlays/NPCFocusWindow"]
-visible = false
-
-[node name="PanelContainer" type="PanelContainer" parent="MenuOverlays/NPCFocusWindow/MiscPanel"]
-margin_left = -4.0
-margin_top = -9.0
-margin_right = 281.0
-margin_bottom = 29.0
-rect_min_size = Vector2( 285, 49 )
-theme = ExtResource( 10 )
-custom_styles/panel = ExtResource( 11 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HB" type="HBoxContainer" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer"]
-margin_left = 2.0
-margin_top = 2.0
-margin_right = 283.0
-margin_bottom = 48.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Panel" type="Panel" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer/HB"]
-margin_right = 9.0
-margin_bottom = 46.0
-rect_min_size = Vector2( 9, 0 )
-custom_styles/panel = SubResource( 36 )
-
-[node name="VB" type="VBoxContainer" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer/HB"]
-margin_left = 9.0
-margin_right = 99.0
-margin_bottom = 46.0
-
-[node name="Panel" type="Panel" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer/HB/VB"]
-margin_right = 90.0
-margin_bottom = 12.0
-rect_min_size = Vector2( 0, 12 )
-custom_styles/panel = SubResource( 37 )
-
-[node name="Label" type="Label" parent="MenuOverlays/NPCFocusWindow/MiscPanel/PanelContainer/HB/VB"]
-material = SubResource( 38 )
-margin_top = 12.0
-margin_right = 90.0
-margin_bottom = 26.0
-custom_fonts/font = ExtResource( 13 )
-text = "Enemy's turn!"
 
 [node name="TurnQueueDisplay" type="Node2D" parent="MenuOverlays"]
 position = Vector2( 346, 0 )

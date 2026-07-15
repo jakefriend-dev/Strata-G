@@ -134,7 +134,6 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	
 	# Determine our element
 	var elem: String = "NORMAL"
-	var elemkeys: Array = elements.keys()
 	for flag in flags: if flag is String:
 		var flag_upper: String = flag.to_upper()
 		var flag_elem: String = flag_upper.replace("_ELEM", "")

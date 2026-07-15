@@ -1,13 +1,31 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=1]
 [ext_resource path="res://combat/battle_ui/BlackFadeStylebox.tres" type="StyleBox" id=2]
 [ext_resource path="res://combat/battle_ui/MoveWindow.gd" type="Script" id=3]
 [ext_resource path="res://combat/battle_ui/Aimflower.tscn" type="PackedScene" id=4]
 [ext_resource path="res://combat/battle_ui/TurntakerCurrentWindow.tscn" type="PackedScene" id=5]
+[ext_resource path="res://art/general/9patch standard shapes4.png" type="Texture" id=6]
+[ext_resource path="res://art/_placeholder/Texturelabs_Paper_183S.jpg" type="Texture" id=7]
 [ext_resource path="res://combat/battle_ui/components/ActionPointBar.tscn" type="PackedScene" id=13]
 [ext_resource path="res://combat/battle_ui/MovesetOption.tscn" type="PackedScene" id=14]
 [ext_resource path="res://text/fonts/built/Font Menu Small 1x.tres" type="DynamicFont" id=15]
+
+[sub_resource type="CanvasItemMaterial" id=28]
+blend_mode = 2
+
+[sub_resource type="StyleBoxTexture" id=27]
+content_margin_left = 2.0
+content_margin_right = 2.0
+content_margin_top = 2.0
+content_margin_bottom = 1.0
+texture = ExtResource( 6 )
+region_rect = Rect2( 0, 0, 12, 12 )
+margin_left = 3.0
+margin_right = 3.0
+margin_top = 3.0
+margin_bottom = 3.0
+modulate_color = Color( 0.227451, 0.227451, 0.227451, 0 )
 
 [sub_resource type="StyleBoxEmpty" id=9]
 
@@ -35,35 +53,53 @@ VBoxContainer/constants/separation = 0
 
 [node name="MoveWindow" type="Node2D"]
 script = ExtResource( 3 )
-path_movegrid = NodePath("PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid")
-path_tooltip_par = NodePath("PanelContainer/HB/EverythingElse/LowerHB/TTPar")
-path_turntaker = NodePath("PanelContainer/HB/EverythingElse/UpperHB/Turntaker")
-path_apb = NodePath("PanelContainer/HB/AimAndAP/ActionPointBar")
+path_movegrid = NodePath("FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid")
+path_tooltip_par = NodePath("FRAME/HB/EverythingElse/LowerHB/TTPar")
+path_turntaker = NodePath("FRAME/HB/EverythingElse/UpperHB/Turntaker")
+path_apb = NodePath("FRAME/HB/AimAndAP/ActionPointBar")
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="BackingPane" type="Panel" parent="."]
 margin_left = -5.0
 margin_top = -8.0
-margin_right = 333.0
+margin_right = 294.0
 margin_bottom = 95.0
-theme = ExtResource( 1 )
 custom_styles/panel = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HB" type="HBoxContainer" parent="PanelContainer"]
+[node name="TexturelabsPaper183s" type="Sprite" parent="."]
+self_modulate = Color( 0, 0.764706, 1, 0.478431 )
+material = SubResource( 28 )
+position = Vector2( -4, -134 )
+scale = Vector2( 0.154939, 0.154939 )
+texture = ExtResource( 7 )
+centered = false
+
+[node name="FRAME" type="PanelContainer" parent="."]
+margin_left = -5.0
+margin_top = -8.0
+margin_right = 333.0
+margin_bottom = 95.0
+theme = ExtResource( 1 )
+custom_styles/panel = SubResource( 27 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HB" type="HBoxContainer" parent="FRAME"]
 margin_left = 2.0
 margin_top = 2.0
-margin_right = 349.0
+margin_right = 336.0
 margin_bottom = 102.0
 
-[node name="S_Left" type="Panel" parent="PanelContainer/HB"]
+[node name="S_Left" type="Panel" parent="FRAME/HB"]
 margin_right = 10.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 10, 0 )
 custom_styles/panel = SubResource( 9 )
 
-[node name="AimAndAP" type="VBoxContainer" parent="PanelContainer/HB"]
+[node name="AimAndAP" type="VBoxContainer" parent="FRAME/HB"]
 margin_left = 10.0
 margin_right = 58.0
 margin_bottom = 100.0
@@ -71,13 +107,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SpacerTop" type="Panel" parent="PanelContainer/HB/AimAndAP"]
+[node name="SpacerTop" type="Panel" parent="FRAME/HB/AimAndAP"]
 margin_right = 48.0
 margin_bottom = 13.0
 rect_min_size = Vector2( 0, 13 )
 custom_styles/panel = SubResource( 10 )
 
-[node name="Aim" type="Panel" parent="PanelContainer/HB/AimAndAP"]
+[node name="Aim" type="Panel" parent="FRAME/HB/AimAndAP"]
 margin_top = 13.0
 margin_right = 48.0
 margin_bottom = 61.0
@@ -85,24 +121,24 @@ rect_min_size = Vector2( 48, 48 )
 size_flags_vertical = 4
 custom_styles/panel = SubResource( 11 )
 
-[node name="Aimflower" parent="PanelContainer/HB/AimAndAP/Aim" instance=ExtResource( 4 )]
+[node name="Aimflower" parent="FRAME/HB/AimAndAP/Aim" instance=ExtResource( 4 )]
 position = Vector2( 24, 24 )
 
-[node name="SpacerMidOver" type="Panel" parent="PanelContainer/HB/AimAndAP"]
+[node name="SpacerMidOver" type="Panel" parent="FRAME/HB/AimAndAP"]
 margin_top = 61.0
 margin_right = 48.0
 margin_bottom = 65.0
 rect_min_size = Vector2( 0, 4 )
 custom_styles/panel = SubResource( 10 )
 
-[node name="DivLineH" type="Panel" parent="PanelContainer/HB/AimAndAP"]
+[node name="DivLineH" type="Panel" parent="FRAME/HB/AimAndAP"]
 margin_top = 65.0
 margin_right = 48.0
 margin_bottom = 66.0
 rect_min_size = Vector2( 0, 1 )
 custom_styles/panel = SubResource( 23 )
 
-[node name="Shadow" type="Panel" parent="PanelContainer/HB/AimAndAP/DivLineH"]
+[node name="Shadow" type="Panel" parent="FRAME/HB/AimAndAP/DivLineH"]
 margin_left = 1.0
 margin_top = 1.0
 margin_right = 49.0
@@ -113,48 +149,48 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SpacerMidUnder" type="Panel" parent="PanelContainer/HB/AimAndAP"]
+[node name="SpacerMidUnder" type="Panel" parent="FRAME/HB/AimAndAP"]
 margin_top = 66.0
 margin_right = 48.0
 margin_bottom = 68.0
 rect_min_size = Vector2( 0, 2 )
 custom_styles/panel = SubResource( 10 )
 
-[node name="ActionPointBar" parent="PanelContainer/HB/AimAndAP" instance=ExtResource( 13 )]
+[node name="ActionPointBar" parent="FRAME/HB/AimAndAP" instance=ExtResource( 13 )]
 margin_top = 68.0
 margin_right = 48.0
 margin_bottom = 96.0
 
-[node name="S_Mid" type="Panel" parent="PanelContainer/HB"]
+[node name="S_Mid" type="Panel" parent="FRAME/HB"]
 margin_left = 58.0
 margin_right = 68.0
 margin_bottom = 100.0
 rect_min_size = Vector2( 10, 0 )
 custom_styles/panel = SubResource( 9 )
 
-[node name="EverythingElse" type="VBoxContainer" parent="PanelContainer/HB"]
+[node name="EverythingElse" type="VBoxContainer" parent="FRAME/HB"]
 margin_left = 68.0
-margin_right = 347.0
+margin_right = 304.0
 margin_bottom = 100.0
 
-[node name="UpperHB" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse"]
-margin_right = 279.0
+[node name="UpperHB" type="HBoxContainer" parent="FRAME/HB/EverythingElse"]
+margin_right = 236.0
 margin_bottom = 74.0
 custom_constants/separation = 0
 
-[node name="MoveVB" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/UpperHB"]
-margin_right = 214.0
+[node name="MoveVB" type="VBoxContainer" parent="FRAME/HB/EverythingElse/UpperHB"]
+margin_right = 222.0
 margin_bottom = 74.0
 
-[node name="S_Top" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB"]
-margin_right = 214.0
+[node name="S_Top" type="Panel" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB"]
+margin_right = 222.0
 margin_bottom = 10.0
 rect_min_size = Vector2( 0, 10 )
 custom_styles/panel = SubResource( 10 )
 
-[node name="MoveGrid" type="GridContainer" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB"]
+[node name="MoveGrid" type="GridContainer" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB"]
 margin_top = 10.0
-margin_right = 214.0
+margin_right = 222.0
 margin_bottom = 74.0
 rect_min_size = Vector2( 214, 64 )
 theme = SubResource( 1 )
@@ -164,92 +200,95 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Option1" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
-margin_right = 100.0
+[node name="Option1" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
+margin_right = 108.0
 
-[node name="Option2" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
-margin_left = 106.0
-margin_right = 206.0
+[node name="Option2" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
+margin_left = 114.0
+margin_right = 222.0
 my_x_col = 1
 
-[node name="Option3" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option3" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 16.0
-margin_right = 100.0
+margin_right = 108.0
 margin_bottom = 30.0
 my_y_row = 1
 
-[node name="Option4" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
-margin_left = 106.0
+[node name="Option4" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
+margin_left = 114.0
 margin_top = 16.0
-margin_right = 206.0
+margin_right = 222.0
 margin_bottom = 30.0
 my_x_col = 1
 my_y_row = 1
 
-[node name="Option5" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option5" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 32.0
-margin_right = 100.0
+margin_right = 108.0
 margin_bottom = 46.0
 my_y_row = 2
 
-[node name="Option6" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
-margin_left = 106.0
+[node name="Option6" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
+margin_left = 114.0
 margin_top = 32.0
-margin_right = 206.0
+margin_right = 222.0
 margin_bottom = 46.0
 my_x_col = 1
 my_y_row = 2
 
-[node name="Option7" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
+[node name="Option7" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
 margin_top = 48.0
-margin_right = 100.0
+margin_right = 108.0
 margin_bottom = 62.0
 my_y_row = 3
 
-[node name="Option8" parent="PanelContainer/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
-margin_left = 106.0
+[node name="Option8" parent="FRAME/HB/EverythingElse/UpperHB/MoveVB/MoveGrid" instance=ExtResource( 14 )]
+margin_left = 114.0
 margin_top = 48.0
-margin_right = 206.0
+margin_right = 222.0
 margin_bottom = 62.0
 my_x_col = 1
 my_y_row = 3
 
-[node name="SpacerReg" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB"]
-margin_left = 214.0
-margin_right = 218.0
+[node name="SpacerReg" type="Panel" parent="FRAME/HB/EverythingElse/UpperHB"]
+visible = false
+margin_left = 222.0
+margin_right = 226.0
 margin_bottom = 74.0
 rect_min_size = Vector2( 4, 0 )
 custom_styles/panel = SubResource( 25 )
 
-[node name="SpacerExtra" type="Panel" parent="PanelContainer/HB/EverythingElse/UpperHB"]
-margin_left = 218.0
-margin_right = 231.0
+[node name="SpacerExtra" type="Panel" parent="FRAME/HB/EverythingElse/UpperHB"]
+visible = false
+margin_left = 226.0
+margin_right = 239.0
 margin_bottom = 74.0
 rect_min_size = Vector2( 13, 0 )
 custom_styles/panel = SubResource( 26 )
 
-[node name="Turntaker" parent="PanelContainer/HB/EverythingElse/UpperHB" instance=ExtResource( 5 )]
-margin_left = 231.0
-margin_right = 279.0
+[node name="Turntaker" parent="FRAME/HB/EverythingElse/UpperHB" instance=ExtResource( 5 )]
+visible = false
+margin_left = 239.0
+margin_right = 287.0
 margin_bottom = 74.0
 
-[node name="LowerHB" type="HBoxContainer" parent="PanelContainer/HB/EverythingElse"]
+[node name="LowerHB" type="HBoxContainer" parent="FRAME/HB/EverythingElse"]
 margin_top = 74.0
-margin_right = 279.0
+margin_right = 236.0
 margin_bottom = 100.0
 
-[node name="SpacerL" type="Panel" parent="PanelContainer/HB/EverythingElse/LowerHB"]
+[node name="SpacerL" type="Panel" parent="FRAME/HB/EverythingElse/LowerHB"]
 margin_right = 8.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 8, 0 )
 custom_styles/panel = SubResource( 8 )
 
-[node name="TTPar" type="VBoxContainer" parent="PanelContainer/HB/EverythingElse/LowerHB"]
+[node name="TTPar" type="VBoxContainer" parent="FRAME/HB/EverythingElse/LowerHB"]
 margin_left = 8.0
 margin_right = 236.0
 margin_bottom = 26.0
 
-[node name="DescTooltip" type="Label" parent="PanelContainer/HB/EverythingElse/LowerHB/TTPar"]
+[node name="DescTooltip" type="Label" parent="FRAME/HB/EverythingElse/LowerHB/TTPar"]
 margin_right = 228.0
 margin_bottom = 13.0
 custom_colors/font_color = Color( 0.8, 0.886275, 0.882353, 1 )
@@ -260,7 +299,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="WarnTooltip" type="Label" parent="PanelContainer/HB/EverythingElse/LowerHB/TTPar"]
+[node name="WarnTooltip" type="Label" parent="FRAME/HB/EverythingElse/LowerHB/TTPar"]
 margin_top = 13.0
 margin_right = 228.0
 margin_bottom = 26.0

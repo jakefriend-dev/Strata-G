@@ -150,8 +150,8 @@ func visual_refresh():
 				$Highlight.visible = false
 		elif $Highlight.visible != currently_highlighted:
 			$Highlight.visible = currently_highlighted
-		if $Highlight/Shape.modulate != Color("000000"):
-			$Highlight/Shape.modulate = Color("000000")
+		if $Highlight.modulate != Color("000000"):
+			$Highlight.modulate = Color("000000")
 		return
 	
 	# Generic visibility setups
@@ -178,8 +178,8 @@ func visual_refresh():
 	m.set_shader_param("col_mid",        colset[1])
 	m.set_shader_param("unfill_height",  colset[2])
 	
-	if $Highlight/Shape.modulate != colsets[state]["highlight_shape"]:
-		$Highlight/Shape.modulate = colsets[state]["highlight_shape"]
+	if $Highlight.modulate != colsets[state]["highlight_shape"]:
+		$Highlight.modulate = colsets[state]["highlight_shape"]
 	
 	if $Highlight.visible != currently_highlighted:
 		$Highlight.visible = currently_highlighted
