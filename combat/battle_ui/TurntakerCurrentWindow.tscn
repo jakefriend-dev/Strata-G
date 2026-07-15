@@ -112,15 +112,24 @@ margin_left = 21.0
 margin_right = 25.0
 custom_styles/panel = SubResource( 3 )
 
+[node name="Sprite" parent="TTUI/VB/MidPlate/HealthBar/Panel8" index="0"]
+frame = 1
+
 [node name="Panel9" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 24.0
 margin_right = 28.0
 custom_styles/panel = SubResource( 3 )
 
+[node name="Sprite" parent="TTUI/VB/MidPlate/HealthBar/Panel9" index="0"]
+frame = 0
+
 [node name="Panel10" parent="TTUI/VB/MidPlate/HealthBar" instance=ExtResource( 6 )]
 margin_left = 27.0
 margin_right = 31.0
 custom_styles/panel = SubResource( 3 )
+
+[node name="Sprite" parent="TTUI/VB/MidPlate/HealthBar/Panel10" index="0"]
+frame = 0
 
 [node name="ShieldBar" type="HBoxContainer" parent="TTUI/VB/MidPlate"]
 margin_left = 31.0
@@ -285,3 +294,7 @@ __meta__ = {
 margin_top = 3.0
 margin_right = 48.0
 margin_bottom = 31.0
+
+[editable path="TTUI/VB/MidPlate/HealthBar/Panel8"]
+[editable path="TTUI/VB/MidPlate/HealthBar/Panel9"]
+[editable path="TTUI/VB/MidPlate/HealthBar/Panel10"]

@@ -6,7 +6,7 @@ export var path_vfx: NodePath
 export var path_misc: NodePath
 export var path_debuglog_par: NodePath
 export var path_turndisplay_par: NodePath
-export var path_actionsel_par: NodePath
+#export var path_actionsel_par: NodePath
 export var path_movewindow: NodePath
 var board: Node2D
 var actors: YSort
@@ -14,7 +14,7 @@ var vfx: YSort
 var misc: YSort
 var debuglog_par: VBoxContainer
 var turndisplay_par: VBoxContainer
-var actionsel_par: VBoxContainer
+#var actionsel_par: VBoxContainer
 var movewindow: Node2D
 
 var board_offset: Vector2
@@ -30,7 +30,7 @@ func _ready():
 	misc = get_node(path_misc)
 	debuglog_par = get_node(path_debuglog_par)
 	turndisplay_par = get_node(path_turndisplay_par)
-	actionsel_par = get_node(path_actionsel_par)
+#	actionsel_par = get_node(path_actionsel_par)
 	movewindow = get_node(path_movewindow)
 	
 	batman.field = self
@@ -46,7 +46,7 @@ func _ready():
 	batman.connect("action_log_updated", self, "update_debuglog")
 	batman.connect("set_up_board", self, "set_up_board")
 	batman.connect("populate_actors", self, "populate_actors")
-	batman.connect("action_option_view_changed", self, "update_action_selector")
+#	batman.connect("action_option_view_changed", self, "update_action_selector")
 	pass
 
 func set_up_board():
@@ -258,71 +258,71 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 
 # -
 
-func update_action_selector(_tf: bool):
-	if !utils.actorpass(batman.curr_actor):
-		push_action_selector_changes()
-		return
-	if not batman.curr_actor is ActorPlayer:
-		push_action_selector_changes()
-		return
-	
-	var pre_list: Array = []
-	var current: String = ""
-	var post_list: Array = []
-	
-	var index: int = -1
-	for key in batman.loaded_moveset:
-		index += 1 # Zero-based
-		var movename: String = batman.loaded_moveset[index]
-		var move: MoveAction = batman.curr_actor.moveset[movename]
-		
-		var formal: String = move.display_name
-		if index == batman.loaded_m_index:
-			current = str("* ",formal)
-			continue
-		
-		if current == "":
-			pre_list.append(formal)
-		else:
-			post_list.append(formal)
-		
-		pass
-	
-	# Now we should have all our strings!
-	var p: String = ""
-	var n: String = ""
-	
-	for line in pre_list:
-		p += "  "
-		p += line
-		if line != pre_list.back():
-			p += "\n"
-	
-	for line in post_list:
-		n += "  "
-		n += line
-		if line != post_list.back():
-			n += "\n"
-	
-	push_action_selector_changes(p, current, n)
-	pass
+#func update_action_selector(_tf: bool):
+#	if !utils.actorpass(batman.curr_actor):
+#		push_action_selector_changes()
+#		return
+#	if not batman.curr_actor is ActorPlayer:
+#		push_action_selector_changes()
+#		return
+#
+#	var pre_list: Array = []
+#	var current: String = ""
+#	var post_list: Array = []
+#
+#	var index: int = -1
+#	for key in batman.loaded_moveset:
+#		index += 1 # Zero-based
+#		var movename: String = batman.loaded_moveset[index]
+#		var move: MoveAction = batman.curr_actor.moveset[movename]
+#
+#		var formal: String = move.display_name
+#		if index == batman.loaded_m_index:
+#			current = str("* ",formal)
+#			continue
+#
+#		if current == "":
+#			pre_list.append(formal)
+#		else:
+#			post_list.append(formal)
+#
+#		pass
+#
+#	# Now we should have all our strings!
+#	var p: String = ""
+#	var n: String = ""
+#
+#	for line in pre_list:
+#		p += "  "
+#		p += line
+#		if line != pre_list.back():
+#			p += "\n"
+#
+#	for line in post_list:
+#		n += "  "
+#		n += line
+#		if line != post_list.back():
+#			n += "\n"
+#
+#	push_action_selector_changes(p, current, n)
+#	pass
 
-func push_action_selector_changes(p: String = "", c: String = "", n: String = ""):
-	var prev: Label = actionsel_par.get_node("Prev")
-	var curr: Label = actionsel_par.get_node("Curr")
-	var next: Label = actionsel_par.get_node("Next")
-	
-	if prev.text != p: prev.text = p
-	if curr.text != c: curr.text = c
-	if next.text != n: next.text = n
-	
-	if prev.visible != (p != ""):
-		prev.visible = (p != "")
-	if curr.visible != (c != ""):
-		curr.visible = (c != "")
-	if next.visible != (n != ""):
-		next.visible = (n != "")
-	pass
+#func push_action_selector_changes(p: String = "", c: String = "", n: String = ""):
+#	var prev: Label = actionsel_par.get_node("Prev")
+#	var curr: Label = actionsel_par.get_node("Curr")
+#	var next: Label = actionsel_par.get_node("Next")
+#
+#	if prev.text != p: prev.text = p
+#	if curr.text != c: curr.text = c
+#	if next.text != n: next.text = n
+#
+#	if prev.visible != (p != ""):
+#		prev.visible = (p != "")
+#	if curr.visible != (c != ""):
+#		curr.visible = (c != "")
+#	if next.visible != (n != ""):
+#		next.visible = (n != "")
+#	pass
 
 
 
