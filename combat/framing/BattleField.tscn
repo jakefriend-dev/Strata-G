@@ -124,6 +124,7 @@ centered = false
 z_index = 1
 
 [node name="OLD_TurnDisplay" type="Node2D" parent="MenuOverlays"]
+visible = false
 position = Vector2( 635, 115 )
 
 [node name="VB" type="VBoxContainer" parent="MenuOverlays/OLD_TurnDisplay"]
