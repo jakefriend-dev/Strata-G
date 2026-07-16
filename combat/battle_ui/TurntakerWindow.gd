@@ -155,7 +155,8 @@ func tbd():
 	tweenlock = true
 	tween.remove_all()
 	
-	# All deleted turns should be destroyed first, ie. go offscreen
+	# All deleted turns should move up to ready for destruction
+	# This should include whoever the current turntaker is moving up too
 	var offscreen_check: bool = false
 	if !exiting_tts.empty():
 		offscreen_check = true
@@ -163,15 +164,32 @@ func tbd():
 			tween.interpolate_property(tt, "position", null, Vector2(tt.position.x, -26), scoot_time, Tween.TRANS_QUINT, Tween.EASE_OUT)
 			tt.vis_state = tt.PORTRAIT
 			tt.update_visible()
+	
+	if utils.valid(front_turntaker):
+		var list_order: int = turn_order_to_list_order(front_turntaker.turn_order)
+		if front_turntaker.list_order != 1:
+			offscreen_check = true
+			tween.interpolate_property(front_turntaker, "position", null, Vector2(front_turntaker.position.x, -26), scoot_time, Tween.TRANS_QUINT, Tween.EASE_OUT)
+			front_turntaker.vis_state = front_turntaker.PORTRAIT
+			front_turntaker.update_visible()
+	
+	if offscreen_check:
 		tween.start()
 		yield(utils.yt(scoot_time, self), "timeout")
 		
 		for tt in exiting_tts:
 			remove_turntaker(tt)
+		
+		if utils.valid(front_turntaker): if front_turntaker.list_order != 1:
+			# Snap the position so we tween in from a clean spot
+			front_turntaker.position = get_pos(front_turntaker.turn_order, true)
+			back_turntaker = front_turntaker
+	front_turntaker = null
 	
 	# Then we update TT positions against turns, *knowing* there could be a new TT ready to add
-	# This should include whoever the current turntaker is moving up
+	var repo_check: bool = false
 	
-	# Then we make the new TTs enter
+	# Then we make the new TTs enter (have to create them first?)
 	# This should include whoever the previous turntaker was moving down
+	var entry_check: bool = false
 	pass

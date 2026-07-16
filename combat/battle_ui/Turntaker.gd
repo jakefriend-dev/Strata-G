@@ -29,9 +29,9 @@ var turn_order: int = -1 # Treat -1 as invalid; numbers >0 as valid
 var linked_ttd: Dictionary
 
 # Used by TurntakerWindow to yank us around!
-var repo_from: Vector2
-var repo_to: Vector2
-var ready_to_repo: bool = false
+#var repo_from: Vector2
+#var repo_to: Vector2
+#var ready_to_repo: bool = false
 
 # ---
 
