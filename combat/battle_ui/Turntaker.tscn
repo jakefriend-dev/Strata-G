@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://combat/battle_ui/components/PipStatus.tscn" type="PackedScene" id=1]
 [ext_resource path="res://combat/framing/MasterTheme.tres" type="Theme" id=2]
@@ -12,6 +12,8 @@
 [ext_resource path="res://art/bui/pips/4x shield pip.png" type="Texture" id=12]
 
 [sub_resource type="StyleBoxEmpty" id=10]
+
+[sub_resource type="StyleBoxEmpty" id=30]
 
 [sub_resource type="StyleBoxTexture" id=25]
 content_margin_left = 0.0
@@ -45,12 +47,12 @@ bg_color = Color( 0, 0, 0, 1 )
 
 [node name="Turntaker" type="Node2D"]
 script = ExtResource( 10 )
-path_portrait = NodePath("VB/VB/PortraitArt/Head48x")
+path_portrait = NodePath("VB/VB/PortraitArt/AllPortrait")
 path_nameplate = NodePath("VB/VB/NamePlate")
 path_midplate = NodePath("VB/TTUI/VB/MidPlate")
 path_botplate = NodePath("VB/TTUI/VB/BotPlate")
 path_actionpar = NodePath("VB/ActionSection")
-path_cr = NodePath("VB/VB/PortraitArt/RedTint/ColorRect")
+path_cr = NodePath("VB/VB/PortraitArt/AllPortrait/RedTint/ColorRect")
 
 [node name="VB" type="VBoxContainer" parent="."]
 margin_left = -12.0
@@ -82,28 +84,19 @@ __meta__ = {
 }
 
 [node name="PortraitArt" type="PanelContainer" parent="VB/VB"]
-self_modulate = Color( 1, 1, 1, 0.690196 )
 margin_right = 24.0
 margin_bottom = 24.0
 rect_min_size = Vector2( 24, 24 )
 size_flags_horizontal = 4
-custom_styles/panel = SubResource( 25 )
+custom_styles/panel = SubResource( 30 )
 
-[node name="Head48x" type="Sprite" parent="VB/VB/PortraitArt"]
-texture = ExtResource( 4 )
-centered = false
+[node name="AllPortrait" type="Node2D" parent="VB/VB/PortraitArt"]
 
-[node name="HeadShadow" type="Sprite" parent="VB/VB/PortraitArt/Head48x"]
-self_modulate = Color( 0, 0, 0, 1 )
-show_behind_parent = true
-texture = ExtResource( 4 )
-centered = false
-
-[node name="Shadow" type="Node2D" parent="VB/VB/PortraitArt"]
+[node name="Shadows" type="Node2D" parent="VB/VB/PortraitArt/AllPortrait"]
 show_behind_parent = true
 position = Vector2( 1, 1 )
 
-[node name="PanelShadow" type="PanelContainer" parent="VB/VB/PortraitArt/Shadow"]
+[node name="PanelShadow" type="PanelContainer" parent="VB/VB/PortraitArt/AllPortrait/Shadows"]
 modulate = Color( 0, 0, 0, 1 )
 margin_right = 24.0
 margin_bottom = 24.0
@@ -114,10 +107,32 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RedTint" type="Node2D" parent="VB/VB/PortraitArt"]
+[node name="IconShadow" type="Sprite" parent="VB/VB/PortraitArt/AllPortrait/Shadows"]
+visible = false
+self_modulate = Color( 0, 0, 0, 1 )
+show_behind_parent = true
+texture = ExtResource( 4 )
+centered = false
+
+[node name="PortraitFrame" type="PanelContainer" parent="VB/VB/PortraitArt/AllPortrait"]
+self_modulate = Color( 1, 1, 1, 0.662745 )
+margin_right = 24.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 24, 24 )
+size_flags_horizontal = 4
+custom_styles/panel = SubResource( 25 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="IconSprite" type="Sprite" parent="VB/VB/PortraitArt/AllPortrait"]
+texture = ExtResource( 4 )
+centered = false
+
+[node name="RedTint" type="Node2D" parent="VB/VB/PortraitArt/AllPortrait"]
 position = Vector2( 24, 24 )
 
-[node name="ColorRect" type="ColorRect" parent="VB/VB/PortraitArt/RedTint"]
+[node name="ColorRect" type="ColorRect" parent="VB/VB/PortraitArt/AllPortrait/RedTint"]
 material = SubResource( 29 )
 margin_right = 24.0
 rect_rotation = 180.0

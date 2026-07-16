@@ -8,7 +8,7 @@ export var path_midplate: NodePath
 export var path_botplate: NodePath
 export var path_actionpar: NodePath
 export var path_cr: NodePath
-var portrait: Sprite
+var portrait: Node2D
 var nameplate: Panel
 var midplate: HBoxContainer
 var botplate: HBoxContainer
@@ -21,6 +21,7 @@ var shield_bar: HBoxContainer
 var hp_num: HBoxContainer
 var statuspar: HBoxContainer
 var apb: VBoxContainer
+var portrait_art: Sprite
 
 enum {ZERO, PORTRAIT, NAME, HEALTH, STATUS, ACTIONS, MAXIMUM} # In progressive order; typically STATUS for current turntaker and PORTRAIT for non-currents
 var vis_state: int = STATUS
@@ -28,10 +29,10 @@ var vis_state: int = STATUS
 var turn_order: int = -1 # Treat -1 as invalid; numbers >0 as valid
 var linked_ttd: Dictionary
 
-# Used by TurntakerWindow to yank us around!
-#var repo_from: Vector2
-#var repo_to: Vector2
-#var ready_to_repo: bool = false
+var shake_dur: float = 0.0
+
+# Used by TurntakerWindow to vet us!
+var no_longer_valid: bool = false
 
 # ---
 
@@ -49,6 +50,7 @@ func _ready():
 	hp_num = botplate.get_node("HealthNum")
 	statuspar = botplate.get_node("Status")
 	apb = actionpar.get_node("ActionPointBar")
+	portrait_art = portrait.get_node("IconSprite")
 	
 	batman.connect("this_actor_any_bui_update", self, "check_for_updates")
 	
@@ -114,6 +116,8 @@ func update_values():
 	# Health colour tint
 	var target_height: float = round((1.0 - hp_percent) * 24.0)
 	if cr.rect_size.y != target_height:
+		# We've taken damage!
+		damage_impact_effect()
 		cr.rect_size.y = target_height
 	
 	# Health number
@@ -186,12 +190,14 @@ func update_values():
 func update_visible():
 	var effective_state: int = vis_state
 	if !utils.actorpass(actor):
-		effective_state = ZERO
+		effective_state = PORTRAIT
+#		effective_state = ZERO
 	
 	if visible != (effective_state >= PORTRAIT):
 		visible = (effective_state >= PORTRAIT)
 	
-	portrait.visible = (actor.ofc_name == "Mage")
+	if utils.actorpass(actor):
+		portrait_art.visible = (actor.ofc_name == "Mage")
 	
 	if nameplate.visible != (effective_state >= NAME):
 		nameplate.visible = (effective_state >= NAME)
@@ -206,3 +212,28 @@ func update_visible():
 		actionpar.visible = (effective_state >= ACTIONS)
 	
 	pass
+
+# ---
+
+func damage_impact_effect():
+	shake_dur = 0.125
+	pass
+
+func _physics_process(d: float):
+	if is_zero_approx(shake_dur):
+		if portrait.position != Vector2.ZERO:
+			portrait.position = Vector2.ZERO
+	else:
+		var shake: float = 2.5
+		portrait.position.x = rand_range(-shake, shake)
+		portrait.position.y = rand_range(-shake, shake)
+	
+	if shake_dur > 0:
+		shake_dur -= d
+		if shake_dur < 0: shake_dur = 0
+	pass
+
+
+
+
+

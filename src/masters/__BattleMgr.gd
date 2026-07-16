@@ -55,7 +55,6 @@ signal new_action_preview_data_readied(MPD)
 
 const BASE_HP_FACTOR: int = 4
 
-signal turnwindow_anims_complete()
 var turncount: int = 0 # Starts at 1 for first turn and cycles upwards until resetting
 var turnqueue: Array = [
 	# Full of turndata dictionaries, already sorted (via turnpos)!
@@ -97,6 +96,7 @@ signal on_turn_ended_via_interruption()
 signal on_turn_exited()
 signal turnqueue_constructed()
 signal turnqueue_updated()
+signal turnwindow_anims_complete()
 
 signal targeted_tiles_updated()
 signal update_all_preview_drawing()
@@ -682,7 +682,7 @@ func cycle_to_next_turn():
 		field.update_targeting()
 		emit_signal("new_round_started")
 		update_action_log(str("ROUND [",round_count,"] - BEGIN!"))
-		yield(utils.yt(0.03, self), "timeout")
+#		yield(utils.yt(0.03, self), "timeout")
 	else:
 		turncount += 1
 	
@@ -700,6 +700,7 @@ func cycle_to_next_turn():
 	
 	# Final setup! We've cleared validations!
 	emit_signal("turnqueue_updated")
+	yield(self, "turnwindow_anims_complete")
 	
 #	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
 	pre_prep_new_turn()
@@ -737,8 +738,8 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	pass
 
 func end_turn(): # Includes post-turn; assumes NO interruption
-	if last_execution_frame == get_tree().get_frame():
-		yield(utils.yt(timeout_turn_time, self), "timeout")
+#	if last_execution_frame == get_tree().get_frame(): # Think we no longer need this with the turnwindow shuffling delay!
+#		yield(utils.yt(timeout_turn_time, self), "timeout")
 	
 	combatstate = C_END_TURN_NATURALLY
 	emit_signal("on_turn_ended_naturally")
