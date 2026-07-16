@@ -49,6 +49,7 @@ __meta__ = {
 }
 
 [node name="Label" type="Label" parent="QueuePanel"]
+visible = false
 margin_left = 56.0
 margin_top = 26.0
 margin_right = 176.0
@@ -62,35 +63,37 @@ __meta__ = {
 }
 
 [node name="All_TT" type="Node2D" parent="."]
+position = Vector2( 0, 2 )
 
 [node name="All_POS" type="Node2D" parent="."]
+position = Vector2( 0, 2 )
 
 [node name="Order1" type="Position2D" parent="All_POS"]
-position = Vector2( 9, 2 )
+position = Vector2( 9, 0 )
 
 [node name="Order2" type="Position2D" parent="All_POS"]
-position = Vector2( 55, 2 )
+position = Vector2( 55, 0 )
 
 [node name="Order3" type="Position2D" parent="All_POS"]
-position = Vector2( 83, 2 )
+position = Vector2( 83, 0 )
 
 [node name="Order4" type="Position2D" parent="All_POS"]
-position = Vector2( 111, 2 )
+position = Vector2( 111, 0 )
 
 [node name="Order5" type="Position2D" parent="All_POS"]
-position = Vector2( 139, 2 )
+position = Vector2( 139, 0 )
 
 [node name="Order6" type="Position2D" parent="All_POS"]
-position = Vector2( 167, 2 )
+position = Vector2( 167, 0 )
 
 [node name="Order7" type="Position2D" parent="All_POS"]
-position = Vector2( 195, 2 )
+position = Vector2( 195, 0 )
 
 [node name="Order8" type="Position2D" parent="All_POS"]
-position = Vector2( 223, 2 )
+position = Vector2( 223, 0 )
 
 [node name="Order9" type="Position2D" parent="All_POS"]
-position = Vector2( 251, 2 )
+position = Vector2( 251, 0 )
 
 [node name="OffscreenGuide" type="ColorRect" parent="."]
 margin_top = -1.0

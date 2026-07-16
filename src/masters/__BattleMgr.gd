@@ -55,6 +55,7 @@ signal new_action_preview_data_readied(MPD)
 
 const BASE_HP_FACTOR: int = 4
 
+signal turnwindow_anims_complete()
 var turncount: int = 0 # Starts at 1 for first turn and cycles upwards until resetting
 var turnqueue: Array = [
 	# Full of turndata dictionaries, already sorted (via turnpos)!
