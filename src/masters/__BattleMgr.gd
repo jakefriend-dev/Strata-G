@@ -57,7 +57,7 @@ const BASE_HP_FACTOR: int = 4
 
 var turncount: int = 0 # Starts at 1 for first turn and cycles upwards until resetting
 var turnqueue: Array = [
-	# Full of turndata dictionaries, already sorted in order!
+	# Full of turndata dictionaries, already sorted (via turnpos)!
 	# Assumes all turntakers are ALIVE
 		# actor						Null if no longer relevant, otherwise an Actor
 		# init						Float; The original initiative roll (eg. 5.72013)
@@ -66,7 +66,7 @@ var turnqueue: Array = [
 		# numerated_name			As "Doggo 1" with a space and all, even if there's only 1
 		# numeration				Int; the 1 in Doggo 1
 		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
-		# turnpos					Int; managed by batman but 
+		# turnpos					Int; managed externally
 ]
 var living_actors: Array = [] # DOES count things like rocks that have no turns, since they have health
 var slain_actors: Array = [] # When turndata is deleted from turnqueue it goes here, to track things like XP and to keep turnqueue clear for living turntakers only.

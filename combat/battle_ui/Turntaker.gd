@@ -23,7 +23,13 @@ var apb: VBoxContainer
 enum {ZERO, PORTRAIT, NAME, HEALTH, STATUS, ACTIONS, MAXIMUM} # In progressive order; typically STATUS for current turntaker and PORTRAIT for non-currents
 var vis_state: int = STATUS
 
-var order: int = -1 # Treat -1 as invalid; numbers >0 as valid
+var turn_order: int = -1 # Treat -1 as invalid; numbers >0 as valid
+var linked_ttd: Dictionary
+
+# Used by TurntakerWindow to yank us around!
+var repo_from: Vector2
+var repo_to: Vector2
+var ready_to_repo: bool = false
 
 # ---
 
@@ -60,8 +66,11 @@ func set_actor(incoming_actor: Actor):
 	actor = incoming_actor
 	statuspar.actor = actor
 	
-	vis_state = STATUS
-	
+	update_values()
+	update_visible()
+	pass
+
+func refresh():
 	update_values()
 	update_visible()
 	pass
@@ -173,6 +182,8 @@ func update_visible():
 	
 	if visible != (effective_state >= PORTRAIT):
 		visible = (effective_state >= PORTRAIT)
+	
+	portrait.visible = (actor.ofc_name == "Mage")
 	
 	if nameplate.visible != (effective_state >= NAME):
 		nameplate.visible = (effective_state >= NAME)
