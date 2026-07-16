@@ -2,6 +2,8 @@ extends Node2D
 
 onready var tween: Tween = get_node("Tween")
 var tweenqueue: Array = []
+var tweenlock: bool = false
+var scoot_time: float = 0.25
 
 # REFERENCE TO BATMAN.TURNQUEUE ONLY
 #var turnqueue: Array = [
@@ -20,9 +22,14 @@ var tweenqueue: Array = []
 var y_offscreen: float = 28.0
 onready var tt_par: Node2D = $All_TT
 
+var front_turntaker: Node2D
+var back_turntaker: Node2D # Just to track the *previous* front_turntaker
 var active_turntakers: Array = []
 # ^ Simple array holding refs to ALL turntaker scenes, in order!
 # If a TT here is missing from batman's TQ, it gets removed/destroyed; vice versa for adding
+
+var exiting_tts: Array = [] # Queued to be deleted
+var entering_tts: Array = [] # Queued to be brought in
 
 # ---
 
@@ -42,7 +49,7 @@ func add_new_turntaker(ttd: Dictionary):
 #	tt.set("actor", ttd["actor"])
 	var turn_order: int = ttd["turnpos"]
 	tt.set("turn_order", turn_order)
-	tt.set("position", get_pos(turn_order))
+	tt.set("position", get_pos(turn_order, true))
 	if turn_order_to_list_order(turn_order) == 1:
 		tt.set("vis_state", tt.STATUS)
 	else:
@@ -55,6 +62,8 @@ func add_new_turntaker(ttd: Dictionary):
 	pass
 
 func remove_turntaker(tt: Node2D):
+	if active_turntakers.has(tt):
+		active_turntakers.erase(tt)
 	tt.get_parent().remove_child(tt)
 	tt.queue_free()
 	pass
@@ -72,12 +81,12 @@ func on_turnqueue_update():
 	pass
 
 func refresh_tt_values_and_activeness():
-	var exiting_tts: Array = []
 	
 	# Updates existing (and checks exiting)
 	for tt in active_turntakers:
 		if !batman.turnqueue.has(tt.linked_ttd) or !utils.actorpass(tt.actor):
-			exiting_tts.append(tt)
+			if !exiting_tts.has(tt):
+				exiting_tts.append(tt)
 			continue
 		
 		tt.turn_order = tt.linked_ttd["turnpos"]
@@ -140,5 +149,29 @@ func turn_order_to_list_order(turn_order: int) -> int:
 
 # Tweens!
 
-func move_tt_offscreen():
+func tbd():
+	if tweenlock: return
+	
+	tweenlock = true
+	tween.remove_all()
+	
+	# All deleted turns should be destroyed first, ie. go offscreen
+	var offscreen_check: bool = false
+	if !exiting_tts.empty():
+		offscreen_check = true
+		for tt in exiting_tts:
+			tween.interpolate_property(tt, "position", null, Vector2(tt.position.x, -26), scoot_time, Tween.TRANS_QUINT, Tween.EASE_OUT)
+			tt.vis_state = tt.PORTRAIT
+			tt.update_visible()
+		tween.start()
+		yield(utils.yt(scoot_time, self), "timeout")
+		
+		for tt in exiting_tts:
+			remove_turntaker(tt)
+	
+	# Then we update TT positions against turns, *knowing* there could be a new TT ready to add
+	# This should include whoever the current turntaker is moving up
+	
+	# Then we make the new TTs enter
+	# This should include whoever the previous turntaker was moving down
 	pass

@@ -7,11 +7,13 @@ export var path_nameplate: NodePath
 export var path_midplate: NodePath
 export var path_botplate: NodePath
 export var path_actionpar: NodePath
+export var path_cr: NodePath
 var portrait: Sprite
 var nameplate: Panel
 var midplate: HBoxContainer
 var botplate: HBoxContainer
 var actionpar: VBoxContainer
+var cr: ColorRect
 # Below are relative-dynamic based on the above
 var namelabel: Label
 var hp_bar: HBoxContainer
@@ -39,6 +41,7 @@ func _ready():
 	midplate = get_node(path_midplate)
 	botplate = get_node(path_botplate)
 	actionpar = get_node(path_actionpar)
+	cr = get_node(path_cr)
 	
 	namelabel = nameplate.get_node("NameActual")
 	hp_bar = midplate.get_node("HealthBar")
@@ -107,6 +110,11 @@ func update_values():
 			to_frame = value_max - value_for_bar
 		if sprite.frame != to_frame:
 			sprite.frame = to_frame
+	
+	# Health colour tint
+	var target_height: float = round((1.0 - hp_percent) * 24.0)
+	if cr.rect_size.y != target_height:
+		cr.rect_size.y = target_height
 	
 	# Health number
 	var hp_fullnum: int = floor(float(actor.health)/4.0)
