@@ -19,7 +19,9 @@ var movewindow: Node2D
 var tq_window: Node2D
 var tt_par: Node2D
 
-export var path_curr_turntaker: NodePath
+export var path_major_text: NodePath
+var major_text: Node2D
+#export var path_curr_turntaker: NodePath
 #var curr_turntaker: Node2D
 
 var board_offset: Vector2
@@ -37,6 +39,7 @@ func _ready():
 	turndisplay_par = get_node(path_turndisplay_par)
 #	actionsel_par = get_node(path_actionsel_par)
 	movewindow = get_node(path_movewindow)
+	major_text = get_node(path_major_text)
 #	curr_turntaker = get_node(path_curr_turntaker)
 	
 	batman.field = self
@@ -52,7 +55,8 @@ func _ready():
 	batman.connect("action_log_updated", self, "update_debuglog")
 	batman.connect("set_up_board", self, "set_up_board")
 	batman.connect("populate_actors", self, "populate_actors")
-#	batman.connect("action_option_view_changed", self, "update_action_selector")
+	
+	hide_major_text()
 	pass
 
 func set_up_board():
@@ -260,6 +264,15 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 		labelcurr.visible = (labelcurr.text != "")
 	if labelnext.visible != (labelnext.text != ""):
 		labelnext.visible = (labelnext.text != "")
+	pass
+
+func show_major_text(new_text: String):
+	major_text.get_node("Label").text = new_text
+	major_text.visible = true
+	pass
+
+func hide_major_text():
+	major_text.visible = false
 	pass
 
 # -

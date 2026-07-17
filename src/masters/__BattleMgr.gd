@@ -403,6 +403,8 @@ func init_new_combat(new_battle_details: Dictionary):
 	roll_initiative()
 	perform_local_pre_combat_setup()
 	
+	yield(utils.yt(0.5, self), "timeout")
+	
 	# This ACTUALLY STARTS the fight!
 	cycle_to_next_turn() 
 	
@@ -586,6 +588,7 @@ func math_out_board_gpos_cells():
 
 func load_battle_field():
 	utils.change_master_scene("battlefield")
+	field.show_major_text("Combat Begins")
 	emit_signal("set_up_board") # Places BattleCell scenes in BattleField
 	emit_signal("populate_actors") # Actually puts the actor scenes on the board
 	pass
@@ -666,8 +669,10 @@ func cycle_to_next_turn():
 	combatstate = C_TRANSITION
 	
 	var is_new_round: bool = false
+	var is_first_round: bool = false
 	if turncount == 0: # It's our first round
 		is_new_round = true
+		is_first_round = true
 	else:
 		clean_up_turnqueue() # Always do this, each new turn after the initial. Remember that this also updates turncount and turnqueue.size()!
 		
@@ -699,6 +704,14 @@ func cycle_to_next_turn():
 		return
 	
 	# Final setup! We've cleared validations!
+	
+	# Hide the window regardless; it'll get brought back as relevant by player chars
+	utils.tween.interpolate_property(field.movewindow, "modulate:a", null, 0.0, timeout_turn_time, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	utils.tween.start()
+	
+	if !is_first_round:
+		field.show_major_text("Next Turne")
+	
 	emit_signal("turnqueue_updated")
 	yield(self, "turnwindow_anims_complete")
 	
@@ -720,18 +733,24 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	
 	moveselcol = 0
 	moveselrow = 0
-	field.movewindow.load_movewindow()
-	field.movewindow.update_ap()
 	
 	if curr_actor is ActorPlayer:
+		curr_actor.prep_moveset_on_turn_start()
+		
+		field.movewindow.load_movewindow()
+		field.movewindow.update_ap()
+		
 		loaded_moveset = curr_actor.moveset.keys()
 		loaded_move = field.movewindow.get_loaded_move() # Allowed to return null even when 'scripted' function
-		curr_actor.prep_moveset_on_turn_start()
+		emit_signal("action_option_view_changed", true)
+		utils.tween.interpolate_property(field.movewindow, "modulate:a", null, 1.0, timeout_turn_time, Tween.TRANS_CUBIC, Tween.EASE_IN)
+		utils.tween.start()
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	if !is_game_live(): return
 	
 	combatstate = C_TURN
+	field.hide_major_text()
 	emit_signal("action_option_view_changed", true)
 	strife.TILE_event_turn_started_on(curr_actor, curr_actor.coord)
 	curr_actor.choose_action()
@@ -765,6 +784,7 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 	emit_signal("on_turn_exited")
 	
 	# Wipe out the current actionqueue and de-ghost everyone
+	field.movewindow.updatelock = true
 	flush_actionqueue()
 	support.de_ghost_all_actors()
 	
@@ -1221,7 +1241,8 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var logline: String = str("[",actor.ofc_name,"] --> ",logname)
 	update_action_log(logline)
 	emit_signal("any_actionstep_initiated")
-	field.movewindow.refresh_all()
+	if curr_actor is ActorPlayer:
+		field.movewindow.refresh_all()
 	
 	# Execute!
 	if paramset.empty():

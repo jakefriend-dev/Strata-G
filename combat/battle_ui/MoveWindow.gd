@@ -16,6 +16,8 @@ var apb: VBoxContainer
 var desccols: Array = [Color("ffdba5"), Color("fdbaf2")]
 var warncols: Array = [Color("9cd8fc"), Color("ff94b3")]
 
+var updatelock: bool = false # If true, does not process updates
+
 # ---
 
 func _ready():
@@ -26,9 +28,12 @@ func _ready():
 	
 	for moveopt in movegrid.get_children():
 		moveopt.window = self
+	
+	modulate.a = 0.0
 	pass
 
 func load_movewindow():
+	updatelock = false
 	
 	for moveopt in movegrid.get_children():
 		moveopt.move = null
@@ -83,6 +88,8 @@ func load_movewindow():
 	pass
 
 func refresh_all():
+	if updatelock: return
+	
 	var tt_desc_text: String = ""
 	var tt_warn_text: String = ""
 	var tt_desc_col: Color = desccols[1]
@@ -110,6 +117,8 @@ func refresh_all():
 	pass
 
 func update_error_text_only():
+	if updatelock: return
+	
 	var error_text: String = ""
 	var is_moveopt_available: bool = false
 	for moveopt in movegrid.get_children():
@@ -162,9 +171,11 @@ func attempt_to_run_moveoption_custom_function() -> bool:
 	pass
 
 func update_ap():
+	if updatelock: return
 	if !utils.actorpass(batman.curr_actor):
 		apb.modulate.a = 0.0
 		return
+	
 	apb.modulate.a = 1.0
 	
 	var curr: int = batman.curr_actor.action_points

@@ -141,7 +141,8 @@ func translate_desc(desc: String) -> String:
 func get_damage() -> int:
 	var damage: int = base_damage
 	
-	damage += actor.get_damage_mod_total()
+	if utils.actorpass(actor): # Weird fringe case going to the turn of someone who just died, I guess...?
+		damage += actor.get_damage_mod_total()
 	
 	if damage < 0: return 0
 	return damage
