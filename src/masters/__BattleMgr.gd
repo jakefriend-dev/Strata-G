@@ -401,6 +401,7 @@ func init_new_combat(new_battle_details: Dictionary):
 	math_out_board_gpos_cells()
 	
 	load_battle_field()
+	yield(utils.root, "new_scene_readied")
 	
 	yield(utils.yt(timeout_major_text, self), "timeout")
 	if !is_combat_mode(): return
@@ -592,7 +593,9 @@ func math_out_board_gpos_cells():
 
 func load_battle_field():
 	utils.change_master_scene("battlefield")
-	field.show_major_text("Combat Begins")
+	yield(utils.root, "new_scene_readied")
+	
+	field.show_major_text("Combat Begins", "", true)
 	emit_signal("set_up_board") # Places BattleCell scenes in BattleField
 	emit_signal("populate_actors") # Actually puts the actor scenes on the board
 	field.update_targeting()
@@ -739,7 +742,7 @@ func do_preturn_visuals(mtext: String):
 	emit_signal("turnqueue_updated")
 	if mtext != "": # Means it's not the first round
 		var unit_name: String = curr_actor.ofc_name
-		field.show_major_text(mtext, unit_name)
+		field.show_major_text(unit_name, mtext)
 	
 	# TurnWindow scoot_time is (currently) 0.25, and a maximum sequence length would be half that times 3 for 0.375. So if we consistently hold a longer window than that here, we can ignore the turnwindow signal.
 	

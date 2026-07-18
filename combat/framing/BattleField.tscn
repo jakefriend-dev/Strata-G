@@ -68,6 +68,7 @@ __meta__ = {
 }
 
 [node name="floor2" type="Sprite" parent="BG"]
+visible = false
 modulate = Color( 1, 1, 1, 0.47451 )
 position = Vector2( -1, 114 )
 scale = Vector2( 0.854667, 0.854667 )
@@ -242,20 +243,22 @@ position = Vector2( 4, 99 )
 [node name="Texture1" type="Sprite" parent="MenuOverlays/MajorText"]
 modulate = Color( 1, 1, 1, 0.501961 )
 material = SubResource( 38 )
+position = Vector2( 0, -32 )
 scale = Vector2( 0.334895, 0.334895 )
 texture = ExtResource( 13 )
 centered = false
 
-[node name="BigLabel" type="Label" parent="MenuOverlays/MajorText"]
-margin_right = 40.0
-margin_bottom = 14.0
+[node name="SmallLabel" type="Label" parent="MenuOverlays/MajorText"]
+margin_top = -60.0
+margin_right = 640.0
+margin_bottom = 300.0
 rect_min_size = Vector2( 640, 360 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 0.686275 )
 custom_constants/shadow_offset_x = 4
 custom_constants/shadow_offset_y = 4
-custom_fonts/font = ExtResource( 11 )
-text = "Next Turne"
+custom_fonts/font = ExtResource( 15 )
+text = "“Bard” \"Bard\""
 align = 1
 valign = 1
 __meta__ = {
@@ -265,22 +268,21 @@ __meta__ = {
 [node name="Texture2" type="Sprite" parent="MenuOverlays/MajorText"]
 modulate = Color( 1, 1, 1, 0.239216 )
 material = SubResource( 38 )
-position = Vector2( 642, -11 )
+position = Vector2( 642, -40 )
 scale = Vector2( -0.335, 0.335 )
 texture = ExtResource( 13 )
 centered = false
 
-[node name="SmallLabel" type="Label" parent="MenuOverlays/MajorText"]
-margin_top = 60.0
+[node name="BigLabel" type="Label" parent="MenuOverlays/MajorText"]
 margin_right = 640.0
-margin_bottom = 420.0
+margin_bottom = 360.0
 rect_min_size = Vector2( 640, 360 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_shadow = Color( 0, 0, 0, 0.686275 )
 custom_constants/shadow_offset_x = 4
 custom_constants/shadow_offset_y = 4
-custom_fonts/font = ExtResource( 15 )
-text = "“Bard” \"Bard\""
+custom_fonts/font = ExtResource( 11 )
+text = "Next Turne"
 align = 1
 valign = 1
 __meta__ = {

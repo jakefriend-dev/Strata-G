@@ -267,91 +267,44 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 		labelnext.visible = (labelnext.text != "")
 	pass
 
-func show_major_text(big_text: String, lesser_text: String = ""):
-	major_text.get_node("BigLabel").text = big_text
+# ---
+
+var mt_time: float = 0.125
+
+func show_major_text(big_text: String, lesser_text: String, instant: bool = false):
+	utils.tween.remove(major_text, "modulate:a")
 	
 	if lesser_text == "":
 		major_text.position.y = 0
+		major_text.get_node("BigLabel").text = big_text
 		major_text.get_node("SmallLabel").text = ""
 	else:
-		major_text.position.y = -32
+		major_text.position.y = 32
 #		major_text.get_node("SmallLabel").text = str("\"",lesser_text,"\"")
-		major_text.get_node("SmallLabel").text = str("“",lesser_text,"”")
+		major_text.get_node("BigLabel").text = str("“",big_text,"”")
+		major_text.get_node("SmallLabel").text = lesser_text
+#		major_text.get_node("SmallLabel").text = str("“",lesser_text,"”")
 	
-	major_text.visible = true
+	if instant:
+#		major_text.visible = true
+		major_text.modulate.a = 1.0
+	else:
+		utils.tween.interpolate_property(major_text, "modulate:a", null, 1.0, mt_time, Tween.TRANS_CIRC, Tween.EASE_OUT)
+		utils.tween.start()
+	
 	pass
 
-func hide_major_text():
-	major_text.visible = false
+func hide_major_text(instant: bool = false):
+	utils.tween.remove(major_text, "modulate:a")
+	if instant:
+#		major_text.visible = false
+		major_text.modulate.a = 0.0
+	else:
+		utils.tween.interpolate_property(major_text, "modulate:a", null, 0.0, mt_time, Tween.TRANS_CIRC, Tween.EASE_OUT)
+		utils.tween.start()
 	pass
 
 # -
-
-#func update_action_selector(_tf: bool):
-#	if !utils.actorpass(batman.curr_actor):
-#		push_action_selector_changes()
-#		return
-#	if not batman.curr_actor is ActorPlayer:
-#		push_action_selector_changes()
-#		return
-#
-#	var pre_list: Array = []
-#	var current: String = ""
-#	var post_list: Array = []
-#
-#	var index: int = -1
-#	for key in batman.loaded_moveset:
-#		index += 1 # Zero-based
-#		var movename: String = batman.loaded_moveset[index]
-#		var move: MoveAction = batman.curr_actor.moveset[movename]
-#
-#		var formal: String = move.display_name
-#		if index == batman.loaded_m_index:
-#			current = str("* ",formal)
-#			continue
-#
-#		if current == "":
-#			pre_list.append(formal)
-#		else:
-#			post_list.append(formal)
-#
-#		pass
-#
-#	# Now we should have all our strings!
-#	var p: String = ""
-#	var n: String = ""
-#
-#	for line in pre_list:
-#		p += "  "
-#		p += line
-#		if line != pre_list.back():
-#			p += "\n"
-#
-#	for line in post_list:
-#		n += "  "
-#		n += line
-#		if line != post_list.back():
-#			n += "\n"
-#
-#	push_action_selector_changes(p, current, n)
-#	pass
-
-#func push_action_selector_changes(p: String = "", c: String = "", n: String = ""):
-#	var prev: Label = actionsel_par.get_node("Prev")
-#	var curr: Label = actionsel_par.get_node("Curr")
-#	var next: Label = actionsel_par.get_node("Next")
-#
-#	if prev.text != p: prev.text = p
-#	if curr.text != c: curr.text = c
-#	if next.text != n: next.text = n
-#
-#	if prev.visible != (p != ""):
-#		prev.visible = (p != "")
-#	if curr.visible != (c != ""):
-#		curr.visible = (c != "")
-#	if next.visible != (n != ""):
-#		next.visible = (n != "")
-#	pass
 
 
 
