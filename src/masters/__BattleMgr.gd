@@ -672,6 +672,7 @@ func perform_local_pre_combat_setup():
 
 func cycle_to_next_turn():
 	combatstate = C_TRANSITION
+	field.hide_major_text()
 	
 	var is_player_turn: bool = false
 	var is_new_round: bool = false
@@ -715,6 +716,9 @@ func cycle_to_next_turn():
 	# Hide the window regardless; it'll get brought back as relevant by player chars
 	utils.tween.interpolate_property(field.movewindow, "modulate:a", null, 0.0, timeout_turn_time, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	utils.tween.start()
+	
+	yield(utils.yt(timeout_turn_time, self), "timeout")
+	if !is_combat_mode(): return
 	
 	var mtext: String = ""
 #	if !is_first_round:

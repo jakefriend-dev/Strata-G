@@ -271,8 +271,10 @@ func show_major_text(big_text: String, lesser_text: String = ""):
 	major_text.get_node("BigLabel").text = big_text
 	
 	if lesser_text == "":
+		major_text.position.y = 0
 		major_text.get_node("SmallLabel").text = ""
 	else:
+		major_text.position.y = -32
 		major_text.get_node("SmallLabel").text = str("“",lesser_text,"”")
 	
 	major_text.visible = true
