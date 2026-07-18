@@ -52,7 +52,7 @@ func load_movewindow():
 			if count == 8: # Custom code for the 8th 'custom function, not a move'
 				moveopt.nonmove_function = "goto_common_move_menu"
 				moveopt.nonmove_tooltip = "Review common moves"
-				moveopt.nonmove_display_name = "Press Fwd"
+				moveopt.nonmove_display_name = "Press Fw'd"
 #				moveopt.nonmove_display_name = "Common MVs"
 				break
 			
