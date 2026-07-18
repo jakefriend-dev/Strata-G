@@ -34,6 +34,9 @@ func PREVIEW():
 	var check_vector: Vector2 = batman.loaded_variant
 	var near_coord: Vector2 = actor.coord + check_vector
 	var far_coord: Vector2 = near_coord + check_vector
+	if !batman.grid_actors.has_cellv(near_coord) or !batman.grid_actors.has_cellv(far_coord):
+		error_text = "Shoving tiles are out of bounds"
+		return
 	
 	var victim: Actor = batman.grid_actors.get_cellv(near_coord)
 	var far_occupant: Actor = batman.grid_actors.get_cellv(far_coord)

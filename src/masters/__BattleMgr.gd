@@ -431,7 +431,8 @@ func flush_all_combat_details():
 	loaded_moveset.clear()
 	loaded_move = null
 	loaded_m_index = 0
-	loaded_variant = Vector2.ZERO
+	loaded_variant = Vector2(-99, -99)
+#	loaded_variant = Vector2.ZERO
 	targeted_tiles.clear()
 	
 	last_execution_frame = -1
@@ -1034,7 +1035,8 @@ func change_movewindow_selcol(amount: int):
 
 func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_selected: bool):
 	if move.actualized_variants.empty():
-		loaded_variant = Vector2.ZERO
+		loaded_variant = Vector2(-99, -99)
+#		loaded_variant = Vector2.ZERO
 		return
 	
 	# We should only exercise this code WHEN THE MOVE IS FIRST LOADED/CHOSEN, not each preview
@@ -1347,7 +1349,8 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	loaded_moveset = []
 	loaded_move = null
 	loaded_m_index = 0
-	loaded_variant = Vector2.ZERO
+	loaded_variant = Vector2(-99, -99)
+#	loaded_variant = Vector2.ZERO
 	emit_signal("action_option_view_changed", false)
 	pass
 
