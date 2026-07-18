@@ -133,6 +133,7 @@ var field: Node2D # Owner of all battle stuff
 var drawer: Node2D # Owner of all action preview drawing
 var actors: YSort
 var board: Node2D # Owner of CELLS not everything
+var timeout_major_text: float = 1.0
 
 # Tile types refer to the GROUND, not any effect on that coordinate (such as oil).
 enum tiletypes {
@@ -401,11 +402,11 @@ func init_new_combat(new_battle_details: Dictionary):
 	
 	load_battle_field()
 	
+	yield(utils.yt(timeout_major_text, self), "timeout")
+	if !is_combat_mode(): return
+	
 	roll_initiative()
 	perform_local_pre_combat_setup()
-	
-	yield(utils.yt(0.5, self), "timeout")
-	if !is_combat_mode(): return
 	
 	# This ACTUALLY STARTS the fight!
 	cycle_to_next_turn() 
@@ -593,6 +594,7 @@ func load_battle_field():
 	field.show_major_text("Combat Begins")
 	emit_signal("set_up_board") # Places BattleCell scenes in BattleField
 	emit_signal("populate_actors") # Actually puts the actor scenes on the board
+	field.update_targeting()
 	pass
 
 func roll_initiative():
@@ -714,11 +716,11 @@ func cycle_to_next_turn():
 	utils.tween.start()
 	
 	var mtext: String = ""
-	if !is_first_round:
-		if is_player_turn:
-			mtext = "Your Turne"
-		else:
-			mtext = "Enemie Turne"
+#	if !is_first_round:
+	if is_player_turn:
+		mtext = "Your Turne"
+	else:
+		mtext = "Enemie Turne"
 	
 	do_preturn_visuals(mtext)
 	yield(self, "preturn_visuals_have_ended")
@@ -730,14 +732,15 @@ func cycle_to_next_turn():
 
 func do_preturn_visuals(mtext: String):
 	emit_signal("turnqueue_updated")
-	if mtext != "":
-		field.show_major_text(mtext)
+	if mtext != "": # Means it's not the first round
+		var unit_name: String = curr_actor.ofc_name
+		field.show_major_text(mtext, unit_name)
 	
 	# TurnWindow scoot_time is (currently) 0.25, and a maximum sequence length would be half that times 3 for 0.375. So if we consistently hold a longer window than that here, we can ignore the turnwindow signal.
 	
 #	yield(self, "turnwindow_anims_complete")
 	
-	yield(utils.yt(0.5, self), "timeout")
+	yield(utils.yt(timeout_major_text, self), "timeout")
 	if !is_combat_mode(): return
 	emit_signal("preturn_visuals_have_ended")
 	pass
@@ -769,11 +772,15 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 		utils.tween.interpolate_property(field.movewindow, "modulate:a", null, 1.0, timeout_turn_time, Tween.TRANS_CUBIC, Tween.EASE_IN)
 		utils.tween.start()
 	
+	yield(VisualServer, "frame_pre_draw")
+	yield(VisualServer, "frame_post_draw")
+	if !is_game_live(): return
+	field.hide_major_text()
+	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	if !is_game_live(): return
 	
 	combatstate = C_TURN
-	field.hide_major_text()
 	emit_signal("action_option_view_changed", true)
 	strife.TILE_event_turn_started_on(curr_actor, curr_actor.coord)
 	curr_actor.choose_action()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=2]
+[gd_scene load_steps=24 format=2]
 
 [ext_resource path="res://art/_placeholder/test play area bg.png" type="Texture" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
@@ -10,10 +10,11 @@
 [ext_resource path="res://text/fonts/built/Font Menu Small 1x.tres" type="DynamicFont" id=8]
 [ext_resource path="res://art/_placeholder/battle area actor layout.png" type="Texture" id=9]
 [ext_resource path="res://combat/battle_ui/TurntakerWindow.tscn" type="PackedScene" id=10]
-[ext_resource path="res://text/fonts/built/Font SuperHeader.tres" type="DynamicFont" id=11]
+[ext_resource path="res://text/fonts/built/Font HeaderBig.tres" type="DynamicFont" id=11]
 [ext_resource path="res://art/_placeholder/mc/castle wall unusable.png" type="Texture" id=12]
 [ext_resource path="res://art/_placeholder/Texturelabs_Grunge_140S.jpg" type="Texture" id=13]
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
+[ext_resource path="res://text/fonts/built/Font HeaderMed.tres" type="DynamicFont" id=15]
 [ext_resource path="res://art/_placeholder/Texturelabs_Grunge_220thumbnail.jpg" type="Texture" id=17]
 [ext_resource path="res://combat/battle_ui/FullViewActionTestbed.tscn" type="PackedScene" id=19]
 [ext_resource path="res://art/_placeholder/grasso.webp" type="Texture" id=20]
@@ -238,7 +239,7 @@ position = Vector2( 4, 99 )
 
 [node name="MajorText" type="Node2D" parent="MenuOverlays"]
 
-[node name="Label" type="Label" parent="MenuOverlays/MajorText"]
+[node name="BigLabel" type="Label" parent="MenuOverlays/MajorText"]
 margin_right = 40.0
 margin_bottom = 14.0
 rect_min_size = Vector2( 640, 360 )
@@ -248,6 +249,23 @@ custom_constants/shadow_offset_x = 4
 custom_constants/shadow_offset_y = 4
 custom_fonts/font = ExtResource( 11 )
 text = "Next Turne"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SmallLabel" type="Label" parent="MenuOverlays/MajorText"]
+margin_top = 60.0
+margin_right = 640.0
+margin_bottom = 420.0
+rect_min_size = Vector2( 640, 360 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_colors/font_color_shadow = Color( 0, 0, 0, 0.686275 )
+custom_constants/shadow_offset_x = 4
+custom_constants/shadow_offset_y = 4
+custom_fonts/font = ExtResource( 15 )
+text = "“Bard”"
 align = 1
 valign = 1
 __meta__ = {

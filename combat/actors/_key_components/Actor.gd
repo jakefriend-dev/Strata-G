@@ -763,7 +763,7 @@ func alive_check() -> bool:
 
 # -
 
-func update_bui():
+func update_facing():
 	if faction == batman.factions.PLAYER:
 		is_facing_left = false
 		my_facing = Vector2.RIGHT
@@ -772,8 +772,16 @@ func update_bui():
 		my_facing = Vector2.LEFT
 		their_facing = Vector2.RIGHT
 	
-	if !is_facing_left:
-		$ArtMgr/HFlipper.scale.x = -1.0
+	if is_facing_left:
+		if $ArtMgr/HFlipper.scale.x != 1.0:
+			$ArtMgr/HFlipper.scale.x = 1.0
+	else:
+		if $ArtMgr/HFlipper.scale.x != -1.0:
+			$ArtMgr/HFlipper.scale.x = -1.0
+	pass
+
+func update_bui():
+	update_facing()
 	
 	if !has_node("BUI"):
 		bui = loader.res_bui.instance()

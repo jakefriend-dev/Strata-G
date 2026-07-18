@@ -156,6 +156,7 @@ func populate_actors():
 func update_targeting():
 	for actor in actors.get_children():
 		actor.update_outline()
+		actor.update_facing()
 	pass
 
 func update_debuglog():
@@ -266,8 +267,14 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 		labelnext.visible = (labelnext.text != "")
 	pass
 
-func show_major_text(new_text: String):
-	major_text.get_node("Label").text = new_text
+func show_major_text(big_text: String, lesser_text: String = ""):
+	major_text.get_node("BigLabel").text = big_text
+	
+	if lesser_text == "":
+		major_text.get_node("SmallLabel").text = ""
+	else:
+		major_text.get_node("SmallLabel").text = str("“",lesser_text,"”")
+	
 	major_text.visible = true
 	pass
 
