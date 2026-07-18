@@ -239,6 +239,13 @@ position = Vector2( 4, 99 )
 
 [node name="MajorText" type="Node2D" parent="MenuOverlays"]
 
+[node name="Texture1" type="Sprite" parent="MenuOverlays/MajorText"]
+modulate = Color( 1, 1, 1, 0.501961 )
+material = SubResource( 38 )
+scale = Vector2( 0.334895, 0.334895 )
+texture = ExtResource( 13 )
+centered = false
+
 [node name="BigLabel" type="Label" parent="MenuOverlays/MajorText"]
 margin_right = 40.0
 margin_bottom = 14.0
@@ -254,6 +261,14 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Texture2" type="Sprite" parent="MenuOverlays/MajorText"]
+modulate = Color( 1, 1, 1, 0.239216 )
+material = SubResource( 38 )
+position = Vector2( 642, -11 )
+scale = Vector2( -0.335, 0.335 )
+texture = ExtResource( 13 )
+centered = false
 
 [node name="SmallLabel" type="Label" parent="MenuOverlays/MajorText"]
 margin_top = 60.0
@@ -271,10 +286,3 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Sprite" type="Sprite" parent="MenuOverlays/MajorText"]
-modulate = Color( 1, 1, 1, 0.321569 )
-material = SubResource( 38 )
-scale = Vector2( 0.334895, 0.334895 )
-texture = ExtResource( 13 )
-centered = false

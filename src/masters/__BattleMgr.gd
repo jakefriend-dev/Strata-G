@@ -133,7 +133,7 @@ var field: Node2D # Owner of all battle stuff
 var drawer: Node2D # Owner of all action preview drawing
 var actors: YSort
 var board: Node2D # Owner of CELLS not everything
-var timeout_major_text: float = 1.0
+var timeout_major_text: float = 1.25
 
 # Tile types refer to the GROUND, not any effect on that coordinate (such as oil).
 enum tiletypes {
