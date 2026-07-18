@@ -655,7 +655,7 @@ func roll_initiative():
 	
 	emit_signal("turnqueue_constructed")
 	
-	field.update_turn_display()
+#	field.update_turn_display()
 	for actor in actors.get_children():
 		actor.update_bui()
 	
@@ -681,10 +681,10 @@ func cycle_to_next_turn():
 	
 	var is_player_turn: bool = false
 	var is_new_round: bool = false
-	var is_first_round: bool = false
+#	var is_first_round: bool = false
 	if turncount == 0: # It's our first round
 		is_new_round = true
-		is_first_round = true
+#		is_first_round = true
 	else:
 		clean_up_turnqueue() # Always do this, each new turn after the initial. Remember that this also updates turncount and turnqueue.size()!
 		
@@ -726,7 +726,6 @@ func cycle_to_next_turn():
 	if !is_battle_scene(): return
 	
 	var mtext: String = ""
-#	if !is_first_round:
 	if is_player_turn:
 		mtext = "Your Turne"
 	else:
@@ -1501,7 +1500,7 @@ func kill_actor(actor: Actor):
 	
 	# Remove the actor from the turnqueue
 	remove_all_turns_of_actor(actor)
-	field.update_turn_display()
+#	field.update_turn_display()
 	
 	# Wipe its tile claims
 	release_actor_claims(actor)

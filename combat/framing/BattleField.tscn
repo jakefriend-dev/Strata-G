@@ -239,6 +239,7 @@ visible = false
 position = Vector2( 4, 99 )
 
 [node name="MajorText" type="Node2D" parent="MenuOverlays"]
+visible = false
 
 [node name="Texture1" type="Sprite" parent="MenuOverlays/MajorText"]
 modulate = Color( 1, 1, 1, 0.501961 )
@@ -258,7 +259,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 0.686275 )
 custom_constants/shadow_offset_x = 4
 custom_constants/shadow_offset_y = 4
 custom_fonts/font = ExtResource( 15 )
-text = "“Bard” \"Bard\""
+text = "Your Turne"
 align = 1
 valign = 1
 __meta__ = {
@@ -282,7 +283,7 @@ custom_colors/font_color_shadow = Color( 0, 0, 0, 0.686275 )
 custom_constants/shadow_offset_x = 4
 custom_constants/shadow_offset_y = 4
 custom_fonts/font = ExtResource( 11 )
-text = "Next Turne"
+text = "“Bard”"
 align = 1
 valign = 1
 __meta__ = {

@@ -49,7 +49,11 @@ var cycle_index: int = 0 # Current position within the toggle_options array
 
 #export var use_exact_input_vector: bool = false # If false, it's relative (almost always)
 export var override_global_variant_on_move_load: bool = false # If true, when selecting this move we ALWAYS the batman var back to this starting var.
-export var misc: String
+
+# These should generally only be needed for ENEMY moves:
+export var req_successful_telegraph: bool = false # If true, the move MUST contain a "TELEGRAPH()" function which has its own cost; telegraphs should also (like reactions) end the turn. A successful telegraph does NOT mean a guarantee of a successful attack execution!
+
+export var misc: String # As of July 18, still not used anywhere...!
 
 var actor: Actor # Quickref!
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop
@@ -102,6 +106,26 @@ var error_text: String = "" # When failing a passfail, provide text that MoveWin
 var ready_to_use: bool = false # Default false; only mark it true when it is VALID TO PICK AND USE
 
 # ------------------------------------------------------------------------------
+
+func run_validation_pass() -> bool:
+	if !has_method("PREVIEW"):
+		print(actor.name," can't find PREVIEW() method for move ",self,"! Soft error")
+	
+	if !has_method("ACT"):
+		print(actor.name," can't load move ",self,", no ACT() method!")
+		return false
+	
+	if option_image == null:
+		print(actor.name," can't load move ",self,", no option_image!")
+		return false
+	
+	if selection_style == inputstyles.CYCLE:
+		if !has_method("LOAD_VARIANTS"):
+			print(actor.name," can't load move ",self,", it's CYCLE type but no LOAD_VARIANTS() method!")
+			return false
+	
+	return true
+	pass
 
 func log_move_use():
 	actor.spend(cost)

@@ -48,7 +48,7 @@ func _ready():
 	batman.board = board
 	
 	update_debuglog()
-	update_turn_display()
+#	update_turn_display()
 	
 	$BG/TestOverlay.visible = false
 	
@@ -253,7 +253,7 @@ func update_turn_display():
 #	push_turn_display_changes(currtext, nexttext)
 	pass
 
-func push_turn_display_changes(currtext: String, nexttext: String):
+#func push_turn_display_changes(currtext: String, nexttext: String):
 #	var labelcurr: Label = turndisplay_par.get_node("Curr")
 #	var labelnext: Label = turndisplay_par.get_node("Next")
 #
@@ -265,7 +265,7 @@ func push_turn_display_changes(currtext: String, nexttext: String):
 #		labelcurr.visible = (labelcurr.text != "")
 #	if labelnext.visible != (labelnext.text != ""):
 #		labelnext.visible = (labelnext.text != "")
-	pass
+#	pass
 
 # ---
 
@@ -273,6 +273,8 @@ var mt_time: float = 0.125
 
 func show_major_text(big_text: String, lesser_text: String, instant: bool = false):
 	utils.tween.remove(major_text, "modulate:a")
+	if !major_text.visible:
+		major_text.visible = true
 	
 	if lesser_text == "":
 		major_text.position.y = 0

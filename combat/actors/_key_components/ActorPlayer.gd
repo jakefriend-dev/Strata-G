@@ -5,9 +5,9 @@ var moveset: Dictionary = {} # Post-validation
 var move_layout: Array2D
 export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null]
 
-const pstring: String = "PREVIEW"
-const astring: String = "ACT"
-const lvstring: String = "LOAD_VARIANTS"
+#const pstring: String = "PREVIEW"
+#const astring: String = "ACT"
+#const lvstring: String = "LOAD_VARIANTS"
 
 # ---
 
@@ -28,26 +28,34 @@ func load_moves():
 		# Basic setup first!
 		if move.resource_name == "":
 			move.resource_name = utils.get_resource_name(move)
+		
+		if moveset.has(move.resource_name):
+			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
+			continue
+		
 		move.set_local_to_scene(true)
 		move.actor = self
 		move.initialize_MPD()
 		
+		if !move.run_validation_pass(): # Any validation that takes place *within* a move should go here!
+			continue
+		
 		# Validations!
-		if !move.has_method(pstring):
-			print(name," can't find PREVIEW() method for move ",move,"! Soft error")
-		if !move.has_method(astring):
-			print(name," can't load move ",move,", no ACT() method!")
-			continue
-		if moveset.has(move.resource_name):
-			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
-			continue
-		if move.option_image == null:
-			print(name," can't load move ",move,", no option_image!")
-			continue
-		if move.selection_style == move.inputstyles.CYCLE:
-			if !move.has_method(lvstring):
-				print(name," can't load move ",move,", it's CYCLE type but no LOAD_VARIANTS() method!")
-				continue
+#		if !move.has_method(pstring):
+#			print(name," can't find PREVIEW() method for move ",move,"! Soft error")
+#		if !move.has_method(astring):
+#			print(name," can't load move ",move,", no ACT() method!")
+#			continue
+#		if moveset.has(move.resource_name):
+#			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
+#			continue
+#		if move.option_image == null:
+#			print(name," can't load move ",move,", no option_image!")
+#			continue
+#		if move.selection_style == move.inputstyles.CYCLE:
+#			if !move.has_method(lvstring):
+#				print(name," can't load move ",move,", it's CYCLE type but no LOAD_VARIANTS() method!")
+#				continue
 		
 		# Pass!
 		moveset[move.resource_name] = move
@@ -125,9 +133,9 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 	move.prepare_actualized_variants()
 	batman.assert_player_variant_against_move(move, is_brand_new_move_selected)
 	
-	if move.has_method(pstring):
+	if move.has_method("PREVIEW"):
 #		print("  --  New Preview  --")
-		move.call(pstring)
+		move.call("PREVIEW")
 		batman.field.movewindow.update_error_text_only()
 		move.generate_cell_highlights()
 		pass
