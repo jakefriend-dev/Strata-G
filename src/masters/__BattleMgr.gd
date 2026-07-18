@@ -97,6 +97,7 @@ signal on_turn_exited()
 signal turnqueue_constructed()
 signal turnqueue_updated()
 signal turnwindow_anims_complete()
+signal preturn_visuals_have_ended()
 
 signal targeted_tiles_updated()
 signal update_all_preview_drawing()
@@ -404,6 +405,7 @@ func init_new_combat(new_battle_details: Dictionary):
 	perform_local_pre_combat_setup()
 	
 	yield(utils.yt(0.5, self), "timeout")
+	if !is_combat_mode(): return
 	
 	# This ACTUALLY STARTS the fight!
 	cycle_to_next_turn() 
@@ -668,6 +670,7 @@ func perform_local_pre_combat_setup():
 func cycle_to_next_turn():
 	combatstate = C_TRANSITION
 	
+	var is_player_turn: bool = false
 	var is_new_round: bool = false
 	var is_first_round: bool = false
 	if turncount == 0: # It's our first round
@@ -697,6 +700,7 @@ func cycle_to_next_turn():
 			found_next_actor = true
 			curr_turndata = turndata
 			curr_actor = turndata["actor"]
+			if curr_actor is ActorPlayer: is_player_turn = true
 			break
 	
 	if !found_next_actor:
@@ -709,20 +713,39 @@ func cycle_to_next_turn():
 	utils.tween.interpolate_property(field.movewindow, "modulate:a", null, 0.0, timeout_turn_time, Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	utils.tween.start()
 	
+	var mtext: String = ""
 	if !is_first_round:
-		field.show_major_text("Next Turne")
+		if is_player_turn:
+			mtext = "Your Turne"
+		else:
+			mtext = "Enemie Turne"
 	
-	emit_signal("turnqueue_updated")
-	yield(self, "turnwindow_anims_complete")
+	do_preturn_visuals(mtext)
+	yield(self, "preturn_visuals_have_ended")
+	if !is_combat_mode(): return
 	
 #	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
 	pre_prep_new_turn()
 	pass
 
+func do_preturn_visuals(mtext: String):
+	emit_signal("turnqueue_updated")
+	if mtext != "":
+		field.show_major_text(mtext)
+	
+	# TurnWindow scoot_time is (currently) 0.25, and a maximum sequence length would be half that times 3 for 0.375. So if we consistently hold a longer window than that here, we can ignore the turnwindow signal.
+	
+#	yield(self, "turnwindow_anims_complete")
+	
+	yield(utils.yt(0.5, self), "timeout")
+	if !is_combat_mode(): return
+	emit_signal("preturn_visuals_have_ended")
+	pass
+
 func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	field.update_targeting()
 	flush_actionqueue()
-	field.update_turn_display()
+#	field.update_turn_display()
 	support.de_ghost_all_actors()
 	
 	combatstate = C_PRE_TURN
@@ -1288,6 +1311,7 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 	# The action_step signals here should NEVER fire the same frame this method is called! If so, we need to wait at LEAST 1 frame before proceeding.
 	if last_execution_frame == get_tree().get_frame():
 		yield(utils.yt(timeout_action_time, self), "timeout")
+		if !is_game_live(): return
 	
 	actions_are_processing = false
 #	print("Action processing time logged: ",action_processing_time)
@@ -1467,6 +1491,7 @@ func kill_actor(actor: Actor):
 	
 	if should_change_turns:
 		yield(utils.yt(timeout_action_time, self), "timeout")
+		if !is_game_live(): return
 		exit_turn()
 	pass
 
@@ -1549,6 +1574,10 @@ func must_battle_be_won() -> bool: # Asked after any enemy is damaged/defeated
 
 func must_battle_be_lost() -> bool: # Asked after any PC is damaged/defeated
 	return false
+
+func is_combat_mode() -> bool:
+	if combatstate == C_OOC: return false
+	return true
 
 func is_game_live() -> bool:
 	if combatstate == C_OOC: return false

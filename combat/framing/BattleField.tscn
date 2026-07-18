@@ -255,7 +255,7 @@ __meta__ = {
 }
 
 [node name="Sprite" type="Sprite" parent="MenuOverlays/MajorText"]
-modulate = Color( 1, 1, 1, 0.109804 )
+modulate = Color( 1, 1, 1, 0.321569 )
 material = SubResource( 38 )
 scale = Vector2( 0.334895, 0.334895 )
 texture = ExtResource( 13 )
