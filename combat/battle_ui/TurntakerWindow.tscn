@@ -15,16 +15,8 @@ script = ExtResource( 5 )
 
 [node name="CurrentPanel" type="Node2D" parent="."]
 
-[node name="Texture" type="Sprite" parent="CurrentPanel"]
-modulate = Color( 0.564706, 0.784314, 0.827451, 0.635294 )
-material = SubResource( 36 )
-position = Vector2( -5, -18 )
-rotation = 1.5708
-scale = Vector2( 0.0405932, -0.0405932 )
-texture = ExtResource( 4 )
-centered = false
-
 [node name="BackingPanel" type="PanelContainer" parent="CurrentPanel"]
+modulate = Color( 1, 1, 1, 0.498039 )
 margin_left = -5.0
 margin_top = -8.0
 margin_right = 47.0
@@ -34,6 +26,16 @@ custom_styles/panel = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Texture" type="Sprite" parent="CurrentPanel"]
+modulate = Color( 0.564706, 0.784314, 0.827451, 0.635294 )
+self_modulate = Color( 1, 1, 1, 0.8 )
+material = SubResource( 36 )
+position = Vector2( -5, -18 )
+rotation = 1.5708
+scale = Vector2( 0.0405932, -0.0405932 )
+texture = ExtResource( 4 )
+centered = false
 
 [node name="QueuePanel" type="Node2D" parent="."]
 visible = false
