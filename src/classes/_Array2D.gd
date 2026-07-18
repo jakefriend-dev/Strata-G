@@ -114,7 +114,7 @@ func has_cellv(p_pos: Vector2) -> bool:
 		p_pos.x -= 1
 		p_pos.y -= 1
 	
-	return len(data) > p_pos.x and len(data[p_pos.x]) > p_pos.y and p_pos.x >= 0 and p_pos.y >= 0
+	return p_pos.x >= 0 and p_pos.y >= 0 and len(data) > p_pos.x and len(data[p_pos.x]) > p_pos.y
 
 func set_cellv(p_pos: Vector2, p_value):
 	assert(has_cellv(p_pos))
