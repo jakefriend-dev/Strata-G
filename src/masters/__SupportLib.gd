@@ -452,6 +452,20 @@ func master_get_adj_tiles(center_tile: Vector2, type_is_orthag: bool, are_pits_a
 	
 	return viable_set
 
+
+func get_all_tiles_of_MY_faction(calling_actor: Actor) -> Array:
+	return get_all_tiles_by_faction(calling_actor.faction)
+	pass
+
+func get_all_tiles_of_THEIR_faction(calling_actor: Actor) -> Array:
+	var other_faction: int
+	if calling_actor.faction == batman.factions.ENEMY:
+		other_faction = batman.factions.PLAYER
+	elif calling_actor.faction == batman.factions.PLAYER:
+		other_faction = batman.factions.ENEMY
+	return get_all_tiles_by_faction(other_faction)
+	pass
+
 func get_all_tiles_by_faction(faction: int) -> Array:
 	var results: Array = []
 	var dataset: Array = batman.grid_factions.get_dataset_with_coords()

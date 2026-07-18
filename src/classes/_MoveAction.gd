@@ -52,6 +52,8 @@ export var override_global_variant_on_move_load: bool = false # If true, when se
 
 # These should generally only be needed for ENEMY moves:
 export var req_successful_telegraph: bool = false # If true, the move MUST contain a "TELEGRAPH()" function which has its own cost; telegraphs should also (like reactions) end the turn. A successful telegraph does NOT mean a guarantee of a successful attack execution!
+export (int, 0, 8) var telegraph_cost: int = 0
+var telegraph_pass: bool = false # True once telegraph is passed, and remains true until 'consumed' by use or RE_TELEGRAPH fails.
 
 export var misc: String # As of July 18, still not used anywhere...!
 
@@ -59,7 +61,8 @@ var actor: Actor # Quickref!
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop
 
 
-# Preview data's storage -------------------------------------------------------
+
+# Preview data's storage (and telegraphs) --------------------------------------
 
 # Colours needed: 5 (bad, good, neutral, passthrough/pass, error)
 var colors: Dictionary = {
@@ -109,7 +112,7 @@ var ready_to_use: bool = false # Default false; only mark it true when it is VAL
 
 func run_validation_pass() -> bool:
 	if !has_method("PREVIEW"):
-		print(actor.name," can't find PREVIEW() method for move ",self,"! Soft error")
+		print(actor.name," can't find PREVIEW() method for move ",self,"! SOFT error!")
 	
 	if !has_method("ACT"):
 		print(actor.name," can't load move ",self,", no ACT() method!")
@@ -121,8 +124,16 @@ func run_validation_pass() -> bool:
 	
 	if selection_style == inputstyles.CYCLE:
 		if !has_method("LOAD_VARIANTS"):
-			print(actor.name," can't load move ",self,", it's CYCLE type but no LOAD_VARIANTS() method!")
+			print(actor.name," can't load move ",self,", it's CYCLE type but has no LOAD_VARIANTS() method!")
 			return false
+	
+	if req_successful_telegraph:
+		if !has_method("TELEGRAPH"):
+			print(actor.name," can't load move ",self,", it requires a telegraph but has no TELEGRAPH() method!")
+			return false
+		if !has_method("RE_TELEGRAPH"):
+			print(actor.name," can't load move ",self,", it requires a telegraph but has no RE_TELEGRAPH() method! SOFT error!")
+#			return false
 	
 	return true
 	pass
@@ -423,7 +434,11 @@ func get_all_cells_by_MPD_type(type: int, use_arrowcells = false) -> Array:
 		return sets.get_cell(COLS.ALLCELL_ARRAY, type)
 	return sets.get_cell(COLS.PURECELL_ARRAY, type)
 
+# -
 
+func clear_all_arrows_by_type(type: int):
+	sets.set_cell(COLS.ARROW_ARRAY, type, [])
+	pass
 
 
 

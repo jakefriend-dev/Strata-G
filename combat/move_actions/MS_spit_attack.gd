@@ -9,33 +9,50 @@ extends MoveAction
 #			actualized_variants.append(vec)
 #	pass
 
-
 func PREVIEW():
-#
-#	var check_vector: Vector2 = batman.loaded_variant
-#
-#	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
-#	if !unoccupieds.empty():
-#		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
-#
-#	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, check_vector)
-#	if !utils.actorpass(victim): return
-#
-#	add_actor(victim, ROWS.BAD)
-#	passfail = true
 	pass
 
 func TELEGRAPH():
+	var picked_tiles: Array = []
 	
+	# First, always choose at least 1 tile a player is on
+	var victims: Array = batman.get_all_opposing_actor_units(actor)
+	if victims.empty():
+		end_action()
+		return
+	
+	victims.shuffle()
+	picked_tiles.append(victims[0].coord)
+	
+	var other_tiles: Array = support.get_all_tiles_of_THEIR_faction(actor)
+	other_tiles.erase(picked_tiles[0]) # No repeats!
+	other_tiles.shuffle()
+	
+	picked_tiles.append(other_tiles.pop_front()) # Always a 2nd bullet
+	picked_tiles.append(other_tiles.pop_front()) # Always a 3rd bullet
+	if rand_range(0.0, 1.0) <= 0.25:
+		picked_tiles.append(other_tiles.pop_front()) # Small chance of a 4th bullet
+	
+	for tile in picked_tiles:
+		add_cell(tile, ROWS.BAD)
+		add_arrow(actor.coord, tile, ROWS.BAD)
+	
+	telegraph_pass = true
+	pass
+
+func RE_TELEGRAPH() -> bool:
+	# This must be run on any 'change' event (health, impact, reposition, etc) once the telegraph is in place. If it returns FALSE, the telegraph breaks, and (if it was required, which they usually are), the main move cannot be used.
+	
+	clear_all_arrows_by_type(ROWS.BAD)
+	for tile in get_all_cells_by_MPD_type(ROWS.BAD):
+		add_arrow(actor.coord, tile, ROWS.BAD)
+	
+	return true
 	pass
 
 func ACT():
-#	# Shoot a target in your line-of-sight; higher damage per tile travelled
-#	var victim: Actor = get_first_actor_by_MPD_type(ROWS.BAD)
-#
-#	if utils.actorpass(victim):
-#		strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(base_damage), ["piercing"])
-#		strife.quick_vfx(victim, "spark_burst")
+	for target in get_all_cells_by_MPD_type(ROWS.BAD):
+		strife.damage_actor_at_coord(actor, target, actor.dmg(1))
 	
 	end_action()
 	pass

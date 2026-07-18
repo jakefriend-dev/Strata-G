@@ -50,9 +50,10 @@ func load_movewindow():
 			var moveopt: HBoxContainer = movegrid.get_node(str("Option",count))
 			
 			if count == 8: # Custom code for the 8th 'custom function, not a move'
-				moveopt.nonmove_function = "check_bag"
-				moveopt.nonmove_tooltip = "Check shared party inventory"
-				moveopt.nonmove_display_name = "Check Bag"
+				moveopt.nonmove_function = "goto_common_move_menu"
+				moveopt.nonmove_tooltip = "Review common moves"
+				moveopt.nonmove_display_name = "Press Fwd"
+#				moveopt.nonmove_display_name = "Common MVs"
 				break
 			
 			# Otherwise, try to load a player move (if it has this many)
@@ -209,7 +210,7 @@ func update_ap():
 
 # ---
 
-func CUSTOM_check_bag():
-	print("Testing CUSTOM_check_bag()! Wow it worked!!")
+func CUSTOM_goto_common_move_menu():
+	print("Testing CUSTOM_goto_common_move_menu()! Wow it worked!!")
 	pass
 
