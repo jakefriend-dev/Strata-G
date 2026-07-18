@@ -19,9 +19,13 @@ var stick_right_active: bool = false
 var stick_right_vangle: Vector2
 var stick_right_gangle: Vector2
 
+var scene_transition_lockdown: bool = true
+
 # ---
 
 func _process(_d):
+	if scene_transition_lockdown: return
+	
 	monitor_gamepad_sticks()
 	monitor_inputs_CORE()
 func _physics_process(_delta):

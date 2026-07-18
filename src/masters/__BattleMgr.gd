@@ -404,7 +404,7 @@ func init_new_combat(new_battle_details: Dictionary):
 	yield(utils.root, "new_scene_readied")
 	
 	yield(utils.yt(timeout_major_text, self), "timeout")
-	if !is_combat_mode(): return
+	if !is_battle_scene(): return
 	
 	roll_initiative()
 	perform_local_pre_combat_setup()
@@ -674,6 +674,8 @@ func perform_local_pre_combat_setup():
 ### Turn management
 
 func cycle_to_next_turn():
+	if !is_battle_scene(): return
+	
 	combatstate = C_TRANSITION
 	field.hide_major_text()
 	
@@ -721,7 +723,7 @@ func cycle_to_next_turn():
 	utils.tween.start()
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
-	if !is_combat_mode(): return
+	if !is_battle_scene(): return
 	
 	var mtext: String = ""
 #	if !is_first_round:
@@ -732,7 +734,7 @@ func cycle_to_next_turn():
 	
 	do_preturn_visuals(mtext)
 	yield(self, "preturn_visuals_have_ended")
-	if !is_combat_mode(): return
+	if !is_battle_scene(): return
 	
 #	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
 	pre_prep_new_turn()
@@ -749,11 +751,13 @@ func do_preturn_visuals(mtext: String):
 #	yield(self, "turnwindow_anims_complete")
 	
 	yield(utils.yt(timeout_major_text, self), "timeout")
-	if !is_combat_mode(): return
+	if !is_game_live(): return
 	emit_signal("preturn_visuals_have_ended")
 	pass
 
 func pre_prep_new_turn(): # Always occurs after next turntaker identified
+	if !is_game_live(): return
+	
 	field.update_targeting()
 	flush_actionqueue()
 #	field.update_turn_display()
@@ -783,6 +787,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	yield(VisualServer, "frame_pre_draw")
 	yield(VisualServer, "frame_post_draw")
 	if !is_game_live(): return
+	
 	field.hide_major_text()
 	
 	yield(utils.yt(timeout_turn_time, self), "timeout")
@@ -797,6 +802,7 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 func end_turn(): # Includes post-turn; assumes NO interruption
 #	if last_execution_frame == get_tree().get_frame(): # Think we no longer need this with the turnwindow shuffling delay!
 #		yield(utils.yt(timeout_turn_time, self), "timeout")
+	if !is_battle_scene(): return
 	
 	combatstate = C_END_TURN_NATURALLY
 	emit_signal("on_turn_ended_naturally")
@@ -812,6 +818,8 @@ func end_turn(): # Includes post-turn; assumes NO interruption
 	pass
 
 func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (use for death)
+	if !is_battle_scene(): return
+	
 	var turn_exited_via_interruption: bool = (
 		bool(combatstate != C_END_TURN_NATURALLY)
 		)
@@ -832,6 +840,8 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 			curr_actor.call("post_turn_teardown")
 		if curr_actor is ActorPlayer:
 			curr_actor.prep_moveset_on_turn_end()
+	
+	if !is_game_live(): return
 	
 	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
@@ -1327,7 +1337,7 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 	# The action_step signals here should NEVER fire the same frame this method is called! If so, we need to wait at LEAST 1 frame before proceeding.
 	if last_execution_frame == get_tree().get_frame():
 		yield(utils.yt(timeout_action_time, self), "timeout")
-		if !is_game_live(): return
+		if !is_battle_scene(): return
 	
 	actions_are_processing = false
 #	print("Action processing time logged: ",action_processing_time)
@@ -1508,7 +1518,7 @@ func kill_actor(actor: Actor):
 	
 	if should_change_turns:
 		yield(utils.yt(timeout_action_time, self), "timeout")
-		if !is_game_live(): return
+		if !is_battle_scene(): return
 		exit_turn()
 	pass
 
@@ -1592,11 +1602,13 @@ func must_battle_be_won() -> bool: # Asked after any enemy is damaged/defeated
 func must_battle_be_lost() -> bool: # Asked after any PC is damaged/defeated
 	return false
 
-func is_combat_mode() -> bool:
-	if combatstate == C_OOC: return false
+func is_battle_scene() -> bool:
+	if utils.root.loaded_scene_shorthand != "battlefield": return false
+#	if combatstate == C_OOC: return false
 	return true
 
 func is_game_live() -> bool:
+	if utils.root.loaded_scene_shorthand != "battlefield": return false
 	if combatstate == C_OOC: return false
 	if combatstate == C_BATTLE_SETUP: return false
 	if combatstate == C_BATTLE_LOST: return false

@@ -196,75 +196,75 @@ func update_debuglog():
 	pass
 
 func update_turn_display():
-	var currtext: String = ""
-	var nexttext: String = ""
-	
-	if batman.combatstate == batman.C_OOC: # I think this should... never happen anymore?
-		push_turn_display_changes(currtext, nexttext)
-		return
-	
-	# Once we're actually IN combat, we can do the real code!
-	
-	var prev: Array = []
-	var next: Array = []
-	
-	var count: int = -1 # 0-based
-	for turndata in batman.turnqueue: if turndata is Dictionary:
-		count += 1
-		if turndata.empty():
-			print("BATTLEFIELD: Error, 0-based index ",count," in turnqueue is not valid turndata? Breakpoint!")
-			
-			continue
-		
-		var actor: Actor = turndata["actor"]
-		var n: String = actor.get_multifactored_actor_name()
-		if actor.faction == batman.factions.PLAYER:
-			n += " *"
-		else:
-			n += "  "
-		
-		if turndata["turnpos"] == batman.turncount:
-			currtext = n
-			continue
-		if turndata["turnpos"] < batman.turncount:
-			prev.append(n)
-			continue
-		next.append(n)
-		pass
-	
-#	print("prev: ",prev)
-#	print("curr: ",currtext)
-#	print("next: ",next)
-	
-	var first: bool = true
-	for n in next:
-		if first:
-			first = false
-		else:
-			nexttext += "\n"
-		nexttext += n
-	for n in prev:
-		if first:
-			first = false
-		else:
-			nexttext += "\n"
-		nexttext += n
-	
-	push_turn_display_changes(currtext, nexttext)
+#	var currtext: String = ""
+#	var nexttext: String = ""
+#
+##	if batman.combatstate == batman.C_OOC: # I think this should... never happen anymore?
+##		push_turn_display_changes(currtext, nexttext)
+##		return
+#
+#	# Once we're actually IN combat, we can do the real code!
+#
+#	var prev: Array = []
+#	var next: Array = []
+#
+#	var count: int = -1 # 0-based
+#	for turndata in batman.turnqueue: if turndata is Dictionary:
+#		count += 1
+#		if turndata.empty():
+#			print("BATTLEFIELD: Error, 0-based index ",count," in turnqueue is not valid turndata? Breakpoint!")
+#
+#			continue
+#
+#		var actor: Actor = turndata["actor"]
+#		var n: String = actor.get_multifactored_actor_name()
+#		if actor.faction == batman.factions.PLAYER:
+#			n += " *"
+#		else:
+#			n += "  "
+#
+#		if turndata["turnpos"] == batman.turncount:
+#			currtext = n
+#			continue
+#		if turndata["turnpos"] < batman.turncount:
+#			prev.append(n)
+#			continue
+#		next.append(n)
+#		pass
+#
+##	print("prev: ",prev)
+##	print("curr: ",currtext)
+##	print("next: ",next)
+#
+#	var first: bool = true
+#	for n in next:
+#		if first:
+#			first = false
+#		else:
+#			nexttext += "\n"
+#		nexttext += n
+#	for n in prev:
+#		if first:
+#			first = false
+#		else:
+#			nexttext += "\n"
+#		nexttext += n
+#
+#	push_turn_display_changes(currtext, nexttext)
 	pass
 
 func push_turn_display_changes(currtext: String, nexttext: String):
-	var labelcurr: Label = turndisplay_par.get_node("Curr")
-	var labelnext: Label = turndisplay_par.get_node("Next")
-	
-	if labelcurr.text != currtext:
-		labelcurr.text = currtext
-	if labelnext.text != nexttext:
-		labelnext.text = nexttext
-	if labelcurr.visible != (labelcurr.text != ""):
-		labelcurr.visible = (labelcurr.text != "")
-	if labelnext.visible != (labelnext.text != ""):
-		labelnext.visible = (labelnext.text != "")
+#	var labelcurr: Label = turndisplay_par.get_node("Curr")
+#	var labelnext: Label = turndisplay_par.get_node("Next")
+#
+#	if labelcurr.text != currtext:
+#		labelcurr.text = currtext
+#	if labelnext.text != nexttext:
+#		labelnext.text = nexttext
+#	if labelcurr.visible != (labelcurr.text != ""):
+#		labelcurr.visible = (labelcurr.text != "")
+#	if labelnext.visible != (labelnext.text != ""):
+#		labelnext.visible = (labelnext.text != "")
 	pass
 
 # ---

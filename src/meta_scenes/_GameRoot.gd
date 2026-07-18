@@ -7,6 +7,7 @@ signal fade_to_black_completed()
 signal scene_transition_completed()
 
 signal new_scene_readied()
+var loaded_scene_shorthand: String = "landing"
 
 # ---
 
@@ -29,6 +30,12 @@ func change_master_scene(to_scene: String):
 		print("GAME ROOT: Error, ",to_scene," scene is not preloaded!")
 		return
 	
+	loaded_scene_shorthand = to_scene
+	if loaded_scene_shorthand != "battlefield":
+		batman.combatstate = batman.C_OOC
+		batman.flush_all_combat_details()
+		print("GAME ROOT: Locking down batman.combatstate")
+	
 	blackfade(true)
 	yield(self, "fade_to_black_completed")
 	
@@ -49,6 +56,9 @@ func change_master_scene(to_scene: String):
 	pass
 
 func blackfade(to_opaque: bool):
+	if to_opaque:
+		controls.scene_transition_lockdown = true
+	
 	utils.tween.interpolate_property($ViewportContainer/Viewport/BlackFader, "modulate:a", null, float(to_opaque), fade_trans_time, Tween.TRANS_CUBIC, Tween.EASE_IN_OUT)
 	utils.tween.start()
 	
@@ -58,5 +68,6 @@ func blackfade(to_opaque: bool):
 		emit_signal("fade_to_black_completed")
 	else:
 		emit_signal("fade_from_black_completed")
+		controls.scene_transition_lockdown = false
 	emit_signal("any_fade_completed")
 	pass
