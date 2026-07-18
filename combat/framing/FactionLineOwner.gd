@@ -1,5 +1,9 @@
 extends YSort
 
+var coord: Vector2
+
+# ---
+
 func _ready():
 	change_active(true)
 	pass

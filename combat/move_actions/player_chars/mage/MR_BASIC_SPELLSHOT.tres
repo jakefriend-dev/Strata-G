@@ -1,0 +1,26 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://combat/move_actions/player_chars/mage/MS_basic_spellshot.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/aimflowers/3x3 - fronts.png" type="Texture" id=2]
+
+
+[resource]
+resource_local_to_scene = true
+script = ExtResource( 1 )
+display_name = "Magickdart"
+short_desc = "DMG damage in line of sight"
+display_desc = "Shoot the first unit in your line of sight for DMG damage. Weak, but convenient."
+option_image = ExtResource( 2 )
+option_desc = "Changes angle of attack."
+cost = 1
+base_damage = 1
+motion_type = 0
+on_use_cooldown = 0
+initial_cooldown = 0
+display_tags = ""
+uses_per_turn = 0
+uses_per_battle = 0
+req_successful_preview = false
+selection_style = 0
+override_global_variant_on_move_load = false
+misc = ""

@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://src/classes/_StatusCondition.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+key = "pressuring_frontline"
+display_name = "Pressuring Frontline"
+display_desc = "Will push frontline forward at start of next turn, unless opposing forces face off at frontline."
+icon_type = "misc"
+default_tick_duration = 1
+tick_point = ""
+listed_subtags = "frontline"
+custom_start_function = ""
+custom_clear_function = "attempt_frontline_press"
+base_value = 0

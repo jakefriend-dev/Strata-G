@@ -61,5 +61,6 @@ emitting = false
 amount = 96
 preprocess = 1.0
 speed_scale = 0.5
+local_coords = false
 process_material = SubResource( 12 )
 texture = ExtResource( 1 )

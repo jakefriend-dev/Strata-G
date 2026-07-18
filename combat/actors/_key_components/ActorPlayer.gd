@@ -127,6 +127,7 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 	support.de_ghost_all_actors()
 	
 	var move: MoveAction = batman.loaded_move
+#	print("running move preview for ",move)
 	if move == null: return
 	
 	move.clear_MPD()
@@ -201,7 +202,7 @@ func attempt_player_char_move(motion: Vector2):
 	pass
 
 func attempt_player_char_action():
-	if !is_player_action_usable(): return
+	if !is_player_action_usable(): return # For 'custom moveopts' this also runs their command before stopping!
 	
 	# Should be valid, then! Adjust our stats/values first
 	var move: MoveAction = batman.loaded_move

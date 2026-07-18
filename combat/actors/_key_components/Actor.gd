@@ -454,6 +454,14 @@ func generic_clear_status(status_key: String):
 	clear_damage_mod(status_key)
 	pass
 
+func attempt_frontline_press(_status_key: String):
+	print("Checking whether ",name," can press frontline for real!")
+	if faction == batman.factions.PLAYER:
+		batman.field.move_frontline(true)
+	else:
+		batman.field.move_frontline(false)
+	pass
+
 func check_status(status_key: String) -> bool:
 	return ongoing_statuses.has(status_key)
 	pass

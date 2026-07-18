@@ -57,10 +57,12 @@ func create_new_move(raw_movename: String):
 		print("File for new MoveAction [",raw_movename,"] already exists, error!!")
 		return
 	
+	# FWIW: These all get dumped in the 'common' folder, but it's safe to move them as-needed
+	
 #	print("File is NEW and we ok!")
 	
 	# Create a "MS" script, lowercase
-	var template_path: String = "res://combat/move_actions/templates/MS_template.gd"
+	var template_path: String = "res://combat/move_actions/_templates/MS_template.gd"
 	var dir: Directory = Directory.new()
 	var mscode: int = dir.copy(template_path, ms_path)
 	if mscode != OK:

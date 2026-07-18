@@ -4,6 +4,7 @@ class_name MoveAction
 # Export vars for the TRES file ------------------------------------------------
 
 export var display_name: String
+export var shorthand_name: String = "" # Explicitly for fitting the MoveWindow; if blank it'll just use display name
 export (String, MULTILINE) var short_desc: String
 export (String, MULTILINE) var display_desc: String
 var key: String # For "Yank-Shot" it's "yank" - whatever the resource name is. Just a convenient reference point; almost certainly a redundancy.

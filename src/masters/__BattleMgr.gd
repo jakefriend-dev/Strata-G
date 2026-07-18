@@ -83,6 +83,9 @@ var grid_rects:    Array2D
 var grid_factions: Array2D
 var targeted_tiles: Array = [] # Just a list of Vector2 coords
 
+# Double tracking just... well, just because it's convenient.
+var player_frontline_col: int = 3
+var enemy_frontline_col: int = 4
 var default_party: Array = ["Knight", "Bard", "Mage"] # Calls these scenes by name when initializing combat; the first one is always in the front and the last is always in the back.
 
 signal set_up_board()
@@ -417,11 +420,11 @@ func init_new_combat(new_battle_details: Dictionary):
 
 func flush_all_combat_details():
 	curr_actor = null
-	acting_actor = null
+#	acting_actor = null
 	curr_turndata.clear()
 	turnqueue.clear()
 	battle_details = {}
-	flush_actionqueue()
+	flush_actionqueue() # Some duplicates in this method were cut since they're in this one already
 	living_actors.clear()
 	slain_actors.clear()
 	ghost_actors.clear()
@@ -429,19 +432,17 @@ func flush_all_combat_details():
 	total_turns_taken = 0
 	unique_actornames_observed.clear()
 	turncount = 0
+	
+	targeted_tiles.clear()
+	pass
+
+func flush_move_details():
 	loaded_moveset.clear()
 	loaded_move = null
 	loaded_m_index = 0
 	loaded_variant = Vector2(-99, -99)
-#	loaded_variant = Vector2.ZERO
-	targeted_tiles.clear()
-	
-	last_execution_frame = -1
-	action_queue.clear()
-	curr_action.clear()
-	prev_action.clear()
-	actions_are_processing = false
-	action_processing_time = 0.0
+	emit_signal("action_option_view_changed", false)
+	emit_signal("new_action_preview_data_readied", null)
 	pass
 
 func load_battle_details():
@@ -655,7 +656,6 @@ func roll_initiative():
 	
 	emit_signal("turnqueue_constructed")
 	
-#	field.update_turn_display()
 	for actor in actors.get_children():
 		actor.update_bui()
 	
@@ -759,7 +759,6 @@ func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	
 	field.update_targeting()
 	flush_actionqueue()
-#	field.update_turn_display()
 	support.de_ghost_all_actors()
 	
 	combatstate = C_PRE_TURN
@@ -1013,7 +1012,7 @@ func get_printable_turntaker_name(turndata: Dictionary) -> String:
 ### Action management
 
 func player_input_validation_checks() -> bool:
-	if loaded_moveset.empty(): return false
+#	if loaded_moveset.empty(): return false
 	if not curr_actor is ActorPlayer: return false
 	if combatstate != C_TURN: return false
 	if !action_queue.empty(): return false
@@ -1179,10 +1178,25 @@ func vet_action(action: Array) -> bool:
 	# Actors need to have the action in their script OR class chain
 	var player_move_flag: bool = (actor is ActorPlayer && !Actor.global_moves.has(methodname))
 	if player_move_flag:
+		var common_path: bool = false
 		if !actor.moveset.has(methodname):
-			print("BATMAN: vet_action(",action,") failed: ActorPlayer does not have a move called ",methodname," in its moveset!")
-			return false
-		var move: MoveAction = actor.moveset[methodname]
+			if !loader.common_moves.has(methodname):
+				print("BATMAN: vet_action(",action,") failed: ActorPlayer does not have a move called ",methodname," in its moveset! (Or a common move called that!)")
+				return false
+			else:
+				common_path = true
+		
+		var move: MoveAction
+		if !common_path:
+			move = actor.moveset[methodname]
+		else:
+			var movevar: String = str("CM_",methodname.to_lower())
+			if movevar in loader:
+				move = loader.get(movevar)
+			else:
+				print("BATMAN: vet_action(",action,") failed: Common move ",methodname," does not have a matching variable in Loader called ",movevar)
+				return false
+			
 		if !move.has_method("ACT"):
 			print("BATMAN: vet_action(",action,") failed: ActorPlayer's move ",move," does not have ACT() method!")
 			return false
@@ -1362,12 +1376,10 @@ func flush_actionqueue(): # Run to wipe any stored-between-turns data
 	prev_action = []
 	last_execution_frame = -1
 	
-	loaded_moveset = []
-	loaded_move = null
-	loaded_m_index = 0
-	loaded_variant = Vector2(-99, -99)
-#	loaded_variant = Vector2.ZERO
-	emit_signal("action_option_view_changed", false)
+	actions_are_processing = false
+	action_processing_time = 0.0
+	
+	flush_move_details()
 	pass
 
 func is_my_action(actor: Actor) -> bool: # Specifically, if this actor is allowed to continue acting!
@@ -1500,7 +1512,6 @@ func kill_actor(actor: Actor):
 	
 	# Remove the actor from the turnqueue
 	remove_all_turns_of_actor(actor)
-#	field.update_turn_display()
 	
 	# Wipe its tile claims
 	release_actor_claims(actor)

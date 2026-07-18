@@ -27,6 +27,7 @@ var major_text: Node2D
 var board_offset: Vector2
 
 const CELL_SIZE: Vector2 = Vector2(64, 48)
+var board_size: Vector2
 
 # ---
 
@@ -48,7 +49,6 @@ func _ready():
 	batman.board = board
 	
 	update_debuglog()
-#	update_turn_display()
 	
 	$BG/TestOverlay.visible = false
 	
@@ -67,6 +67,7 @@ func set_up_board():
 		board.remove_child(c)
 		c.queue_free()
 	
+	board_size = batman.battle_details["board_size"]
 	var w: int = batman.battle_details["board_size"].x #Always even
 	var h: int = batman.battle_details["board_size"].y
 	
@@ -95,6 +96,7 @@ func set_up_board():
 			
 			if cell.col == first_enemy_col:
 				var flo: YSort = loader.res_factionline.instance()
+				flo.set("coord", coord)
 				flo.set("position", cell.position)
 				$FieldObjects/Misc/FactionLines.add_child(flo)
 	pass
@@ -195,78 +197,6 @@ func update_debuglog():
 		labelold.visible = (labelold.text != "")
 	pass
 
-func update_turn_display():
-#	var currtext: String = ""
-#	var nexttext: String = ""
-#
-##	if batman.combatstate == batman.C_OOC: # I think this should... never happen anymore?
-##		push_turn_display_changes(currtext, nexttext)
-##		return
-#
-#	# Once we're actually IN combat, we can do the real code!
-#
-#	var prev: Array = []
-#	var next: Array = []
-#
-#	var count: int = -1 # 0-based
-#	for turndata in batman.turnqueue: if turndata is Dictionary:
-#		count += 1
-#		if turndata.empty():
-#			print("BATTLEFIELD: Error, 0-based index ",count," in turnqueue is not valid turndata? Breakpoint!")
-#
-#			continue
-#
-#		var actor: Actor = turndata["actor"]
-#		var n: String = actor.get_multifactored_actor_name()
-#		if actor.faction == batman.factions.PLAYER:
-#			n += " *"
-#		else:
-#			n += "  "
-#
-#		if turndata["turnpos"] == batman.turncount:
-#			currtext = n
-#			continue
-#		if turndata["turnpos"] < batman.turncount:
-#			prev.append(n)
-#			continue
-#		next.append(n)
-#		pass
-#
-##	print("prev: ",prev)
-##	print("curr: ",currtext)
-##	print("next: ",next)
-#
-#	var first: bool = true
-#	for n in next:
-#		if first:
-#			first = false
-#		else:
-#			nexttext += "\n"
-#		nexttext += n
-#	for n in prev:
-#		if first:
-#			first = false
-#		else:
-#			nexttext += "\n"
-#		nexttext += n
-#
-#	push_turn_display_changes(currtext, nexttext)
-	pass
-
-#func push_turn_display_changes(currtext: String, nexttext: String):
-#	var labelcurr: Label = turndisplay_par.get_node("Curr")
-#	var labelnext: Label = turndisplay_par.get_node("Next")
-#
-#	if labelcurr.text != currtext:
-#		labelcurr.text = currtext
-#	if labelnext.text != nexttext:
-#		labelnext.text = nexttext
-#	if labelcurr.visible != (labelcurr.text != ""):
-#		labelcurr.visible = (labelcurr.text != "")
-#	if labelnext.visible != (labelnext.text != ""):
-#		labelnext.visible = (labelnext.text != "")
-#	pass
-
 # ---
 
 var mt_time: float = 0.125
@@ -308,7 +238,38 @@ func hide_major_text(instant: bool = false):
 
 # -
 
-
+var frontline_move_time: float = 1.25
+func move_frontline(toward_enemy: bool):
+	if toward_enemy:
+		if batman.enemy_frontline_col == board_size.x:
+			print("BATTLEFIELD: Attempted to move enemy frontline beyond its final column!")
+			return
+		batman.enemy_frontline_col += 1
+		batman.player_frontline_col += 1
+		
+	else:
+		if batman.player_frontline_col == 1:
+			print("BATTLEFIELD: Attempted to move player frontline beyond its final column!")
+			return
+		batman.enemy_frontline_col -= 1
+		batman.player_frontline_col -= 1
+	
+	var faction_dataset: Array = batman.grid_factions.get_dataset_with_coords(true)
+	for set in faction_dataset:
+		var coord: Vector2 = set[1]
+		if coord.x <= batman.player_frontline_col:
+			batman.grid_factions.set_cellv(coord, batman.factions.PLAYER)
+		else:
+			batman.grid_factions.set_cellv(coord, batman.factions.ENEMY)
+	
+	for flo in $FieldObjects/Misc/FactionLines.get_children():
+		if toward_enemy:
+			flo.coord.x = flo.coord.x + 1
+		else:
+			flo.coord.x = flo.coord.x - 1
+		utils.tween.interpolate_property(flo, "position", null, batman.grid_gpos.get_cellv(flo.coord), frontline_move_time, Tween.TRANS_CIRC, Tween.EASE_OUT)
+	utils.tween.start()
+	pass
 
 
 

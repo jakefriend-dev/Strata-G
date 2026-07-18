@@ -35,11 +35,7 @@ func _ready():
 func load_movewindow():
 	updatelock = false
 	
-	for moveopt in movegrid.get_children():
-		moveopt.move = null
-		moveopt.actor = batman.curr_actor
-		moveopt.nonmove_function = "" # Allow this to be overwritten as necessary LATER
-		moveopt.currently_highlighted = (moveopt.my_x_col == batman.moveselcol and moveopt.my_y_row == batman.moveselrow)
+	wipe_moveopts_for_overwrite()
 	
 	if batman.curr_actor is ActorPlayer:
 		var movelist: Array = batman.curr_actor.moveset.keys()
@@ -50,10 +46,9 @@ func load_movewindow():
 			var moveopt: HBoxContainer = movegrid.get_node(str("Option",count))
 			
 			if count == 8: # Custom code for the 8th 'custom function, not a move'
-				moveopt.nonmove_function = "goto_common_move_menu"
+				moveopt.nonmove_display_name = "Common MVs"
 				moveopt.nonmove_tooltip = "Review common moves"
-				moveopt.nonmove_display_name = "Press Fw'd"
-#				moveopt.nonmove_display_name = "Common MVs"
+				moveopt.nonmove_function = "goto_common_move_menu"
 				break
 			
 			# Otherwise, try to load a player move (if it has this many)
@@ -210,7 +205,88 @@ func update_ap():
 
 # ---
 
-func CUSTOM_goto_common_move_menu():
-	print("Testing CUSTOM_goto_common_move_menu()! Wow it worked!!")
+func wipe_moveopts_for_overwrite():
+	for moveopt in movegrid.get_children():
+		moveopt.move = null
+		moveopt.actor = batman.curr_actor
+		moveopt.nonmove_function = "" # Allow this to be overwritten as necessary LATER
+		moveopt.currently_highlighted = (moveopt.my_x_col == batman.moveselcol and moveopt.my_y_row == batman.moveselrow)
 	pass
 
+func CUSTOM_goto_common_move_menu():
+	print("Testing CUSTOM_goto_common_move_menu()")
+	
+	# First, wipe everything
+	batman.flush_move_details()
+	batman.moveselcol = 0
+	batman.moveselrow = 0
+	
+	wipe_moveopts_for_overwrite()
+	
+	if batman.curr_actor is ActorPlayer:
+		
+		var count: int = 0 # 1-based
+		for n in 8:
+			count += 1
+			var moveopt: HBoxContainer = movegrid.get_node(str("Option",count))
+			
+			match count:
+				1:
+					moveopt.nonmove_display_name = str(batman.curr_actor.ofc_name," MVs")
+					moveopt.nonmove_tooltip = str("Review ",batman.curr_actor.ofc_name,"'s moves")
+					moveopt.nonmove_function = "goto_local_move_menu"
+				2:
+					moveopt.nonmove_display_name = "Check Bag"
+					moveopt.nonmove_tooltip = "Check shared party inventory"
+					moveopt.nonmove_function = "goto_inventory_menu"
+				8:
+					moveopt.move = loader.CM_press_forward
+					moveopt.move.actor = batman.curr_actor
+					moveopt.move.plausible_variants = strife.aimflower_vectors_from_file(moveopt.move.option_image.resource_path)
+					moveopt.move.initialize_MPD()
+		
+		pass
+	
+	full_recheck_pass()
+#	var tt_desc_text: String = ""
+#	var tt_warn_text: String = ""
+#	for moveopt in movegrid.get_children():
+#		moveopt.update_against_new_move()
+
+#		if moveopt.currently_highlighted:
+#			tt_warn_text = moveopt.loaded_tt_warn_text
+#			tt_desc_text = moveopt.loaded_tt_desc_text
+#
+#	if tooltip_par.get_node("DescTooltip").text != tt_desc_text:
+#		tooltip_par.get_node("DescTooltip").text = tt_desc_text
+#	if tooltip_par.get_node("WarnTooltip").text != tt_warn_text:
+#		tooltip_par.get_node("WarnTooltip").text = tt_warn_text
+	pass
+
+func CUSTOM_goto_inventory_menu():
+	print("Testing CUSTOM_goto_inventory_menu()")
+	pass
+
+func CUSTOM_goto_local_move_menu(): # 'Local' meaning Knight moves for the Knight, etc - the default
+	print("Testing CUSTOM_goto_local_move_menu()")
+	
+	batman.flush_move_details()
+	batman.moveselcol = 0
+	batman.moveselrow = 0
+	
+	load_movewindow()
+	full_recheck_pass()
+	pass
+
+func CUSTOM_press_forward_placeholder():
+	print("Testing CUSTOM_press_forward_placeholder()")
+	pass
+
+func full_recheck_pass():
+	refresh_all()
+	batman.loaded_move = get_loaded_move() # Allowed to return null even when 'scripted' function
+	batman.emit_signal("action_option_view_changed", true)
+	
+	if batman.loaded_move == null:
+		batman.emit_signal("new_action_preview_data_readied", null)
+	pass
