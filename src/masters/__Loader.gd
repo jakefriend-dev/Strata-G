@@ -18,6 +18,7 @@ var res_hp_8  = preload("res://combat/battle_ui/components/Pip_8_Health.tscn")
 var res_hp_10 = preload("res://combat/battle_ui/components/Pip_10_Health.tscn")
 
 var res_turntaker = preload("res://combat/battle_ui/Turntaker.tscn")
+var res_quip = preload("res://combat/framing/ActionQuip.tscn")
 
 
 

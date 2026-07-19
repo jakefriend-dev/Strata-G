@@ -30,7 +30,8 @@ enum s { # States represent the unselected AND selected variants!
 var colsets: Dictionary = {
 	# Array indices are: Light colour, dark colour, unfill_height shader param
 	s.NOT_MOVE: {
-		0: [Color("8babbf"), Color("79808d"), 5],
+		0: [Color("cfedd0"), Color("8babbf"), 5],
+#		0: [Color("8babbf"), Color("79808d"), 5],
 		1: [Color("ffffff"), Color("ffda70"), 9],
 		"highlight_shape": Color("cfedd0"),
 	},

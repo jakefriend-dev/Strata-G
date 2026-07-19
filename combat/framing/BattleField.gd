@@ -8,6 +8,7 @@ export var path_debuglog_par: NodePath
 export var path_turndisplay_par: NodePath
 #export var path_actionsel_par: NodePath
 export var path_movewindow: NodePath
+export var path_quip_par: NodePath
 var board: Node2D
 var actors: YSort
 var vfx: YSort
@@ -18,6 +19,7 @@ var turndisplay_par: VBoxContainer
 var movewindow: Node2D
 var tq_window: Node2D
 var tt_par: Node2D
+var quip_par: Node2D
 
 export var path_major_text: NodePath
 var major_text: Node2D
@@ -42,6 +44,7 @@ func _ready():
 	movewindow = get_node(path_movewindow)
 	major_text = get_node(path_major_text)
 #	curr_turntaker = get_node(path_curr_turntaker)
+	quip_par = get_node(path_quip_par)
 	
 	batman.field = self
 	batman.drawer = $FieldFore/Drawer
@@ -199,6 +202,8 @@ func update_debuglog():
 
 # ---
 
+# ---
+
 var mt_time: float = 0.125
 
 func show_major_text(big_text: String, lesser_text: String, instant: bool = false):
@@ -209,13 +214,15 @@ func show_major_text(big_text: String, lesser_text: String, instant: bool = fals
 	if lesser_text == "":
 		major_text.position.y = 0
 		major_text.get_node("BigLabel").text = big_text
+		major_text.get_node("BigLabel/Shadow").text = big_text
 		major_text.get_node("SmallLabel").text = ""
+		major_text.get_node("SmallLabel/Shadow").text = ""
 	else:
 		major_text.position.y = 32
-#		major_text.get_node("SmallLabel").text = str("\"",lesser_text,"\"")
 		major_text.get_node("BigLabel").text = str("“",big_text,"”")
+		major_text.get_node("BigLabel/Shadow").text = str("“",big_text,"”")
 		major_text.get_node("SmallLabel").text = lesser_text
-#		major_text.get_node("SmallLabel").text = str("“",lesser_text,"”")
+		major_text.get_node("SmallLabel/Shadow").text = lesser_text
 	
 	if instant:
 #		major_text.visible = true

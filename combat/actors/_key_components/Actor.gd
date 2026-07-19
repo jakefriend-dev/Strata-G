@@ -456,7 +456,12 @@ func generic_clear_status(status_key: String):
 
 func attempt_frontline_press(_status_key: String):
 	print("Checking whether ",name," can press frontline for real!")
+	var move = loader.CM_press_forward
+	if !move.affirm_by_any_actor(self):
+		return
+	
 	if faction == batman.factions.PLAYER:
+		quip("The moment is ours!")
 		batman.field.move_frontline(true)
 	else:
 		batman.field.move_frontline(false)
@@ -822,6 +827,10 @@ func update_outline(): # Should be called every time targeting changes
 	if use_outline:
 		sm.set_shader_param("outline_col", to_col)
 	sm.set_shader_param("outline_enabled", use_outline)
+	pass
+
+func quip(text: String):
+	support.quip(position + Vector2(0, -32), text)
 	pass
 
 # -

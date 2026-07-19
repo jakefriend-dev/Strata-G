@@ -552,5 +552,12 @@ func de_ghost_all_actors():
 			actor.release_claims()
 	pass
 
+func quip(gpos: Vector2, text: String):
+	var quip: Node2D = loader.res_quip.instance()
+	quip.set("text", text)
+	quip.set("position", gpos)
+	
+	batman.field.quip_par.add_child(quip)
+	pass
 
 

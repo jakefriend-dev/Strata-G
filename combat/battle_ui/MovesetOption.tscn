@@ -9,7 +9,7 @@
 [ext_resource path="res://text/fonts/built/Font BUI Numeration 1x.tres" type="DynamicFont" id=7]
 [ext_resource path="res://art/bui/pips/8x action pip.png" type="Texture" id=8]
 [ext_resource path="res://art/bui/pips/8x holup icon.png" type="Texture" id=9]
-[ext_resource path="res://text/TextShader1.gdshader" type="Shader" id=10]
+[ext_resource path="res://text/BitmapTextShader1.gdshader" type="Shader" id=10]
 [ext_resource path="res://art/bui/pips/16x8 select arrow icon.png" type="Texture" id=11]
 [ext_resource path="res://art/_placeholder/Texturelabs_Paper_370S - white.png" type="Texture" id=12]
 

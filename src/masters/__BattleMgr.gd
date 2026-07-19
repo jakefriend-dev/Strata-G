@@ -841,6 +841,8 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 	
 	if !is_game_live(): return
 	
+	strife.between_turn_checks()
+	
 	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
 

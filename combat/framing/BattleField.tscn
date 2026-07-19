@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://art/_placeholder/test play area bg.png" type="Texture" id=1]
 [ext_resource path="res://combat/framing/BattleField.gd" type="Script" id=2]
@@ -16,6 +16,7 @@
 [ext_resource path="res://art/_placeholder/mc/Sprite-0006.png" type="Texture" id=14]
 [ext_resource path="res://text/fonts/built/Font HeaderMed.tres" type="DynamicFont" id=15]
 [ext_resource path="res://art/_placeholder/Texturelabs_Grunge_220thumbnail.jpg" type="Texture" id=17]
+[ext_resource path="res://text/AliasFontPixelizerShader1.gdshader" type="Shader" id=18]
 [ext_resource path="res://combat/battle_ui/FullViewActionTestbed.tscn" type="PackedScene" id=19]
 [ext_resource path="res://art/_placeholder/grasso.webp" type="Texture" id=20]
 
@@ -33,6 +34,70 @@ width = 2
 
 [sub_resource type="CanvasItemMaterial" id=38]
 
+[sub_resource type="ShaderMaterial" id=41]
+resource_local_to_scene = true
+shader = ExtResource( 18 )
+shader_param/active = true
+shader_param/threshold_lone = 0.625
+shader_param/body_col = Color( 1, 1, 1, 1 )
+shader_param/edge_col = Color( 0.679, 0.702, 0.639, 1 )
+shader_param/shade_col = Color( 0, 0, 0, 1 )
+shader_param/light_col = Color( 0.914, 0.91, 0.78, 1 )
+shader_param/use_dual_thresholds = false
+shader_param/threshold_hard = 0.75
+shader_param/threshold_soft = 0.5
+shader_param/use_soft_inner_corners = false
+shader_param/use_standard_shadow = false
+shader_param/use_thin_hlines = false
+
+[sub_resource type="ShaderMaterial" id=42]
+resource_local_to_scene = true
+shader = ExtResource( 18 )
+shader_param/active = true
+shader_param/threshold_lone = 0.625
+shader_param/body_col = Color( 0, 0, 0, 1 )
+shader_param/edge_col = Color( 0.679, 0.702, 0.639, 1 )
+shader_param/shade_col = Color( 0, 0, 0, 1 )
+shader_param/light_col = Color( 0.914, 0.91, 0.78, 1 )
+shader_param/use_dual_thresholds = false
+shader_param/threshold_hard = 0.75
+shader_param/threshold_soft = 0.5
+shader_param/use_soft_inner_corners = false
+shader_param/use_standard_shadow = false
+shader_param/use_thin_hlines = false
+
+[sub_resource type="ShaderMaterial" id=40]
+resource_local_to_scene = true
+shader = ExtResource( 18 )
+shader_param/active = true
+shader_param/threshold_lone = 0.48
+shader_param/body_col = Color( 1, 1, 1, 1 )
+shader_param/edge_col = Color( 0.679, 0.702, 0.639, 1 )
+shader_param/shade_col = Color( 0, 0, 0, 1 )
+shader_param/light_col = Color( 0.914, 0.91, 0.78, 1 )
+shader_param/use_dual_thresholds = false
+shader_param/threshold_hard = 0.75
+shader_param/threshold_soft = 0.5
+shader_param/use_soft_inner_corners = false
+shader_param/use_standard_shadow = false
+shader_param/use_thin_hlines = false
+
+[sub_resource type="ShaderMaterial" id=43]
+resource_local_to_scene = true
+shader = ExtResource( 18 )
+shader_param/active = true
+shader_param/threshold_lone = 0.48
+shader_param/body_col = Color( 0, 0, 0, 1 )
+shader_param/edge_col = Color( 0.679, 0.702, 0.639, 1 )
+shader_param/shade_col = Color( 0, 0, 0, 1 )
+shader_param/light_col = Color( 0.914, 0.91, 0.78, 1 )
+shader_param/use_dual_thresholds = false
+shader_param/threshold_hard = 0.75
+shader_param/threshold_soft = 0.5
+shader_param/use_soft_inner_corners = false
+shader_param/use_standard_shadow = false
+shader_param/use_thin_hlines = false
+
 [node name="BattleField" type="Node2D"]
 script = ExtResource( 2 )
 path_board = NodePath("Ground")
@@ -42,6 +107,7 @@ path_misc = NodePath("FieldObjects/Misc")
 path_debuglog_par = NodePath("MenuOverlays/DebugLog/VB")
 path_turndisplay_par = NodePath("MenuOverlays/OLD_TurnDisplay/VB")
 path_movewindow = NodePath("MenuOverlays/MoveWindow")
+path_quip_par = NodePath("FieldFore/Quips")
 path_major_text = NodePath("MenuOverlays/MajorText")
 
 [node name="BG" type="Node2D" parent="."]
@@ -119,7 +185,10 @@ process_priority = 1
 z_index = 1
 script = ExtResource( 6 )
 
-[node name="Sprite" type="Sprite" parent="FieldFore"]
+[node name="Quips" type="Node2D" parent="FieldFore"]
+z_index = 2
+
+[node name="TestVignette" type="Sprite" parent="FieldFore"]
 modulate = Color( 1, 1, 1, 0.247059 )
 material = SubResource( 37 )
 position = Vector2( -45, -4 )
@@ -240,6 +309,7 @@ position = Vector2( 4, 99 )
 
 [node name="MajorText" type="Node2D" parent="MenuOverlays"]
 visible = false
+z_index = 10
 
 [node name="Texture1" type="Sprite" parent="MenuOverlays/MajorText"]
 modulate = Color( 1, 1, 1, 0.501961 )
@@ -250,12 +320,31 @@ texture = ExtResource( 13 )
 centered = false
 
 [node name="SmallLabel" type="Label" parent="MenuOverlays/MajorText"]
+material = SubResource( 41 )
 margin_top = -60.0
 margin_right = 640.0
 margin_bottom = 300.0
 rect_min_size = Vector2( 640, 360 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 0.686275 )
+custom_constants/shadow_offset_x = 4
+custom_constants/shadow_offset_y = 4
+custom_fonts/font = ExtResource( 15 )
+text = "Your Turne"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Label" parent="MenuOverlays/MajorText/SmallLabel"]
+show_behind_parent = true
+material = SubResource( 42 )
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 642.0
+margin_bottom = 362.0
+rect_min_size = Vector2( 640, 360 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_constants/shadow_offset_x = 4
 custom_constants/shadow_offset_y = 4
 custom_fonts/font = ExtResource( 15 )
@@ -275,11 +364,30 @@ texture = ExtResource( 13 )
 centered = false
 
 [node name="BigLabel" type="Label" parent="MenuOverlays/MajorText"]
+material = SubResource( 40 )
 margin_right = 640.0
 margin_bottom = 360.0
 rect_min_size = Vector2( 640, 360 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 0.686275 )
+custom_constants/shadow_offset_x = 4
+custom_constants/shadow_offset_y = 4
+custom_fonts/font = ExtResource( 11 )
+text = "“Bard”"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Shadow" type="Label" parent="MenuOverlays/MajorText/BigLabel"]
+show_behind_parent = true
+material = SubResource( 43 )
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 643.0
+margin_bottom = 363.0
+rect_min_size = Vector2( 640, 360 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_constants/shadow_offset_x = 4
 custom_constants/shadow_offset_y = 4
 custom_fonts/font = ExtResource( 11 )

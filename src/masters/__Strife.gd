@@ -1245,6 +1245,18 @@ func is_affected_by_sinking(actor: Actor) -> bool:
 
 # End of tiletype checks!
 
+func between_turn_checks():
+	check_for_pressers_forward()
+	pass
+
+func check_for_pressers_forward():
+	for actor in batman.living_actors: if utils.actorpass(actor):
+		if actor.check_status("pressuring_frontline"):
+			var move: MoveAction = loader.CM_press_forward
+			if !move.affirm_by_any_actor(actor):
+				actor.clear_status("pressuring_frontline")
+	pass
+
 # Aimflower 3x3 shorthands!
 
 func aimflower_key_from_file(filepath: String) -> String:
