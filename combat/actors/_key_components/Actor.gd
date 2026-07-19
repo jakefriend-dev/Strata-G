@@ -52,8 +52,9 @@ const MAX_action_cracking: int = 1 # Could change to 1 for testing if ya wants
 
 var actions_completed_this_turn: int = 0 # An action is what we think of as an attack;
 	# like all 3 steps of Doggo's charge attack is 1 action
-var turns_completed_this_round: int = 0 # Includes interruptions, just if you had a turn at all
 var turns_completed_total: int = 0
+var consecutive_miss_turns: int = 0 # Goes up each time a turn ends while hits_this_turn = 0
+var hits_this_turn: int = 0 # (Predominantly relevant to ActorEnemy but in theory players too idk)
 
 #export var base_damage: int = 1 # For attack shortcuts for simple mobs (gets auto-factored)
 #var bonus_damage: int = 0
@@ -213,7 +214,6 @@ func _ready():
 	tween = $Utils/Tween
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
-	batman.connect("new_round_started", self, "master_pre_round_setup")
 	batman.connect("update_all_preview_drawing", self, "adjust_target_highlights")
 	pass
 
@@ -347,15 +347,12 @@ func clear_action_cracking():
 
 # ---
 
-func master_pre_round_setup():
-	turns_completed_this_round = 0
-	pass
-
 func master_pre_turn_setup(who: Actor):
 	if who != self: return
 	
 #	print("Pre-turn refresh for ",self)
 	actions_completed_this_turn = 0
+	hits_this_turn = 0
 	ghost_mode(false)
 	tick_down_ongoing_statuses(true)
 	
@@ -364,8 +361,16 @@ func master_pre_turn_setup(who: Actor):
 
 func master_post_turn_teardown(): # Teardown happens EVEN IF turn is interrupted! Baseline needs!
 	turns_completed_total += 1
+	if hits_this_turn == 0:
+		consecutive_miss_turns += 1
+	
 	tick_down_ongoing_statuses(false)
 	refresh_action_points()
+	pass
+
+func log_hit():
+	hits_this_turn += 1
+	consecutive_miss_turns = 0
 	pass
 
 # Just shortcuts

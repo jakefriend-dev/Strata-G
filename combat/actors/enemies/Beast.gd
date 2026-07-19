@@ -259,10 +259,7 @@ func ACT_lunge_forward():
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_action(self): return
 	
-#	var moved_actor_count: int = 0 # We want to SKIP our delay if we cause someone else's impact
-	
 	strife.reset_CAMs()
-#	strife.set_CAM_admin("pushes_heavy", true)
 	strife.set_CAM_admin("knockback", true)
 	
 	# Damage impact! All adjacent cells take 1 base, our cell takes 2 base
@@ -278,10 +275,7 @@ func ACT_lunge_forward():
 			var victim: Actor = batman.grid_actors.get_cellv(target)
 			if utils.actorpass(victim):
 				strife.store_CAMstep_by_actor(victim, motion)
-#				if !support.is_tile_traversable_relative(victim, motion):
-#					moved_actor_count += 1
 			
-#			strife.extmotion_actor_at_coord(self, target, motion, ["knockback"])
 			strife.quick_vfx(target, "dust")
 	
 	var per_tile_dur: float = 0.15

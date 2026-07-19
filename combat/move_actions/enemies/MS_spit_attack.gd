@@ -36,6 +36,8 @@ func TELEGRAPH():
 func RE_TELEGRAPH() -> bool:
 	# This must be run on any 'change' event (health, impact, reposition, etc) once the telegraph is in place. If it returns FALSE, the telegraph breaks, and (if it was required, which they usually are), the main move cannot be used.
 	
+	# ...if there is no "RE_TELEGRAPH" can we simply instead 1. clear all data and 2. run TELEGRAPH again? Let's find out with Lunge Stomp!
+	
 	clear_all_arrows_by_type(ROWS.BAD)
 	for tile in get_all_cells_by_MPD_type(ROWS.BAD):
 		add_arrow(actor.coord, tile, ROWS.BAD)
@@ -46,6 +48,8 @@ func RE_TELEGRAPH() -> bool:
 func ACT():
 	for target in get_all_cells_by_MPD_type(ROWS.BAD):
 		strife.damage_actor_at_coord(actor, target, actor.dmg(1))
+		if utils.actorpass(batman.grid_actors.get_cellv(target)):
+			actor.log_hit()
 	
 	end_action()
 	pass

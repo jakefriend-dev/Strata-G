@@ -133,7 +133,7 @@ func run_validation_pass() -> bool:
 			print(actor.name," can't load move ",self,", it requires a telegraph but has no TELEGRAPH() method!")
 			return false
 		if !has_method("RE_TELEGRAPH"):
-			print(actor.name," can't load move ",self,", it requires a telegraph but has no RE_TELEGRAPH() method! SOFT error!")
+			print(actor.name," can't find RE_TELEGRAPH() method in ",self,"; allowed to bypass via re-running TELEGRAPH. SOFT error!")
 #			return false
 	
 	return true
