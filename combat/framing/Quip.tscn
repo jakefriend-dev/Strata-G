@@ -1,13 +1,13 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://text/fonts/built/Font HeaderSmall.tres" type="DynamicFont" id=1]
-[ext_resource path="res://text/AliasFontPixelizerShader1.gdshader" type="Shader" id=2]
-[ext_resource path="res://text/fonts/built/Font HeaderSmallOutline.tres" type="DynamicFont" id=3]
-[ext_resource path="res://combat/framing/ActionQuip.gd" type="Script" id=4]
+[ext_resource path="res://text/AliasFontPixelizerShader1.gdshader" type="Shader" id=1]
+[ext_resource path="res://text/fonts/built/Font HeaderSmallOutline.tres" type="DynamicFont" id=2]
+[ext_resource path="res://text/fonts/built/Font HeaderSmall.tres" type="DynamicFont" id=3]
+[ext_resource path="res://combat/framing/Quip.gd" type="Script" id=4]
 
 [sub_resource type="ShaderMaterial" id=44]
 resource_local_to_scene = true
-shader = ExtResource( 2 )
+shader = ExtResource( 1 )
 shader_param/active = true
 shader_param/threshold_lone = 0.339
 shader_param/body_col = Color( 1, 1, 1, 1 )
@@ -23,7 +23,7 @@ shader_param/use_thin_hlines = false
 
 [sub_resource type="ShaderMaterial" id=45]
 resource_local_to_scene = true
-shader = ExtResource( 2 )
+shader = ExtResource( 1 )
 shader_param/active = true
 shader_param/threshold_lone = 0.339
 shader_param/body_col = Color( 0, 0, 0, 1 )
@@ -46,7 +46,7 @@ margin_left = -200.0
 margin_top = -60.0
 margin_right = 200.0
 rect_min_size = Vector2( 400, 60 )
-custom_fonts/font = ExtResource( 1 )
+custom_fonts/font = ExtResource( 3 )
 text = "Spin Dance"
 align = 1
 valign = 2
@@ -62,7 +62,7 @@ margin_top = 1.0
 margin_right = 401.0
 margin_bottom = 61.0
 rect_min_size = Vector2( 400, 60 )
-custom_fonts/font = ExtResource( 3 )
+custom_fonts/font = ExtResource( 2 )
 text = "Spin Dance"
 align = 1
 valign = 2

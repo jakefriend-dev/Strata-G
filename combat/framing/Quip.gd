@@ -34,7 +34,7 @@ func _process(_d):
 	
 	if !signalled_out:
 		if $Main.modulate.a < 0.9:
-			print("flag1")
+#			print("flag1")
 			if am_i_the_last_quip():
 				batman.emit_signal("all_quips_cleared")
 			signalled_out = true
@@ -60,7 +60,7 @@ func delete():
 	visible = false
 	
 	if !signalled_out:
-		print("flag2")
+#		print("flag2")
 		if am_i_the_last_quip():
 			batman.emit_signal("all_quips_cleared")
 		signalled_out = true

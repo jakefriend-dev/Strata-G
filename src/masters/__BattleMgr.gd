@@ -692,15 +692,15 @@ func cycle_to_next_turn():
 	
 	var is_player_turn: bool = false
 	var is_new_round: bool = false
-#	var is_first_round: bool = false
 	if turncount == 0: # It's our first round
 		is_new_round = true
-#		is_first_round = true
 	else:
 		clean_up_turnqueue() # Always do this, each new turn after the initial. Remember that this also updates turncount and turnqueue.size()!
 		
 		if turncount >= turnqueue.size(): # We've concluded this round - we are ALREADY at size before incrementing therefore we will exceed size after incrementing
 			is_new_round = true
+	
+	var prev_actor: Actor = curr_actor
 	
 	total_turns_taken += 1 # Happens regardless
 	if is_new_round:
@@ -710,7 +710,6 @@ func cycle_to_next_turn():
 		field.update_targeting()
 		emit_signal("new_round_started")
 		update_action_log(str("ROUND [",round_count,"] - BEGIN!"))
-#		yield(utils.yt(0.03, self), "timeout")
 	else:
 		turncount += 1
 	
@@ -736,6 +735,22 @@ func cycle_to_next_turn():
 	yield(utils.yt(timeout_turn_time, self), "timeout")
 	if !is_battle_scene(): return
 	
+	# Do signalling checks for between-turn things!
+	strife.between_turn_checks(prev_actor, curr_actor)
+	
+	if field.quip_par.get_child_count() > 0: # Allow quips to breathe!
+		var need_to_wait: bool = false
+#		print("a: ",field.quip_par.get_child_count())
+		for quip in field.quip_par.get_children():
+			if !quip.signalled_out:
+				need_to_wait = true
+				break
+		if need_to_wait:
+#			print("b")
+			yield(self, "all_quips_cleared")
+	
+	# Major text card time!
+	
 	var mtext: String = ""
 	if is_player_turn:
 		mtext = "Your Turne"
@@ -745,7 +760,6 @@ func cycle_to_next_turn():
 	do_preturn_visuals(mtext)
 	yield(self, "preturn_visuals_have_ended")
 	if !is_battle_scene(): return
-	
 #	print("BATMAN: cycle_to_next_turn() = [",get_printable_roundturncount(),": ",get_printable_turntaker_name(curr_turndata),"]")
 	pre_prep_new_turn()
 	pass
@@ -851,20 +865,6 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 			curr_actor.prep_moveset_on_turn_end()
 	
 	if !is_game_live(): return
-	
-	var next_turn_actor: Actor
-	strife.between_turn_checks(curr_actor, next_turn_actor)
-	
-	if field.quip_par.get_child_count() > 0: # Allow quips to breathe!
-		var need_to_wait: bool = false
-		print("a: ",field.quip_par.get_child_count())
-		for quip in field.quip_par.get_children():
-			if !quip.signalled_out:
-				need_to_wait = true
-				break
-		if need_to_wait:
-			print("b")
-			yield(self, "all_quips_cleared")
 	
 	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
