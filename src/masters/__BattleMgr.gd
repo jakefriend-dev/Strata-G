@@ -71,6 +71,7 @@ var turnqueue: Array = [
 var living_actors: Array = [] # DOES count things like rocks that have no turns, since they have health
 var slain_actors: Array = [] # When turndata is deleted from turnqueue it goes here, to track things like XP and to keep turnqueue clear for living turntakers only.
 
+var pressuring_actor: Actor
 var ghost_actors: Array = []
 var grid_actors:   Array2D	# Initially this TEMPORARILY populates string names,
 							# then is written over as actual instances. Note that this
@@ -105,6 +106,7 @@ signal preturn_visuals_have_ended()
 signal targeted_tiles_updated()
 signal update_all_preview_drawing()
 signal this_actor_any_bui_update(which_actor)
+signal all_quips_cleared()
 
 enum factions {
 	NEUTRAL,
@@ -419,6 +421,9 @@ func init_new_combat(new_battle_details: Dictionary):
 	pass
 
 func flush_all_combat_details():
+	# Should only be called when exiting/entering Battlefield.tscn; NEVER mid-fight
+	
+	pressuring_actor = null
 	curr_actor = null
 #	acting_actor = null
 	curr_turndata.clear()
@@ -443,6 +448,12 @@ func flush_move_details():
 	loaded_variant = Vector2(-99, -99)
 	emit_signal("action_option_view_changed", false)
 	emit_signal("new_action_preview_data_readied", null)
+	
+	for key in loader.common_moves:
+		var varname: String = str("CM_",key.to_lower())
+		if varname in loader:
+			var move: MoveAction = loader.get(varname)
+			move.initialize_MPD() # Technically a more complex 'clear'
 	pass
 
 func load_battle_details():
@@ -841,7 +852,19 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 	
 	if !is_game_live(): return
 	
-	strife.between_turn_checks()
+	var next_turn_actor: Actor
+	strife.between_turn_checks(curr_actor, next_turn_actor)
+	
+	if field.quip_par.get_child_count() > 0: # Allow quips to breathe!
+		var need_to_wait: bool = false
+		print("a: ",field.quip_par.get_child_count())
+		for quip in field.quip_par.get_children():
+			if !quip.signalled_out:
+				need_to_wait = true
+				break
+		if need_to_wait:
+			print("b")
+			yield(self, "all_quips_cleared")
 	
 	cycle_to_next_turn() # Includes turnqueue cleaning and disabling ongoing behaviour!
 	pass
@@ -1506,6 +1529,7 @@ func kill_actor(actor: Actor):
 	# Clear the actor from the board and all tracking lists
 	strife.end_all_vfx_on_actor(actor)
 	remove_actor_from_actorgrid(actor)
+	if pressuring_actor == actor: pressuring_actor = null
 	if ghost_actors.has(actor):
 		ghost_actors.erase(actor)
 	if living_actors.has(actor):

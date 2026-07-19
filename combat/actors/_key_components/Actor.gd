@@ -454,12 +454,15 @@ func generic_clear_status(status_key: String):
 	clear_damage_mod(status_key)
 	pass
 
-func attempt_frontline_press(_status_key: String):
-	print("Checking whether ",name," can press frontline for real!")
-	var move = loader.CM_press_forward
-	if !move.affirm_by_any_actor(self):
-		return
+func frontline_press():
+#	print("Checking whether ",name," can press frontline for real!")
+		# This is getting called prematurely... when manually ending the status, not just naturally!
+#	var move = loader.CM_press_forward
 	
+	# We know this has ALREADY been affirmed one last time by the between-turn checks! This code was just creating duplicate fail case Quips
+#	if !move.affirm_by_any_actor(self):
+#		return
+	batman.pressuring_actor = null
 	if faction == batman.factions.PLAYER:
 		quip("The moment is ours!")
 		batman.field.move_frontline(true)

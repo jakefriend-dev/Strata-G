@@ -1245,16 +1245,22 @@ func is_affected_by_sinking(actor: Actor) -> bool:
 
 # End of tiletype checks!
 
-func between_turn_checks():
-	check_for_pressers_forward()
+func between_turn_checks(exiting_actor: Actor, entering_actor: Actor):
+	check_for_pressers_forward(entering_actor)
 	pass
 
-func check_for_pressers_forward():
-	for actor in batman.living_actors: if utils.actorpass(actor):
-		if actor.check_status("pressuring_frontline"):
+func check_for_pressers_forward(entering_actor: Actor):
+	if utils.actorpass(batman.pressuring_actor):
+		if batman.pressuring_actor.check_status("pressuring_frontline"):
 			var move: MoveAction = loader.CM_press_forward
-			if !move.affirm_by_any_actor(actor):
-				actor.clear_status("pressuring_frontline")
+			if !move.affirm_by_any_actor(batman.pressuring_actor):
+				batman.pressuring_actor.clear_status("pressuring_frontline")
+				batman.pressuring_actor = null
+			elif batman.pressuring_actor == entering_actor:
+				# Success!
+				entering_actor.frontline_press()
+		else:
+			batman.pressuring_actor = null # Cleanup a probable error
 	pass
 
 # Aimflower 3x3 shorthands!

@@ -12,5 +12,5 @@ default_tick_duration = 1
 tick_point = ""
 listed_subtags = "frontline"
 custom_start_function = ""
-custom_clear_function = "attempt_frontline_press"
+custom_clear_function = ""
 base_value = 0

@@ -217,12 +217,17 @@ func show_major_text(big_text: String, lesser_text: String, instant: bool = fals
 		major_text.get_node("BigLabel/Shadow").text = big_text
 		major_text.get_node("SmallLabel").text = ""
 		major_text.get_node("SmallLabel/Shadow").text = ""
-	else:
+		major_text.get_node("Texture1").visible = true
+		major_text.get_node("Texture2").self_modulate.a = 1.0
+	
+	else: # Typically for 'Next Turne' etc
 		major_text.position.y = 32
 		major_text.get_node("BigLabel").text = str("“",big_text,"”")
 		major_text.get_node("BigLabel/Shadow").text = str("“",big_text,"”")
 		major_text.get_node("SmallLabel").text = lesser_text
 		major_text.get_node("SmallLabel/Shadow").text = lesser_text
+		major_text.get_node("Texture1").visible = false
+		major_text.get_node("Texture2").self_modulate.a = 0.5
 	
 	if instant:
 #		major_text.visible = true

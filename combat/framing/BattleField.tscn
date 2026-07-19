@@ -134,7 +134,6 @@ __meta__ = {
 }
 
 [node name="floor2" type="Sprite" parent="BG"]
-visible = false
 modulate = Color( 1, 1, 1, 0.47451 )
 position = Vector2( -1, 114 )
 scale = Vector2( 0.854667, 0.854667 )
@@ -308,7 +307,6 @@ visible = false
 position = Vector2( 4, 99 )
 
 [node name="MajorText" type="Node2D" parent="MenuOverlays"]
-visible = false
 z_index = 10
 
 [node name="Texture1" type="Sprite" parent="MenuOverlays/MajorText"]

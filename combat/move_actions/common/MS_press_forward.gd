@@ -14,6 +14,10 @@ func PREVIEW():
 	var my_frontline_x: int
 	var their_frontline_x: int
 	
+	if utils.actorpass(batman.pressuring_actor):
+		error_text = "Only one may press at once!"
+		add_actor(actor, ROWS.ERROR)
+	
 	if actor.faction == batman.factions.PLAYER:
 		my_frontline_x = batman.player_frontline_col
 		their_frontline_x = batman.enemy_frontline_col
@@ -28,7 +32,6 @@ func PREVIEW():
 	
 	# If enemies are against the frontline, fail
 	var y: int = 0 # 1-based
-	var opposing_pass: bool = true
 	for n in batman.field.board_size.y:
 		y += 1
 		var coord: Vector2 = Vector2(their_frontline_x, y)
@@ -84,6 +87,7 @@ func ACT():
 	actor.quip("We press forward!")
 #	actor.quip(str(actor.ofc_name," presses forward!"))
 	actor.start_status("pressuring_frontline")
+	batman.pressuring_actor = actor
 	
 	yield(utils.yt(1.0, actor), "timeout")
 	if !batman.is_my_action(actor): return
