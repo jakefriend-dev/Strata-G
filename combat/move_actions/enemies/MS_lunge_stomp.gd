@@ -1,6 +1,10 @@
 extends MoveAction
 
 var DIST: int = 3
+var return_tile: Vector2
+var post_jump_rumble_time: float = 0.2
+
+var seq: int = 1
 
 # Only uncomment this method if you want to bypass "normal" variant loading
 #func LOAD_VARIANTS():
@@ -26,6 +30,8 @@ func PREVIEW():
 	pass
 
 func TELEGRAPH():
+	seq = 1
+	
 	var target: Vector2 = actor.coord + (actor.my_facing * DIST)
 	if !batman.grid_actors.has_cellv(target):
 		error_text = "Can't lunge off battlefield!"
@@ -41,73 +47,101 @@ func TELEGRAPH():
 # No need for RE_TELEGRAPH; clear data and run TELEGRAPH again!
 
 func ACT():
-#	# Shoot a target in your line-of-sight; higher damage per tile travelled
-#	var victim: Actor = get_first_actor_by_MPD_type(ROWS.BAD)
-#
-#	if utils.actorpass(victim):
-#		strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(base_damage), ["piercing"])
-#		strife.quick_vfx(victim, "spark_burst")
+	
+	match seq:
+		1:
+			ACT_lunge_forward()
+			seq += 1
+			return
+		2:
+			ACT_lunge_back()
+			seq += 1
+			return
 	
 	end_action() # Should not reach this code! Always go to OTHER funcs and return after, and THOSE funcs must end action!
 	pass
 
-func ACT_forward():
+func ACT_lunge_forward():
 	print("lunge_forward")
 	actor.allowed_over_faction_lines = true
 	actor.claim_tile()
 #	actor.ghost_mode(false)
 	
+	# Try to return to a random tile (BEFORE enabling ghost mode)
+	return_tile = actor.claimed_tile
+	var rand_tile: Vector2 = support.get_rand_faction_tile_for_actormoving(actor, actor.faction, true)
+	if rand_tile != actor.coord:
+		print(actor.name," ACT_forward() picked new tile whose occupant is ",batman.grid_actors.get_cellv(rand_tile))
+		return_tile = rand_tile
+		actor.claim_tile(return_tile)
 	
-#
-#	# Attempt to return to a random tile (BEFORE enabling ghost mode)
-#	lunge_return_tile = claimed_tile
-#	var rand_tile: Vector2 = support.get_rand_faction_tile_for_actormoving(self, faction, true)
-#	if rand_tile != coord:
-#		print(name," ACT_lunge_forward() picked new tile whose occupant is ",batman.grid_actors.get_cellv(rand_tile))
-#		lunge_return_tile = rand_tile
-#		claim_tile(lunge_return_tile)
-#
-#	ghost_mode(true)
-#
-#	var dur: float = 0.5
-#
-#	hotjump(jump_dest_coord, dur)
-#	yield(utils.yt(dur, self), "timeout")
-#	if !batman.is_my_action(self): return
-#
-#	strife.reset_CAMs()
-#	strife.set_CAM_admin("knockback", true)
-#
-#	# Damage impact! All adjacent cells take 1 base, our cell takes 2 base
-#	for target in targeted_tiles:
-#		if target == coord: # Center tile
-#			strife.damage_actor_at_coord(self, target, dmg(2))
-#			strife.quick_vfx(target, "dust")
-#			if support.is_tile_available(target, [self]):
-#				support.change_tiletype_single(target, batman.tiletypes.JAGGED)
-#		else: # Adjacent tiles
-#			# For testing! Disables orthagonal damage, but instead pushes actors away!
-#			var motion: Vector2 = target - coord
-#			var victim: Actor = batman.grid_actors.get_cellv(target)
-#			if utils.actorpass(victim):
-#				strife.store_CAMstep_by_actor(victim, motion)
-#
-#			strife.quick_vfx(target, "dust")
-#
-#	var per_tile_dur: float = 0.15
-#	var total_dur: float = strife.get_total_CAM_dur(per_tile_dur)
-#	strife.execute_CAMs(self, per_tile_dur)
-#
+	actor.ghost_mode(true)
+	
+	var dur: float = 0.5
+	var ctarget: Vector2 = get_first_cell_by_MPD_type(ROWS.BAD)
+	actor.hotjump(ctarget, dur)
+	
+	yield(utils.yt(dur, actor), "timeout")
+	if !batman.is_my_action(actor): return
+	
+	strife.reset_CAMs()
+	strife.set_CAM_admin("knockback", true)
+	
+	# Damage impact! All adjacent cells take 0+knockback, center cell takes 2
+	
+	# Center:
+	strife.damage_actor_at_coord(actor, ctarget, actor.dmg(2))
+	strife.quick_vfx(ctarget, "dust")
+	if support.is_tile_available(ctarget, [actor]):
+		support.change_tiletype_single(ctarget, batman.tiletypes.JAGGED)
+	
+	# Adjacents:
+	for atarget in get_all_cells_by_MPD_type(ROWS.NEUTRAL):
+		# For testing! Disables orthagonal damage, but instead pushes actors away!
+		var motion: Vector2 = atarget - actor.coord
+		var victim: Actor = batman.grid_actors.get_cellv(atarget)
+		if utils.actorpass(victim):
+			strife.store_CAMstep_by_actor(victim, motion)
+		
+		strife.quick_vfx(atarget, "dust")
+	
+	var per_tile_dur: float = 0.15
+	var total_dur: float = strife.get_total_CAM_dur(per_tile_dur)
+	strife.execute_CAMs(actor, per_tile_dur)
+	
 #	release_targeted_tiles()
-#
-#	if strife.are_CAMs_loaded():
-#		yield(utils.yt(total_dur, self), "timeout")
-#	else:
-#		yield(utils.yt(post_jump_rumble_time, self), "timeout")
-#	if !batman.is_my_action(self): return
+	
+	if strife.are_CAMs_loaded():
+		yield(utils.yt(total_dur, actor), "timeout")
+	else:
+		yield(utils.yt(post_jump_rumble_time, actor), "timeout")
+	if !batman.is_my_action(actor): return
+	
+	batman.append_action(actor, resource_name)
+	end_action()
 	pass
 
-func ACT_back():
+func ACT_lunge_back():
+	
+	var dur: float = 0.5
+	
+	var occupant_of_dest: Actor = batman.grid_actors.get_cellv(return_tile)
+	print(actor.name," ACT_lunge_back() when is_ghost ",actor.is_ghost," and occupant of lunge dest: ",occupant_of_dest)
+	if utils.actorpass(occupant_of_dest):
+		# Breakpoint!
+		pass
+	
+	actor.hotjump(return_tile, dur)
+	yield(utils.yt(dur, actor), "timeout")
+	if !batman.is_my_action(actor): return
+	
+	actor.ghost_mode(false)
+	actor.allowed_over_faction_lines = false
+	
+	yield(utils.yt(post_jump_rumble_time, actor), "timeout")
+	if !batman.is_my_action(actor): return
+	
+	end_action()
 	pass
 
 
