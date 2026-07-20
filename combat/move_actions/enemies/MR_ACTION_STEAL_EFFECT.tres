@@ -1,0 +1,29 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://combat/move_actions/enemies/MS_action_steal_effect.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/aimflowers/3x3 - sole.png" type="Texture" id=2]
+
+[resource]
+resource_local_to_scene = true
+resource_name = "ACTION_STEAL_EFFECT"
+script = ExtResource( 1 )
+display_name = "Draining Wail"
+shorthand_name = "DrainWail"
+short_desc = "-1 AP to other side, +1 AP to yours"
+display_desc = "Wrathful wail disheartens all enemies into losing -1 AP and all allies into gaining +1 AP."
+option_image = ExtResource( 2 )
+option_desc = ""
+cost = 2
+base_damage = 0
+motion_type = 0
+on_use_cooldown = 2
+initial_cooldown = 0
+display_tags = ""
+uses_per_turn = 0
+uses_per_battle = 0
+req_successful_preview = false
+selection_style = 0
+override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
+misc = ""

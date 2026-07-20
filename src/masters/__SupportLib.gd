@@ -430,6 +430,7 @@ func get_rand_faction_tile_for_actormoving(actor: Actor, faction: int, regardles
 	var opts: Array = get_all_tiles_by_faction(faction)
 	var valid_opts: Array = []
 	for coord in opts:
+		if coord == actor.coord: continue
 		if is_tile_traversable_exact(actor, coord, regardless_of_ghost): # Handles all our validations
 			valid_opts.append(coord)
 	
