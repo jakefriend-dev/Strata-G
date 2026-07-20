@@ -30,8 +30,10 @@ func PREVIEW():
 	passfail = true
 	pass
 
-func RE_PREVIEW() -> bool:
+func RE_PREVIEW():
 	# This must be run on any 'change' event (health, impact, reposition, etc) once the telegraph is in place. If it returns FALSE, the telegraph breaks, and (if it was required, which they usually are), the main move cannot be used.
+	
+	# passfail must be flipped back to false before re-previewing!
 	
 	# ...if there is no "RE_TELEGRAPH" can we simply instead 1. clear all data and 2. run TELEGRAPH again? Let's find out with Lunge Stomp!
 	
@@ -39,7 +41,7 @@ func RE_PREVIEW() -> bool:
 	for tile in get_all_cells_by_MPD_type(ROWS.BAD):
 		add_arrow(actor.coord, tile, ROWS.BAD)
 	
-	return true
+	passfail = true
 	pass
 
 func ACT():
