@@ -15,21 +15,6 @@ var seq: int = 1
 
 
 func PREVIEW():
-#
-#	var check_vector: Vector2 = batman.loaded_variant
-#
-#	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
-#	if !unoccupieds.empty():
-#		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
-#
-#	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, check_vector)
-#	if !utils.actorpass(victim): return
-#
-#	add_actor(victim, ROWS.BAD)
-#	passfail = true
-	pass
-
-func TELEGRAPH():
 	seq = 1
 	
 	var target: Vector2 = actor.coord + (actor.my_facing * DIST)
@@ -42,6 +27,8 @@ func TELEGRAPH():
 	var adj_tiles: Array = support.get_adj_orthagonal_tiles(target)
 	for tile in adj_tiles:
 		add_cell(tile, ROWS.NEUTRAL)
+	
+	passfail = true
 	pass
 
 # No need for RE_TELEGRAPH; clear data and run TELEGRAPH again!
@@ -90,6 +77,7 @@ func ACT_lunge_forward():
 	# Damage impact! All adjacent cells take 0+knockback, center cell takes 2
 	
 	# Center:
+	support.log_actorhit_if_occupied(actor, ctarget)
 	strife.damage_actor_at_coord(actor, ctarget, actor.dmg(2))
 	strife.quick_vfx(ctarget, "dust")
 	if support.is_tile_available(ctarget, [actor]):
@@ -98,6 +86,7 @@ func ACT_lunge_forward():
 	# Adjacents:
 	for atarget in get_all_cells_by_MPD_type(ROWS.NEUTRAL):
 		# For testing! Disables orthagonal damage, but instead pushes actors away!
+		support.log_actorhit_if_occupied(actor, atarget)
 		var motion: Vector2 = atarget - actor.coord
 		var victim: Actor = batman.grid_actors.get_cellv(atarget)
 		if utils.actorpass(victim):

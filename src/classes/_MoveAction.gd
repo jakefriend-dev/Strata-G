@@ -52,9 +52,9 @@ var cycle_index: int = 0 # Current position within the toggle_options array
 export var override_global_variant_on_move_load: bool = false # If true, when selecting this move we ALWAYS the batman var back to this starting var.
 
 # These should generally only be needed for ENEMY moves:
-export var req_successful_telegraph: bool = false # If true, the move MUST contain a "TELEGRAPH()" function which has its own cost; telegraphs should also (like reactions) end the turn. A successful telegraph does NOT mean a guarantee of a successful attack execution!
+export var req_successful_telegraph: bool = false # If true, the move MUST contain a "PREVIEW()" function which has its own cost; telegraphs should also (like reactions) end the turn. A successful telegraph does NOT mean a guarantee of a successful attack execution!
 export (int, 0, 8) var telegraph_cost: int = 0
-var telegraph_pass: bool = false # True once telegraph is passed, and remains true until 'consumed' by use or RE_TELEGRAPH fails.
+#var telegraph_pass: bool = false # True once telegraph is passed, and remains true until 'consumed' by use or RE_PREVIEW fails.
 
 export var misc: String # As of July 18, still not used anywhere...!
 
@@ -113,7 +113,9 @@ var ready_to_use: bool = false # Default false; only mark it true when it is VAL
 
 func run_validation_pass() -> bool:
 	if !has_method("PREVIEW"):
-		print(actor.name," can't find PREVIEW() method for move ",self,"! SOFT error!")
+		if req_successful_preview or req_successful_telegraph:
+			print(actor.name," can't find PREVIEW() method for move ",self,", but previews/telegraphs are required!")
+			return false
 	
 	if !has_method("ACT"):
 		print(actor.name," can't load move ",self,", no ACT() method!")
@@ -129,11 +131,8 @@ func run_validation_pass() -> bool:
 			return false
 	
 	if req_successful_telegraph:
-		if !has_method("TELEGRAPH"):
-			print(actor.name," can't load move ",self,", it requires a telegraph but has no TELEGRAPH() method!")
-			return false
-		if !has_method("RE_TELEGRAPH"):
-			print(actor.name," can't find RE_TELEGRAPH() method in ",self,"; allowed to bypass via re-running TELEGRAPH. SOFT error!")
+		if !has_method("RE_PREVIEW"):
+			print(actor.name," can't find RE_PREVIEW() method in ",self,"; allowed to bypass via re-running PREVIEW. SOFT error!")
 #			return false
 	
 	return true

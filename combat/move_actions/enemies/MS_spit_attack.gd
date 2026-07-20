@@ -3,9 +3,6 @@ extends MoveAction
 
 
 func PREVIEW():
-	pass
-
-func TELEGRAPH():
 	var picked_tiles: Array = []
 	
 	# First, always choose at least 1 tile a player is on
@@ -30,10 +27,10 @@ func TELEGRAPH():
 		add_cell(tile, ROWS.BAD)
 		add_arrow(actor.coord, tile, ROWS.BAD)
 	
-	telegraph_pass = true
+	passfail = true
 	pass
 
-func RE_TELEGRAPH() -> bool:
+func RE_PREVIEW() -> bool:
 	# This must be run on any 'change' event (health, impact, reposition, etc) once the telegraph is in place. If it returns FALSE, the telegraph breaks, and (if it was required, which they usually are), the main move cannot be used.
 	
 	# ...if there is no "RE_TELEGRAPH" can we simply instead 1. clear all data and 2. run TELEGRAPH again? Let's find out with Lunge Stomp!

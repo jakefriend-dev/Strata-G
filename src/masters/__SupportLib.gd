@@ -64,6 +64,29 @@ func import_tags_tsv():
 	# TRAVERSABLE: The tile is available AND a specific actor is capable of being there
 		# (ie. it's not a "pit but I can't hover" situation, or a faction bounds issue)
 
+func log_actorhit_if_occupied(actor: Actor, coord: Vector2):
+	if is_cellv_occupied(coord):
+		actor.log_hit()
+	return
+
+func is_cellv_occupied(coord: Vector2) -> bool:
+	if !batman.grid_actors.has_cellv(coord): return false # Off the grid
+	
+	# Valid actor exists (normally)
+	var actor: Actor = batman.grid_actors.get_cellv(coord)
+	if actor != null:
+		if utils.actorpass(actor):
+			return true
+	
+	# If not on the grid, let's check ghost actors!
+	for ghost in batman.ghost_actors:
+		if ghost.coord == coord:
+			if utils.actorpass(ghost):
+				return true
+	
+	return false
+	pass
+
 func get_actor_at_cellv(coord: Vector2) -> Actor:
 	if !batman.grid_actors.has_cellv(coord): return null # Off the grid
 	
