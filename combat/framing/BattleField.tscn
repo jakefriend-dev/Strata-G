@@ -134,6 +134,7 @@ __meta__ = {
 }
 
 [node name="floor2" type="Sprite" parent="BG"]
+visible = false
 modulate = Color( 1, 1, 1, 0.47451 )
 position = Vector2( -1, 114 )
 scale = Vector2( 0.854667, 0.854667 )

@@ -113,9 +113,14 @@ var ready_to_use: bool = false # Default false; only mark it true when it is VAL
 
 func run_validation_pass() -> bool:
 	if !has_method("PREVIEW"):
-		if req_successful_preview or req_successful_telegraph:
-			print(actor.name," can't find PREVIEW() method for move ",self,", but previews/telegraphs are required!")
-			return false
+		if actor is ActorPlayer:
+			if req_successful_preview:
+				print(actor.name," can't find PREVIEW() method for move ",self,", but previews are required!")
+				return false
+		elif actor is ActorEnemy:
+			if req_successful_telegraph:
+				print(actor.name," can't find PREVIEW() method for move ",self,", but telegraphs are required!")
+				return false
 	
 	if !has_method("ACT"):
 		print(actor.name," can't load move ",self,", no ACT() method!")
@@ -139,7 +144,7 @@ func run_validation_pass() -> bool:
 	pass
 
 func log_move_use():
-	actor.spend(cost)
+	actor.spend(effective_cost())
 	
 	if on_use_cooldown > 0:
 		current_cooldown = (on_use_cooldown + 1) # Adds 1 to account for current turn
@@ -150,7 +155,7 @@ func log_move_use():
 
 func is_usable(ignore_ap: bool = false) -> bool:
 	if !ignore_ap:
-		if cost > actor.action_points:
+		if effective_cost() > actor.action_points:
 			return false
 	
 #	if !passfail: return false
@@ -165,6 +170,21 @@ func is_usable(ignore_ap: bool = false) -> bool:
 		return false
 	
 	return true
+
+func effective_cost() -> int:
+	if not actor is ActorEnemy:
+		return (cost + telegraph_cost) # Players treat the telegraph cost as part of the package
+	
+	if !req_successful_telegraph:
+		return cost
+	
+	# Requires a telegraph, but have we already done so?
+	if actor.telegraphed_move == self:
+		return cost
+	
+	# Nope! Telegraph-first time
+	return telegraph_cost
+	pass
 
 func translate_desc(desc: String) -> String:
 	var dmg: String = str(get_damage())

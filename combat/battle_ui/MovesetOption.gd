@@ -112,16 +112,16 @@ func validate():
 	
 	# At this point it should just be a matter of whether we can afford the AP cost or not
 	
-	elif move.cost > actor.action_points:
+	elif move.effective_cost() > actor.action_points:
 		state = s.UNAVAILABLE
 		loaded_iconpar = $AllIcons/ActionNo
-		loaded_value = str(move.cost)
-		loaded_tt_warn_text = str("Cannot afford ",move.cost," cost with ",actor.action_points," AP remaining")
+		loaded_value = str(move.effective_cost())
+		loaded_tt_warn_text = str("Cannot afford ",move.effective_cost()," cost with ",actor.action_points," AP remaining")
 	
 	else: # We CAN afford it! Finally!
 		state = s.AVAILABLE
 		loaded_iconpar = $AllIcons/ActionYes
-		loaded_value = str(move.cost)
+		loaded_value = str(move.effective_cost())
 		tooltips_are_valid = true
 		
 		if move.on_use_cooldown > 0:

@@ -2,7 +2,7 @@ extends ActorEnemy
 
 #var targeted_locs: Array = []
 enum {NOT_SET, LUNGE, SHOOT, POST_LUNGE, POST_SHOOT}
-var OLD_telegraphed_move: int = NOT_SET
+var telegraphed_move: int = NOT_SET
 var executed_main_attack: bool = false
 
 var lunge_delta_target: Vector2 # A static *relative* reference to the opposite side of the board
@@ -36,10 +36,10 @@ func pre_combat_setup():
 #	print("Beast pre combat setup!")
 	jump_dest_coord = coord + lunge_delta_target
 	if utils.coin_flip():
-		OLD_telegraphed_move = LUNGE
+		telegraphed_move = LUNGE
 		ACT_pre_lunge()
 	else:
-		OLD_telegraphed_move = SHOOT
+		telegraphed_move = SHOOT
 		ACT_pre_shoot()
 	pass
 
@@ -47,7 +47,7 @@ func pre_turn_setup():
 	allowed_over_faction_lines = false
 	executed_main_attack = false
 	
-#	print("starting our turn when our telegraphed move is ",OLD_telegraphed_move)
+#	print("starting our turn when our telegraphed move is ",telegraphed_move)
 	pass
 
 func prep_next_action():
@@ -56,8 +56,8 @@ func prep_next_action():
 	
 	# First, check if we've telegraphed anything; if yes, can we follow-through?
 	if !executed_main_attack: # Only try our lunge or shoot ONCE, as first priority
-		if OLD_telegraphed_move == LUNGE:
-			OLD_telegraphed_move = POST_LUNGE
+		if telegraphed_move == LUNGE:
+			telegraphed_move = POST_LUNGE
 			next_telegraph_cost = COST_PRE_SHOOT
 			if can_afford(COST_LUNGE):
 #				print("checking if we can lunge to exact jump_dest_coord ",jump_dest_coord)
@@ -79,8 +79,8 @@ func prep_next_action():
 					release_targeted_tiles()
 			else: release_targeted_tiles()
 		
-		if OLD_telegraphed_move == SHOOT:
-			OLD_telegraphed_move = POST_SHOOT
+		if telegraphed_move == SHOOT:
+			telegraphed_move = POST_SHOOT
 			next_telegraph_cost = COST_PRE_LUNGE
 			if can_afford(COST_SHOOT):
 				executed_main_attack = true
@@ -89,28 +89,28 @@ func prep_next_action():
 				return
 			else: release_targeted_tiles()
 	
-	if OLD_telegraphed_move == NOT_SET: # Handles something like if we failed to telegraph last turn
+	if telegraphed_move == NOT_SET: # Handles something like if we failed to telegraph last turn
 		if utils.coin_flip():
-			OLD_telegraphed_move = POST_LUNGE
+			telegraphed_move = POST_LUNGE
 			next_telegraph_cost = COST_PRE_SHOOT
 		else:
-			OLD_telegraphed_move = POST_SHOOT
+			telegraphed_move = POST_SHOOT
 			next_telegraph_cost = COST_PRE_LUNGE
 	
 	# Turn-starting telegraph follow-ups are done with; now prioritize turn *ending* telegraphs
 	# If we can afford a telegraph and nothing but, that's always what we should do!
 	if action_points == next_telegraph_cost:
 		
-		if OLD_telegraphed_move == POST_LUNGE:
+		if telegraphed_move == POST_LUNGE:
 			spend(COST_PRE_SHOOT)
-			OLD_telegraphed_move = SHOOT
+			telegraphed_move = SHOOT
 			batman.append_action(self, "pre_shoot")
 			return
 		
-		if OLD_telegraphed_move == POST_SHOOT:
+		if telegraphed_move == POST_SHOOT:
 			spend(COST_PRE_LUNGE)
-			OLD_telegraphed_move = LUNGE
-			print("before pre lunge, OLD_telegraphed_move is ",OLD_telegraphed_move)
+			telegraphed_move = LUNGE
+			print("before pre lunge, telegraphed_move is ",telegraphed_move)
 			batman.append_action(self, "pre_lunge")
 			return
 	
@@ -173,7 +173,7 @@ func prep_next_action():
 		return # No attempting to squeeze in an additional main attack!
 	
 	# If we FAILED to execute a main attack this turn so far, including if we weren't able to set one up last turn, pick a different option we typically wouldn't do
-	OLD_telegraphed_move = NOT_SET
+	telegraphed_move = NOT_SET
 	
 	# If we can afford to debuff the party AND do a telegraph after, do that
 	if can_afford(next_telegraph_cost + COST_SUPERDEBUFF):

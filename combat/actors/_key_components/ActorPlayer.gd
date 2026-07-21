@@ -167,8 +167,8 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 		
 		return false
 	
-	if !can_afford(move.cost):
-		if do_print: print(name," can't afford ",move.cost,"-AP for ",move)
+	if !can_afford(move.effective_cost()):
+		if do_print: print(name," can't afford ",move.effective_cost(),"-AP for ",move)
 		return false
 	if move.current_cooldown > 0:
 		if do_print: print(name," still on cooldown for ",move.current_cooldown," turns: ",move)
@@ -207,7 +207,7 @@ func attempt_player_char_action():
 	# Should be valid, then! Adjust our stats/values first
 	var move: MoveAction = batman.loaded_move
 	
-#	print("going to spend ",move.cost,"-AP when ",action_points,"-AP remain")
+#	print("going to spend ",move.effective_cost(),"-AP when ",action_points,"-AP remain")
 	
 	move.log_move_use()
 	
