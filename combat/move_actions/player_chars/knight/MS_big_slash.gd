@@ -53,7 +53,7 @@ func ACT():
 
 func slash_1():
 	# Prepare our slash *immediately* so that if an interruption happens based on dealing damage, we're already cued to do it
-	batman.append_action(actor, resource_name)
+	batman.append_action(actor, self)
 	
 	for cell in slash_1_cells:
 		if !batman.grid_actors.has_cellv(cell): continue

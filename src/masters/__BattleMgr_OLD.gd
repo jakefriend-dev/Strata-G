@@ -1186,22 +1186,49 @@ func vet_action(action: Array) -> bool:
 		print("BATMAN: vet_action(",action,") failed: Actor is null")
 		return false
 	
-	if !actor.active: # Notably, we do allow moves to be called if the actor is dead!
+	if !actor.active:
 		print("BATMAN: vet_action(",action,") failed: Actor is not active")
 		return false
 	
-	if not action[1] is MoveAction:
-		print("BATMAN: vet_action(",action,") failed: Second param is not a MoveAction!")
+	if not action[1] is String:
+		print("BATMAN: vet_action(",action,") failed: Second param is not a string (for methodname)")
 		return false
 	
-	var move: MoveAction = action[1]
-#	var movename: String = move.resource_name
+	var movename: String = action[1]
 	
-	if move == null:
-		print("BATMAN: vet_action(",action,") failed: Move is null!")
+	if movename == "":
+		print("BATMAN: vet_action(",action,") failed: Method name is blank")
 		return false
 	
-	# We DON'T worry about move validation here, because we're careful with common moves already being set up right, and actors run local validation on their moves already.
+	# Actors need to have the action in their script OR class chain
+	var player_move_flag: bool = (actor is ActorPlayer && !Actor.global_moves.has(movename))
+	if player_move_flag:
+		var common_path: bool = false
+		if !actor.moveset.has(movename):
+			if !loader.common_moves.has(movename):
+				print("BATMAN: vet_action(",action,") failed: ActorPlayer does not have a move called ",movename," in its moveset! (Or a common move called that!)")
+				return false
+			else:
+				common_path = true
+		
+		var move: MoveAction
+		if !common_path:
+			move = actor.moveset[movename]
+		else:
+			var movevar: String = str("CM_",movename.to_lower())
+			if movevar in loader:
+				move = loader.get(movevar)
+			else:
+				print("BATMAN: vet_action(",action,") failed: Common move ",movename," does not have a matching variable in Loader called ",movevar)
+				return false
+			
+		if !move.has_method("ACT"):
+			print("BATMAN: vet_action(",action,") failed: ActorPlayer's move ",move," does not have ACT() method!")
+			return false
+	else: # Player walking, or any enemy action
+		if !actor.has_method(str("ACT_"+movename)):
+			print("BATMAN: vet_action(",action,") failed: Actor does not have method in its script or class-chain")
+			return false
 	
 	if action.size() == 3:
 		if not action[2] is Array:
@@ -1211,8 +1238,8 @@ func vet_action(action: Array) -> bool:
 	return true
 	pass
 
-func append_action(actor: Actor, move: MoveAction, paramset: Array = []):
-	var action: Array = [actor, move, paramset]
+func append_action(actor: Actor, movename: String, paramset: Array = []):
+	var action: Array = [actor, movename, paramset]
 	if !vet_action(action):
 		return
 	
@@ -1220,12 +1247,12 @@ func append_action(actor: Actor, move: MoveAction, paramset: Array = []):
 	action_queue.append(action)
 	pass
 
-func reaction(actor: Actor, move: MoveAction, paramset: Array = []):
-	insert_action(0, actor, move, paramset)
+func reaction(actor: Actor, movename: String, paramset: Array = []):
+	insert_action(0, actor, movename, paramset)
 	pass
 
-func insert_action(position: int, actor: Actor, move: MoveAction, paramset: Array = []):
-	var action: Array = [actor, move, paramset]
+func insert_action(position: int, actor: Actor, movename: String, paramset: Array = []):
+	var action: Array = [actor, movename, paramset]
 	if !vet_action(action):
 		return
 	
@@ -1234,7 +1261,7 @@ func insert_action(position: int, actor: Actor, move: MoveAction, paramset: Arra
 		position = 0
 	elif position > action_queue.size():
 		print("BATMAN: Invalid index insert_action(",action,", ",position,"), appending instead!")
-		append_action(actor, move, paramset)
+		append_action(actor, movename, paramset)
 		return
 	
 	# Validations complete
@@ -1276,30 +1303,23 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	# Gather data...
 	var player_flag: bool = (actor is ActorPlayer)
-	var move: MoveAction = curr_action[1]
-	var logname: String = str(move)
-#	var raw_movename: String = curr_action[1]
-#	var movename: String = str("ACT_"+raw_movename)
-#	var logname: String = raw_movename
+	
+	var raw_movename: String = curr_action[1]
+	var movename: String = str("ACT_"+raw_movename)
+	var logname: String = raw_movename
 	var paramset: Array = curr_action[2]
 	
-	var methodname: String = "ACT"
-	if !player_flag:
-		if move.req_successful_telegraph:
-			if actor.telegraphed_move != move:
-				methodname = "PREVIEW"
-	
 	# Check that there's a method that can be called!
-#	var caller = actor
-#	if player_flag:
-#		if !Actor.global_moves.has(raw_movename):
-#			movename = "ACT"
-#			caller = loaded_move
-#			logname = loaded_move.display_name
-#	if !caller.has_method(movename):
-#		print("MAJOR ERROR! ",actor.ofc_name," (or its move) does not have the called method ",movename,"()")
-#
-#		pass
+	var caller = actor
+	if player_flag:
+		if !Actor.global_moves.has(raw_movename):
+			movename = "ACT"
+			caller = loaded_move
+			logname = loaded_move.display_name
+	if !caller.has_method(movename):
+		print("MAJOR ERROR! ",actor.ofc_name," (or its move) does not have the called method ",movename,"()")
+		
+		pass
 	
 	# Validation cleared!
 	acting_actor = actor # For async ref
@@ -1313,10 +1333,10 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	# Execute!
 	if paramset.empty():
-		move.call(methodname)
+		caller.call(movename)
 	else:
 		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
-		move.callv(methodname, paramset)
+		caller.callv(movename, paramset)
 	
 	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
 	pass

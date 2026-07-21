@@ -65,7 +65,7 @@ func affirm_by_any_actor(anyactor: Actor) -> bool:
 	
 	# If enemies are against the frontline, fail
 	var y: int = 0 # 1-based
-	var opposing_pass: bool = true
+#	var opposing_pass: bool = true
 	for n in batman.field.board_size.y:
 		y += 1
 		var coord: Vector2 = Vector2(their_frontline_x, y)

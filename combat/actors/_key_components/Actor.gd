@@ -104,6 +104,7 @@ export (weightclasses) var def_weight: int = weightclasses.NORMAL
 
 const COST_WALK: int = 1
 export var tile_walk_speed: float = 0.125
+#var walkdir: Vector2 = Vector2.ZERO
 
 #export var def_hovering:			bool = false # Not affected by ground type or pits at all
 #export var def_lightweight:			bool = false # Not affected by tiles that you sink in, like mud
@@ -460,14 +461,8 @@ func generic_clear_status(status_key: String):
 	clear_damage_mod(status_key)
 	pass
 
-func frontline_press():
-#	print("Checking whether ",name," can press frontline for real!")
-		# This is getting called prematurely... when manually ending the status, not just naturally!
-#	var move = loader.CM_press_forward
+func frontline_press(): # Only called AFTER successful
 	
-	# We know this has ALREADY been affirmed one last time by the between-turn checks! This code was just creating duplicate fail case Quips
-#	if !move.affirm_by_any_actor(self):
-#		return
 	batman.pressuring_actor = null
 	if faction == batman.factions.PLAYER:
 		quip("The moment is ours!")

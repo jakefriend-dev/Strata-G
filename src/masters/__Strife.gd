@@ -477,7 +477,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	
 	# The is_quiet signalling actually needs to happen when the ACTION STEP begins, not the moment (mid-attacker's action step) this connects - and dealing damage needs to wait until the motion ends! So for now, just create the reaction and forward the details to there.
 	
-	batman.reaction(defender, "be_external_motioned", [
+	batman.reaction(defender, loader.CM_be_ext_motioned, [
 		spent_motion, knockback_damage, attacker, is_quiet, flags
 		])
 	pass

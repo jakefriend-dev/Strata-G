@@ -1,0 +1,29 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://combat/move_actions/common/MS_walk.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/aimflowers/3x3 - orthag.png" type="Texture" id=2]
+
+[resource]
+resource_local_to_scene = true
+resource_name = "WALK"
+script = ExtResource( 1 )
+display_name = "Walk"
+shorthand_name = ""
+short_desc = "[Travel] 1 tile; [fracture] AP"
+display_desc = "[Travel] 1 tile orthagonally while [fracturing] once. While zero-cost, must have at least 1 AP to be used."
+option_image = ExtResource( 2 )
+option_desc = "Changes direction of travel."
+cost = 0
+base_damage = 0
+motion_type = 1
+on_use_cooldown = 0
+initial_cooldown = 0
+display_tags = "travel, fracture"
+uses_per_turn = 0
+uses_per_battle = 0
+req_successful_preview = true
+selection_style = 0
+override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
+misc = ""

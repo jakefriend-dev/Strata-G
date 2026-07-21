@@ -128,7 +128,7 @@ func ACT():
 			if !batman.is_my_action(actor): return
 			
 			if frontmost_cell != actor.coord:
-				batman.append_action(actor, resource_name)
+				batman.append_action(actor, self)
 			pass
 		
 		2: # Charge forwards (end by delivering impact)
@@ -147,7 +147,7 @@ func ACT():
 					strife.do_impact_damage(actor, victim, actor.dmg(dist_2))
 			
 			if og_cell != actor.coord:
-				batman.append_action(actor, resource_name)
+				batman.append_action(actor, self)
 			pass
 		
 		3: # Return to original position

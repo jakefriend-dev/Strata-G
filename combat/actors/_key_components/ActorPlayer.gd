@@ -192,12 +192,15 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 	pass
 
 func attempt_player_char_move(motion: Vector2):
-	if !can_afford(COST_WALK): return
-	if !support.is_tile_traversable_relative(self, motion): return
-	
-	# Should be valid, then!
-	walk_spend_check()
-	batman.append_action(self, "walk", [motion])
+#	walkdir = motion
+#	
+#	if !can_afford(COST_WALK): return
+#	if !support.is_tile_traversable_relative(self, motion): return
+#
+#	# Should be valid, then!
+#	walk_spend_check()
+	print("letsgo: ",motion)
+	batman.append_action(self, loader.CM_walk, [motion])
 	submit_player_action(false)
 	pass
 
@@ -212,7 +215,7 @@ func attempt_player_char_action():
 	move.log_move_use()
 	
 	# Now execute!
-	batman.append_action(self, move.resource_name)
+	batman.append_action(self, move)
 	
 	submit_player_action(move.motion_type == move.motionchecks.REST)
 	pass

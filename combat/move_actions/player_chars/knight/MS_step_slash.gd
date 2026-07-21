@@ -76,7 +76,7 @@ func move_forward_and_stab():
 	strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(base_damage), ["piercing"])
 	strife.quick_vfx(victim, "spark_burst")
 	
-	batman.append_action(actor, resource_name)
+	batman.append_action(actor, self)
 	end_action()
 	pass
 

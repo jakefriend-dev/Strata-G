@@ -118,8 +118,11 @@ func run_validation_pass() -> bool:
 				print(actor.name," can't find PREVIEW() method for move ",self,", but previews are required!")
 				return false
 		else:
-			if req_successful_telegraph:
-				print(actor.name," can't find PREVIEW() method for move ",self,", but telegraphs are required!")
+			if req_successful_telegraph and req_successful_preview:
+				print(actor.name," separately tagged to require a successful preview AND a telegraph; should only be one or the other!")
+				return false
+			elif req_successful_telegraph or req_successful_preview:
+				print(actor.name," can't find PREVIEW() method for move ",self,", but previews/telegraphs are required!")
 				return false
 	
 	if !has_method("ACT"):

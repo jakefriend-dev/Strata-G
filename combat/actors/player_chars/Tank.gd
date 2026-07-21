@@ -18,5 +18,5 @@ func prep_melee_counter(_combat_package: Dictionary):
 #	if !is_melee: return
 	
 #	print(name," reacting to melee damage!")
-	batman.reaction(self, "basic_melee")
+	batman.reaction(self, moveset["BASIC_SLASH"])
 	pass

@@ -106,7 +106,7 @@ func ACT_lunge_forward():
 		yield(utils.yt(post_jump_rumble_time, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
-	batman.append_action(actor, resource_name)
+	batman.append_action(actor, self)
 	end_action()
 	pass
 
