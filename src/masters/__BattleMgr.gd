@@ -417,19 +417,18 @@ func init_new_combat(new_battle_details: Dictionary):
 	# This ACTUALLY STARTS the fight!
 	
 	if action_queue.empty():
-		print("BATMAN: Actionqueue is empty, starting the first turn right away!")
+#		print("BATMAN: Actionqueue is empty, starting the first turn right away!")
 		cycle_to_next_turn()
 	else:
-		print("BATMAN: Actionqueue is pre-filled, executing telegraph previews!")
+#		print("BATMAN: Actionqueue is pre-filled, executing telegraph previews!")
 		process_prefight_actionsteps()
 	
-#	print("BATMAN: GPos data is:",grid_gpos)
 	pass
 
 func flush_all_combat_details():
 	# Should only be called when exiting/entering Battlefield.tscn; NEVER mid-fight
 	
-	print("BATMAN.flush_all_combat_details()")
+#	print("BATMAN.flush_all_combat_details()")
 	pressuring_actor = null
 	curr_actor = null
 #	acting_actor = null
@@ -793,7 +792,7 @@ func do_preturn_visuals(mtext: String):
 func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	if !is_game_live(): return
 	
-	print("BATMAN.pre_prep_new_turn()")
+#	print("BATMAN.pre_prep_new_turn()")
 	field.update_targeting()
 	flush_actionqueue()
 	support.de_ghost_all_actors()
@@ -914,7 +913,7 @@ func clean_up_turnqueue(): # Ensures any eg. null actors are removed; refreshes 
 	
 	if new_turncount != turncount:
 		has_a_change_been_observed = true
-		print("BATMAN: Turncount updated from ",turncount," to ",new_turncount," during clean_up_turnqueue()")
+#		print("BATMAN: Turncount updated from ",turncount," to ",new_turncount," during clean_up_turnqueue()")
 	turncount = new_turncount
 	
 	turnqueue = []
@@ -1000,7 +999,7 @@ func remove_all_turns_of_actor(actor: Actor):
 	
 	if new_turncount != turncount:
 		has_a_change_been_observed = true
-		print("BATMAN: Turncount updated from ",turncount," to ",new_turncount," during remove_all_turns_of_actor()")
+#		print("BATMAN: Turncount updated from ",turncount," to ",new_turncount," during remove_all_turns_of_actor()")
 	turncount = new_turncount
 	
 	turnqueue = []
@@ -1263,7 +1262,7 @@ func process_prefight_actionsteps():
 	pass
 
 func progress_action_queue(): # Calls ONE next action, or if there is none, skips
-	print("BATMAN.progress_action_queue()")
+#	print("BATMAN.progress_action_queue()")
 	last_execution_frame = get_tree().get_frame()
 	acting_actor = null
 	reset_common_moves()
@@ -1282,7 +1281,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var unvalidated_action: Array = action_queue.pop_front()
 	var actor: Actor = unvalidated_action[0]
 	
-	# We're actually NOT calling utils.actorpass() here, because it might be useful to let actors do a final "on death" action!
+	# We're actually intentionally NOT calling utils.actorpass() here, because it might be useful to let actors do a final "on death" action!
 	if !utils.valid(actor):
 		end_action()
 		return
@@ -1306,7 +1305,6 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var paramset: Array = curr_action[2]
 	
 	var methodname: String = "ACT"
-	var need_to_clear_telegraphed_move: bool = false
 	if !player_flag:
 		if move.req_successful_telegraph:
 			if actor.telegraphed_move != move:
@@ -1385,7 +1383,7 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 	pass
 
 func flush_actionqueue(): # Run to wipe any stored-between-turns data
-	print("BATMAN.flush_actionqueue()")
+#	print("BATMAN.flush_actionqueue()")
 	release_most_claims()
 	
 	acting_actor = null
@@ -1461,7 +1459,7 @@ func change_actor_grid_coord(actor: Actor, new_coord: Vector2):
 		batman.grid_actors.set_cellv(new_coord, actor)
 		return true
 	
-	print("BATMAN: ERROR, tried to change actor grid coord for actor: ",actor," when it wasn't already on the grid and DIDN'T just exit ghost_mode? old: ",old_coord," and new: ",new_coord)
+#	print("BATMAN: ERROR, tried to change actor grid coord for actor: ",actor," when it wasn't already on the grid and DIDN'T just exit ghost_mode? old: ",old_coord," and new: ",new_coord)
 	
 	return false
 	pass

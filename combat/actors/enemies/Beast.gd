@@ -63,12 +63,15 @@ func prep_next_action():
 		print("Flipped lunge_vs_spit_coin to: ",lunge_vs_spit_coin)
 		
 		# ...whether or not it actually plays out!
-		if telegraphed_move.totality_check():
+		if telegraphed_move.totality_check([], self, true):
 			did_main_attack = true
 			execute_npc_move(telegraphed_move)
 			return
 		else:
 			clear_telegraphed_move()
+	
+	if telegraphed_move == null and !did_main_attack and action_points == 5:
+		print("BEAST has 5 AP, no telegraphed move, and has NOT done its main attack yet")
 	
 	# (One way or the other, AFTER this point, telegraphed_move is null)
 	
@@ -82,7 +85,7 @@ func prep_next_action():
 	
 	if action_points == next_main_attack.effective_cost():
 		readied_telegraph = true # Flag it as 'we tried' whether or not it executes
-		if next_main_attack.totality_check():
+		if next_main_attack.totality_check([], self, true):
 			execute_npc_move(next_main_attack)
 			return
 	
@@ -105,11 +108,18 @@ func prep_next_action():
 	# (Which is mostly sort of moving around vaguely)
 	
 	var can_walk: bool = randomwalk_if_possible(false) && loader.CM_walk.usability_check(self) # Confirms at least ONE direction is possible, but doesn't actually walk yet
+	if can_walk:
+		if action_points < (loader.CM_walk.effective_cost() + next_main_attack.effective_cost()):
+			can_walk = false
 	var can_repo: bool = moveset["REPO_JUMP"].totality_check() # Confirms we can move to at least one OTHER tile
+	if can_repo:
+		if action_points < (moveset["REPO_JUMP"].effective_cost() + next_main_attack.effective_cost()):
+			can_repo = false
+	
 	
 	if can_walk:
 		if can_repo: # Both! Choose randomly (weighted!)
-			if (rand_range(0.0, 3.0) <= 2.0):
+			if (rand_range(0.0, 4.0) <= 3.0):
 				randomwalk_if_possible()
 				return
 			else:
@@ -126,7 +136,7 @@ func prep_next_action():
 	
 	# And if we can't walk OR repo, well - maybe just skip ahead to the telegraph?
 	readied_telegraph = true # Once we get to this point, turn's over either way
-	if next_main_attack.totality_check():
+	if next_main_attack.totality_check([], self, true):
 		execute_npc_move(next_main_attack)
 		return
 	

@@ -1,6 +1,6 @@
 [gd_scene load_steps=15 format=2]
 
-[ext_resource path="res://combat/actors/player_chars/Tank.gd" type="Script" id=1]
+[ext_resource path="res://combat/actors/player_chars/Knight.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/bird char mockups2b.png" type="Texture" id=2]
 [ext_resource path="res://combat/actors/_key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://combat/actors/_key_components/Actor Shader UMS.tres" type="Shader" id=4]

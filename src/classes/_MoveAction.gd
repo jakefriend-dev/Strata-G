@@ -123,7 +123,7 @@ func do_startup_config():
 	set_local_to_scene(true)
 	initialize_MPD()
 	
-	plausible_variants = strife.aimflower_vectors_from_file(option_image.resource_path)
+	plausible_variants = strife.aimflower_vectors_from_file(actor, option_image.resource_path)
 	pass
 
 func run_validation_pass() -> bool:
@@ -245,9 +245,11 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 
 func totality_check(params: Array = [], a: Actor = null, do_print: bool = false) -> bool:
 	if !quick_context_passfail_check(params):
+		print(self,".totality_check() failed context check")
 		return false
 	
 	if !usability_check(a, do_print):
+		print(self,".totality_check() failed usability check")
 		return false
 	
 	return true
@@ -369,8 +371,6 @@ func initialize_MPD():
 	pass
 
 func clear_MPD():
-	if resource_name == "SPIT_ATTACK" or resource_name == "LUNGE_STOMP":
-		print("gdi, you were right, MPD is clearing between telegraph and execution!")
 	
 	passfail = false
 	ready_to_use = false

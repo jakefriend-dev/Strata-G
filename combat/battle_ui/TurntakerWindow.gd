@@ -45,7 +45,7 @@ func _ready():
 	pass
 
 func on_turnqueue_construction():
-	print("TT WINDOW: on_turnqueue_construction()")
+#	print("TT WINDOW: on_turnqueue_construction()")
 	
 	for ttd in batman.turnqueue: if ttd is Dictionary:
 		add_new_turntaker(ttd)
@@ -91,14 +91,14 @@ func remove_turntaker(tt: Node2D):
 	pass
 
 func on_turnqueue_update():
-	print("TT WINDOW: on_turnqueue_update()")
+#	print("TT WINDOW: on_turnqueue_update()")
 	do_full_update()
 	pass
 
 # ---
 
 func do_full_update(): # Always assumes batman.turnqueue is fully up to date!
-	print("TT WINDOW: do_full_update()")
+#	print("TT WINDOW: do_full_update()")
 	refresh_tt_values_and_activeness()
 	animate_position_changes()
 	
