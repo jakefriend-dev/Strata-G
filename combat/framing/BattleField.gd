@@ -212,6 +212,7 @@ func show_major_text(big_text: String, lesser_text: String, instant: bool = fals
 		major_text.visible = true
 	
 	if lesser_text == "":
+		major_text.position.x = 0
 		major_text.position.y = 0
 		major_text.get_node("BigLabel").text = big_text
 		major_text.get_node("BigLabel/Shadow").text = big_text
@@ -221,6 +222,14 @@ func show_major_text(big_text: String, lesser_text: String, instant: bool = fals
 		major_text.get_node("Texture2").self_modulate.a = 1.0
 	
 	else: # Typically for 'Next Turne' etc
+		var offset: float = 0.2
+		if lesser_text == "Your Turne":
+			major_text.position.x = batman.WINDOW_SIZE.x * offset
+		elif lesser_text == "Enemie Turne":
+			major_text.position.x = batman.WINDOW_SIZE.x * -offset
+		else:
+			major_text.position.x = 0
+		
 		major_text.position.y = 32
 		major_text.get_node("BigLabel").text = str("“",big_text,"”")
 		major_text.get_node("BigLabel/Shadow").text = str("“",big_text,"”")

@@ -68,6 +68,7 @@ first_initiative = 2
 second_initiative = 4
 max_health = 27
 max_shield = 1
+ofc_name = "Bigmaw"
 base_action_points = 5
 def_weight = 3
 tile_walk_speed = 0.75

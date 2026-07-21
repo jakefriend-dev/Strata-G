@@ -3,6 +3,7 @@ extends Node
 const USE_ACTION_CRACKING: bool = true # Disable or enable functionality
 
 var default_halfboard_size: Vector2 = Vector2(3, 5)
+const WINDOW_SIZE: Vector2 = Vector2(640.0, 360.0)
 const DETERMINISTIC: bool = false # When true, randomness is not initiated
 const CELL_SIZE: Vector2 = Vector2(64.0, 48.0)
 const CELL_ROW_OFFSET: float = 24.0 # Each column southward moves +offset X position
