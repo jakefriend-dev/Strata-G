@@ -32,7 +32,7 @@ func _ready():
 	pass
 
 func pre_combat_setup():
-	print("Beast pre combat setup!")
+#	print("Beast pre combat setup!")
 	if utils.coin_flip():
 		lunge_vs_spit_coin = false # NEXT one is lunge, so THIS one is spit
 		execute_npc_move(moveset["SPIT_ATTACK"], true)
@@ -43,6 +43,7 @@ func pre_combat_setup():
 	pass
 
 func pre_turn_setup():
+	print("\n---\n")
 	allowed_over_faction_lines = false
 	did_main_attack = false
 	readied_telegraph = false
@@ -60,7 +61,7 @@ func prep_next_action():
 	if telegraphed_move != null: if !did_main_attack: 
 		# Prep for next time!
 		lunge_vs_spit_coin = !lunge_vs_spit_coin
-		print("Flipped lunge_vs_spit_coin to: ",lunge_vs_spit_coin)
+#		print("Flipped lunge_vs_spit_coin to: ",lunge_vs_spit_coin)
 		
 		# ...whether or not it actually plays out!
 		if telegraphed_move.totality_check([], self, true):

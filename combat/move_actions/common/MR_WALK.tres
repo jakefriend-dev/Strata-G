@@ -26,4 +26,5 @@ selection_style = 0
 override_global_variant_on_move_load = false
 req_successful_telegraph = false
 telegraph_cost = 0
+fracture_on_use = true
 misc = ""

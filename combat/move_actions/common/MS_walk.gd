@@ -21,7 +21,6 @@ func PREVIEW(who: Actor, motion: Vector2):
 
 func ACT(who: Actor, motion: Vector2):
 	var dur: float = who.tile_walk_speed
-	who.walk_spend_check()
 	
 	var exact_coord: Vector2 = who.coord + motion
 	who.hotmove(exact_coord, dur)

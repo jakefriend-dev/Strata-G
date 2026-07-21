@@ -18,7 +18,7 @@ func ACT():
 	pass
 
 func REACT(combat_package: Dictionary):
-	print("Melee Counter: REACT()!")
+#	print("Melee Counter: REACT()!")
 	if !actor.check_status("melee_counter"): return
 	
 	if !combat_package.has("attacker_is_real"): return

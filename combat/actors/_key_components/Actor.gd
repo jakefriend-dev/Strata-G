@@ -261,7 +261,12 @@ func load_moves():
 			continue
 		
 		moveset[move.resource_name] = move
-		move.actor = self 
+		move.actor = self
+		
+		if faction == batman.factions.ENEMY:
+			move.plausible_variants = strife.xflip_plausible_variants(move.plausible_variants)
+#			print(move,": ",move.plausible_variants)
+		
 		# Pass to the layout 2x4 and update the position data!
 #		print(name," col:row ",col,":",row)
 		move_layout.set_cell(col, row, move)
@@ -385,6 +390,10 @@ func manual_spend(expense: int):
 	pass
 
 func spend(move): # You HAVE to send a MoveAction, but we can't static type it thanks to recursion :(
+#	print(name," has ",action_points," AP and boutta spend ",move.effective_cost())
+	if move.fracture_on_use:
+		do_fracture()
+	
 	MASTER_spend(move.effective_cost())
 	pass
 
@@ -431,7 +440,7 @@ func refresh_action_points():
 	update_bui()
 	pass
 
-func walk_spend_check():
+func do_fracture():
 	if batman.USE_ACTION_CRACKING:
 		inc_action_cracking()
 	else:

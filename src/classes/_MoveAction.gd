@@ -56,6 +56,7 @@ export var req_successful_telegraph: bool = false # If true, the move MUST conta
 export (int, 0, 8) var telegraph_cost: int = 0
 #var telegraph_pass: bool = false # True once telegraph is passed, and remains true until 'consumed' by use or RE_PREVIEW fails.
 
+export var fracture_on_use: bool = false
 export var misc: String # As of July 18, still not used anywhere...!
 
 var actor: Actor # Quickref!
@@ -123,7 +124,7 @@ func do_startup_config():
 	set_local_to_scene(true)
 	initialize_MPD()
 	
-	plausible_variants = strife.aimflower_vectors_from_file(actor, option_image.resource_path)
+	plausible_variants = strife.aimflower_vectors_from_file(option_image.resource_path)
 	pass
 
 func run_validation_pass() -> bool:
@@ -194,7 +195,7 @@ func usability_check(a: Actor = null, do_print: bool = false) -> bool:
 		return false
 	
 	if actualized_variants.empty():
-		if do_print: print(a.name," has zero possible variants for ",self," at this position!")
+		if do_print: print(a.name," has zero possible variants for ",self," at this position! Plausible variants: ",plausible_variants)
 		return false
 	
 	if uses_per_turn > 0: # Ignore if unlimited
@@ -211,20 +212,33 @@ func usability_check(a: Actor = null, do_print: bool = false) -> bool:
 	pass
 
 func quick_context_passfail_check(params: Array = []) -> bool:
-	if passfail: return true # Already verified!
+	if passfail:
+		if req_successful_telegraph:
+			return true # Already verified!
 	
 	if req_successful_preview:
+		var repreviewed: bool = false
+		if has_method("RE_PREVIEW"):
+			if passfail:
+				repreviewed = true
+				if params.empty():
+					call("RE_PREVIEW")
+				else:
+					callv("RE_PREVIEW", params)
 		
-		if params.empty():
-			call("PREVIEW")
-		else:
-			callv("PREVIEW", params)
+		if !repreviewed:
+			if params.empty():
+				call("PREVIEW")
+			else:
+				callv("PREVIEW", params)
+		
 		return passfail
-		
 	
 	if req_successful_telegraph:
 		# If it's a telegraph, we want to approve it - telegraphs have to 'execute' their PREVIEWs as an action and speak for themselves.
 		return true
+	
+	# And lower priority, we'll do a PREVIEW cycle anyways, cuz why not!
 	
 	if has_method("RE_PREVIEW"): # Prioritized slightly over PREVIEW!
 		if params.empty():

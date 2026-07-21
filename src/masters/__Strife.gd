@@ -1275,12 +1275,12 @@ func aimflower_key_from_file(filepath: String) -> String:
 	return key
 	pass
 
-func aimflower_vectors_from_file(actor: Actor, filepath: String) -> Array:
+func aimflower_vectors_from_file(filepath: String) -> Array:
 	var key: String = aimflower_key_from_file(filepath)
-	return aimflower_vectors_from_key(actor, key)
+	return aimflower_vectors_from_key(key)
 	pass
 
-func aimflower_vectors_from_key(actor: Actor, key: String) -> Array:
+func aimflower_vectors_from_key(key: String) -> Array:
 	# Note, the expected 'start' position is always the FIRST of these vectors!
 	var results: Array = []
 	
@@ -1369,27 +1369,21 @@ func aimflower_vectors_from_key(actor: Actor, key: String) -> Array:
 		"west":
 			results.append(Vector2.LEFT)
 	
-	var flip_flag: bool = false
-	if utils.actorpass(actor):
-		if actor is ActorEnemy:
-			flip_flag = true
-	if flip_flag:
-		var flipped_results: Array = []
-		for vec in results:
-			if !is_zero_approx(vec.x):
-				var flipvec: Vector2 = Vector2(-vec.x, vec.y)
-				flipped_results.append(flipvec)
-			else:
-				flipped_results.append(vec)
-		
-#		print("variants for key (flipped) [",key,"]: ",flipped_results)
-		return flipped_results
-	else:
-#		print("variants for key [",key,"]: ",results)
-		return results
-	
+	return results
 	pass
 
+func xflip_plausible_variants(unflipped_variants: Array) -> Array:
+	var flipped_results: Array = []
+	for vec in unflipped_variants:
+		if !is_zero_approx(vec.x):
+			var flipvec: Vector2 = Vector2(-vec.x, vec.y)
+			flipped_results.append(flipvec)
+		else:
+			flipped_results.append(vec)
+	
+#	print("(flipped): ",flipped_results)
+	return flipped_results
+	pass
 
 
 

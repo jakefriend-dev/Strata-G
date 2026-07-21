@@ -51,7 +51,8 @@ func ACT():
 	pass
 
 func ACT_lunge_forward():
-	print("lunge_forward")
+#	print("lunge_forward when neutral cells = ",get_all_cells_by_MPD_type(ROWS.NEUTRAL))
+	
 	actor.allowed_over_faction_lines = true
 	actor.claim_tile()
 #	actor.ghost_mode(false)
@@ -60,7 +61,7 @@ func ACT_lunge_forward():
 	return_tile = actor.claimed_tile
 	var rand_tile: Vector2 = support.get_rand_faction_tile_for_actormoving(actor, actor.faction, true)
 	if rand_tile != actor.coord:
-		print(actor.name," ACT_forward() picked new tile whose occupant is ",batman.grid_actors.get_cellv(rand_tile))
+#		print(actor.name," ACT_forward() picked new tile whose occupant is ",batman.grid_actors.get_cellv(rand_tile))
 		return_tile = rand_tile
 		actor.claim_tile(return_tile)
 	
@@ -117,7 +118,7 @@ func ACT_lunge_back():
 	var dur: float = 0.5
 	
 	var occupant_of_dest: Actor = batman.grid_actors.get_cellv(return_tile)
-	print(actor.name," ACT_lunge_back() when is_ghost ",actor.is_ghost," and occupant of lunge dest: ",occupant_of_dest)
+#	print(actor.name," ACT_lunge_back() when is_ghost ",actor.is_ghost," and occupant of lunge dest: ",occupant_of_dest)
 	if utils.actorpass(occupant_of_dest):
 		# Breakpoint!
 		pass

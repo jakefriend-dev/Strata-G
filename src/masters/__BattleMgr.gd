@@ -121,6 +121,7 @@ var curr_action: Array = []
 var prev_action: Array = []
 var timeout_action_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
 var timeout_turn_time: float = (12.0/60.0) # How long between ended turns if time has not passed
+signal about_to_progress_actionqueue()
 signal any_actionstep_initiated()
 signal action_step_complete() # Should fire any time we do an individual action
 signal all_action_steps_complete() # Should fire whenever ALL steps are done
@@ -1267,6 +1268,9 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	acting_actor = null
 	reset_common_moves()
 	
+	
+	emit_signal("about_to_progress_actionqueue")
+	
 	if action_queue.empty(): # No actions queued when this was called! Time to move on
 		
 		# curr_actor can be null IF this is prefight actionsteps, like telegraphs
@@ -1312,7 +1316,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 				actor.telegraphed_move = move
 				# Note that telegraphed_move does NOT auto-clear!
 	
-	print("ACTIONSTEP: ",actor.name,"'s ",move,".",methodname,"()")
+	print("ACTIONSTEP: ",actor.name,"'s ",move,".",methodname,"() - [",actor.action_points," AP remaining (post-spend)]")
 	
 	# Validation cleared!
 	acting_actor = actor # For async ref
@@ -1331,7 +1335,33 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
 		move.callv(methodname, paramset)
 	
-	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
+	# Great success! It's the actor's job to cue end_action()/end_telegraph() from here.
+	
+	yield(self, "about_to_progress_actionqueue")
+#	yield(VisualServer, "frame_pre_draw")
+#	yield(VisualServer, "frame_post_draw")
+	# CONDITIONAL cleanup!
+	if !utils.actorpass(actor): return
+	
+	if move.req_successful_telegraph:
+		if methodname == "ACT":
+#			print("Doing cleanup on ended actionstep's move ",move,"!")
+			move.clear_MPD()
+	else:
+#		print("Doing cleanup on ended actionstep's move ",move,"!")
+		move.clear_MPD()
+	pass
+
+func clean_all_MPDs_between_actionstep_batches():
+	# Okay, so this fires RIGHT BEFORE Actor.choose_action()
+#	print("BATMAN: clean_all_MPDs_between_actionstep_batches()")
+	for actor in living_actors: if utils.actorpass(actor):
+		for key in actor.moveset.keys():
+			var move: MoveAction = actor.moveset[key]
+			if move.req_successful_telegraph: continue
+			move.clear_MPD()
+	
+	reset_common_moves()
 	pass
 
 func update_action_log(new_logline: String):
@@ -1349,12 +1379,15 @@ func monitor_action_processing_time(delta: float):
 	pass
 
 func prompt_next_turntaker_action():
-	if combatstate == C_TURN:
-		if utils.actorpass(curr_actor):
-			curr_actor.choose_action()
-			return
-		# Branch where current actor is no longer valid; most likely because it died mid-turn
-		end_turn()
+	if combatstate != C_TURN: return
+	
+	clean_all_MPDs_between_actionstep_batches()
+	
+	if utils.actorpass(curr_actor):
+		curr_actor.choose_action()
+		return
+	# Branch where current actor is no longer valid; most likely because it died mid-turn
+	end_turn()
 	pass
 
 func skip_action(): end_action() # Just a shortcut

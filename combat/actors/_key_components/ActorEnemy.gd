@@ -44,15 +44,11 @@ func randomwalk_if_possible(auto_execute_if_true: bool = true) -> bool: # If tru
 	
 	# Success!
 	if auto_execute_if_true:
+		# Kind of want to compress this into a standard function, but it's ok for now!
+		spend(move)
 		batman.append_action(self, move, [self, motion])
 	
 	return true
 	pass
-
-#func is_any_walk_possible() -> bool: # True if at least ONE orthagonal position is viable!
-#	for vec in support.orthags:
-#
-#	return false
-
 
 
