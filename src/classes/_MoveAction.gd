@@ -113,11 +113,11 @@ var ready_to_use: bool = false # Default false; only mark it true when it is VAL
 
 func run_validation_pass() -> bool:
 	if !has_method("PREVIEW"):
-		if actor is ActorPlayer:
+		if actor.faction == batman.factions.PLAYER: # Ah so we can't use this, it's recursion
 			if req_successful_preview:
 				print(actor.name," can't find PREVIEW() method for move ",self,", but previews are required!")
 				return false
-		elif actor is ActorEnemy:
+		else:
 			if req_successful_telegraph:
 				print(actor.name," can't find PREVIEW() method for move ",self,", but telegraphs are required!")
 				return false
@@ -153,26 +153,31 @@ func log_move_use():
 	current_turn_uses += 1
 	pass
 
-func is_usable(ignore_ap: bool = false) -> bool:
-	if !ignore_ap:
-		if effective_cost() > actor.action_points:
-			return false
-	
-#	if !passfail: return false
-	
-	if current_cooldown > 0:
-		return false
-	
-	if current_turn_uses >= uses_per_turn:
-		return false
-	
-	if current_battle_uses >= uses_per_battle:
-		return false
-	
-	return true
+# WAIT NOTHING USES THIS.............................................
+# yeah it's been entirely handled in ActorPlayer.is_player_action_usable()
+# deprecate this
+#func is_usable(ignore_ap: bool = false) -> bool:
+#	if !ignore_ap:
+#		if effective_cost() > actor.action_points:
+#			return false
+#
+#
+#
+##	if !passfail: return false # This is its own thing downstream! Don't worry about contextual checks here
+#
+#	if current_cooldown > 0:
+#		return false
+#
+#	if current_turn_uses >= uses_per_turn:
+#		return false
+#
+#	if current_battle_uses >= uses_per_battle:
+#		return false
+#
+#	return true
 
 func effective_cost() -> int:
-	if not actor is ActorEnemy:
+	if actor.faction == batman.factions.PLAYER:
 		return (cost + telegraph_cost) # Players treat the telegraph cost as part of the package
 	
 	if !req_successful_telegraph:

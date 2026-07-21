@@ -150,7 +150,7 @@ var last_pos: Vector2 = Vector2.ZERO
 var coord: Vector2
 var prior_actionstep_coord: Vector2 # Update this at the end of every actionstep for every actor! This helps us understand what happened this actionstep for tiletype changes
 var claimed_tile: Vector2 = Vector2.ZERO
-var telegraphed_move: MoveAction
+var telegraphed_move
 
 var z: int
 var prev_z: int
