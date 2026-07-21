@@ -3,12 +3,12 @@
 [ext_resource path="res://combat/move_actions/player_chars/mage/MS_fireball.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - fronts.png" type="Texture" id=2]
 
-
 [resource]
 resource_local_to_scene = true
 resource_name = "FIREBALL"
 script = ExtResource( 1 )
 display_name = "Fireball"
+shorthand_name = ""
 short_desc = "Explodes outward from obstacle, DMG fire dmg AOE"
 display_desc = "Explodes at the first obstacle in your line of sight, radiating outwards 2 tiles from impact in all directions. Each impacted unit receives DMG fire damage."
 option_image = ExtResource( 2 )
@@ -24,4 +24,6 @@ uses_per_battle = 0
 req_successful_preview = false
 selection_style = 0
 override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
 misc = ""

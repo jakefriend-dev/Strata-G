@@ -9,7 +9,7 @@ func ACT():
 		if victim.faction == batman.factions.NEUTRAL: continue
 		if victim.faction != actor.faction:
 			strife.quick_vfx(victim, "quick_bad")
-			victim.spend(1)
+			victim.manual_spend(1)
 	
 	yield(utils.yt(0.5, actor), "timeout")
 	if !batman.is_my_action(actor): return

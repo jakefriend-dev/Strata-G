@@ -3,10 +3,10 @@
 [ext_resource path="res://combat/move_actions/player_chars/mage/MS_wind_step.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - diag.png" type="Texture" id=2]
 
-
 [resource]
 script = ExtResource( 1 )
 display_name = "Quickstep"
+shorthand_name = ""
 short_desc = "Move diag to get around obstacles"
 display_desc = "Move 1 tile diagonally. Allows user to conveniently move around an obstacle or hazard."
 option_image = ExtResource( 2 )
@@ -22,4 +22,6 @@ uses_per_battle = 0
 req_successful_preview = true
 selection_style = 1
 override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
 misc = ""

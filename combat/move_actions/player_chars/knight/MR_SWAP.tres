@@ -8,6 +8,7 @@ resource_local_to_scene = true
 resource_name = "SWAP"
 script = ExtResource( 1 )
 display_name = "Swap Places"
+shorthand_name = ""
 short_desc = "Swap positions with ally"
 display_desc = "Swap positions with an adjacent ally."
 option_image = ExtResource( 2 )

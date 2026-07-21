@@ -6,12 +6,6 @@ var post_jump_rumble_time: float = 0.2
 
 var seq: int = 1
 
-# Only uncomment this method if you want to bypass "normal" variant loading
-#func LOAD_VARIANTS():
-#	for vec in plausible_variants:
-#		if batman.grid_actors.has_cellv(actor.coord + vec + Vector2(DIST, 0)):
-#			actualized_variants.append(vec)
-#	pass
 
 
 func PREVIEW():
@@ -19,7 +13,12 @@ func PREVIEW():
 	
 	var target: Vector2 = actor.coord + (actor.my_facing * DIST)
 	if !batman.grid_actors.has_cellv(target):
-		error_text = "Can't lunge off battlefield!"
+		error_text = "Can't access lunge dest!"
+		add_actor(actor, ROWS.ERROR)
+		return
+	
+	if batman.grid_tiles.get_cellv(target) == batman.tiletypes.PIT:
+		error_text = "Lunge dest is pit!"
 		add_actor(actor, ROWS.ERROR)
 		return
 	

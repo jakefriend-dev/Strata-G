@@ -3,10 +3,10 @@
 [ext_resource path="res://combat/move_actions/player_chars/mage/MS_water_lob.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - plus.png" type="Texture" id=2]
 
-
 [resource]
 script = ExtResource( 1 )
 display_name = "Water Lob"
+shorthand_name = ""
 short_desc = "Throw to erode shield & cause ice"
 display_desc = "Throw a sphere of water in an arc at the target roughly 3 tiles in front of you. Deals DMG cold (eroding) damage on impact and turns tile to Ice."
 option_image = ExtResource( 2 )
@@ -22,4 +22,6 @@ uses_per_battle = 0
 req_successful_preview = true
 selection_style = 0
 override_global_variant_on_move_load = true
+req_successful_telegraph = false
+telegraph_cost = 0
 misc = ""

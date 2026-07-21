@@ -449,6 +449,10 @@ func flush_move_details():
 	emit_signal("action_option_view_changed", false)
 	emit_signal("new_action_preview_data_readied", null)
 	
+	reset_common_moves()
+	pass
+
+func reset_common_moves():
 	for key in loader.common_moves:
 		var varname: String = str("CM_",key.to_lower())
 		if varname in loader:
@@ -1076,7 +1080,6 @@ func change_movewindow_selcol(amount: int):
 func assert_player_variant_against_move(move: MoveAction, is_brand_new_move_selected: bool):
 	if move.actualized_variants.empty():
 		loaded_variant = Vector2(-99, -99)
-#		loaded_variant = Vector2.ZERO
 		return
 	
 	# We should only exercise this code WHEN THE MOVE IS FIRST LOADED/CHOSEN, not each preview
@@ -1244,6 +1247,7 @@ func insert_action(position: int, actor: Actor, move: MoveAction, paramset: Arra
 func progress_action_queue(): # Calls ONE next action, or if there is none, skips
 	last_execution_frame = get_tree().get_frame()
 	acting_actor = null
+	reset_common_moves()
 	
 	if action_queue.empty(): # No actions queued when this was called! Time to move on
 		
@@ -1278,9 +1282,6 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var player_flag: bool = (actor is ActorPlayer)
 	var move: MoveAction = curr_action[1]
 	var logname: String = str(move)
-#	var raw_movename: String = curr_action[1]
-#	var movename: String = str("ACT_"+raw_movename)
-#	var logname: String = raw_movename
 	var paramset: Array = curr_action[2]
 	
 	var methodname: String = "ACT"
@@ -1288,18 +1289,12 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 		if move.req_successful_telegraph:
 			if actor.telegraphed_move != move:
 				methodname = "PREVIEW"
+				actor.telegraphed_move = move
+			else:
+				# CLEAR the telegraphed move if we are executing any ACT func!
+				actor.clear_telegraphed_move()
 	
-	# Check that there's a method that can be called!
-#	var caller = actor
-#	if player_flag:
-#		if !Actor.global_moves.has(raw_movename):
-#			movename = "ACT"
-#			caller = loaded_move
-#			logname = loaded_move.display_name
-#	if !caller.has_method(movename):
-#		print("MAJOR ERROR! ",actor.ofc_name," (or its move) does not have the called method ",movename,"()")
-#
-#		pass
+#	print("methodname: ",methodname)
 	
 	# Validation cleared!
 	acting_actor = actor # For async ref
@@ -1320,9 +1315,6 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	# Great success. It's the actor's job to cue end_action() from here, or for an interruption to step_signal() instead.
 	pass
-
-#func get_actionstep_method_name():
-#	pass
 
 func update_action_log(new_logline: String):
 	actionlog.insert(0, new_logline)

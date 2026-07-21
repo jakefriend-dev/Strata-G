@@ -8,6 +8,7 @@ resource_local_to_scene = true
 resource_name = "ATTACK_BUFF"
 script = ExtResource( 1 )
 display_name = "Cry of Valor"
+shorthand_name = ""
 short_desc = "All allies gain +DMG dmg for 1 turn"
 display_desc = "All allies gain a +DMG dmg bonus on their next turn (or for the user, for the rest of their current turn). However, has a long cooldown."
 option_image = ExtResource( 2 )

@@ -1,13 +1,5 @@
 extends MoveAction
 
-#var DIST: int = 3
-
-# Only uncomment this method if you want to bypass "normal" variant loading
-#func LOAD_VARIANTS():
-#	for vec in plausible_variants:
-#		if batman.grid_actors.has_cellv(actor.coord + vec + Vector2(DIST, 0)):
-#			actualized_variants.append(vec)
-#	pass
 
 
 func PREVIEW():

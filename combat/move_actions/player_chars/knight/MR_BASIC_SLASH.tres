@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource( 1 )
 display_name = "Stab"
+shorthand_name = ""
 short_desc = "DMG damage in melee range"
 display_desc = "Make a strong melee attack against an adjacent target for DMG damage."
 option_image = ExtResource( 2 )

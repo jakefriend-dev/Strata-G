@@ -2,6 +2,14 @@ extends Node
 
 var tags: Dictionary = {}
 
+var orthags: Array = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
+var diags: Array = [
+	Vector2(-1, -1),
+	Vector2(-1,  1),
+	Vector2( 1, -1),
+	Vector2( 1,  1)
+	]
+
 func _ready():
 	import_tags_tsv()
 	pass
@@ -454,13 +462,9 @@ func get_adj_3x3_tiles(center_tile: Vector2, are_pits_allowed: bool = false, mus
 func master_get_adj_tiles(center_tile: Vector2, type_is_orthag: bool, are_pits_allowed: bool, must_be_faction: int) -> Array:
 	var viable_set: Array = []
 	
-	var surrounders: Array = [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]
+	var surrounders: Array = orthags.duplicate()
 	if !type_is_orthag:
-		surrounders = [
-			Vector2.UP + Vector2.LEFT,
-			Vector2.UP + Vector2.RIGHT,
-			Vector2.DOWN + Vector2.LEFT,
-			Vector2.DOWN + Vector2.RIGHT]
+		surrounders = diags.duplicate()
 	
 	for surr in surrounders:
 		var coord: Vector2 = center_tile + surr

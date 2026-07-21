@@ -10,10 +10,10 @@ var dist_3: float # frontmost to OG
 
 # ---
 
-func LOAD_VARIANTS():
-	for vec in plausible_variants: # Force add the forward-facing variant, no matter what
-		actualized_variants.append(vec)
-	pass
+#func LOAD_VARIANTS():
+#	for vec in plausible_variants: # Force add the forward-facing variant, no matter what
+#		actualized_variants.append(vec)
+#	pass
 
 func PREVIEW():
 	seq = 0

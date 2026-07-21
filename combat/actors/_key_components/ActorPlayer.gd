@@ -1,9 +1,9 @@
 extends Actor
 class_name ActorPlayer
 
-var moveset: Dictionary = {} # Post-validation
-var move_layout: Array2D
-export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null]
+#var moveset: Dictionary = {} # Post-validation
+#var move_layout: Array2D # ONLY used by ActorPlayer!
+#export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null] # Can manually change this for ActorEnemy but leave as 7 by default; shouldn't exceed 7 for ActorPlayer
 
 #const pstring: String = "PREVIEW"
 #const astring: String = "ACT"
@@ -12,113 +12,10 @@ export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null
 # ---
 
 func _ready():
-	load_moves()
-	prep_moveset_on_battle_start()
+#	load_moves()
+#	prep_moveset_on_battle_start()
 	batman.connect("action_option_view_changed", self, "run_move_preview")
 	batman.connect("action_step_complete", self, "run_move_preview")
-	pass
-
-func load_moves():
-	var row: int = 0
-	var col: int = 0
-	move_layout = Array2D.new()
-	move_layout.resize(2, 4)
-	
-	for move in loaded_moves: if move != null: if move is MoveAction:
-		# Basic setup first!
-		if move.resource_name == "":
-			move.resource_name = utils.get_resource_name(move)
-		
-		if moveset.has(move.resource_name):
-			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
-			continue
-		
-		move.set_local_to_scene(true)
-		move.actor = self
-		move.initialize_MPD()
-		
-		if !move.run_validation_pass(): # Any validation that takes place *within* a move should go here!
-			continue
-		
-		# Validations!
-#		if !move.has_method(pstring):
-#			print(name," can't find PREVIEW() method for move ",move,"! Soft error")
-#		if !move.has_method(astring):
-#			print(name," can't load move ",move,", no ACT() method!")
-#			continue
-#		if moveset.has(move.resource_name):
-#			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
-#			continue
-#		if move.option_image == null:
-#			print(name," can't load move ",move,", no option_image!")
-#			continue
-#		if move.selection_style == move.inputstyles.CYCLE:
-#			if !move.has_method(lvstring):
-#				print(name," can't load move ",move,", it's CYCLE type but no LOAD_VARIANTS() method!")
-#				continue
-		
-		# Pass!
-		moveset[move.resource_name] = move
-		move.plausible_variants = strife.aimflower_vectors_from_file(move.option_image.resource_path)
-		
-		# Pass to the layout 2x4 and update the position data!
-#		print(name," col:row ",col,":",row)
-		move_layout.set_cell(col, row, move)
-		
-		col += 1
-		if col > 1:
-			col = 0
-			row += 1
-		pass
-	
-#	print(name," move_layout: ",move_layout)
-#	print("ALL loaded moves in moveset are: ",moveset)
-	pass
-
-func prep_moveset_on_battle_start():
-#	print(name," battle start")
-	for key in moveset:
-		var move: MoveAction = moveset[key]
-		move.current_turn_uses = 0
-		move.current_battle_uses = 0
-		if move.initial_cooldown > 0:
-			move.current_cooldown = move.initial_cooldown
-		else:
-			move.current_cooldown = 0
-		if move.has_method("ONE_TIME_SETUP"):
-			move.call("ONE_TIME_SETUP")
-		pass
-	
-	pass
-
-func prep_moveset_on_turn_start():
-#	print(name," turn start")
-	for key in moveset:
-		var move: MoveAction = moveset[key]
-		if move.current_turn_uses > 0 and move.uses_per_turn > 0:
-#			print(move," unlocked as per-turn uses resets")
-			pass
-		move.current_turn_uses = 0
-#		print("reset ",move," current_turn_uses")
-		pass
-	
-	pass
-
-func prep_moveset_on_turn_end():
-#	print(name," turn end")
-	for key in moveset:
-		var move: MoveAction = moveset[key]
-		if move.current_cooldown > 0:
-			move.current_cooldown -= 1
-			print("Cooldown ticked down for ",move," to: ",move.current_cooldown)
-	pass
-
-func clear_all_move_previews():
-	if batman.curr_actor != self: return
-	support.de_ghost_all_actors()
-	
-	for key in moveset.keys():
-		moveset[key].clear_MPD()
 	pass
 
 func run_move_preview(is_brand_new_move_selected: bool = false):
@@ -136,7 +33,7 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 	
 	if move.has_method("PREVIEW"):
 #		print("  --  New Preview  --")
-		move.call("PREVIEW")
+		move.call("PREVIEW") # Player moves (other than common's WALK) never have params; they use the actualized variant stuff to determine possible options!
 		batman.field.movewindow.update_error_text_only()
 		move.generate_cell_highlights()
 		pass
@@ -167,40 +64,16 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 		
 		return false
 	
-	if !can_afford(move.effective_cost()):
-		if do_print: print(name," can't afford ",move.effective_cost(),"-AP for ",move)
-		return false
-	if move.current_cooldown > 0:
-		if do_print: print(name," still on cooldown for ",move.current_cooldown," turns: ",move)
-		return false
-	if move.req_successful_preview and !move.passfail:
-		if do_print: print(name," needs preview pass for ",move)
-		return false
-	if move.actualized_variants.empty():
-		if do_print: print(name," has zero possible variants for ",move," at this position!")
-		return false
-	if move.uses_per_turn > 0: # Ignore if unlimited
-		if move.current_turn_uses >= move.uses_per_turn:
-			if do_print: print(name," already maxed per-turn uses of ",move)
-			return false
-	if move.uses_per_battle > 0: # Ignore if unlimited
-		if move.current_battle_uses >= move.uses_per_battle:
-			if do_print: print(name," already maxed per-battle uses of ",move)
-			return false
-	
-	return true
+	return move.usability_check(self, do_print)
 	pass
 
 func attempt_player_char_move(motion: Vector2):
-#	walkdir = motion
-#	
-#	if !can_afford(COST_WALK): return
-#	if !support.is_tile_traversable_relative(self, motion): return
-#
-#	# Should be valid, then!
-#	walk_spend_check()
-	print("letsgo: ",motion)
-	batman.append_action(self, loader.CM_walk, [motion])
+	if !loader.CM_walk.totality_check([self, motion], self, true):
+		print("validation fail, move error: ",loader.CM_walk.error_text)
+		return
+	
+#	print("letsgo: ",motion)
+	batman.append_action(self, loader.CM_walk, [self, motion])
 	submit_player_action(false)
 	pass
 
@@ -212,7 +85,7 @@ func attempt_player_char_action():
 	
 #	print("going to spend ",move.effective_cost(),"-AP when ",action_points,"-AP remain")
 	
-	move.log_move_use()
+	move.log_move_use() # Also spends player's AP
 	
 	# Now execute!
 	batman.append_action(self, move)

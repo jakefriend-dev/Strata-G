@@ -6,6 +6,7 @@
 [resource]
 script = ExtResource( 1 )
 display_name = "X-Slash"
+shorthand_name = ""
 short_desc = "Two DMG dmg attacks. Hits center twice"
 display_desc = "Wide-slash twice, hitting the center tile with both swings. Each hit deals DMG damage."
 option_image = ExtResource( 2 )

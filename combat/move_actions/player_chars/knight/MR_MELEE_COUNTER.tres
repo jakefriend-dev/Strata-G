@@ -8,6 +8,7 @@ resource_local_to_scene = true
 resource_name = "MELEE_COUNTER"
 script = ExtResource( 1 )
 display_name = "Counter Stance"
+shorthand_name = ""
 short_desc = "End turn, auto-attack melee on hit for DMG dmg"
 display_desc = "Ends your turn; any unit that attacks or forcibly moves you from melee range* until the start of your next turn will receive an automatic DMG dmg counterattack.
 

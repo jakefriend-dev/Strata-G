@@ -8,6 +8,7 @@ resource_local_to_scene = true
 resource_name = "STEP_SLASH"
 script = ExtResource( 1 )
 display_name = "Hook Stab"
+shorthand_name = ""
 short_desc = "Step-n-stab for DMG dmg, pull back"
 display_desc = "Move forward 1 tile, hit one target for DMG piercing damage, and move back, pulling the target with you. If not able to move (eg. target is too close), cannot be used."
 option_image = ExtResource( 2 )

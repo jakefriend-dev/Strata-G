@@ -28,7 +28,7 @@ func ACT():
 	
 	if utils.actorpass(victim):
 		strife.quick_vfx(victim, "quick_bad")
-		victim.spend(2)
+		victim.manual_spend(1)
 	
 	var allies: Array = batman.get_all_allied_actor_units(actor)
 	for ally in allies:

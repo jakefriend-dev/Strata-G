@@ -1089,7 +1089,7 @@ func TILE_entered_ICE(actor: Actor, coord: Vector2):
 
 func TILE_entered_SHRUB(actor: Actor, _coord: Vector2):
 	if !is_affected_by_shrub(actor): return
-	actor.spend(1)
+	actor.manual_spend(1)
 	pass
 
 func TILE_entered_JAGGED(actor: Actor, coord: Vector2):
@@ -1097,7 +1097,7 @@ func TILE_entered_JAGGED(actor: Actor, coord: Vector2):
 		# 1 damage, 1 move debuff
 		quick_vfx(actor, "quick_bad")
 		do_impact_damage(null, actor, 4)
-		actor.spend(1)
+		actor.manual_spend(1)
 		pass
 	
 	if is_fixes_jagged_on_contact(actor):

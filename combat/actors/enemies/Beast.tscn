@@ -1,9 +1,13 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://combat/actors/enemies/Beast.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/Beast.png" type="Texture" id=2]
 [ext_resource path="res://combat/actors/_key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://combat/actors/_key_components/Actor Shader UMS.tres" type="Shader" id=4]
+[ext_resource path="res://combat/move_actions/enemies/MR_SPIT_ATTACK.tres" type="Resource" id=5]
+[ext_resource path="res://combat/move_actions/enemies/MR_LUNGE_STOMP.tres" type="Resource" id=6]
+[ext_resource path="res://combat/move_actions/enemies/MR_ACTION_STEAL_EFFECT.tres" type="Resource" id=7]
+[ext_resource path="res://combat/move_actions/general/MR_REPO_JUMP.tres" type="Resource" id=8]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -69,6 +73,7 @@ def_weight = 3
 tile_walk_speed = 0.75
 def_immune_jagged = true
 def_immune_poison = true
+loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), null, null, null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

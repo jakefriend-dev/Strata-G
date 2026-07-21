@@ -26,7 +26,7 @@ export (initspeeds) var third_initiative: int = initspeeds.DOES_NOT_ACT
 	# An actor can optionally have up to 3 turns, for a boss; matching the party
 var variance_initiative: float  = -1.0 # Cued by batman at start of combat; percentage from 0-99%
 
-const global_moves: Array = ["walk", "be_external_motioned"]
+#const global_moves: Array = ["walk", "be_external_motioned"]
 
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
@@ -137,21 +137,26 @@ var is_immune_magnet: bool
 var is_immune_elec: bool
 var is_immune_piercing: bool
 
+var moveset: Dictionary = {} # Post-validation
+var move_layout: Array2D # ONLY used by ActorPlayer!
+export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null] # Can manually change this for ActorEnemy but leave as 7 by default; shouldn't exceed 7 for ActorPlayer
+
 var is_ghost: bool = false # When true, allowed to break many rules. You almost ALWAYS turn this off at the end of a turn; meant as a temporary thing for like a charge-through attack.
 var just_exited_ghost_mode: bool = false # Helps us bypass some errors
 
 var allowed_over_faction_lines: bool = false
 export var keep_claims_at_eot: bool = false # Set true for the RARE cases (like a missile) where you don't want to wipe its claim at the end of a turn
 
-var targeted_tiles: Array = [] # Just an array of Vector2 coords that is fed to BatMan
 var vis_object: Node2D # Typically the parent of all the visual stuff that has Z height
+# Need to deprecate vvvvv I think?
+var targeted_tiles: Array = [] # Just an array of Vector2 coords that is fed to BatMan
 
 # Convenience references; duplicate data to batman.grid_actors but DRIVEN FROM HERE (important)
 var last_pos: Vector2 = Vector2.ZERO
 var coord: Vector2
-var prior_actionstep_coord: Vector2 # Update this at the end of every actionstep for every actor! This helps us understand what happened this actionstep for tiletype changes
+#var prior_actionstep_coord: Vector2 # Update this at the end of every actionstep for every actor! This helps us understand what happened this actionstep for tiletype changes
 var claimed_tile: Vector2 = Vector2.ZERO
-var telegraphed_move
+var telegraphed_move # Can't static type or recursion, alas
 
 var z: int
 var prev_z: int
@@ -209,11 +214,14 @@ func _ready():
 	add_to_group("actors")
 	if first_initiative != initspeeds.DOES_NOT_ACT:
 		add_to_group("live_actors")
-	
-	perform_initial_data_setup()
 	$ArtMgr/Shadow.recenter()
 	vis_object = $ArtMgr/HFlipper
 	tween = $Utils/Tween
+	
+	perform_initial_data_setup()
+	
+	load_moves()
+	prep_moveset_on_battle_start()
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
 	batman.connect("update_all_preview_drawing", self, "adjust_target_highlights")
@@ -234,6 +242,94 @@ func perform_initial_data_setup():
 	for term in ["unmovable", "immune_fire", "immune_shrub", "immune_ice", "immune_poison", "immune_magnet", "immune_elec", "immune_jagged", "immune_mud", "immune_piercing"]:
 		set( str("is_"+term), get(str("def_",term)) )
 	weight = def_weight
+	pass
+
+func load_moves():
+	var row: int = 0
+	var col: int = 0
+	move_layout = Array2D.new()
+	move_layout.resize(2, 4)
+	
+	for move in loaded_moves: if move != null: #if move is MoveAction:
+		# Basic setup first!
+		move.do_startup_config()
+		
+		if moveset.has(move.resource_name):
+			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
+			continue
+		if !move.run_validation_pass(): # Any validation that takes place *within* a move should go here!
+			continue
+		
+		moveset[move.resource_name] = move
+		move.actor = self 
+		# Pass to the layout 2x4 and update the position data!
+#		print(name," col:row ",col,":",row)
+		move_layout.set_cell(col, row, move)
+		
+		col += 1
+		if col > 1:
+			col = 0
+			row += 1
+		pass
+	
+#	print(name," move_layout: ",move_layout)
+#	print("ALL loaded moves in moveset are: ",moveset)
+	pass
+
+func prep_moveset_on_battle_start():
+#	print(name," battle start")
+	for key in moveset:
+		var move = moveset[key]
+#		var move: MoveAction = moveset[key]
+		move.current_turn_uses = 0
+		move.current_battle_uses = 0
+		if move.initial_cooldown > 0:
+			move.current_cooldown = move.initial_cooldown
+		else:
+			move.current_cooldown = 0
+		if move.has_method("ONE_TIME_SETUP"):
+			move.call("ONE_TIME_SETUP")
+		pass
+	
+	pass
+
+func prep_moveset_on_turn_start():
+#	print(name," turn start")
+	for key in moveset:
+		var move = moveset[key]
+#		var move: MoveAction = moveset[key]
+		if move.current_turn_uses > 0 and move.uses_per_turn > 0:
+#			print(move," unlocked as per-turn uses resets")
+			pass
+		move.current_turn_uses = 0
+#		print("reset ",move," current_turn_uses")
+		pass
+	
+	pass
+
+func prep_moveset_on_turn_end():
+#	print(name," turn end")
+	for key in moveset:
+		var move = moveset[key]
+#		var move: MoveAction = moveset[key]
+		if move.current_cooldown > 0:
+			move.current_cooldown -= 1
+			print("Cooldown ticked down for ",move," to: ",move.current_cooldown)
+	pass
+
+func clear_all_move_previews():
+	if batman.curr_actor != self: return
+	support.de_ghost_all_actors()
+	
+	for key in moveset.keys():
+		moveset[key].clear_MPD()
+	pass
+
+func clear_telegraphed_move():
+	if telegraphed_move == null: return
+	
+	telegraphed_move.clear_MPD()
+	telegraphed_move = null
 	pass
 
 # ---
@@ -284,22 +380,30 @@ func can_afford(cost: int) -> bool:
 	return false
 	pass
 
-func spend(cost: int):
-	if cost <= 0: return
+func manual_spend(expense: int):
+	MASTER_spend(expense)
+	pass
+
+func spend(move): # You HAVE to send a MoveAction, but we can't static type it thanks to recursion :(
+	MASTER_spend(move.effective_cost())
+	pass
+
+func MASTER_spend(expense: int):
+	if expense <= 0: return
 	
-	var og_cost: int = cost
+	var og_expense: int = expense
 	var og_actions: int = action_points
 	
-#	while bonus_actions > 0 and cost > 0:
+#	while bonus_actions > 0 and expense > 0:
 #		bonus_actions -= 1
-#		cost -= 1
+#		expense -= 1
 	
-	while action_points > 0 and cost > 0:
+	while action_points > 0 and expense > 0:
 		action_points -= 1
-		cost -= 1
+		expense -= 1
 	
-	if cost > 0: # Note that this 'goes through' even if it's an issue; the print is the only notice
-		print(name,": ERROR, tried to spend ",og_cost," action points when only ",og_actions," we available!")
+	if expense > 0: # Note that this 'goes through' even if it's an issue; the print is the only notice
+		print(name,": ERROR, tried to spend ",og_expense," action points when only ",og_actions," we available!")
 	
 	if action_points < 0: action_points = 0
 #	if bonus_actions < 0: bonus_actions = 0
@@ -331,14 +435,14 @@ func walk_spend_check():
 	if batman.USE_ACTION_CRACKING:
 		inc_action_cracking()
 	else:
-		spend(COST_WALK)
+		spend(loader.CM_walk)
 	pass
 
 func inc_action_cracking():
 	action_cracking += 1
 	if action_cracking > MAX_action_cracking:
 		action_cracking = 0
-		spend(1)
+		manual_spend(1)
 	update_bui()
 	pass
 

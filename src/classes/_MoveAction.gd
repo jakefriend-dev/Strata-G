@@ -101,7 +101,7 @@ enum COLS { # LEFT TO RIGHT
 
 var starting_variant: Vector2
 var actualized_variants: Array = [] # The below list, restricted to only what's situationally possible
-var plausible_variants: Array = [] # ALL the plausible variant vectots, regardless of what might be situationally POSSIBLE
+var plausible_variants: Array = [] # ALL the plausible variant vectors, regardless of what might be situationally POSSIBLE
 
 var affected_actors: Array = [] # All of em! Just for reference.
 var unique_cells: Array = []
@@ -109,11 +109,30 @@ var passfail: bool = false # Default false; only mark it true when, you know, tr
 var error_text: String = "" # When failing a passfail, provide text that MoveWindow can use!
 var ready_to_use: bool = false # Default false; only mark it true when it is VALID TO PICK AND USE
 
+var config_complete: bool = false
+
 # ------------------------------------------------------------------------------
+
+func do_startup_config():
+	if config_complete: return
+	config_complete = true # One-time - maybe validation overkill, but in case of duplicates.
+	
+	if resource_name == "":
+		resource_name = utils.get_resource_name(self)
+	
+	set_local_to_scene(true)
+	initialize_MPD()
+	
+	plausible_variants = strife.aimflower_vectors_from_file(option_image.resource_path)
+	pass
 
 func run_validation_pass() -> bool:
 	if !has_method("PREVIEW"):
-		if actor.faction == batman.factions.PLAYER: # Ah so we can't use this, it's recursion
+		if !utils.actorpass(actor):
+			if req_successful_preview:
+				print("Actorless move ",self," can't find PREVIEW() method, but previews are required!")
+				return false
+		elif actor.faction == batman.factions.PLAYER: # Ah so we can't use this, it's recursion
 			if req_successful_preview:
 				print(actor.name," can't find PREVIEW() method for move ",self,", but previews are required!")
 				return false
@@ -126,28 +145,134 @@ func run_validation_pass() -> bool:
 				return false
 	
 	if !has_method("ACT"):
-		print(actor.name," can't load move ",self,", no ACT() method!")
+		print(self," can't be loaded, no ACT() method!")
 		return false
 	
 	if option_image == null:
-		print(actor.name," can't load move ",self,", no option_image!")
+		print(self," can't be loaded, no option_image!")
 		return false
 	
 	if selection_style == inputstyles.CYCLE:
 		if !has_method("LOAD_VARIANTS"):
-			print(actor.name," can't load move ",self,", it's CYCLE type but has no LOAD_VARIANTS() method!")
+			print(self," can't be loaded, it's CYCLE type but has no LOAD_VARIANTS() method!")
 			return false
 	
 	if req_successful_telegraph:
 		if !has_method("RE_PREVIEW"):
-			print(actor.name," can't find RE_PREVIEW() method in ",self,"; allowed to bypass via re-running PREVIEW. SOFT error!")
+			print(self," can't find RE_PREVIEW() method! Allowed to bypass via re-running PREVIEW... *SOFT* error!")
 #			return false
 	
 	return true
 	pass
 
+# ---
+
+func usability_check(a: Actor = null, do_print: bool = false) -> bool:
+	# VALIDATION FIRST
+	if utils.actorpass(actor):
+		a = actor
+	else:
+		# We're sending an actor even though MOST moves do have them, just since common moves don't!
+		if !utils.actorpass(a):
+			print(self,": usability_check() failed b/c no valid actor!")
+			return false
+	
+	# We have an actor (as expected), so actual checks!
+	
+	prepare_actualized_variants() # Needed since this function is skipped by 'normal' player moves
+	
+	if !a.can_afford(effective_cost()): # Enemy telegraphs accounted for!
+		if do_print: print(a.name," can't afford ",effective_cost(),"-AP for ",self)
+		return false
+	
+	if current_cooldown > 0:
+		if do_print: print(a.name," still on cooldown for ",current_cooldown," turns: ",self)
+		return false
+	
+	if req_successful_preview and !passfail:
+		if do_print: print(a.name," needs preview pass for ",self)
+		return false
+	
+	if actualized_variants.empty():
+		if do_print: print(a.name," has zero possible variants for ",self," at this position!")
+		return false
+	
+	if uses_per_turn > 0: # Ignore if unlimited
+		if current_turn_uses >= uses_per_turn:
+			if do_print: print(a.name," already maxed per-turn uses of ",self)
+			return false
+	
+	if uses_per_battle > 0: # Ignore if unlimited
+		if current_battle_uses >= uses_per_battle:
+			if do_print: print(a.name," already maxed per-battle uses of ",self)
+			return false
+	
+	return true
+	pass
+
+func quick_context_passfail_check(params: Array = []) -> bool:
+	if passfail: return true # Already verified!
+	
+	if req_successful_preview:
+		
+		if params.empty():
+			call("PREVIEW")
+		else:
+			callv("PREVIEW", params)
+		return passfail
+		
+	
+	if req_successful_telegraph:
+		# If it's a telegraph, we want to approve it - telegraphs have to 'execute' their PREVIEWs as an action and speak for themselves.
+		return true
+	
+	if has_method("RE_PREVIEW"): # Prioritized slightly over PREVIEW!
+		if params.empty():
+			call("RE_PREVIEW")
+		else:
+			callv("RE_PREVIEW", params)
+		return passfail
+	
+	if has_method("PREVIEW"):
+		if params.empty():
+			call("PREVIEW")
+		else:
+			callv("PREVIEW", params)
+		return passfail
+	
+	return true # Otherwise, by default assume if no conditions need to be met, we're good to go!
+	pass
+
+func totality_check(params: Array = [], a: Actor = null, do_print: bool = false) -> bool:
+	if !quick_context_passfail_check(params):
+		return false
+	
+	if !usability_check(a, do_print):
+		return false
+	
+	return true
+	pass
+
+func will_next_use_be_a_telegraph() -> bool:
+	if !req_successful_telegraph:
+		return false
+	
+	if !utils.actorpass(actor):
+		return false
+	
+	if actor.telegraphed_move != self:
+		return false
+	
+	return true
+	pass
+
+# ---
+
 func log_move_use():
-	actor.spend(effective_cost())
+	
+	actor.spend(self) # This works out telegraph vs non-telegraph costs on its own!
+	
+	if will_next_use_be_a_telegraph(): return
 	
 	if on_use_cooldown > 0:
 		current_cooldown = (on_use_cooldown + 1) # Adds 1 to account for current turn
@@ -156,42 +281,16 @@ func log_move_use():
 	current_turn_uses += 1
 	pass
 
-# WAIT NOTHING USES THIS.............................................
-# yeah it's been entirely handled in ActorPlayer.is_player_action_usable()
-# deprecate this
-#func is_usable(ignore_ap: bool = false) -> bool:
-#	if !ignore_ap:
-#		if effective_cost() > actor.action_points:
-#			return false
-#
-#
-#
-##	if !passfail: return false # This is its own thing downstream! Don't worry about contextual checks here
-#
-#	if current_cooldown > 0:
-#		return false
-#
-#	if current_turn_uses >= uses_per_turn:
-#		return false
-#
-#	if current_battle_uses >= uses_per_battle:
-#		return false
-#
-#	return true
-
 func effective_cost() -> int:
-	if actor.faction == batman.factions.PLAYER:
-		return (cost + telegraph_cost) # Players treat the telegraph cost as part of the package
+	if utils.actorpass(actor):
+		if actor.faction == batman.factions.PLAYER:
+			return (cost + telegraph_cost) # Players treat the telegraph cost as part of the package
 	
-	if !req_successful_telegraph:
-		return cost
+	# If not a player, separate telegraph cost is possible!
+	if will_next_use_be_a_telegraph():
+		return telegraph_cost
 	
-	# Requires a telegraph, but have we already done so?
-	if actor.telegraphed_move == self:
-		return cost
-	
-	# Nope! Telegraph-first time
-	return telegraph_cost
+	return cost
 	pass
 
 func translate_desc(desc: String) -> String:
@@ -220,12 +319,15 @@ func prepare_actualized_variants():
 	# Custom path, if custom logic is desired
 	if has_method("LOAD_VARIANTS"):
 		if selection_style == inputstyles.CYCLE:
-			starting_variant = Vector2(-99, -99) # We want to FORCE starting at the 'fornt of the line' so to speak!
+			starting_variant = Vector2(-99, -99) # We want to FORCE starting at the 'front of the line' so to speak!
 		call("LOAD_VARIANTS")
 	else: # Default path otherwise
 		for vec in plausible_variants:
-			if batman.grid_actors.has_cellv(actor.coord + vec):
-				actualized_variants.append(vec)
+			if utils.actorpass(actor):
+				if batman.grid_actors.has_cellv(actor.coord + vec):
+					actualized_variants.append(vec)
+			else:
+				actualized_variants.append(vec) # Common moves can bypass
 	
 	# Our preferred default is the first one on the list
 	if !actualized_variants.empty():
@@ -237,11 +339,11 @@ func prepare_actualized_variants():
 	pass
 
 func end_action():
-	actor.end_action()
+	batman.end_action()
 	pass
 
 func end_turn():
-	actor.end_turn()
+	batman.end_turn()
 	pass
 
 var pref: String = "["

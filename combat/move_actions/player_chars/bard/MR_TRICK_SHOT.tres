@@ -3,12 +3,12 @@
 [ext_resource path="res://combat/move_actions/player_chars/bard/MS_trick_shot.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - tops_and_bottoms.png" type="Texture" id=2]
 
-
 [resource]
 resource_local_to_scene = true
 resource_name = "TRICK_SHOT"
 script = ExtResource( 1 )
 display_name = "Trick Shot"
+shorthand_name = ""
 short_desc = "Bounce shot off 1st target, DMG piercing dmg"
 display_desc = "Ricochet an arrow off the first target in your line of sight in a direction of your choosing, for DMG piercing damage."
 option_image = ExtResource( 2 )
@@ -24,4 +24,6 @@ uses_per_battle = 0
 req_successful_preview = false
 selection_style = 1
 override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
 misc = ""

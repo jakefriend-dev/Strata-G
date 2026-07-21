@@ -3,12 +3,12 @@
 [ext_resource path="res://combat/move_actions/player_chars/bard/MS_basic_arrowarc.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - plus.png" type="Texture" id=2]
 
-
 [resource]
 resource_local_to_scene = true
 resource_name = "BASIC_ARROWARC"
 script = ExtResource( 1 )
 display_name = "Highshot"
+shorthand_name = ""
 short_desc = "Shoots overhead, DMG piercing damage"
 display_desc = "Shoot over obstacles to a precise position roughly 4 tiles ahead of you, for DMG damage. Pierces shields."
 option_image = ExtResource( 2 )
@@ -24,4 +24,6 @@ uses_per_battle = 0
 req_successful_preview = false
 selection_style = 0
 override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
 misc = ""

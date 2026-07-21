@@ -3,12 +3,12 @@
 [ext_resource path="res://combat/move_actions/player_chars/mage/MS_dismiss.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - up_and_down.png" type="Texture" id=2]
 
-
 [resource]
 resource_local_to_scene = true
 resource_name = "DISMISS"
 script = ExtResource( 1 )
 display_name = "Dismiss"
+shorthand_name = ""
 short_desc = "Move unit in line of sight out of your way"
 display_desc = "Targets the first unit in your line of sight, and magically move them up or down to be out of your way. Can move Heavy units."
 option_image = ExtResource( 2 )
@@ -24,4 +24,6 @@ uses_per_battle = 0
 req_successful_preview = true
 selection_style = 1
 override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
 misc = ""

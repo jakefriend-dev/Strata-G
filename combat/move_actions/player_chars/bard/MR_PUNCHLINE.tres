@@ -3,14 +3,14 @@
 [ext_resource path="res://combat/move_actions/player_chars/bard/MS_punchline.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - sole.png" type="Texture" id=2]
 
-
 [resource]
 resource_local_to_scene = true
 resource_name = "PUNCHLINE"
 script = ExtResource( 1 )
 display_name = "Punchline"
-short_desc = "Target loses 2 AP, allies gain 1"
-display_desc = "Demean one unit with a joke, lowering their AP by 2, while your allies get +1 AP from laughing along."
+shorthand_name = ""
+short_desc = "Target loses 1 AP, allies gain 1"
+display_desc = "Demean one unit with a joke, lowering their AP by 1, while your allies get +1 AP from laughing along."
 option_image = ExtResource( 2 )
 option_desc = "Cycles between possible target units."
 cost = 0
@@ -24,4 +24,6 @@ uses_per_battle = 3
 req_successful_preview = true
 selection_style = 2
 override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
 misc = ""

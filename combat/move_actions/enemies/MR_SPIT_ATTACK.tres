@@ -3,12 +3,12 @@
 [ext_resource path="res://combat/move_actions/enemies/MS_spit_attack.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - sole.png" type="Texture" id=2]
 
-
 [resource]
 resource_local_to_scene = true
 resource_name = "SPIT_ATTACK"
 script = ExtResource( 1 )
 display_name = "Spit Burst"
+shorthand_name = ""
 short_desc = "Many DMG dmg projs target random tiles"
 display_desc = "On telegraph, 3-4 tiles on the opposing faction's zone are randomly targeted. On execution, each of those tiles are hit for DMG dmg."
 option_image = ExtResource( 2 )

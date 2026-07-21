@@ -3,12 +3,12 @@
 [ext_resource path="res://combat/move_actions/player_chars/mage/MS_calcify.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - sole.png" type="Texture" id=2]
 
-
 [resource]
 resource_local_to_scene = true
 resource_name = "CALCIFY"
 script = ExtResource( 1 )
 display_name = "Calcify"
+shorthand_name = ""
 short_desc = "Enemy unit cannot move on next turn"
 display_desc = "One enemy unit receives Calcified status and cannot move by choice on its next turn"
 option_image = ExtResource( 2 )
@@ -24,4 +24,6 @@ uses_per_battle = 0
 req_successful_preview = true
 selection_style = 2
 override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
 misc = ""

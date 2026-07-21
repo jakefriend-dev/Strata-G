@@ -3,7 +3,6 @@ extends ActorPlayer
 # ---
 
 func _ready():
-	
 	pass
 
 func pre_turn_setup():
