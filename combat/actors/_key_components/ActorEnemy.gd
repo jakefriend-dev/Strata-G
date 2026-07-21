@@ -13,10 +13,14 @@ func execute_npc_move(move: MoveAction, free_prefight_telegraph: bool = false):
 	batman.append_action(self, move)
 	
 	var is_rest: bool = (move.motion_type == move.motionchecks.REST)
+	if move.req_successful_telegraph and telegraphed_move != move:
+		# This is a telegraph! ALWAYS counts as a rest... I... think?
+		is_rest = true
 	
 #	emit_signal("player_action_submitted")
 	
 	if is_rest:
+		print(name," doing an action that is a rest!")
 		yield(batman, "action_step_complete")
 		if !batman.is_my_action(self): return
 		
