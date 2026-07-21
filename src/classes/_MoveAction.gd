@@ -55,6 +55,7 @@ export var override_global_variant_on_move_load: bool = false # If true, when se
 export var req_successful_telegraph: bool = false # If true, the move MUST contain a "PREVIEW()" function which has its own cost; telegraphs should also (like reactions) end the turn. A successful telegraph does NOT mean a guarantee of a successful attack execution!
 export (int, 0, 8) var telegraph_cost: int = 0
 #var telegraph_pass: bool = false # True once telegraph is passed, and remains true until 'consumed' by use or RE_PREVIEW fails.
+export (motionchecks) var telegraph_motion_type: int = motionchecks.REST
 
 export var fracture_on_use: bool = false
 export var misc: String # As of July 18, still not used anywhere...!
