@@ -444,7 +444,7 @@ func do_fracture():
 	if batman.USE_ACTION_CRACKING:
 		inc_action_cracking()
 	else:
-		spend(loader.CM_walk)
+		spend(loader.cm["WALK"])
 	pass
 
 func inc_action_cracking():

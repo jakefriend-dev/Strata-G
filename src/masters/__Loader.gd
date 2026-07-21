@@ -31,20 +31,25 @@ var names_objects: Array = ["Rock"]
 
 
 # Common Moves (resource files)
-var common_moves: Array = ["WALK", "BE_EXT_MOTIONED", "PRESS_FORWARD"]
-var CM_walk: Resource = preload("res://combat/move_actions/common/MR_WALK.tres")
-var CM_be_ext_motioned: Resource = preload("res://combat/move_actions/common/MR_BE_EXT_MOTIONED.tres")
-var CM_press_forward: Resource = preload("res://combat/move_actions/common/MR_PRESS_FORWARD.tres")
+var cm: Dictionary = {
+	"WALK": preload("res://combat/move_actions/common/MR_WALK.tres"),
+	"BE_EXT_MOTIONED": preload("res://combat/move_actions/common/MR_BE_EXT_MOTIONED.tres"),
+	"PRESS_FORWARD": preload("res://combat/move_actions/common/MR_PRESS_FORWARD.tres"),
+}
+
+#var common_moves: Array = ["WALK", "BE_EXT_MOTIONED", "PRESS_FORWARD"]
+#var CM_walk: Resource = preload("res://combat/move_actions/common/MR_WALK.tres")
+#var CM_be_ext_motioned: Resource = preload("res://combat/move_actions/common/MR_BE_EXT_MOTIONED.tres")
+#var CM_press_forward: Resource = preload("res://combat/move_actions/common/MR_PRESS_FORWARD.tres")
 
 # ---
 
 func _ready():
 	
-	for key in common_moves:
-		var varname: String = str("CM_",key.to_lower())
-		if varname in self:
-			var move: MoveAction = get(varname)
-			move.do_startup_config()
-
+	for key in cm.keys():
+		var move: MoveAction = cm[key]
+		move.do_startup_config()
+	
+	pass
 
 

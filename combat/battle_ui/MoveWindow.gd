@@ -240,7 +240,7 @@ func CUSTOM_goto_common_move_menu():
 					moveopt.nonmove_tooltip = "Check shared party inventory"
 					moveopt.nonmove_function = "goto_inventory_menu"
 				8:
-					moveopt.move = loader.CM_press_forward
+					moveopt.move = loader.cm["PRESS_FORWARD"]
 					moveopt.move.actor = batman.curr_actor
 					moveopt.move.plausible_variants = strife.aimflower_vectors_from_file(moveopt.move.option_image.resource_path)
 					moveopt.move.initialize_MPD()

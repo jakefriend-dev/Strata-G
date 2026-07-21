@@ -460,11 +460,9 @@ func flush_move_details():
 	pass
 
 func reset_common_moves():
-	for key in loader.common_moves:
-		var varname: String = str("CM_",key.to_lower())
-		if varname in loader:
-			var move: MoveAction = loader.get(varname)
-			move.initialize_MPD() # Technically a more complex 'clear'
+	for key in loader.cm.keys():
+		var move: MoveAction = loader.cm[key]
+		move.initialize_MPD() # Technically a more complex 'clear'
 	pass
 
 func load_battle_details():
