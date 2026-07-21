@@ -346,6 +346,12 @@ func end_turn():
 	batman.end_turn()
 	pass
 
+func end_telegraph():
+	if utils.actorpass(actor):
+		if batman.is_my_action(actor):
+			end_action()
+	pass
+
 var pref: String = "["
 var suff: String = "]"
 func _to_string() -> String:
@@ -363,6 +369,9 @@ func initialize_MPD():
 	pass
 
 func clear_MPD():
+	if resource_name == "SPIT_ATTACK" or resource_name == "LUNGE_STOMP":
+		print("gdi, you were right, MPD is clearing between telegraph and execution!")
+	
 	passfail = false
 	ready_to_use = false
 	unique_cells.clear()

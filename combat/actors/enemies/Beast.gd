@@ -29,20 +29,15 @@ var get_bonus_action_next_turn: bool = false
 # ---
 
 func _ready():
-#	lunge_delta_target = batman.get_halfboard_size()
-#	lunge_delta_target.x *= -1
-#	lunge_delta_target.y = 0
-#	set_up_next_turn()
 	pass
 
 func pre_combat_setup():
-#	print("Beast pre combat setup!")
-#	jump_dest_coord = coord + lunge_delta_target
+	print("Beast pre combat setup!")
 	if utils.coin_flip():
-		lunge_vs_spit_coin = true # NEXT one is lunge, so THIS one is spit
+		lunge_vs_spit_coin = false # NEXT one is lunge, so THIS one is spit
 		execute_npc_move(moveset["SPIT_ATTACK"], true)
 	else:
-		lunge_vs_spit_coin = false
+		lunge_vs_spit_coin = true
 		execute_npc_move(moveset["LUNGE_STOMP"], true)
 		
 	pass
@@ -65,6 +60,7 @@ func prep_next_action():
 	if telegraphed_move != null: if !did_main_attack: 
 		# Prep for next time!
 		lunge_vs_spit_coin = !lunge_vs_spit_coin
+		print("Flipped lunge_vs_spit_coin to: ",lunge_vs_spit_coin)
 		
 		# ...whether or not it actually plays out!
 		if telegraphed_move.totality_check():

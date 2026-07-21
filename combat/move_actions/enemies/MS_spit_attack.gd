@@ -8,7 +8,7 @@ func PREVIEW():
 	# First, always choose at least 1 tile a player is on
 	var victims: Array = batman.get_all_opposing_actor_units(actor)
 	if victims.empty():
-		end_action()
+		end_telegraph()
 		return
 	
 	victims.shuffle()
@@ -28,6 +28,7 @@ func PREVIEW():
 		add_arrow(actor.coord, tile, ROWS.BAD)
 	
 	passfail = true
+	end_telegraph()
 	pass
 
 func RE_PREVIEW():
@@ -50,6 +51,7 @@ func ACT():
 		if utils.actorpass(batman.grid_actors.get_cellv(target)):
 			actor.log_hit()
 	
+	actor.clear_telegraphed_move()
 	end_action()
 	pass
 

@@ -2,9 +2,9 @@ extends Actor
 class_name ActorEnemy
 
 func execute_npc_move(move: MoveAction, free_prefight_telegraph: bool = false):
-	move.prepare_actualized_variants() # IDK if matters, frankly?
+	print(name,".execute_npc_move(",move,")")
 	
-#	print("going to spend ",move.effective_cost(),"-AP when ",action_points,"-AP remain")
+	move.prepare_actualized_variants() # IDK if matters, frankly?
 	
 	if !free_prefight_telegraph:
 		move.log_move_use() # Also spends user's AP

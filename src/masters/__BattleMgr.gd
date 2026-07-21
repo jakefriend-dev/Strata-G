@@ -415,7 +415,13 @@ func init_new_combat(new_battle_details: Dictionary):
 	perform_local_pre_combat_setup()
 	
 	# This ACTUALLY STARTS the fight!
-	cycle_to_next_turn() 
+	
+	if action_queue.empty():
+		print("BATMAN: Actionqueue is empty, starting the first turn right away!")
+		cycle_to_next_turn()
+	else:
+		print("BATMAN: Actionqueue is pre-filled, executing telegraph previews!")
+		process_prefight_actionsteps()
 	
 #	print("BATMAN: GPos data is:",grid_gpos)
 	pass
@@ -423,6 +429,7 @@ func init_new_combat(new_battle_details: Dictionary):
 func flush_all_combat_details():
 	# Should only be called when exiting/entering Battlefield.tscn; NEVER mid-fight
 	
+	print("BATMAN.flush_all_combat_details()")
 	pressuring_actor = null
 	curr_actor = null
 #	acting_actor = null
@@ -786,6 +793,7 @@ func do_preturn_visuals(mtext: String):
 func pre_prep_new_turn(): # Always occurs after next turntaker identified
 	if !is_game_live(): return
 	
+	print("BATMAN.pre_prep_new_turn()")
 	field.update_targeting()
 	flush_actionqueue()
 	support.de_ghost_all_actors()
@@ -835,9 +843,10 @@ func end_turn(): # Includes post-turn; assumes NO interruption
 	emit_signal("on_turn_ended_naturally")
 	
 	# Do post-turn effects here
-	if curr_actor.action_points > 0:
-		strife.emit_signal("actor_rest_event", curr_actor)
-	strife.TILE_event_turn_ended_on(curr_actor, curr_actor.coord)
+	if utils.actorpass(curr_actor):
+		if curr_actor.action_points > 0:
+			strife.emit_signal("actor_rest_event", curr_actor)
+		strife.TILE_event_turn_ended_on(curr_actor, curr_actor.coord)
 	
 	# ^^^
 	
@@ -861,7 +870,7 @@ func exit_turn(): # IMMEDIATELY ends the turn as an interruption, no post-turn (
 	flush_actionqueue()
 	support.de_ghost_all_actors()
 	
-	if utils.valid(curr_actor):
+	if utils.actorpass(curr_actor):
 		curr_actor.master_post_turn_teardown()
 		if curr_actor.has_method("post_turn_teardown"):
 			curr_actor.call("post_turn_teardown")
@@ -1244,15 +1253,27 @@ func insert_action(position: int, actor: Actor, move: MoveAction, paramset: Arra
 	action_queue.insert(position, action)
 	pass
 
+func process_prefight_actionsteps():
+	if !is_battle_scene(): return
+	
+	combatstate = C_TURN
+	field.hide_major_text()
+	
+	progress_action_queue()
+	pass
+
 func progress_action_queue(): # Calls ONE next action, or if there is none, skips
+	print("BATMAN.progress_action_queue()")
 	last_execution_frame = get_tree().get_frame()
 	acting_actor = null
 	reset_common_moves()
 	
 	if action_queue.empty(): # No actions queued when this was called! Time to move on
 		
-		if curr_actor.has_method("post_all_action_prep"):
-			curr_actor.call("post_all_action_prep")
+		# curr_actor can be null IF this is prefight actionsteps, like telegraphs
+		if utils.valid(curr_actor):
+			if curr_actor.has_method("post_all_action_prep"):
+				curr_actor.call("post_all_action_prep")
 		
 		end_turn()
 		return
@@ -1285,16 +1306,15 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var paramset: Array = curr_action[2]
 	
 	var methodname: String = "ACT"
+	var need_to_clear_telegraphed_move: bool = false
 	if !player_flag:
 		if move.req_successful_telegraph:
 			if actor.telegraphed_move != move:
 				methodname = "PREVIEW"
 				actor.telegraphed_move = move
-			else:
-				# CLEAR the telegraphed move if we are executing any ACT func!
-				actor.clear_telegraphed_move()
+				# Note that telegraphed_move does NOT auto-clear!
 	
-#	print("methodname: ",methodname)
+	print("ACTIONSTEP: ",actor.name,"'s ",move,".",methodname,"()")
 	
 	# Validation cleared!
 	acting_actor = actor # For async ref
@@ -1365,6 +1385,7 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 	pass
 
 func flush_actionqueue(): # Run to wipe any stored-between-turns data
+	print("BATMAN.flush_actionqueue()")
 	release_most_claims()
 	
 	acting_actor = null

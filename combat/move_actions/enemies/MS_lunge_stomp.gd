@@ -15,11 +15,13 @@ func PREVIEW():
 	if !batman.grid_actors.has_cellv(target):
 		error_text = "Can't access lunge dest!"
 		add_actor(actor, ROWS.ERROR)
+		end_telegraph()
 		return
 	
 	if batman.grid_tiles.get_cellv(target) == batman.tiletypes.PIT:
 		error_text = "Lunge dest is pit!"
 		add_actor(actor, ROWS.ERROR)
+		end_telegraph()
 		return
 	
 	add_cell(target, ROWS.BAD)
@@ -28,6 +30,7 @@ func PREVIEW():
 		add_cell(tile, ROWS.NEUTRAL)
 	
 	passfail = true
+	end_telegraph()
 	pass
 
 # No need for RE_TELEGRAPH; clear data and run TELEGRAPH again!
@@ -129,6 +132,7 @@ func ACT_lunge_back():
 	yield(utils.yt(post_jump_rumble_time, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
+	actor.clear_telegraphed_move()
 	end_action()
 	pass
 

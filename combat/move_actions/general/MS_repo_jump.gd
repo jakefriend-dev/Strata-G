@@ -8,6 +8,7 @@ func PREVIEW():
 		error_text = "Nowhere eligible to jump to"
 		return
 	
+	add_cell(target, ROWS.NEUTRAL)
 	passfail = true
 	pass
 
