@@ -73,7 +73,8 @@ func move_forward_and_stab():
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
-	strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(base_damage), ["piercing"])
+	support.log_actorhit_if_occupied(actor, victim_cell)
+	strife.damage_actor_at_coord(actor, victim_cell, actor.dmg(base_damage), ["piercing"])
 	strife.quick_vfx(victim, "spark_burst")
 	
 	batman.append_action(actor, self)

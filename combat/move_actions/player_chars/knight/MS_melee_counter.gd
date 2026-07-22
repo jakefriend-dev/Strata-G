@@ -40,6 +40,7 @@ func REACT(combat_package: Dictionary):
 		if attacker.coord == check_cell:
 			strife.do_impact_damage(actor, attacker, actor.dmg(base_damage))
 			strife.quick_vfx(attacker, "melee_slice")
+			actor.log_hit()
 			return
 	
 	# Must not be a melee attack!

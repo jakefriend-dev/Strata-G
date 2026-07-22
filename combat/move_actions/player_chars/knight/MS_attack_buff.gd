@@ -19,6 +19,7 @@ func ACT():
 		ally.start_status("attack_buff")
 #		ally.start_status("attack_buff", "Cry of Valor", "+1 damage until end of next turn.", "good", 1, true, [], "generic_clear_status")
 	
+	actor.log_hit()
 	end_action()
 	pass
 

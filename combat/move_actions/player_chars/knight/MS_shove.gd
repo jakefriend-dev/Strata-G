@@ -78,6 +78,7 @@ func ACT():
 	var near_coord: Vector2 = actor.coord + check_vector
 #	var far_coord: Vector2 = near_coord + check_vector
 	var victim: Actor = batman.grid_actors.get_cellv(near_coord)
+	actor.log_hit()
 	
 	strife.do_impact_motion(actor, victim, check_vector)
 	

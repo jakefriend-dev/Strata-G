@@ -23,6 +23,7 @@ func ACT():
 	yield(utils.yt(0.25, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
+	actor.log_hit() # You would just never use this if there weren't opposing forces, because the battle would be over!
 	end_action()
 	pass
 

@@ -141,6 +141,7 @@ func ACT():
 			
 			var victim: Actor = support.get_actor_at_cellv(actor.coord + actor.my_facing)
 			if victim != null:
+				actor.log_hit()
 				if strife.is_affected_by_force(victim):
 					strife.do_impact_motion(actor, victim, Vector2(dist_2, 0), ["knockback"])
 				else:

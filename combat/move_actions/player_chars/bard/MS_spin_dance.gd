@@ -77,6 +77,7 @@ func ACT():
 	yield(utils.yt(total_dur, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
+	actor.log_hit() # If no victims, we can't trigger the ability anyhow
 	end_action()
 	pass
 

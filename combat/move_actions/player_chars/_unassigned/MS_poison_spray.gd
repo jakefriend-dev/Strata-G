@@ -49,6 +49,7 @@ func ACT():
 		var victim: Actor = batman.grid_actors.get_cellv(target)
 		if utils.actorpass(victim):
 			victim.start_status("poisoned")
+			actor.log_hit()
 		
 #		print("poison at target ",target)
 #		strife.damage_actor_at_coord(actor, target, actor.dmg(base_damage), ["shield_bypass", "poison"])

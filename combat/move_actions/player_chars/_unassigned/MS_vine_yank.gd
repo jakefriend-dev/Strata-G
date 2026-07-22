@@ -71,5 +71,6 @@ func ACT():
 	yield(utils.yt(0.375, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
+	actor.log_hit()
 	end_action()
 	pass

@@ -28,6 +28,7 @@ func ACT():
 #	target = get_first_cell_by_MPD_type(ROWS.BAD)
 #	print("bow arc ACT target: ",target)
 	strife.damage_actor_at_coord(actor, target, actor.dmg(base_damage), ["piercing"])
+	support.log_actorhit_if_occupied(actor, target)
 	
 	end_action()
 	pass
