@@ -40,19 +40,19 @@ func ACT():
 	pass
 
 func ACT_recoil_in_place():
-	
+#	hotcollide_in_place
 	
 	end_action()
 	pass
 
 func ACT_push_collision():
-	
+#	hotpush_n_collide
 	
 	end_action()
 	pass
 
 func ACT_push_smooth():
-	
+#	hotpushed
 	
 	end_action()
 	pass
