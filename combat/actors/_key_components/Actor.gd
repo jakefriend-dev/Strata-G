@@ -992,28 +992,29 @@ func quip(text: String):
 
 # "HOT" MOVEMENT BEHAVIOURS, aka handy shortcuts for standard movements!
 
+# Smooth start and end; usually walking
 func hotmove(to_coord: Vector2, dur: float):
 	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_CIRC, Tween.EASE_IN_OUT)
 	tween.start()
 	pass
 
+# Immediate start; rough end
 func hotpushed(to_coord: Vector2, dur: float):
 	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_QUINT, Tween.EASE_OUT)
 	tween.start()
 	pass
 
+# ... it's a jump
 func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
 	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 	
 	tween.interpolate_property(self, "z", null, height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
 	tween.interpolate_property(self, "z", height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
-
-#	tween.interpolate_property(vis_object, "position:y", null, -height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
-#	tween.interpolate_property(vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
-
+	
 	tween.start()
 	pass
 
+# Immediate start, collision at the very end w/ a bit of recoil
 func hotpush_n_collide():
 	
 	pass
