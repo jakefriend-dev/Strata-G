@@ -223,7 +223,8 @@ func _ready():
 	
 	perform_initial_data_setup()
 	
-	load_moves()
+	load_local_moves()
+	load_moveset()
 	prep_moveset_on_battle_start()
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
@@ -249,15 +250,45 @@ func perform_initial_data_setup():
 	weight = def_weight
 	pass
 
-func load_moves():
+func load_local_moves():
+	# probably could automate this using the folder but w/e
+	var preloaders: Dictionary = {
+		"WALK": load("res://combat/move_actions/local/MR_WALK.tres"),
+		"EXT_TRAVEL": load("res://combat/move_actions/local/MR_EXT_TRAVEL.tres"),
+	}
+	
+	# We duplicate it AFTER its resource name etc have been set up!
+	for key in preloaders:
+		var nondupemove = preloaders[key]
+		nondupemove.do_startup_config()
+		LM[key] = nondupemove.duplicate() 
+	
+	for key in LM.keys():
+		var move = LM[key]
+		move.do_startup_config()
+		if !move.run_validation_pass(): # Any validation that takes place *within* a move should go here!
+			continue
+		
+#		if key == "WALK": print("actor before setting to ",self,": ",move.actor)
+		move.actor = self
+		
+		if faction == batman.factions.ENEMY:
+			move.plausible_variants = strife.xflip_plausible_variants(move.plausible_variants)
+	pass
+
+func load_moveset():
 	var row: int = 0
 	var col: int = 0
 	move_layout = Array2D.new()
 	move_layout.resize(2, 4)
 	
-	for move in loaded_moves: if move != null: #if move is MoveAction:
+	for nondupemove in loaded_moves: if nondupemove != null: #if move is MoveAction:
+		nondupemove.do_startup_config()
+		var move = nondupemove.duplicate() # This 'actually' sets it as 'local_to_scene' in practice
+		
 		# Basic setup first!
-		move.do_startup_config()
+		move.do_startup_config() # needs to be called ASAP do that its _to_string() func works right!
+#		print(name,"'s mid-loading move: ",move)
 		
 		if moveset.has(move.resource_name):
 			print(name," can't load move ",move,", duplicate entry! Already in moveset!")
@@ -333,13 +364,13 @@ func clear_all_move_previews():
 	
 	print("Actor.clear_all_move_previews()")
 	for key in moveset.keys():
-		moveset[key].restage_MPD()
+		moveset[key].restage_MPD("Actor clear ALL move previews")
 	pass
 
 func clear_telegraphed_move():
 	if telegraphed_move == null: return
 	
-	telegraphed_move.restage_MPD()
+	telegraphed_move.restage_MPD("Actor clear telegraphed move")
 	telegraphed_move = null
 	pass
 
@@ -450,7 +481,7 @@ func do_fracture():
 	if batman.USE_ACTION_CRACKING:
 		inc_action_cracking()
 	else:
-		spend(loader.CM["WALK"])
+		spend(LM["WALK"])
 	pass
 
 func inc_action_cracking():

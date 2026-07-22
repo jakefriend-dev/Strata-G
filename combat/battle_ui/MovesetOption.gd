@@ -88,6 +88,9 @@ func validate():
 	
 	# Regular moves
 	if move == null: return
+	
+#	print(name,".update_against_new_move().validate move ",move)
+	
 	valid = true
 	loaded_display_name = move.display_name
 	loaded_tt_desc_text = move.translate_desc(move.short_desc)

@@ -1,6 +1,7 @@
 extends MoveAction
 
 func PREVIEW():
+#	print(self,"'s preview!!!")
 	
 	var check_vector: Vector2 = batman.loaded_variant
 	

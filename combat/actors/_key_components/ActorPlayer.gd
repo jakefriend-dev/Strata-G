@@ -12,8 +12,6 @@ class_name ActorPlayer
 # ---
 
 func _ready():
-#	load_moves()
-#	prep_moveset_on_battle_start()
 	batman.connect("action_option_view_changed", self, "run_move_preview")
 	batman.connect("action_step_complete", self, "run_move_preview")
 	pass
@@ -32,7 +30,7 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 
 func limited_run_move_preview(move, is_brand_new_move_selected: bool = false):
 	# This version BYPASSES VALIDATIONS so that it can also be called after the action is successfully processed in batman!
-	move.restage_MPD()
+	move.restage_MPD("Actor Player limited move preview")
 	move.prepare_actualized_variants()
 	batman.assert_player_variant_against_move(move, is_brand_new_move_selected)
 	
@@ -73,16 +71,16 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 	pass
 
 func attempt_player_char_move(motion: Vector2):
-	loader.CM["WALK"].actor = self
-	loader.CM["WALK"].manual_variant = motion
+#	LM["WALK"].actor = self
+	LM["WALK"].manual_variant = motion
 	
-	if !loader.CM["WALK"].totality_check([], self, true):
-		print("validation fail, move error: ",loader.CM["WALK"].error_text)
+	if !LM["WALK"].totality_check([], self, true):
+		print("validation fail, move error: ",LM["WALK"].error_text)
 		return
 	
 #	print("letsgo: ",motion)
-	spend(loader.CM["WALK"])
-	batman.append_action(self, loader.CM["WALK"])
+	spend(LM["WALK"])
+	batman.append_action(self, LM["WALK"])
 	submit_player_action(false)
 	pass
 

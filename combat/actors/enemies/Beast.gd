@@ -108,9 +108,9 @@ func prep_next_action():
 	# FOURTH: At this point, you can do as you like with the AP remaining.
 	# (Which is mostly sort of moving around vaguely)
 	
-	var can_walk: bool = randomwalk_if_possible(false) && loader.CM["WALK"].usability_check(self) # Confirms at least ONE direction is possible, but doesn't actually walk yet
+	var can_walk: bool = randomwalk_if_possible(false) && LM["WALK"].usability_check(self) # Confirms at least ONE direction is possible, but doesn't actually walk yet
 	if can_walk:
-		if action_points < (loader.CM["WALK"].effective_cost() + next_main_attack.effective_cost()):
+		if action_points < (LM["WALK"].effective_cost() + next_main_attack.effective_cost()):
 			can_walk = false
 	var can_repo: bool = moveset["REPO_JUMP"].totality_check() # Confirms we can move to at least one OTHER tile
 	if can_repo:

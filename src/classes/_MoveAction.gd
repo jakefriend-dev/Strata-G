@@ -118,14 +118,15 @@ var config_complete: bool = false
 
 func do_startup_config():
 	if config_complete: return
-	config_complete = true # One-time - maybe validation overkill, but in case of duplicates.
 #	print(self,".do_startup_config()")
+	
+	set_local_to_scene(true) # I don't think this does anything, frankly. If you want local copies, call .duplicate() when loading the move.
+	config_complete = true # One-time - maybe validation overkill, but in case of duplicates.
 	
 	if resource_name == "":
 		resource_name = utils.get_resource_name(self)
 	
-	set_local_to_scene(true)
-	restage_MPD()
+	restage_MPD("MoveAction startup")
 	
 	plausible_variants = strife.aimflower_vectors_from_file(option_image.resource_path)
 	
@@ -294,7 +295,7 @@ func update_telegraph_previews():
 	if !utils.actorpass(actor): return
 	if actor.telegraphed_move != self: return
 	
-	print(self,".update_telegraph_previews()")
+#	print(self,".update_telegraph_previews()")
 	passfail = false # Regardless of if we clear or not
 	
 	if has_method("RE_PREVIEW"):
@@ -302,7 +303,7 @@ func update_telegraph_previews():
 		call("RE_PREVIEW")
 	elif has_method("PREVIEW"):
 		# We DO clear here, because we're starting from scratch.
-		restage_MPD()
+		restage_MPD("MoveAction preview update A")
 		actor.release_targeted_tiles()
 		call("PREVIEW")
 	else:
@@ -311,7 +312,7 @@ func update_telegraph_previews():
 		pass
 	
 	if !passfail:
-		restage_MPD()
+		restage_MPD("MoveAction preview update B")
 		actor.release_targeted_tiles()
 		actor.telegraphed_move = null
 		actor.emit_signal("on_telegraph_failed", self)
@@ -415,9 +416,10 @@ func _to_string() -> String:
 
 # ActionPreviewData method dump! -----------------------------------------------
 
-func restage_MPD(): # Replaces BOTH initialize_MPD() and clear_MPD() of olde
-	if self == loader.CM["WALK"]:
-		print("WALK: Restaging MPD!")
+# warning-ignore:unused_argument
+# "source" is only for debugging
+func restage_MPD(source: String): # Replaces BOTH initialize_MPD() and clear_MPD() of olde
+#	if resource_name == "BASIC_ARROWLINE": print(self,".restage_MPD(",source,")")
 	
 	if sets == null: # One-time setup
 		sets = Array2D.new()

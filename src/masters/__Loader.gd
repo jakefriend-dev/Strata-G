@@ -32,8 +32,8 @@ var names_objects: Array = ["Rock"]
 
 # Common Moves (resource files)
 var CM: Dictionary = {
-	"WALK": preload("res://combat/move_actions/local/MR_WALK.tres"),
-	"BE_EXT_MOTIONED": preload("res://combat/move_actions/local/MR_BE_EXT_MOTIONED.tres"),
+#	"WALK": preload("res://combat/move_actions/local/MR_WALK.tres"),
+#	"BE_EXT_MOTIONED": preload("res://combat/move_actions/local/MR_BE_EXT_MOTIONED.tres"),
 	"PRESS_FORWARD": preload("res://combat/move_actions/common/MR_PRESS_FORWARD.tres"),
 }
 

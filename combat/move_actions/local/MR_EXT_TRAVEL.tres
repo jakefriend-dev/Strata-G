@@ -1,6 +1,6 @@
 [gd_resource type="Resource" load_steps=3 format=2]
 
-[ext_resource path="res://combat/move_actions/local/MS_be_ext_motioned.gd" type="Script" id=1]
+[ext_resource path="res://combat/move_actions/local/MS_ext_travel.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - rim.png" type="Texture" id=2]
 
 [resource]
