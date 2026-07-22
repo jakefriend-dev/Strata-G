@@ -15,12 +15,14 @@ func PREVIEW():
 	if !batman.grid_actors.has_cellv(target):
 		error_text = "Can't access lunge dest!"
 		add_actor(actor, ROWS.ERROR)
+		print("[a] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
 		end_telegraph()
 		return
 	
 	if batman.grid_tiles.get_cellv(target) == batman.tiletypes.PIT:
 		error_text = "Lunge dest is pit!"
 		add_actor(actor, ROWS.ERROR)
+		print("[b] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
 		end_telegraph()
 		return
 	
@@ -30,6 +32,7 @@ func PREVIEW():
 	for tile in adj_tiles:
 		add_cell(tile, ROWS.NEUTRAL)
 	
+	print("[c] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
 	passfail = true
 	end_telegraph()
 	pass
