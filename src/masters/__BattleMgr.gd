@@ -1575,6 +1575,8 @@ func kill_actor(actor: Actor):
 		actor.visible = false
 		actor.queue_free()
 	
+	strife.note_combatstate_event("actor_deletion")
+	
 	if should_change_turns:
 		yield(utils.yt(timeout_action_time, self), "timeout")
 		if !is_battle_scene(): return

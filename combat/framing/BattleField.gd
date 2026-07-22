@@ -290,6 +290,8 @@ func move_frontline(toward_enemy: bool):
 			flo.coord.x = flo.coord.x - 1
 		utils.tween.interpolate_property(flo, "position", null, batman.grid_gpos.get_cellv(flo.coord), frontline_move_time, Tween.TRANS_CIRC, Tween.EASE_OUT)
 	utils.tween.start()
+	
+	strife.note_combatstate_event("frontline_change")
 	pass
 
 

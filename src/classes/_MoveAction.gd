@@ -126,6 +126,9 @@ func do_startup_config():
 	initialize_MPD()
 	
 	plausible_variants = strife.aimflower_vectors_from_file(option_image.resource_path)
+	
+	if req_successful_telegraph:
+		strife.connect("notable_combatstate_event", self, "update_telegraph_previews")
 	pass
 
 func run_validation_pass() -> bool:
@@ -283,6 +286,33 @@ func will_next_use_be_a_telegraph() -> bool:
 	return true
 	pass
 
+func update_telegraph_previews():
+	if !utils.actorpass(actor): return
+	if actor.telegraphed_move != self: return
+	
+	print(self,".update_telegraph_previews()")
+	passfail = false # Regardless of if we clear or not
+	
+	if has_method("RE_PREVIEW"):
+		# We DON'T clear MPD/targets here, because re-previews tweak existing data without need for a total rerun.
+		call("RE_PREVIEW")
+	elif has_method("PREVIEW"):
+		# We DO clear here, because we're starting from scratch.
+		clear_MPD()
+		actor.release_targeted_tiles()
+		call("PREVIEW")
+	else:
+		print(self,": This is a pre-validated impossible case. How did you get here?? Breakpoint!")
+		
+		pass
+	
+	if !passfail:
+		clear_MPD()
+		actor.release_targeted_tiles()
+		actor.telegraphed_move = null
+		actor.emit_signal("on_telegraph_failed", self)
+	pass
+
 # ---
 
 func log_move_use():
@@ -365,6 +395,8 @@ func end_turn():
 
 func end_telegraph():
 	if utils.actorpass(actor):
+		actor.set_targeted_tiles(get_all_cells_by_MPD_type(ROWS.BAD)) # This is the OVERWRITE function, not append, jfyi! So no need to release first	
+		
 		if batman.is_my_action(actor):
 			end_action()
 	pass

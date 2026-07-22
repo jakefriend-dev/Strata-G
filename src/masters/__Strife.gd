@@ -13,34 +13,47 @@ extends Node
 	# Tile entry/exit effects
 	# Global checks for if a given actor is 'allowed' to move to a given tile
 
+# Loads all status RESOURCES on boot-up, using their status key as dict keys and the entire resource as the value. Single point of reference so that everyone else can simply use the key!
 var status_db: Dictionary = {}
 
-enum elements {NORMAL, COLD, FIRE, WOOD, GROUND, AIR, MAGIC, ELEC, POISON, BLOOD, LIGHT}
+#enum elements {NORMAL, COLD, FIRE, WOOD, GROUND, AIR, MAGIC, ELEC, POISON, BLOOD, LIGHT}
 # Ones I'm unsure of being an 'element' so much as just a flag:
 	# BREAKING
 
 enum hitrange {CONTACT, DISTANT} # Not used anywhere atm
-
 enum impacts {PHYSICAL, ABSTRACT} # Not use anywhere atm
 
-# For actors, to help handle things like ice or conveyor effect motion
-#enum moves { # WAYS of moving, for the purpose of things like determining ice slippy-ness.
-#	NOT_MOVING,
-#	BY_TRAVEL, # Affected by ice! Does not factor in hover etc; this is a plain adjacency thing
-#	BY_JUMP,
-#	BY_WARP,
-#	BY_SPECIAL_TRAVEL, # A cartwheel might be immune to slipping, for instance
-#	MOVED_EXTERNALLY, # Similar to BY_TRAVEL but helps separate external forces from ourselves
-#		# If someone else warps our position, we'll just use BY_WARP rather than make another WARPED_EXTERNALLY
-#	DNU
-#}
-
-# Loads all status RESOURCES on boot-up, using their status key as dict keys and the entire resource as the value. Single point of reference so that everyone else can simply use the key!
-var statusdict: Dictionary = {}
-
 signal actor_rest_event(which_actor)
+signal notable_combatstate_event()
+# Predominantly used for RE-RUNNING ENEMY TELEGRAPHS/PREVIEWS.
+	# Don't emit this directly; instead call note_combatstate_event(type)
+	# In theory, MoveActions could be told to opt in to re-updates only if the 'type' matches, but...
+		# ...it's only enemy telegraphs; shouldn't ever be too many at once!
+		# (...maybe not just telegraphs?)
+# Conditions:
+	# - Any actor coordinate changes
+	# - Any actor changing weight class, or on_ground, or perhaps immunities
+	# - Any actor death
+	# - Any actor creation/spawning
+	# - Any tile changes (eg. a pit is put in the way - big but it could happen!)
+	# - Frontline changes
+	# - (if this were to ever happen)
+	#	- An actor changing factions mid-fight
+
+var last_combatstate_event_frame: int = -1
+func note_combatstate_event(_type: String):
+	if last_combatstate_event_frame == get_tree().get_frame(): return
+	last_combatstate_event_frame = get_tree().get_frame()
+	
+	yield(get_tree(), "physics_frame")
+	emit_signal("notable_combatstate_event")
+	
+	# Only be called once per frame, to avoid multi-reruns, but always delays 1 frame to ensure it runs after everyone's changes are accounted for throughout the prior frame
+	pass
 
 var tween: Tween
+
+# 000
 
 func _ready():
 	tween = Tween.new()

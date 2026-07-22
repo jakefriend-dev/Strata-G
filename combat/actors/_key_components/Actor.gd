@@ -170,6 +170,7 @@ signal on_z_jumped() # Even a non-"jump" counts as long as it becomes airborne
 signal on_z_landed()
 
 #var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
+signal on_telegraph_failed(move)
 
 # Attacker combat signals
 signal on_blocked_by_shield_any(combat_package) # Connected with a shield *at all*
@@ -225,6 +226,8 @@ func _ready():
 	
 	batman.connect("pre_turn_setup", self, "master_pre_turn_setup")
 	batman.connect("update_all_preview_drawing", self, "adjust_target_highlights")
+	
+	strife.note_combatstate_event("actor_spawn")
 	pass
 
 func perform_initial_data_setup():
@@ -800,7 +803,8 @@ func manage_z_height():
 		if prev_z > 0 and z <= 0:
 			emit_signal("on_z_landed")
 			strife.TILE_event_entry(self, coord)
-			print(name," landed!")
+			strife.note_combatstate_event("actor_land")
+			print("ACTOR: ",name," landed!")
 	
 	# going up
 	elif z > prev_z:
@@ -809,7 +813,8 @@ func manage_z_height():
 		airstate = airstates.RISING
 		if prev_z <= 0 and z > 0:
 			emit_signal("on_z_jumped")
-			print(name," jumped!")
+			strife.note_combatstate_event("actor_jump")
+			print("ACTOR: ",name," jumped!")
 	
 	# sustained position
 	else:
@@ -857,6 +862,7 @@ func monitor_position_as_coordinate():
 	
 	strife.TILE_event_exit(self, prev_tick_coord)
 	strife.TILE_event_entry(self, coord)
+	strife.note_combatstate_event("actor_coord_change")
 	
 	if is_ghost: return
 	

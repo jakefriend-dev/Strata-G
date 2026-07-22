@@ -210,35 +210,23 @@ func change_tiletype_mass(coordset: Array, to_tiletype: int, restrictions_overri
 		
 		if !batman.grid_tiles.has_cellv(coord): continue
 		
+		var og_tiletype: int = batman.grid_tiles.get_cellv(coord)
+		if og_tiletype == to_tiletype:
+			continue
+		
 		# Steel should be immune
-		if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.MAGIC:
+		if og_tiletype == batman.tiletypes.MAGIC:
 			if !restrictions_override:
 				continue
 		
 		# We don't normally change pits
-		if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.PIT:
+		if og_tiletype == batman.tiletypes.PIT:
 			if !restrictions_override:
 				continue
 		
-		# HACK: For now, we're removing the pit function entirely
+		# We're removing the become-pit function entirely; it's from the start of a fight or never
 		elif to_tiletype == batman.tiletypes.PIT:
 			continue
-		
-#		# Make sure an actor cannot be pitted
-#		elif to_tiletype == batman.tiletypes.PIT:
-#			if batman.grid_actors.get_cellv(coord) != null: # Yes, there's an actor!
-#				if batman.grid_tiles.get_cellv(coord) != batman.tiletypes.JAGGED:
-#					# Only bother 'cracking' if it's not already cracked
-#					# (Otherwise, this is skipped)
-#					impact_dict[coord] = batman.tiletypes.JAGGED
-#				continue
-#
-#		# Make sure a re-cracked unoccupied tile becomes a pit instead
-#		elif to_tiletype == batman.tiletypes.JAGGED:
-#			if batman.grid_tiles.get_cellv(coord) == batman.tiletypes.JAGGED:
-#				if batman.grid_actors.get_cellv(coord) == null: # Unoccupied pre-cracked tile!
-#					impact_dict[coord] = batman.tiletypes.PIT
-#					continue
 		
 		# If no other conditions are met, we process as-is!
 		impact_dict[coord] = to_tiletype
@@ -256,6 +244,7 @@ func change_tiletype_mass(coordset: Array, to_tiletype: int, restrictions_overri
 	
 #	print("Preparing tilechanges:\n",impact_dict)
 	batman.emit_signal("update_all_tiletypes")
+	strife.note_combatstate_event("tile_change")
 	pass
 
 

@@ -25,6 +25,7 @@ func PREVIEW():
 		return
 	
 	add_cell(target, ROWS.BAD)
+	
 	var adj_tiles: Array = support.get_adj_orthagonal_tiles(target)
 	for tile in adj_tiles:
 		add_cell(tile, ROWS.NEUTRAL)
