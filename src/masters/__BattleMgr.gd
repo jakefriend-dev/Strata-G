@@ -122,12 +122,14 @@ var curr_action: Array = []
 var prev_action: Array = []
 var timeout_action_time: float = (3.0/60.0) # How long between skipped actions if time has not passed
 var timeout_turn_time: float = (12.0/60.0) # How long between ended turns if time has not passed
+signal ready_to_choose_next_unit_action()
 signal about_to_progress_actionqueue()
 signal any_actionstep_initiated()
 signal action_step_complete() # Should fire any time we do an individual action
 signal all_action_steps_complete() # Should fire whenever ALL steps are done
 var actions_are_processing: bool = false
 var action_processing_time: float = 0.0
+var aq_call_count: int = 0 # For unique-ifying
 
 #var actionlog: Array = [] # Historical log of all processed AND FAILED actions! Strings only
 var actionlog: Array = [] # Log of notable actions for on-screen visibility! Strings only
@@ -445,6 +447,7 @@ func flush_all_combat_details():
 	total_turns_taken = 0
 	unique_actornames_observed.clear()
 	turncount = 0
+	aq_call_count = 0
 	
 	targeted_tiles.clear()
 	pass
@@ -1267,7 +1270,8 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	acting_actor = null
 #	reset_common_moves() # Nah, this actually gets auto-called post-actionstep by clean_all_MPDs_between_actionstep_batches()
 	
-	
+	aq_call_count += 1
+	var this_aq_call: int = aq_call_count
 	emit_signal("about_to_progress_actionqueue")
 	
 	if action_queue.empty(): # No actions queued when this was called! Time to move on
@@ -1336,7 +1340,11 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	# Great success! It's the actor's job to cue end_action()/end_telegraph() from here.
 	
-	yield(self, "about_to_progress_actionqueue")
+	
+	yield(self, "ready_to_choose_next_unit_action")
+	if this_aq_call != aq_call_count:
+		print("BATMAN: After progressing actionqueue, AQ call ",this_aq_call," yielded until it was a different AQ call (",aq_call_count)
+		return
 #	yield(VisualServer, "frame_pre_draw")
 #	yield(VisualServer, "frame_post_draw")
 	# CONDITIONAL cleanup!
@@ -1349,6 +1357,9 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	else:
 		print("Doing cleanup on ended actionstep's move ",move,"!")
 		move.restage_MPD()
+	
+	if actor is ActorPlayer:
+		actor.limited_run_move_preview(move)
 	pass
 
 func clean_all_MPDs_between_actionstep_batches():
@@ -1381,6 +1392,7 @@ func prompt_next_turntaker_action():
 	if combatstate != C_TURN: return
 	
 	clean_all_MPDs_between_actionstep_batches()
+	emit_signal("ready_to_choose_next_unit_action")
 	
 	if utils.actorpass(curr_actor):
 		curr_actor.choose_action()

@@ -27,6 +27,11 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 #	print("running move preview for ",move)
 	if move == null: return
 	
+	limited_run_move_preview(move, is_brand_new_move_selected)
+	pass
+
+func limited_run_move_preview(move, is_brand_new_move_selected: bool = false):
+	# This version BYPASSES VALIDATIONS so that it can also be called after the action is successfully processed in batman!
 	move.restage_MPD()
 	move.prepare_actualized_variants()
 	batman.assert_player_variant_against_move(move, is_brand_new_move_selected)
