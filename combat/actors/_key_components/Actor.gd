@@ -141,6 +141,8 @@ var moveset: Dictionary = {} # Post-validation
 var move_layout: Array2D # ONLY used by ActorPlayer!
 export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null] # Can manually change this for ActorEnemy but leave as 7 by default; shouldn't exceed 7 for ActorPlayer
 
+var LM: Dictionary = {} # Local moves include WALK and BE_EXT_MOTIONED
+
 var is_ghost: bool = false # When true, allowed to break many rules. You almost ALWAYS turn this off at the end of a turn; meant as a temporary thing for like a charge-through attack.
 var just_exited_ghost_mode: bool = false # Helps us bypass some errors
 
@@ -448,7 +450,7 @@ func do_fracture():
 	if batman.USE_ACTION_CRACKING:
 		inc_action_cracking()
 	else:
-		spend(loader.cm["WALK"])
+		spend(loader.CM["WALK"])
 	pass
 
 func inc_action_cracking():

@@ -73,16 +73,16 @@ func is_player_action_usable(do_print: bool = true) -> bool:
 	pass
 
 func attempt_player_char_move(motion: Vector2):
-	loader.cm["WALK"].actor = self
-	loader.cm["WALK"].manual_variant = motion
+	loader.CM["WALK"].actor = self
+	loader.CM["WALK"].manual_variant = motion
 	
-	if !loader.cm["WALK"].totality_check([], self, true):
-		print("validation fail, move error: ",loader.cm["WALK"].error_text)
+	if !loader.CM["WALK"].totality_check([], self, true):
+		print("validation fail, move error: ",loader.CM["WALK"].error_text)
 		return
 	
 #	print("letsgo: ",motion)
-	spend(loader.cm["WALK"])
-	batman.append_action(self, loader.cm["WALK"])
+	spend(loader.CM["WALK"])
+	batman.append_action(self, loader.CM["WALK"])
 	submit_player_action(false)
 	pass
 

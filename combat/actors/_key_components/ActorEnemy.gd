@@ -41,9 +41,9 @@ func randomwalk_if_possible(auto_execute_if_true: bool = true) -> bool: # If tru
 	if !passflag: # We have at least 1 viable option, and since we randomly drew it, it's our direction!
 		return false
 	
-	var move: MoveAction = loader.cm["WALK"]
-	loader.cm["WALK"].actor = self
-	loader.cm["WALK"].manual_variant = motion
+	var move: MoveAction = loader.CM["WALK"]
+	loader.CM["WALK"].actor = self
+	loader.CM["WALK"].manual_variant = motion
 	
 	if !move.quick_context_passfail_check():
 		return false

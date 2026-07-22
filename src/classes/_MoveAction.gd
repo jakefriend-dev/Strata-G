@@ -416,7 +416,7 @@ func _to_string() -> String:
 # ActionPreviewData method dump! -----------------------------------------------
 
 func restage_MPD(): # Replaces BOTH initialize_MPD() and clear_MPD() of olde
-	if self == loader.cm["WALK"]:
+	if self == loader.CM["WALK"]:
 		print("WALK: Restaging MPD!")
 	
 	if sets == null: # One-time setup

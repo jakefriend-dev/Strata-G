@@ -490,7 +490,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 #
 #	# The is_quiet signalling actually needs to happen when the ACTION STEP begins, not the moment (mid-attacker's action step) this connects - and dealing damage needs to wait until the motion ends! So for now, just create the reaction and forward the details to there.
 #
-#	batman.reaction(defender, loader.cm["BE_EXT_MOTIONED"], [
+#	batman.reaction(defender, loader.CM["BE_EXT_MOTIONED"], [
 #		spent_motion, knockback_damage, attacker, is_quiet, flags
 #		])
 	pass
@@ -1265,7 +1265,7 @@ func between_turn_checks(exiting_actor: Actor, entering_actor: Actor):
 func check_for_pressers_forward(entering_actor: Actor):
 	if utils.actorpass(batman.pressuring_actor):
 		if batman.pressuring_actor.check_status("pressuring_frontline"):
-			var move: MoveAction = loader.cm["PRESS_FORWARD"]
+			var move: MoveAction = loader.CM["PRESS_FORWARD"]
 			if !move.affirm_by_any_actor(batman.pressuring_actor):
 				batman.pressuring_actor.clear_status("pressuring_frontline")
 				batman.pressuring_actor = null

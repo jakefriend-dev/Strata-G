@@ -31,23 +31,19 @@ var names_objects: Array = ["Rock"]
 
 
 # Common Moves (resource files)
-var cm: Dictionary = {
-	"WALK": preload("res://combat/move_actions/common/MR_WALK.tres"),
-	"BE_EXT_MOTIONED": preload("res://combat/move_actions/common/MR_BE_EXT_MOTIONED.tres"),
+var CM: Dictionary = {
+	"WALK": preload("res://combat/move_actions/local/MR_WALK.tres"),
+	"BE_EXT_MOTIONED": preload("res://combat/move_actions/local/MR_BE_EXT_MOTIONED.tres"),
 	"PRESS_FORWARD": preload("res://combat/move_actions/common/MR_PRESS_FORWARD.tres"),
 }
 
-#var common_moves: Array = ["WALK", "BE_EXT_MOTIONED", "PRESS_FORWARD"]
-#var CM_walk: Resource = preload("res://combat/move_actions/common/MR_WALK.tres")
-#var CM_be_ext_motioned: Resource = preload("res://combat/move_actions/common/MR_BE_EXT_MOTIONED.tres")
-#var CM_press_forward: Resource = preload("res://combat/move_actions/common/MR_PRESS_FORWARD.tres")
 
 # ---
 
 func _ready():
 	
-	for key in cm.keys():
-		var move: MoveAction = cm[key]
+	for key in CM.keys():
+		var move: MoveAction = CM[key]
 		move.do_startup_config()
 	
 	pass

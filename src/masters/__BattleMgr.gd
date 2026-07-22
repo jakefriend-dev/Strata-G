@@ -464,8 +464,8 @@ func flush_move_details():
 	pass
 
 func reset_common_moves():
-	for key in loader.cm.keys():
-		var move: MoveAction = loader.cm[key]
+	for key in loader.CM.keys():
+		var move: MoveAction = loader.CM[key]
 		move.restage_MPD()
 	pass
 
@@ -1347,7 +1347,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 		move.restage_MPD()
 	
 	if actor is ActorPlayer:
-		if move == loader.cm["WALK"]: return # Walking isn't real! No previews!
+		if move == loader.CM["WALK"]: return # Walking isn't real! No previews!
 		actor.limited_run_move_preview(move)
 	pass
 
