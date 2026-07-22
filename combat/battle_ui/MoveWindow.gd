@@ -243,7 +243,7 @@ func CUSTOM_goto_common_move_menu():
 					moveopt.move = loader.cm["PRESS_FORWARD"]
 					moveopt.move.actor = batman.curr_actor
 					moveopt.move.plausible_variants = strife.aimflower_vectors_from_file(moveopt.move.option_image.resource_path)
-					moveopt.move.initialize_MPD()
+					moveopt.move.restage_MPD()
 		
 		pass
 	

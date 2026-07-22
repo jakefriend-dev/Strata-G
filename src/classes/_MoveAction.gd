@@ -118,12 +118,13 @@ var config_complete: bool = false
 func do_startup_config():
 	if config_complete: return
 	config_complete = true # One-time - maybe validation overkill, but in case of duplicates.
+#	print(self,".do_startup_config()")
 	
 	if resource_name == "":
 		resource_name = utils.get_resource_name(self)
 	
 	set_local_to_scene(true)
-	initialize_MPD()
+	restage_MPD()
 	
 	plausible_variants = strife.aimflower_vectors_from_file(option_image.resource_path)
 	
@@ -131,7 +132,7 @@ func do_startup_config():
 		strife.connect("notable_combatstate_event", self, "update_telegraph_previews")
 	pass
 
-func run_validation_pass() -> bool:
+func run_validation_pass(print_soft_errors: bool = false) -> bool:
 	if !has_method("PREVIEW"):
 		if !utils.actorpass(actor):
 			if req_successful_preview:
@@ -164,7 +165,7 @@ func run_validation_pass() -> bool:
 	
 	if req_successful_telegraph:
 		if !has_method("RE_PREVIEW"):
-			print(self," can't find RE_PREVIEW() method! Allowed to bypass via re-running PREVIEW... *SOFT* error!")
+			if print_soft_errors: print(self," can't find RE_PREVIEW() method! Allowed to bypass via re-running PREVIEW... *SOFT* error!")
 #			return false
 	
 	return true
@@ -298,7 +299,7 @@ func update_telegraph_previews():
 		call("RE_PREVIEW")
 	elif has_method("PREVIEW"):
 		# We DO clear here, because we're starting from scratch.
-		clear_MPD()
+		restage_MPD()
 		actor.release_targeted_tiles()
 		call("PREVIEW")
 	else:
@@ -307,7 +308,7 @@ func update_telegraph_previews():
 		pass
 	
 	if !passfail:
-		clear_MPD()
+		restage_MPD()
 		actor.release_targeted_tiles()
 		actor.telegraphed_move = null
 		actor.emit_signal("on_telegraph_failed", self)
@@ -411,13 +412,10 @@ func _to_string() -> String:
 
 # ActionPreviewData method dump! -----------------------------------------------
 
-func initialize_MPD():
-	sets = Array2D.new()
-	sets.resize(COLS.size(), ROWS.size())
-	clear_MPD() # Also sets up arrays
-	pass
-
-func clear_MPD():
+func restage_MPD(): # Replaces BOTH initialize_MPD() and clear_MPD() of olde
+	if sets == null: # One-time setup
+		sets = Array2D.new()
+		sets.resize(COLS.size(), ROWS.size())
 	
 	passfail = false
 	ready_to_use = false

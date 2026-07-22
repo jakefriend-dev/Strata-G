@@ -463,7 +463,7 @@ func flush_move_details():
 func reset_common_moves():
 	for key in loader.cm.keys():
 		var move: MoveAction = loader.cm[key]
-		move.initialize_MPD() # Technically a more complex 'clear'
+		move.restage_MPD()
 	pass
 
 func load_battle_details():
@@ -1265,7 +1265,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 #	print("BATMAN.progress_action_queue()")
 	last_execution_frame = get_tree().get_frame()
 	acting_actor = null
-	reset_common_moves()
+#	reset_common_moves() # Nah, this actually gets auto-called post-actionstep by clean_all_MPDs_between_actionstep_batches()
 	
 	
 	emit_signal("about_to_progress_actionqueue")
@@ -1344,21 +1344,21 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	if move.req_successful_telegraph:
 		if methodname == "ACT":
-#			print("Doing cleanup on ended actionstep's move ",move,"!")
-			move.clear_MPD()
+			print("Doing cleanup on ended actionstep's move ",move,"!")
+			move.restage_MPD()
 	else:
-#		print("Doing cleanup on ended actionstep's move ",move,"!")
-		move.clear_MPD()
+		print("Doing cleanup on ended actionstep's move ",move,"!")
+		move.restage_MPD()
 	pass
 
 func clean_all_MPDs_between_actionstep_batches():
 	# Okay, so this fires RIGHT BEFORE Actor.choose_action()
-#	print("BATMAN: clean_all_MPDs_between_actionstep_batches()")
+	print("BATMAN.clean_all_MPDs_between_actionstep_batches()")
 	for actor in living_actors: if utils.actorpass(actor):
 		for key in actor.moveset.keys():
 			var move: MoveAction = actor.moveset[key]
 			if move.req_successful_telegraph: continue
-			move.clear_MPD()
+			move.restage_MPD()
 	
 	reset_common_moves()
 	pass

@@ -27,7 +27,7 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 #	print("running move preview for ",move)
 	if move == null: return
 	
-	move.clear_MPD()
+	move.restage_MPD()
 	move.prepare_actualized_variants()
 	batman.assert_player_variant_against_move(move, is_brand_new_move_selected)
 	

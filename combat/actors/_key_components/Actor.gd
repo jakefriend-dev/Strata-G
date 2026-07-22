@@ -329,14 +329,15 @@ func clear_all_move_previews():
 	if batman.curr_actor != self: return
 	support.de_ghost_all_actors()
 	
+	print("Actor.clear_all_move_previews()")
 	for key in moveset.keys():
-		moveset[key].clear_MPD()
+		moveset[key].restage_MPD()
 	pass
 
 func clear_telegraphed_move():
 	if telegraphed_move == null: return
 	
-	telegraphed_move.clear_MPD()
+	telegraphed_move.restage_MPD()
 	telegraphed_move = null
 	pass
 
