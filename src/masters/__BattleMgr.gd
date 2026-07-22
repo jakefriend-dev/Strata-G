@@ -1186,7 +1186,7 @@ func cycle_player_variant_backward():
 func vet_action(action: Array) -> bool:
 	# We expect 2-3 values: A valid actor, a valid method in that actor's script, and *optionally*, an array of param data for the method. The array is allowed to be missing or empty, and can have whatever in it. HOWEVER, in any situation where no paramset is sent, we add an empty array for consistency. A validated action DOES have 3 params.
 	
-	if action.size() != 2 and action.size() != 3:
+	if action.size() != 2:
 		print("BATMAN: vet_action(",action,") failed: Array is the wrong size")
 		return false
 	
@@ -1217,16 +1217,11 @@ func vet_action(action: Array) -> bool:
 	
 	# We DON'T worry about move validation here, because we're careful with common moves already being set up right, and actors run local validation on their moves already.
 	
-	if action.size() == 3:
-		if not action[2] is Array:
-			print("BATMAN: vet_action(",action,") failed: Third param is not an Array")
-			return false
-	
 	return true
 	pass
 
-func append_action(actor: Actor, move: MoveAction, paramset: Array = []):
-	var action: Array = [actor, move, paramset]
+func append_action(actor: Actor, move: MoveAction):
+	var action: Array = [actor, move]
 	if !vet_action(action):
 		return
 	
@@ -1234,12 +1229,12 @@ func append_action(actor: Actor, move: MoveAction, paramset: Array = []):
 	action_queue.append(action)
 	pass
 
-func reaction(actor: Actor, move: MoveAction, paramset: Array = []):
-	insert_action(0, actor, move, paramset)
+func reaction(actor: Actor, move: MoveAction):
+	insert_action(0, actor, move)
 	pass
 
-func insert_action(position: int, actor: Actor, move: MoveAction, paramset: Array = []):
-	var action: Array = [actor, move, paramset]
+func insert_action(position: int, actor: Actor, move: MoveAction):
+	var action: Array = [actor, move]
 	if !vet_action(action):
 		return
 	
@@ -1248,7 +1243,7 @@ func insert_action(position: int, actor: Actor, move: MoveAction, paramset: Arra
 		position = 0
 	elif position > action_queue.size():
 		print("BATMAN: Invalid index insert_action(",action,", ",position,"), appending instead!")
-		append_action(actor, move, paramset)
+		append_action(actor, move)
 		return
 	
 	# Validations complete
@@ -1309,7 +1304,6 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	var player_flag: bool = (actor is ActorPlayer)
 	var move: MoveAction = curr_action[1]
 	var logname: String = str(move)
-	var paramset: Array = curr_action[2]
 	
 	var methodname: String = "ACT"
 	if !player_flag:
@@ -1332,21 +1326,15 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 		field.movewindow.refresh_all()
 	
 	# Execute!
-	if paramset.empty():
-		move.call(methodname)
-	else:
-		# We can't know how many parameters the method is expecting; we have to expect issue upon failure, alas.
-		move.callv(methodname, paramset)
+	move.call(methodname)
 	
-	# Great success! It's the actor's job to cue end_action()/end_telegraph() from here.
-	
+	# Great success! It's the actor's job to MANUALLY cue end_action()/end_telegraph() from here.
 	
 	yield(self, "ready_to_choose_next_unit_action")
 	if this_aq_call != aq_call_count:
 		print("BATMAN: After progressing actionqueue, AQ call ",this_aq_call," yielded until it was a different AQ call (",aq_call_count)
 		return
-#	yield(VisualServer, "frame_pre_draw")
-#	yield(VisualServer, "frame_post_draw")
+	
 	# CONDITIONAL cleanup!
 	if !utils.actorpass(actor): return
 	
@@ -1359,7 +1347,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 		move.restage_MPD()
 	
 	if actor is ActorPlayer:
-		if move == loader.cm["WALK"]: return # Walking isn't real!
+		if move == loader.cm["WALK"]: return # Walking isn't real! No previews!
 		actor.limited_run_move_preview(move)
 	pass
 
