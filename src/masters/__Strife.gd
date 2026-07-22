@@ -376,123 +376,123 @@ func do_quiet_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: A
 	# skip_own_faction: Typically FF is default-on; this would bypass that
 
 func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: Array, is_quiet: bool):
-	if motion == Vector2.ZERO: return
-	if !utils.actorpass(defender): return # Attacker is allowed to be null, though!
-	
-	var og_motion: Vector2 = motion
-	if !support.is_motion_a_line(motion): # Just a safety check, SHOULD never actually happen
-		motion = support.lineize_motion(motion)
-		print("STRIFE: Had to line-ize incoming motion ",og_motion," into ",motion)
-	
-	var attacker_is_real: bool = false
-	if utils.actorpass(attacker):
-		attacker_is_real = true
-	
-	var friendly_fire: bool = true
-	if flags.has("skip_own_faction"): friendly_fire = false
-	if !friendly_fire:
-		if attacker_is_real:
-			if attacker.faction == defender.faction:
-				return
-	
-	#
-	# Check resistances!
-	#
-	
-	var successful_motion: bool = false
-	var on_ice: bool = bool(
-		batman.grid_tiles.get_cellv(defender.coord) == batman.tiletypes.ICE)
-	
-	if is_affected_by_force(defender):
-		successful_motion = true
-	elif (
-		on_ice and
-		is_affected_by_ice(defender) and
-		defender.is_on_ground and
-		defender.weight != defender.weightclasses.HOVER):
-			# Even a 'force-immune' enemy on the ground gets pushed while on ice!
-			successful_motion = true
-	
-	if !successful_motion: return
-	
-	#
-	# Work out if we can move, and if so how far (and track it all!)
-	#
-	
-	var unspent_motion: Vector2 = motion
-	var spent_motion: Vector2 = Vector2.ZERO
-	
-	var tilemove_successes: int = 0
-	var tilemove_failures: int = 0
-	
-	var loops: int = 0 # 1-based, shortly
-	var max_loops: int = support.get_steps_in_vector_line_int(motion)
-	var step: Vector2 = motion.normalized().round()
-	var check_tile_rel: Vector2 = Vector2.ZERO
-	
-	while !unspent_motion.is_equal_approx(Vector2.ZERO):
-		loops += 1
-		if loops > max_loops:
-			loops = max_loops
-			print("MAX LOOPS REACHED! Unspent motion: ",unspent_motion)
-			break
-		
-		# If we've already failed, don't bother with check logic - the rest is necessarily also a fail, and we already know our final spent_motion.
-		if tilemove_failures > 0:
-			tilemove_failures += 1
-			continue
-		
-		# Last validation check to make sure we're still on the board
-		check_tile_rel += step
-		var check_tile_exact: Vector2 = defender.coord + check_tile_rel
-		if !batman.grid_tiles.has_cellv(check_tile_exact): # (Unless we're off the board)
-			tilemove_failures += 1
-			continue
-		
-		#
-		# Okay, NOW we're still in the game!
-		#
-		
-		# Finally, if we're ABLE to exist on that tile, spend the motion; otherwise continue
-		if support.is_tile_traversable_exact(defender, check_tile_exact):
-			tilemove_successes += 1
-			spent_motion += step
-			unspent_motion -= step
-			continue
-		else:
-			tilemove_failures += 1
-			continue
-		pass
-	
-	print("STRIFE: Worked out that master_do_motion(",attacker,", ",defender,", ",motion,", ",flags,") was able to push the defender ",tilemove_successes," steps with spent_motion ",spent_motion," and ",tilemove_failures," step failures!")
-	
-	#
-	# At this point, we should now know our destination tile and how far we *couldn't* move
-	#
-	
-	var do_knockback: bool = flags.has("knockback")
-	var knockback_damage: int = 0
-	if do_knockback:
-		knockback_damage = (tilemove_failures * batman.BASE_HP_FACTOR)
-	
-	# No motion??
-	if spent_motion.is_equal_approx(Vector2.ZERO):
-		if knockback_damage == 0:
-			# We failed to move anyone or deal knockback damage - why react?
-			return
-		
-		# Otherwise, we have knockback and no motion - there's no need to wait for movement; trigger the impact and signals now then skip the reaction movement
-		if attacker_is_real:
-			attacker.emit_signal("knockback_damaged_other_actor", self, knockback_damage)
-		defender.emit_signal("was_knockback_damaged_by_external", knockback_damage)
-		do_impact_damage(attacker, defender, knockback_damage, flags)
-		return
-	
-	# The is_quiet signalling actually needs to happen when the ACTION STEP begins, not the moment (mid-attacker's action step) this connects - and dealing damage needs to wait until the motion ends! So for now, just create the reaction and forward the details to there.
-	
-	batman.reaction(defender, loader.cm["BE_EXT_MOTIONED"], [
-		spent_motion, knockback_damage, attacker, is_quiet, flags
-		])
+#	if motion == Vector2.ZERO: return
+#	if !utils.actorpass(defender): return # Attacker is allowed to be null, though!
+#
+#	var og_motion: Vector2 = motion
+#	if !support.is_motion_a_line(motion): # Just a safety check, SHOULD never actually happen
+#		motion = support.lineize_motion(motion)
+#		print("STRIFE: Had to line-ize incoming motion ",og_motion," into ",motion)
+#
+#	var attacker_is_real: bool = false
+#	if utils.actorpass(attacker):
+#		attacker_is_real = true
+#
+#	var friendly_fire: bool = true
+#	if flags.has("skip_own_faction"): friendly_fire = false
+#	if !friendly_fire:
+#		if attacker_is_real:
+#			if attacker.faction == defender.faction:
+#				return
+#
+#	#
+#	# Check resistances!
+#	#
+#
+#	var successful_motion: bool = false
+#	var on_ice: bool = bool(
+#		batman.grid_tiles.get_cellv(defender.coord) == batman.tiletypes.ICE)
+#
+#	if is_affected_by_force(defender):
+#		successful_motion = true
+#	elif (
+#		on_ice and
+#		is_affected_by_ice(defender) and
+#		defender.is_on_ground and
+#		defender.weight != defender.weightclasses.HOVER):
+#			# Even a 'force-immune' enemy on the ground gets pushed while on ice!
+#			successful_motion = true
+#
+#	if !successful_motion: return
+#
+#	#
+#	# Work out if we can move, and if so how far (and track it all!)
+#	#
+#
+#	var unspent_motion: Vector2 = motion
+#	var spent_motion: Vector2 = Vector2.ZERO
+#
+#	var tilemove_successes: int = 0
+#	var tilemove_failures: int = 0
+#
+#	var loops: int = 0 # 1-based, shortly
+#	var max_loops: int = support.get_steps_in_vector_line_int(motion)
+#	var step: Vector2 = motion.normalized().round()
+#	var check_tile_rel: Vector2 = Vector2.ZERO
+#
+#	while !unspent_motion.is_equal_approx(Vector2.ZERO):
+#		loops += 1
+#		if loops > max_loops:
+#			loops = max_loops
+#			print("MAX LOOPS REACHED! Unspent motion: ",unspent_motion)
+#			break
+#
+#		# If we've already failed, don't bother with check logic - the rest is necessarily also a fail, and we already know our final spent_motion.
+#		if tilemove_failures > 0:
+#			tilemove_failures += 1
+#			continue
+#
+#		# Last validation check to make sure we're still on the board
+#		check_tile_rel += step
+#		var check_tile_exact: Vector2 = defender.coord + check_tile_rel
+#		if !batman.grid_tiles.has_cellv(check_tile_exact): # (Unless we're off the board)
+#			tilemove_failures += 1
+#			continue
+#
+#		#
+#		# Okay, NOW we're still in the game!
+#		#
+#
+#		# Finally, if we're ABLE to exist on that tile, spend the motion; otherwise continue
+#		if support.is_tile_traversable_exact(defender, check_tile_exact):
+#			tilemove_successes += 1
+#			spent_motion += step
+#			unspent_motion -= step
+#			continue
+#		else:
+#			tilemove_failures += 1
+#			continue
+#		pass
+#
+#	print("STRIFE: Worked out that master_do_motion(",attacker,", ",defender,", ",motion,", ",flags,") was able to push the defender ",tilemove_successes," steps with spent_motion ",spent_motion," and ",tilemove_failures," step failures!")
+#
+#	#
+#	# At this point, we should now know our destination tile and how far we *couldn't* move
+#	#
+#
+#	var do_knockback: bool = flags.has("knockback")
+#	var knockback_damage: int = 0
+#	if do_knockback:
+#		knockback_damage = (tilemove_failures * batman.BASE_HP_FACTOR)
+#
+#	# No motion??
+#	if spent_motion.is_equal_approx(Vector2.ZERO):
+#		if knockback_damage == 0:
+#			# We failed to move anyone or deal knockback damage - why react?
+#			return
+#
+#		# Otherwise, we have knockback and no motion - there's no need to wait for movement; trigger the impact and signals now then skip the reaction movement
+#		if attacker_is_real:
+#			attacker.emit_signal("knockback_damaged_other_actor", self, knockback_damage)
+#		defender.emit_signal("was_knockback_damaged_by_external", knockback_damage)
+#		do_impact_damage(attacker, defender, knockback_damage, flags)
+#		return
+#
+#	# The is_quiet signalling actually needs to happen when the ACTION STEP begins, not the moment (mid-attacker's action step) this connects - and dealing damage needs to wait until the motion ends! So for now, just create the reaction and forward the details to there.
+#
+#	batman.reaction(defender, loader.cm["BE_EXT_MOTIONED"], [
+#		spent_motion, knockback_damage, attacker, is_quiet, flags
+#		])
 	pass
 
 
