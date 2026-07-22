@@ -7,10 +7,10 @@
 resource_local_to_scene = true
 resource_name = "BE_EXT_MOTIONED"
 script = ExtResource( 1 )
-display_name = ""
-shorthand_name = ""
-short_desc = ""
-display_desc = ""
+display_name = "External-Force Travel"
+shorthand_name = "Ext Travel"
+short_desc = "Being moved by another"
+display_desc = "Internal use move representing when "
 option_image = ExtResource( 2 )
 option_desc = ""
 cost = 1

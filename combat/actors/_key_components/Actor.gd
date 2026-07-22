@@ -26,8 +26,6 @@ export (initspeeds) var third_initiative: int = initspeeds.DOES_NOT_ACT
 	# An actor can optionally have up to 3 turns, for a boss; matching the party
 var variance_initiative: float  = -1.0 # Cued by batman at start of combat; percentage from 0-99%
 
-#const global_moves: Array = ["walk", "be_external_motioned"]
-
 var active: bool = true # When false, cannot act. Depletion of health should auto-set this, unless we want someone to have a post-death action, or a post-death health increase reaction for a second phase.
 
 export (int, 1, 52) var max_health: int = 4 # Pre-factoring
@@ -141,7 +139,7 @@ var moveset: Dictionary = {} # Post-validation
 var move_layout: Array2D # ONLY used by ActorPlayer!
 export (Array, Resource) var loaded_moves: Array = [null, null, null, null, null, null, null] # Can manually change this for ActorEnemy but leave as 7 by default; shouldn't exceed 7 for ActorPlayer
 
-var LM: Dictionary = {} # Local moves include WALK and BE_EXT_MOTIONED
+var LM: Dictionary = {} # Local moves include WALK and EXT_TRAVEL
 
 var is_ghost: bool = false # When true, allowed to break many rules. You almost ALWAYS turn this off at the end of a turn; meant as a temporary thing for like a charge-through attack.
 var just_exited_ghost_mode: bool = false # Helps us bypass some errors
@@ -992,6 +990,7 @@ func quip(text: String):
 
 # -
 
+# "HOT" MOVEMENT BEHAVIOURS, aka handy shortcuts for standard movements!
 
 func hotmove(to_coord: Vector2, dur: float):
 	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_CIRC, Tween.EASE_IN_OUT)
@@ -1003,8 +1002,25 @@ func hotpushed(to_coord: Vector2, dur: float):
 	tween.start()
 	pass
 
-func hotknockbacked(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_value: int):
-	print(name,": hotknockbacked(",attacker,", ",relvec,", ",dur,", ",total_kb_dmg_value,")")
+func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
+	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	
+	tween.interpolate_property(self, "z", null, height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	tween.interpolate_property(self, "z", height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
+
+#	tween.interpolate_property(vis_object, "position:y", null, -height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
+#	tween.interpolate_property(vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
+
+	tween.start()
+	pass
+
+func hotpush_n_collide():
+	
+	pass
+
+# The actor DOESN'T ACTUALLY CHANGE COORDINATES - just a bump in place!
+func hotcollide_in_place(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_value: int):
+	print(name,": hotcollide_in_place(",attacker,", ",relvec,", ",dur,", ",total_kb_dmg_value,")")
 	
 	relvec = relvec.normalized()
 	var dur1_3: float = dur/3.0
@@ -1028,17 +1044,6 @@ func hotknockbacked(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_v
 	
 	pass
 
-func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
-	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
-	
-	tween.interpolate_property(self, "z", null, height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
-	tween.interpolate_property(self, "z", height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
-
-#	tween.interpolate_property(vis_object, "position:y", null, -height, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_OUT)
-#	tween.interpolate_property(vis_object, "position:y", -height, 0.0, dur/2.0,Tween.TRANS_CUBIC, Tween.EASE_IN, dur/2.0)
-
-	tween.start()
-	pass
 
 func ACT_walk(motion: Vector2):
 #	print("walk")

@@ -1,30 +1,64 @@
 extends MoveAction
 
+var motion: Vector2
+var attacker: Actor
+var attacker_is_real: bool
 
+var action_type: String = ""
+var knockback_damage: int = 0
 
-func PREVIEW():
-#
-#	var check_vector: Vector2 = batman.loaded_variant
-#
-#	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
-#	if !unoccupieds.empty():
-#		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
-#
-#	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, check_vector)
-#	if !utils.actorpass(victim): return
-#
-#	add_actor(victim, ROWS.BAD)
-#	passfail = true
+var flags: Array = []
+
+# ---
+
+func reset_before_feeding_data():
+	motion = Vector2.ZERO
+	attacker = null
+	attacker_is_real = false
+	action_type = ""
+	knockback_damage = 0
+	flags = []
 	pass
 
+# -
+
+#func PREVIEW(): # All our validation is handled by Strife.master_do_motion!
+#	pass
+
 func ACT():
-#	# Shoot a target in your line-of-sight; higher damage per tile travelled
-#	var victim: Actor = get_first_actor_by_MPD_type(ROWS.BAD)
-#
-#	if utils.actorpass(victim):
-#		strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(base_damage), ["piercing"])
-#		strife.quick_vfx(victim, "spark_burst")
+	match action_type:
+		"recoil_in_place":
+			ACT_recoil_in_place()
+			return
+		"push_collision":
+			ACT_push_collision()
+			return
+		"push_smooth":
+			ACT_push_smooth()
+			return
+	end_action()
+	pass
+
+func ACT_recoil_in_place():
+	
 	
 	end_action()
 	pass
 
+func ACT_push_collision():
+	
+	
+	end_action()
+	pass
+
+func ACT_push_smooth():
+	
+	
+	end_action()
+	pass
+
+
+
+
+
+#do_impact_damage(attacker, defender, knockback_damage, flags)
