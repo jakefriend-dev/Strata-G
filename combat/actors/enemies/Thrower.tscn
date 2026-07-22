@@ -61,7 +61,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="Thrower" type="Node2D"]
 script = ExtResource( 1 )
 max_shield = 2
-ofc_name = "Thrower"
+display_name = "Thrower"
 base_action_points = 3
 def_weight = 3
 tile_walk_speed = 0.25

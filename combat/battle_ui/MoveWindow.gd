@@ -232,8 +232,8 @@ func CUSTOM_goto_common_move_menu():
 			
 			match count:
 				1:
-					moveopt.nonmove_display_name = str(batman.curr_actor.ofc_name," MVs")
-					moveopt.nonmove_tooltip = str("Review ",batman.curr_actor.ofc_name,"'s moves")
+					moveopt.nonmove_display_name = str(batman.curr_actor.display_name," MVs")
+					moveopt.nonmove_tooltip = str("Review ",batman.curr_actor.display_name,"'s moves")
 					moveopt.nonmove_function = "goto_local_move_menu"
 				2:
 					moveopt.nonmove_display_name = "Check Bag"

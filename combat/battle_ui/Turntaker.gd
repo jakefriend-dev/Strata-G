@@ -92,8 +92,8 @@ func update_values():
 	# Section here for portrait, *eventually!*
 	
 	# Name
-	if namelabel.text != actor.ofc_name:
-		namelabel.text = actor.ofc_name
+	if namelabel.text != actor.display_name:
+		namelabel.text = actor.display_name
 	
 	# Healthbar
 	var hp_percent: float = float(actor.health)/float(actor.max_health)
@@ -197,7 +197,7 @@ func update_visible():
 		visible = (effective_state >= PORTRAIT)
 	
 	if utils.actorpass(actor):
-		portrait_art.visible = (actor.ofc_name == "Mage")
+		portrait_art.visible = (actor.display_name == "Mage")
 	
 	if nameplate.visible != (effective_state >= NAME):
 		nameplate.visible = (effective_state >= NAME)

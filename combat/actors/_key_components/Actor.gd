@@ -37,7 +37,7 @@ var base_health_pips: int = 4 # Updated ONCE by max health and that's it!
 export var max_shield: int = 0 # Actually "base/starting" shield; max is 16 (4 pips) no matter what for all actors.
 var shield: int = 0
 
-export var ofc_name: String = "--"
+export var display_name: String = "--"
 var numerated_name: String = ""
 
 enum bui_tiers {FULL, JUST_PIPS, JUST_HEALTH, INVIS_UNTIL_HIT, NOTHING_EVER}
@@ -1141,12 +1141,12 @@ func ACT_be_external_motioned(motion: Vector2, knockback_damage: int, attacker: 
 # -
 
 func get_multifactored_actor_name() -> String:
-	if !batman.unique_actornames_observed.has(ofc_name):
-		return ofc_name
+	if !batman.unique_actornames_observed.has(display_name):
+		return display_name
 	
-	var qty: int = batman.unique_actornames_observed[ofc_name]
+	var qty: int = batman.unique_actornames_observed[display_name]
 	if qty == 1:
-		return ofc_name
+		return display_name
 	
 	return numerated_name
 	pass
@@ -1198,8 +1198,8 @@ func x_facing() -> int: # Shortcut for the X-facing dir
 	return 0
 
 func _to_string() -> String:
-	if ofc_name != "--":
-		return ofc_name
+	if display_name != "--":
+		return display_name
 	else:
 		return name
 

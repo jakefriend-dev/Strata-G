@@ -68,7 +68,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="Bard" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 7
-ofc_name = "Bard"
+display_name = "Bard"
 base_action_points = 6
 faction = 1
 def_immune_shrub = true

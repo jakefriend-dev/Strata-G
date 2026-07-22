@@ -63,7 +63,7 @@ var turnqueue: Array = [
 		# actor						Null if no longer relevant, otherwise an Actor
 		# init						Float; The original initiative roll (eg. 5.72013)
 		# has_finished_turn			Bool that fires once its turn is complete
-		# ofc_name					Direct from the actor's ofc_name
+		# display_name					Direct from the actor's display_name
 		# numerated_name			As "Doggo 1" with a space and all, even if there's only 1
 		# numeration				Int; the 1 in Doggo 1
 		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
@@ -641,7 +641,7 @@ func roll_initiative():
 			actorcount += 1 # We just don't count rocks
 		
 		var count_of_type: int = 1
-		var n: String = actor.ofc_name
+		var n: String = actor.display_name
 		if !unique_actornames_observed.has(n):
 			unique_actornames_observed[n] = 1
 		else:
@@ -660,7 +660,7 @@ func roll_initiative():
 			turndata["init"] = init
 			turndata["has_finished_turn"] = false
 			
-			turndata["ofc_name"] = n
+			turndata["display_name"] = n
 			turndata["numerated_name"] = numerated_name
 			turndata["numeration"] = count_of_type
 			turndata["turncount_of_this_actor"] = initcount # Typically 1, could be 2 or 3 for bosses
@@ -780,7 +780,7 @@ func cycle_to_next_turn():
 func do_preturn_visuals(mtext: String):
 	emit_signal("turnqueue_updated")
 	if mtext != "": # Means it's not the first round
-		var unit_name: String = curr_actor.ofc_name
+		var unit_name: String = curr_actor.display_name
 		field.show_major_text(unit_name, mtext)
 	
 	# TurnWindow scoot_time is (currently) 0.25, and a maximum sequence length would be half that times 3 for 0.375. So if we consistently hold a longer window than that here, we can ignore the turnwindow signal.
@@ -1036,7 +1036,7 @@ func get_printable_roundturncount() -> String:
 	pass
 
 func get_printable_turntaker_name(turndata: Dictionary) -> String:
-	var name_unnum: String = turndata["ofc_name"]
+	var name_unnum: String = turndata["display_name"]
 	var name_num: String = turndata["numerated_name"]
 	
 	if !unique_actornames_observed.has(name_unnum):
@@ -1319,7 +1319,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	acting_actor = actor # For async ref
 	
 	# Log the action BEFORE executing
-	var logline: String = str("[",actor.ofc_name,"] --> ",logname)
+	var logline: String = str("[",actor.display_name,"] --> ",logname)
 	update_action_log(logline)
 	emit_signal("any_actionstep_initiated")
 	if curr_actor is ActorPlayer:
@@ -1567,7 +1567,7 @@ func kill_actor(actor: Actor):
 		ghost_actors.erase(actor)
 	if living_actors.has(actor):
 		living_actors.erase(actor)
-	slain_actors.append(actor.ofc_name) # This can maybe be improved later if enemies have local XP
+	slain_actors.append(actor.display_name) # This can maybe be improved later if enemies have local XP
 	
 	# Remove the actor from the turnqueue
 	remove_all_turns_of_actor(actor)

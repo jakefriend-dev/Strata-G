@@ -143,8 +143,8 @@ func populate_actors():
 		var actor: Node2D = res_actor.instance()
 		
 		actor.set("position", gpos)
-		if actor.get("ofc_name") == "--":
-			actor.set("ofc_name", actor.get("name"))
+		if actor.get("display_name") == "--":
+			actor.set("display_name", actor.get("name"))
 		if midpath == "player_chars":
 			actor.set("faction", batman.factions.PLAYER)
 		elif midpath == "enemies":

@@ -378,7 +378,7 @@ func are_actors_adjacent(a: Actor, b: Actor) -> bool:
 
 func get_first_actor_by_name(nstring: String, must_be_alive: bool = true) -> Actor:
 	for a in batman.actors.get_children(): if a is Actor:
-		if a.ofc_name == nstring:
+		if a.display_name == nstring:
 			if must_be_alive:
 				if a.health > 0:
 					return a

@@ -77,7 +77,7 @@ func failquip(anyactor: Actor, text: String):
 func ACT():
 	# Get the effect, then end TURN (not action).
 	actor.quip("We press forward!")
-#	actor.quip(str(actor.ofc_name," presses forward!"))
+#	actor.quip(str(actor.display_name," presses forward!"))
 	actor.start_status("pressuring_frontline")
 	batman.pressuring_actor = actor
 	

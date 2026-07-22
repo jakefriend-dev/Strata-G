@@ -16,7 +16,7 @@ var max_list_qty_inclusive: int = 9
 		# actor						Null if no longer relevant, otherwise an Actor
 		# init						Float; The original initiative roll (eg. 5.72013)
 		# has_finished_turn			Bool that fires once its turn is complete
-		# ofc_name					Direct from the actor's ofc_name
+		# display_name					Direct from the actor's display_name
 		# numerated_name			As "Doggo 1" with a space and all, even if there's only 1
 		# numeration				Int; the 1 in Doggo 1
 		# turncount_of_this_actor	Int; 1 by default and a boss could have 2 or 3
