@@ -1338,6 +1338,8 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	# CONDITIONAL cleanup!
 	if !utils.actorpass(actor): return
 	
+	if methodname == "ACT": actor.release_targeted_tiles()
+	
 	if move.req_successful_telegraph:
 		if methodname == "ACT":
 #			print("Doing cleanup on ended actionstep's move ",move,"!")

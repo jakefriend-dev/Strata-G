@@ -240,6 +240,9 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 			else:
 				callv("PREVIEW", params)
 		
+		if !passfail:
+			if !utils.actorpass(actor):
+				actor.release_targeted_tiles()
 		return passfail
 	
 	if req_successful_telegraph:
@@ -253,6 +256,9 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 			call("RE_PREVIEW")
 		else:
 			callv("RE_PREVIEW", params)
+		if !passfail:
+			if !utils.actorpass(actor):
+				actor.release_targeted_tiles()
 		return passfail
 	
 	passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
@@ -261,6 +267,9 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 			call("PREVIEW")
 		else:
 			callv("PREVIEW", params)
+		if !passfail:
+			if !utils.actorpass(actor):
+				actor.release_targeted_tiles()
 		return passfail
 	
 	return true # Otherwise, by default assume if no conditions need to be met, we're good to go!
@@ -400,7 +409,8 @@ func end_turn():
 
 func end_telegraph():
 	if utils.actorpass(actor):
-		actor.set_targeted_tiles(get_all_cells_by_MPD_type(ROWS.BAD)) # This is the OVERWRITE function, not append, jfyi! So no need to release first	
+		actor.set_targeted_tiles(get_all_cells_by_MPD_type(ROWS.BAD)) # This is the OVERWRITE function, not append, jfyi! So no need to release first
+		print(actor.name,"'s targeted tiles: ",actor.targeted_tiles)
 		
 		if batman.is_my_action(actor):
 			end_action()
