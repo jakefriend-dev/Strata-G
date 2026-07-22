@@ -33,6 +33,7 @@ func ACT():
 		# Again, shouldn't be possible, but w/e
 		strife.quick_vfx(victim, "quick_bad")
 		victim.start_status("calcified")
+		actor.log_hit()
 	
 	end_action()
 	pass

@@ -39,6 +39,7 @@ func PREVIEW():
 func ACT():
 	# We KNOW there' a victim, because if there wasn't, we couldn't have passed the preview check
 	var victim: Actor = get_first_actor_by_MPD_type(ROWS.NEUTRAL)
+	actor.log_hit()
 	
 	# Data setup!
 	var motion: Vector2 = batman.loaded_variant

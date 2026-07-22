@@ -43,6 +43,7 @@ func ACT():
 	var target: Vector2 = actor.coord + check_vector
 	var og_tile: Vector2 = actor.coord
 	var victim: Actor = support.get_actor_at_cellv(target)
+	actor.log_hit()
 	
 	actor.ghost_mode(true, victim.coord, true)
 	victim.ghost_mode(true, actor.coord, true)

@@ -30,6 +30,7 @@ func ACT():
 #	print("water lob ACT target: ",target)
 	strife.damage_actor_at_coord(actor, target, actor.dmg(base_damage), ["water_elem"])
 	support.change_tiletype_single(target, batman.tiletypes.ICE)
+	support.log_actorhit_if_occupied(actor, target)
 	
 	end_action()
 	pass

@@ -50,6 +50,7 @@ func ACT():
 	if utils.actorpass(victim):
 		strife.damage_actor_at_coord(actor, victim.coord, actor.dmg(dmg), ["elec_elem"])
 		strife.quick_vfx(victim, "spark_burstdamage")
+		actor.log_hit()
 	
 	end_action()
 	pass

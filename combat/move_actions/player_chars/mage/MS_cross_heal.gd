@@ -26,6 +26,7 @@ func ACT():
 	for target in targets:
 		strife.heal_actor_at_coord(actor, target, 2*batman.BASE_HP_FACTOR)
 		strife.quick_vfx(target, "spark_burst")
+		support.log_actorhit_if_occupied(actor, target)
 	
 	end_action()
 	pass
