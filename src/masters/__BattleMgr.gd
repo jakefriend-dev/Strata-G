@@ -1352,19 +1352,20 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	if move.req_successful_telegraph:
 		if methodname == "ACT":
-			print("Doing cleanup on ended actionstep's move ",move,"!")
+#			print("Doing cleanup on ended actionstep's move ",move,"!")
 			move.restage_MPD()
 	else:
-		print("Doing cleanup on ended actionstep's move ",move,"!")
+#		print("Doing cleanup on ended actionstep's move ",move,"!")
 		move.restage_MPD()
 	
 	if actor is ActorPlayer:
+		if move == loader.cm["WALK"]: return # Walking isn't real!
 		actor.limited_run_move_preview(move)
 	pass
 
 func clean_all_MPDs_between_actionstep_batches():
 	# Okay, so this fires RIGHT BEFORE Actor.choose_action()
-	print("BATMAN.clean_all_MPDs_between_actionstep_batches()")
+#	print("BATMAN.clean_all_MPDs_between_actionstep_batches()")
 	for actor in living_actors: if utils.actorpass(actor):
 		for key in actor.moveset.keys():
 			var move: MoveAction = actor.moveset[key]

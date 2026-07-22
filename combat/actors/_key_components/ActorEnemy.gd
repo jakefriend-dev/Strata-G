@@ -42,15 +42,17 @@ func randomwalk_if_possible(auto_execute_if_true: bool = true) -> bool: # If tru
 		return false
 	
 	var move: MoveAction = loader.cm["WALK"]
+	loader.cm["WALK"].actor = self
+	loader.cm["WALK"].manual_variant = motion
 	
-	if !move.quick_context_passfail_check([self, motion]):
+	if !move.quick_context_passfail_check():
 		return false
 	
 	# Success!
 	if auto_execute_if_true:
 		# Kind of want to compress this into a standard function, but it's ok for now!
 		spend(move)
-		batman.append_action(self, move, [self, motion])
+		batman.append_action(self, move)
 	
 	return true
 	pass

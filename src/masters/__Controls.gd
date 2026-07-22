@@ -25,6 +25,7 @@ var scene_transition_lockdown: bool = true
 
 func _process(_d):
 	if scene_transition_lockdown: return
+	if batman.actions_are_processing: return
 	
 	monitor_gamepad_sticks()
 	monitor_inputs_CORE()

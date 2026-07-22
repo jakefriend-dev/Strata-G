@@ -104,6 +104,7 @@ enum COLS { # LEFT TO RIGHT
 var starting_variant: Vector2
 var actualized_variants: Array = [] # The below list, restricted to only what's situationally possible
 var plausible_variants: Array = [] # ALL the plausible variant vectors, regardless of what might be situationally POSSIBLE
+var manual_variant: Vector2 = Vector2(-99, -99) # Must be manually set immediately before use; like for Walk
 
 var affected_actors: Array = [] # All of em! Just for reference.
 var unique_cells: Array = []
@@ -232,6 +233,7 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 					callv("RE_PREVIEW", params)
 		
 		if !repreviewed:
+			passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
 			if params.empty():
 				call("PREVIEW")
 			else:
@@ -252,6 +254,7 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 			callv("RE_PREVIEW", params)
 		return passfail
 	
+	passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
 	if has_method("PREVIEW"):
 		if params.empty():
 			call("PREVIEW")
@@ -413,6 +416,9 @@ func _to_string() -> String:
 # ActionPreviewData method dump! -----------------------------------------------
 
 func restage_MPD(): # Replaces BOTH initialize_MPD() and clear_MPD() of olde
+	if self == loader.cm["WALK"]:
+		print("WALK: Restaging MPD!")
+	
 	if sets == null: # One-time setup
 		sets = Array2D.new()
 		sets.resize(COLS.size(), ROWS.size())
@@ -421,6 +427,7 @@ func restage_MPD(): # Replaces BOTH initialize_MPD() and clear_MPD() of olde
 	ready_to_use = false
 	unique_cells.clear()
 	affected_actors.clear()
+	manual_variant = Vector2(-99, -99)
 	
 	var x: int = 0
 	for nx in COLS.size():
