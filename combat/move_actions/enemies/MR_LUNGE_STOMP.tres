@@ -29,3 +29,4 @@ telegraph_cost = 2
 telegraph_motion_type = 0
 fracture_on_use = false
 misc = ""
+auto_refresh_MPDs_PCA = false

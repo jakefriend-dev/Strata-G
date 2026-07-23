@@ -8,6 +8,7 @@ var action_type: String = ""
 var knockback_damage: int = 0
 
 var flags: Array = []
+var is_quiet: bool = false
 
 # ---
 
@@ -15,6 +16,7 @@ func reset_before_feeding_data():
 	motion = Vector2.ZERO
 	attacker = null
 	attacker_is_real = false
+	is_quiet = false
 	action_type = ""
 	knockback_damage = 0
 	flags = []

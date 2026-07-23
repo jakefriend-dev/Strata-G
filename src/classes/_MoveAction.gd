@@ -63,6 +63,7 @@ export var misc: String # As of July 18, still not used anywhere...!
 var actor: Actor # Quickref!
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop
 
+export var auto_refresh_MPDs_PCA: bool = true # PCA is "pre choose_action()" which is where the auto-refresh trigger has been moved to!
 
 
 # Preview data's storage (and telegraphs) --------------------------------------
@@ -392,7 +393,9 @@ func prepare_actualized_variants():
 #	print("actualized_variants for ",self," now: ",actualized_variants," when starting_variant: ",starting_variant)
 	pass
 
-func end_action():
+func end_action(ACT_not_PREV: bool = true):
+	if ACT_not_PREV and utils.actorpass(actor):
+		actor.release_targeted_tiles()
 	batman.end_action()
 	pass
 
@@ -407,7 +410,7 @@ func end_telegraph():
 		
 #		print(self,".end_telegraph()")
 		if batman.is_my_action(actor):
-			end_action()
+			end_action(false)
 	pass
 
 var pref: String = "["

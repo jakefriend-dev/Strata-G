@@ -1337,42 +1337,42 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 #	yield(self, "about_to_progress_actionqueue")
 #	print("BATMAN.progress_action_queue(): NEW ACTION on call ",aq_call_count,", frame ",last_execution_frame)
 	
-	yield(self, "ready_to_choose_next_unit_action")
-	
-	"This is problematic if MULTIPLE moves get jammed up here at once, then only the LAST one is allowed to do its actual cleanup!"
-	
-#	print("BATMAN.progress_action_queue(): REACHED READY_TO_CHOOSE ENDSTAGE on call ",aq_call_count,", frame ",get_tree().get_frame())
-	if this_aq_call != aq_call_count:
-#		print("BATMAN: After progressing actionqueue, AQ call ",this_aq_call," yielded until it was a different AQ call (",aq_call_count)
-		# I think this could happen naturally if at the end of a *series* of actionsteps, like Lunge Stomp
-		return
-	
-	# CONDITIONAL cleanup!
-	if !utils.actorpass(actor): return
-	
-	if methodname == "ACT": actor.release_targeted_tiles()
-	
-	if move.req_successful_telegraph:
-		if methodname == "ACT":
-#			print("Doing cleanup on ended actionstep's move ",move,"!")
-			"This is problematic for LUNGE STOMP which requires multiple ACT calls in a row!"
-			move.restage_MPD("BatMan post-action-processing cleanup A")
-	else:
-#		print("Doing cleanup on ended actionstep's move ",move,"!")
-		# ISSUE: This runs AFTER MoveWindow prompts the player with their next preview!
-		if actor is ActorPlayer and actor == curr_actor:
-			# Just a complex "not" condition tbh
-			pass
-		else:
-			move.restage_MPD("BatMan post-action-processing cleanup B")
-	
-	if actor is ActorPlayer:
-		if move == actor.LM["WALK"]: return # Walking isn't real! No previews!
-		if actor == curr_actor:
-			# We don't want to double-run - this will already happen as MoveWindow re-appears!
-			return
-		print("BATMAN.progress_action_queue()")
-		actor.limited_run_move_preview(move)
+#	yield(self, "ready_to_choose_next_unit_action")
+#
+#	"This is problematic if MULTIPLE moves get jammed up here at once, then only the LAST one is allowed to do its actual cleanup!"
+#
+##	print("BATMAN.progress_action_queue(): REACHED READY_TO_CHOOSE ENDSTAGE on call ",aq_call_count,", frame ",get_tree().get_frame())
+#	if this_aq_call != aq_call_count:
+##		print("BATMAN: After progressing actionqueue, AQ call ",this_aq_call," yielded until it was a different AQ call (",aq_call_count)
+#		# I think this could happen naturally if at the end of a *series* of actionsteps, like Lunge Stomp
+#		return
+#
+#	# CONDITIONAL cleanup!
+#	if !utils.actorpass(actor): return
+#
+#	if methodname == "ACT": actor.release_targeted_tiles()
+#
+#	if move.req_successful_telegraph:
+#		if methodname == "ACT":
+##			print("Doing cleanup on ended actionstep's move ",move,"!")
+#			"This is problematic for LUNGE STOMP which requires multiple ACT calls in a row!"
+#			move.restage_MPD("BatMan post-action-processing cleanup A")
+#	else:
+##		print("Doing cleanup on ended actionstep's move ",move,"!")
+#		# ISSUE: This runs AFTER MoveWindow prompts the player with their next preview!
+#		if actor is ActorPlayer and actor == curr_actor:
+#			# Just a complex "not" condition tbh
+#			pass
+#		else:
+#			move.restage_MPD("BatMan post-action-processing cleanup B")
+#
+#	if actor is ActorPlayer:
+#		if move == actor.LM["WALK"]: return # Walking isn't real! No previews!
+#		if actor == curr_actor:
+#			# We don't want to double-run - this will already happen as MoveWindow re-appears!
+#			return
+#		print("BATMAN.progress_action_queue()")
+#		actor.limited_run_move_preview(move)
 	pass
 
 func clean_all_MPDs_between_actionstep_batches():
@@ -1381,14 +1381,18 @@ func clean_all_MPDs_between_actionstep_batches():
 #	print("BATMAN.clean_all_MPDs_between_actionstep_batches()")
 	for actor in living_actors: if utils.actorpass(actor):
 		for key in actor.moveset.keys():
+			if actor is ActorPlayer and curr_actor == actor: continue
+			
 			var move: MoveAction = actor.moveset[key]
 			if move.req_successful_telegraph: continue
 			if loaded_move == move: continue # This fix MIGHT not be good enough for NPCs - not sure?
+			if !move.auto_refresh_MPDs_PCA: continue
 			move.restage_MPD("BatMan clean all MPDs A")
 		for key in actor.LM.keys():
 			var move: MoveAction = actor.LM[key]
 			if move.req_successful_telegraph: continue
 			if loaded_move == move: continue
+			if !move.auto_refresh_MPDs_PCA: continue
 			move.restage_MPD("BatMan clean all MPDs B")
 	
 	reset_common_moves()
@@ -1412,7 +1416,8 @@ func prompt_next_turntaker_action():
 	if combatstate != C_TURN: return
 	
 	clean_all_MPDs_between_actionstep_batches()
-	emit_signal("ready_to_choose_next_unit_action")
+#	emit_signal("ready_to_choose_next_unit_action")
+	
 	
 	if utils.actorpass(curr_actor):
 		curr_actor.choose_action()
