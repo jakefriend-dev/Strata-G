@@ -26,4 +26,7 @@ selection_style = 1
 override_global_variant_on_move_load = false
 req_successful_telegraph = false
 telegraph_cost = 0
+telegraph_motion_type = 0
+fracture_on_use = false
 misc = ""
+auto_refresh_MPDs_PCA = true

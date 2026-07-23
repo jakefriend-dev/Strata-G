@@ -80,7 +80,7 @@ func ACT():
 	var victim: Actor = batman.grid_actors.get_cellv(near_coord)
 	actor.log_hit()
 	
-	strife.do_impact_motion(actor, victim, check_vector)
+	strife.do_impact_motion(actor, victim, check_vector, ["unit_dur_0.25"])
 	
 #	var dur: float = 0.25
 #	yield(utils.yt(dur, actor), "timeout")

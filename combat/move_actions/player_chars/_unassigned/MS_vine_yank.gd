@@ -66,7 +66,11 @@ func ACT():
 	strife.quick_vfx(victim, "dust")
 #	print("dest_coord C: ",dest_coord," and victim.coord: ",victim.coord," and motion: ",motion)
 	if dest_coord != victim.coord:
-		victim.ACT_be_external_motioned(motion, 0, actor, false)
+		
+		victim.hotpushed(dest_coord, 0.25)
+#		strife.do_impact_motion(actor, victim, motion)
+		
+#		victim.ACT_be_external_motioned(motion, 0, actor, false)
 	
 	yield(utils.yt(0.375, actor), "timeout")
 	if !batman.is_my_action(actor): return

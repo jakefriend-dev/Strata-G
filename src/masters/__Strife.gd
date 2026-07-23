@@ -400,7 +400,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	# Check resistances! We may not be *capable* of being pushed around.
 	#
 	
-	print("master do motion got here??")
+#	print("master do motion got here??")
 	
 	# Actually deprecating the below - as long as it's not a total no-sell, we should see a visual reaction.
 	var successful_motion: bool = true
@@ -413,7 +413,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 		do_impact_damage(attacker, defender, damage_instead_of_travel)
 		return
 	
-	print("master do motion here too??")
+#	print("master do motion here too??")
 	
 	#
 	# Work out if we can move, and if so how far (and track it all!)
@@ -480,6 +480,15 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	# At this point, we should now know our successful motion and how far we *couldn't* move
 	#
 	
+	var custom_unit_dur
+	var use_custom_unit_dur: bool = false
+	for flag in flags: if flag is String:
+		var editflag: String = flag.replace("unit_dur_","")
+		if editflag.length() != flag.length():
+			custom_unit_dur = float(editflag)
+			use_custom_unit_dur = true
+			break
+	
 	var do_knockback: bool = flags.has("knockback")
 	var knockback_damage: int = 0
 	if do_knockback:
@@ -495,6 +504,9 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	move.flags = flags
 	move.is_quiet = is_quiet
 	move.unit_dur = 0.125
+	if use_custom_unit_dur:
+#		print("Custom unit dir detected! ",custom_unit_dur)
+		move.unit_dur = custom_unit_dur
 	
 	# No successful motion at all?
 	if spent_motion.is_equal_approx(Vector2.ZERO):
