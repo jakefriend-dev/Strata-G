@@ -68,7 +68,7 @@ func move_forward_and_stab():
 	actor.allowed_over_faction_lines = true
 	
 	var dur: float = 0.1
-	actor.hotmove(step_cell, dur)
+	actor.hotslide(step_cell, dur)
 	
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return
@@ -101,10 +101,10 @@ func move_back_and_pull():
 				pullable_vic = true
 	
 	var dur: float = 0.375
-	actor.hotmove(og_cell, dur)
+	actor.hotslide(og_cell, dur)
 	if pullable_vic:
 		victim.ghost_mode(true)
-		victim.hotmove(step_cell, dur)
+		victim.hotslide(step_cell, dur)
 		strife.quick_vfx(victim_cell, "dust")
 	
 	yield(utils.yt(dur, actor), "timeout")

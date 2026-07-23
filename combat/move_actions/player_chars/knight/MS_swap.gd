@@ -50,12 +50,12 @@ func ACT():
 	
 	var delay: float = 0.1
 	var dur: float = 0.3
-	actor.hotmove(target, dur)
+	actor.hotslide(target, dur)
 	
 	yield(utils.yt(delay, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
-	victim.hotmove(og_tile, dur)
+	victim.hotslide(og_tile, dur)
 	
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return

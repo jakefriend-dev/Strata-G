@@ -996,7 +996,7 @@ func quip(text: String):
 # "HOT" MOVEMENT BEHAVIOURS, aka handy shortcuts for standard movements!
 
 # Smooth start and end; usually walking
-func hotmove(to_coord: Vector2, dur: float):
+func hotslide(to_coord: Vector2, dur: float):
 	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_CIRC, Tween.EASE_IN_OUT)
 	tween.start()
 	pass
@@ -1054,7 +1054,7 @@ func ACT_walk(motion: Vector2):
 	var dur: float = tile_walk_speed
 	
 	var exact_coord: Vector2 = coord + motion
-	hotmove(exact_coord, dur)
+	hotslide(exact_coord, dur)
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_action(self): return
 	

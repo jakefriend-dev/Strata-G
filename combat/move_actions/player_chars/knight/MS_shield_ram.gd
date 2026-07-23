@@ -122,7 +122,7 @@ func ACT():
 		1: # Move backwards
 			var dur1: float = actor.tile_walk_speed * dist_1
 			var dur2: float = dur1 + actor.tile_walk_speed
-			actor.hotmove(backmost_cell, dur1)
+			actor.hotslide(backmost_cell, dur1)
 			
 			yield(utils.yt(dur2, actor), "timeout") # Waits extra long before the charge
 			if !batman.is_my_action(actor): return
@@ -134,7 +134,7 @@ func ACT():
 		2: # Charge forwards (end by delivering impact)
 			var dur: float = 0.05 * dist_2
 			actor.allowed_over_faction_lines = true
-			actor.hotmove(frontmost_cell, dur)
+			actor.hotslide(frontmost_cell, dur)
 			
 			yield(utils.yt(dur, actor), "timeout")
 			if !batman.is_my_action(actor): return
@@ -157,7 +157,7 @@ func ACT():
 			
 			var dur: float = actor.tile_walk_speed * dist_3
 			actor.allowed_over_faction_lines = true
-			actor.hotmove(og_cell, dur)
+			actor.hotslide(og_cell, dur)
 			
 			yield(utils.yt(dur, actor), "timeout")
 			if !batman.is_my_action(actor): return

@@ -26,7 +26,7 @@ func ACT():
 #	var target: Vector2 = get_first_cell_by_MPD_type(ROWS.NEUTRAL)
 #	print("target: ",target)
 	
-	actor.hotmove(dest, dur)
+	actor.hotslide(dest, dur)
 	
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return

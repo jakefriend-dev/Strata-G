@@ -33,7 +33,7 @@ func ACT():
 	var dur: float = actor.tile_walk_speed
 	
 	var exact_coord: Vector2 = actor.coord + manual_variant
-	actor.hotmove(exact_coord, dur)
+	actor.hotslide(exact_coord, dur)
 #	print(actor.name,"'s WALK start (",manual_variant,") at: ",actor.get_tree().get_frame())
 	
 	yield(utils.yt(dur, actor), "timeout")

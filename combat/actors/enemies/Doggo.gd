@@ -144,7 +144,7 @@ func ACT_charge_forward():
 	
 	# Perform a visual movement to the destination cell!
 	var dur: float = float(xdist)*0.1
-	hotmove(dest_coord, dur)
+	hotslide(dest_coord, dur)
 	
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_action(self): return
@@ -164,7 +164,7 @@ func ACT_charge_back():
 	
 	# Perform a visual movement to the destination cell!
 	var dur: float = valid_xdist*0.1
-	hotmove(claimed_tile, dur)
+	hotslide(claimed_tile, dur)
 	
 	yield(utils.yt(dur, self), "timeout")
 	if !batman.is_my_action(self): return
