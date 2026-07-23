@@ -10,7 +10,7 @@
 [ext_resource path="res://combat/move_actions/player_chars/knight/MR_ATTACK_BUFF.tres" type="Resource" id=8]
 [ext_resource path="res://combat/move_actions/player_chars/knight/MR_SWAP.tres" type="Resource" id=9]
 [ext_resource path="res://combat/move_actions/player_chars/knight/MR_STEP_SLASH.tres" type="Resource" id=10]
-[ext_resource path="res://combat/move_actions/player_chars/knight/MR_MELEE_COUNTER.tres" type="Resource" id=11]
+[ext_resource path="res://combat/move_actions/player_chars/knight/MR_SHIELD_RAM.tres" type="Resource" id=11]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true

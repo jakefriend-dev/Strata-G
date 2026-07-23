@@ -120,6 +120,7 @@ func ACT():
 	match seq:
 		
 		1: # Move backwards
+			print(self,".ACT(): seq ",seq)
 			var dur1: float = actor.tile_walk_speed * dist_1
 			var dur2: float = dur1 + actor.tile_walk_speed
 			actor.hotslide(backmost_cell, dur1)
@@ -132,26 +133,30 @@ func ACT():
 			pass
 		
 		2: # Charge forwards (end by delivering impact)
+			print(self,".ACT(): seq ",seq)
 			var dur: float = 0.05 * dist_2
 			actor.allowed_over_faction_lines = true
-			actor.hotslide(frontmost_cell, dur)
+			actor.hotcharge(frontmost_cell, dur)
 			
 			yield(utils.yt(dur, actor), "timeout")
 			if !batman.is_my_action(actor): return
 			
 			var victim: Actor = support.get_actor_at_cellv(actor.coord + actor.my_facing)
-			if victim != null:
+			if utils.actorpass(victim):
 				actor.log_hit()
-				if strife.is_affected_by_force(victim):
-					strife.do_impact_motion(actor, victim, Vector2(dist_2, 0), ["knockback"])
-				else:
-					strife.do_impact_damage(actor, victim, actor.dmg(dist_2))
+				strife.do_impact_motion(actor, victim, Vector2(dist_2, 0), ["knockback"])
+				# Now we let the func handle movability or not!
+#				if strife.is_affected_by_force(victim):
+#					strife.do_impact_motion(actor, victim, Vector2(dist_2, 0), ["knockback"])
+#				else:
+#					strife.do_impact_damage(actor, victim, actor.dmg(dist_2))
 			
 			if og_cell != actor.coord:
 				batman.append_action(actor, self)
 			pass
 		
 		3: # Return to original position
+			print(self,".ACT(): seq ",seq)
 			yield(utils.yt(actor.tile_walk_speed, actor), "timeout")
 			if !batman.is_my_action(actor): return
 			

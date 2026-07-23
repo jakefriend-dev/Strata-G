@@ -171,6 +171,7 @@ signal on_z_landed()
 
 #var moving_style: int = strife.moves.NOT_MOVING # All mobs should set this every action (actionstep?), semi-automatically (ie. defaulting to NOT_MOVING when not specified)
 signal on_telegraph_failed(move)
+signal hotcollide_impact_timing_cue()
 
 # Attacker combat signals
 signal on_blocked_by_shield_any(combat_package) # Connected with a shield *at all*
@@ -1001,7 +1002,13 @@ func hotslide(to_coord: Vector2, dur: float):
 	tween.start()
 	pass
 
-# Immediate start; rough end
+# slow start into fullspeed collision
+func hotcharge(to_coord: Vector2, dur: float):
+	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_CIRC, Tween.EASE_IN)
+	tween.start()
+	pass
+
+# Immediate start; slow end
 func hotpushed(to_coord: Vector2, dur: float):
 	tween.interpolate_property(self, "position", null, batman.grid_gpos.get_cellv(to_coord), dur,Tween.TRANS_QUINT, Tween.EASE_OUT)
 	tween.start()
@@ -1018,12 +1025,39 @@ func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
 	pass
 
 # Immediate start, collision at the very end w/ a bit of recoil
-func hotpush_n_collide(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_value: int):
+func hotpush_n_collide(attacker: Actor, to_coord: Vector2, dur: float, total_kb_dmg_value: int):
+	# Break our timings up
+	var dur_recoil: float = 0.375
+	if dur < 0.75:
+		dur_recoil = dur * 0.5
+	var dur_push: float = dur - dur_recoil
 	
+	var relvec: Vector2 = to_coord - coord
+	relvec = relvec.normalized()
+	
+#	var og_pos: Vector2 = position
+	var to_pos: Vector2 = batman.grid_gpos.get_cellv(to_coord)
+	var kb_pos: Vector2 = to_pos + (relvec*6.0)
+	
+	# Ready to actually start!
+	
+	tween.interpolate_property(self, "position", null, kb_pos, dur_push, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+	tween.start()
+	
+	yield(utils.yt(dur_push, self), "timeout")
+	
+	# Take the hit before moving back!
+	if total_kb_dmg_value > 0:
+		strife.do_impact_damage(attacker, self, total_kb_dmg_value)
+	emit_signal("hotcollide_impact_timing_cue")
+	if !utils.actorpass(self): return
+	
+	tween.interpolate_property(self, "position", kb_pos, to_pos, dur_recoil, Tween.TRANS_CUBIC, Tween.EASE_OUT)
+	tween.start()
 	pass
 
 # The actor DOESN'T ACTUALLY CHANGE COORDINATES - just a bump in place!
-func hotcollide_in_place(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_value: int):
+func hotcollide_in_place(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_value: int, damage_immediate_not_delayed: bool = false):
 	print(name,": hotcollide_in_place(",attacker,", ",relvec,", ",dur,", ",total_kb_dmg_value,")")
 	
 	relvec = relvec.normalized()
@@ -1036,11 +1070,15 @@ func hotcollide_in_place(attacker: Actor, relvec: Vector2, dur: float, total_kb_
 	tween.interpolate_property(self, "position", null, kb_pos, dur1_3, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	tween.start()
 	
+	if damage_immediate_not_delayed and total_kb_dmg_value > 0:
+		strife.do_impact_damage(attacker, self, total_kb_dmg_value)
+	
 	yield(utils.yt(dur1_3, self), "timeout")
 	
 	# Take the hit before moving back!
-	if total_kb_dmg_value > 0:
+	if !damage_immediate_not_delayed and total_kb_dmg_value > 0:
 		strife.do_impact_damage(attacker, self, total_kb_dmg_value)
+	emit_signal("hotcollide_impact_timing_cue")
 	if !utils.actorpass(self): return
 	
 	tween.interpolate_property(self, "position", kb_pos, og_pos, dur2_3, Tween.TRANS_CUBIC, Tween.EASE_OUT)

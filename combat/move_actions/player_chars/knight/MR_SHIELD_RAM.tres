@@ -3,12 +3,12 @@
 [ext_resource path="res://combat/move_actions/player_chars/knight/MS_shield_ram.gd" type="Script" id=1]
 [ext_resource path="res://art/bui/aimflowers/3x3 - east.png" type="Texture" id=2]
 
-
 [resource]
 resource_local_to_scene = true
 resource_name = "SHIELD_RAM"
 script = ExtResource( 1 )
 display_name = "Shield Ram"
+shorthand_name = ""
 short_desc = "Move back then charge for high knockback"
 display_desc = "Step backwards as far as you can, then charge forward into the first unit in your path, before returning to your original position.
 
@@ -26,4 +26,9 @@ uses_per_battle = 0
 req_successful_preview = true
 selection_style = 0
 override_global_variant_on_move_load = false
+req_successful_telegraph = false
+telegraph_cost = 0
+telegraph_motion_type = 0
+fracture_on_use = false
 misc = ""
+auto_refresh_MPDs_PCA = true

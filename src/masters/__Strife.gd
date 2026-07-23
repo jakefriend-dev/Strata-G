@@ -400,10 +400,20 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	# Check resistances! We may not be *capable* of being pushed around.
 	#
 	
-	var successful_motion: bool = false
-	if is_affected_by_force(defender): # This also takes "heavy X ice" into consideration!
-		successful_motion = true
-	if !successful_motion: return
+	print("master do motion got here??")
+	
+	# Actually deprecating the below - as long as it's not a total no-sell, we should see a visual reaction.
+	var successful_motion: bool = true
+	if is_unmovable(defender):
+#	if is_affected_by_force(defender): # This also takes "heavy X ice" into consideration!
+		successful_motion = false
+	if !successful_motion:
+		var damage_instead_of_travel: int = support.get_steps_in_vector_line_int(motion)
+		damage_instead_of_travel *= 4
+		do_impact_damage(attacker, defender, damage_instead_of_travel)
+		return
+	
+	print("master do motion here too??")
 	
 	#
 	# Work out if we can move, and if so how far (and track it all!)
@@ -439,6 +449,13 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 			tilemove_failures += 1
 			continue
 		
+		# If we're immune to force and this is IMPACTFUL, convert to damage
+		if !is_quiet:
+			if !is_affected_by_force(defender):
+				print("Not affected by force, fail!")
+				tilemove_failures += 1
+				continue
+		
 		# If we'd be on ice (and affected by it), increase both unspent_motion and max_loops
 		var check_tiletype: int = batman.grid_tiles.get_cellv(check_tile_exact)
 		if check_tiletype == batman.tiletypes.ICE:
@@ -456,7 +473,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 			tilemove_failures += 1
 			continue
 		pass
-
+	
 	print("STRIFE: Worked out that master_do_motion(",attacker,", ",defender,", ",motion,", ",flags,") was able to push the defender ",tilemove_successes," steps with spent_motion ",spent_motion," and ",tilemove_failures," step failures!")
 	
 	#
@@ -477,6 +494,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 	move.attacker_is_real = attacker_is_real
 	move.flags = flags
 	move.is_quiet = is_quiet
+	move.unit_dur = 0.125
 	
 	# No successful motion at all?
 	if spent_motion.is_equal_approx(Vector2.ZERO):
@@ -496,6 +514,7 @@ func master_do_motion(attacker: Actor, defender: Actor, motion: Vector2, flags: 
 			pass
 		# Do an error visual either way
 		move.action_type = "recoil_in_place"
+		move.motion = og_motion
 		batman.reaction(defender, move)
 		return
 	

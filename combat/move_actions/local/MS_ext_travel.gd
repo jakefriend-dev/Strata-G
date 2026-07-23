@@ -32,15 +32,16 @@ func reset_before_feeding_data():
 func ACT():
 	
 	var dur: float = get_real_dur()
-	var exact_coord: Vector2 = actor.coord + manual_variant
+	var exact_coord: Vector2 = actor.coord + motion
 	
 	match action_type:
 		"recoil_in_place":
 			print("recoil_in_place -> hotcollide_in_place!")
-			actor.hotcollide_in_place(attacker, manual_variant, dur, knockback_damage)
+			dur = 0.125
+			actor.hotcollide_in_place(attacker, motion, dur, knockback_damage, true)
 		"push_collision":
 			print("push_collision -> hotpush_n_collide!")
-			actor.hotpush_n_collide(attacker, manual_variant, dur, knockback_damage)
+			actor.hotpush_n_collide(attacker, exact_coord, dur, knockback_damage)
 		"push_smooth":
 			print("push_smooth -> hotpushed!")
 			actor.hotpushed(exact_coord, dur)
@@ -55,7 +56,7 @@ func ACT():
 
 # This is used both internally and externally, for determining dynamic yields!
 func get_real_dur() -> float:
-	var tile_qty: float = round(manual_variant.length())
+	var tile_qty: float = round(motion.length())
 	var dur: float = unit_dur * tile_qty
 	return dur
 	pass
