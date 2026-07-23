@@ -59,7 +59,7 @@ func _ready():
 	batman.connect("set_up_board", self, "set_up_board")
 	batman.connect("populate_actors", self, "populate_actors")
 	
-	hide_major_text()
+#	hide_major_text(true)
 	pass
 
 func set_up_board():
@@ -204,57 +204,21 @@ func update_debuglog():
 
 # ---
 
-var mt_time: float = 0.125
+
 
 func show_major_text(big_text: String, lesser_text: String, instant: bool = false):
-	utils.tween.remove(major_text, "modulate:a")
-	if !major_text.visible:
-		major_text.visible = true
-	
 	if lesser_text == "":
-		major_text.position.x = 0
-		major_text.position.y = 0
-		major_text.get_node("BigLabel").text = big_text
-		major_text.get_node("BigLabel/Shadow").text = big_text
-		major_text.get_node("SmallLabel").text = ""
-		major_text.get_node("SmallLabel/Shadow").text = ""
-		major_text.get_node("Texture1").visible = true
-		major_text.get_node("Texture2").self_modulate.a = 1.0
-	
-	else: # Typically for 'Next Turne' etc
-		var offset: float = 0.2
-		if lesser_text == "Your Turne":
-			major_text.position.x = batman.WINDOW_SIZE.x * offset
-		elif lesser_text == "Enemie Turne":
-			major_text.position.x = batman.WINDOW_SIZE.x * -offset
-		else:
-			major_text.position.x = 0
-		
-		major_text.position.y = 32
-		major_text.get_node("BigLabel").text = str("“",big_text,"”")
-		major_text.get_node("BigLabel/Shadow").text = str("“",big_text,"”")
-		major_text.get_node("SmallLabel").text = lesser_text
-		major_text.get_node("SmallLabel/Shadow").text = lesser_text
-		major_text.get_node("Texture1").visible = false
-		major_text.get_node("Texture2").self_modulate.a = 0.5
-	
-	if instant:
-#		major_text.visible = true
-		major_text.modulate.a = 1.0
+		major_text.show_solo_text(big_text, instant)
 	else:
-		utils.tween.interpolate_property(major_text, "modulate:a", null, 1.0, mt_time, Tween.TRANS_CIRC, Tween.EASE_OUT)
-		utils.tween.start()
-	
+		major_text.show_prefixed_text(big_text, lesser_text, instant)
+	pass
+
+func show_new_turn_text(turntaker: Actor, lesser_text: String, instant: bool = false):
+	major_text.show_new_turn_text(turntaker, lesser_text, instant)
 	pass
 
 func hide_major_text(instant: bool = false):
-	utils.tween.remove(major_text, "modulate:a")
-	if instant:
-#		major_text.visible = false
-		major_text.modulate.a = 0.0
-	else:
-		utils.tween.interpolate_property(major_text, "modulate:a", null, 0.0, mt_time, Tween.TRANS_CIRC, Tween.EASE_OUT)
-		utils.tween.start()
+	major_text.hide_major_text(instant)
 	pass
 
 # -

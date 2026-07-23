@@ -781,7 +781,7 @@ func do_preturn_visuals(mtext: String):
 	emit_signal("turnqueue_updated")
 	if mtext != "": # Means it's not the first round
 		var unit_name: String = curr_actor.display_name
-		field.show_major_text(unit_name, mtext)
+		field.show_new_turn_text(curr_actor, mtext)
 	
 	# TurnWindow scoot_time is (currently) 0.25, and a maximum sequence length would be half that times 3 for 0.375. So if we consistently hold a longer window than that here, we can ignore the turnwindow signal.
 	
