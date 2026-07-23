@@ -51,10 +51,10 @@ func ACT():
 		if utils.actorpass(batman.grid_actors.get_cellv(target)):
 			actor.log_hit()
 	
-	print(actor.name,"'s SPIT ATTACK fires at: ",actor.get_tree().get_frame())
-	yield(utils.yt(0.75, actor), "timeout")
-	if !batman.is_my_action(actor): return
-	print(actor.name,"'s SPIT ATTACK after 0.75sec delay: ",actor.get_tree().get_frame())
+#	print(actor.name,"'s SPIT ATTACK fires at: ",actor.get_tree().get_frame())
+#	yield(utils.yt(0.75, actor), "timeout")
+#	if !batman.is_my_action(actor): return
+#	print(actor.name,"'s SPIT ATTACK after 0.75sec delay: ",actor.get_tree().get_frame())
 	
 	actor.clear_telegraphed_move()
 	end_action()

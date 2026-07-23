@@ -9,21 +9,21 @@ var seq: int = 1
 
 
 func PREVIEW():
-	print(actor.name,"'s LUNGE PREVIEW start at: ",actor.get_tree().get_frame())
+#	print(actor.name,"'s LUNGE PREVIEW start at: ",actor.get_tree().get_frame())
 	seq = 1
 	
 	var target: Vector2 = actor.coord + (actor.my_facing * DIST)
 	if !batman.grid_actors.has_cellv(target):
 		error_text = "Can't access lunge dest!"
 		add_actor(actor, ROWS.ERROR)
-		print("[a] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
+#		print("[a] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
 		end_telegraph()
 		return
 	
 	if batman.grid_tiles.get_cellv(target) == batman.tiletypes.PIT:
 		error_text = "Lunge dest is pit!"
 		add_actor(actor, ROWS.ERROR)
-		print("[b] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
+#		print("[b] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
 		end_telegraph()
 		return
 	
@@ -33,7 +33,7 @@ func PREVIEW():
 	for tile in adj_tiles:
 		add_cell(tile, ROWS.NEUTRAL)
 	
-	print("[c] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
+#	print("[c] lunge stomp # of bad rows: ",get_all_cells_by_MPD_type(ROWS.BAD).size())
 	passfail = true
 	end_telegraph()
 	pass
@@ -41,7 +41,7 @@ func PREVIEW():
 # No need for RE_TELEGRAPH; clear data and run TELEGRAPH again!
 
 func ACT():
-	print(actor.name,"'s LUNGE ACT-",seq," start at: ",actor.get_tree().get_frame())
+#	print(actor.name,"'s LUNGE ACT-",seq," start at: ",actor.get_tree().get_frame())
 	
 	match seq:
 		1:

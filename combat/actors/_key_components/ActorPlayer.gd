@@ -35,7 +35,7 @@ func limited_run_move_preview(move, is_brand_new_move_selected: bool = false):
 	batman.assert_player_variant_against_move(move, is_brand_new_move_selected)
 	
 	if move.has_method("PREVIEW"):
-		print(move," limited_run_move_preview")
+#		print(move," limited_run_move_preview")
 		move.call("PREVIEW") # Player moves (other than common's WALK) never have params; they use the actualized variant stuff to determine possible options!
 		batman.field.movewindow.update_error_text_only()
 		move.generate_cell_highlights()
@@ -74,7 +74,7 @@ func attempt_player_char_move(motion: Vector2):
 #	LM["WALK"].actor = self
 	LM["WALK"].manual_variant = motion
 	
-	if !LM["WALK"].totality_check([], self, true):
+	if !LM["WALK"].totality_check(self, true):
 		print("validation fail, move error: ",LM["WALK"].error_text)
 		return
 	

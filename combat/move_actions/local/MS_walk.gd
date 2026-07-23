@@ -34,12 +34,12 @@ func ACT():
 	
 	var exact_coord: Vector2 = actor.coord + manual_variant
 	actor.hotmove(exact_coord, dur)
-	print(actor.name,"'s WALK start (",manual_variant,") at: ",actor.get_tree().get_frame())
+#	print(actor.name,"'s WALK start (",manual_variant,") at: ",actor.get_tree().get_frame())
 	
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
-	print(actor.name,"'s WALK end at: ",actor.get_tree().get_frame())
+#	print(actor.name,"'s WALK end at: ",actor.get_tree().get_frame())
 	
 	end_action()
 	pass

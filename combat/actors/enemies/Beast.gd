@@ -64,7 +64,7 @@ func prep_next_action():
 #		print("Flipped lunge_vs_spit_coin to: ",lunge_vs_spit_coin)
 		
 		# ...whether or not it actually plays out!
-		if telegraphed_move.totality_check([], self, true):
+		if telegraphed_move.totality_check(self, true):
 			did_main_attack = true
 			execute_npc_move(telegraphed_move)
 			return
@@ -86,7 +86,7 @@ func prep_next_action():
 	
 	if action_points == next_main_attack.effective_cost():
 		readied_telegraph = true # Flag it as 'we tried' whether or not it executes
-		if next_main_attack.totality_check([], self, true):
+		if next_main_attack.totality_check(self, true):
 			execute_npc_move(next_main_attack)
 			return
 	
@@ -137,7 +137,7 @@ func prep_next_action():
 	
 	# And if we can't walk OR repo, well - maybe just skip ahead to the telegraph?
 	readied_telegraph = true # Once we get to this point, turn's over either way
-	if next_main_attack.totality_check([], self, true):
+	if next_main_attack.totality_check(self, true):
 		execute_npc_move(next_main_attack)
 		return
 	

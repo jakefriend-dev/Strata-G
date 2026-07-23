@@ -218,7 +218,7 @@ func usability_check(a: Actor = null, do_print: bool = false) -> bool:
 	return true
 	pass
 
-func quick_context_passfail_check(params: Array = []) -> bool:
+func quick_context_passfail_check() -> bool:
 	if passfail:
 		if req_successful_telegraph:
 			return true # Already verified!
@@ -228,18 +228,12 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 		if has_method("RE_PREVIEW"):
 			if passfail:
 				repreviewed = true
-				if params.empty():
-					call("RE_PREVIEW")
-				else:
-					callv("RE_PREVIEW", params)
+				call("RE_PREVIEW")
 		
 		if !repreviewed:
 			passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
-			if params.empty():
-				call("PREVIEW")
-				print(self," quick_context_passfail_check A")
-			else:
-				callv("PREVIEW", params)
+#			print(self," quick_context_passfail_check A")
+			call("PREVIEW")
 		
 		if !passfail:
 			if !utils.actorpass(actor):
@@ -253,10 +247,7 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 	# And lower priority, we'll do a PREVIEW cycle anyways, cuz why not!
 	
 	if has_method("RE_PREVIEW"): # Prioritized slightly over PREVIEW!
-		if params.empty():
-			call("RE_PREVIEW")
-		else:
-			callv("RE_PREVIEW", params)
+		call("RE_PREVIEW")
 		if !passfail:
 			if !utils.actorpass(actor):
 				actor.release_targeted_tiles()
@@ -264,11 +255,8 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 	
 	passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
 	if has_method("PREVIEW"):
-		if params.empty():
-			print(self," quick_context_passfail_check B")
-			call("PREVIEW")
-		else:
-			callv("PREVIEW", params)
+#		print(self," quick_context_passfail_check B")
+		call("PREVIEW")
 		if !passfail:
 			if !utils.actorpass(actor):
 				actor.release_targeted_tiles()
@@ -277,8 +265,8 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 	return true # Otherwise, by default assume if no conditions need to be met, we're good to go!
 	pass
 
-func totality_check(params: Array = [], a: Actor = null, do_print: bool = false) -> bool:
-	if !quick_context_passfail_check(params):
+func totality_check(a: Actor = null, do_print: bool = false) -> bool:
+	if !quick_context_passfail_check():
 		print(self,".totality_check() failed context check")
 		return false
 	
@@ -318,7 +306,7 @@ func update_telegraph_previews():
 		# We DO clear here, because we're starting from scratch.
 		restage_MPD("MoveAction preview update A")
 		actor.release_targeted_tiles()
-		print(self," update_telegraph_previews")
+#		print(self," update_telegraph_previews")
 		call("PREVIEW")
 	else:
 		print(self,": This is a pre-validated impossible case. How did you get here?? Breakpoint!")
