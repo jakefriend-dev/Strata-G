@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://text/AliasFontPixelizerShader1.gdshader" type="Shader" id=1]
 [ext_resource path="res://text/fonts/built/Font HeaderBig.tres" type="DynamicFont" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://art/_placeholder/Texturelabs_Grunge_140S.jpg" type="Texture" id=4]
 [ext_resource path="res://combat/framing/MajorText.gd" type="Script" id=5]
 [ext_resource path="res://text/fonts/built/Font HeaderMedSmall.tres" type="DynamicFont" id=6]
+[ext_resource path="res://art/textures/large grunge with cut edge SOFTENED.png" type="Texture" id=7]
+[ext_resource path="res://art/textures/paint streak 1b white.png" type="Texture" id=8]
 
 [sub_resource type="CanvasItemMaterial" id=38]
 
@@ -72,6 +74,9 @@ shader_param/threshold_soft = 0.5
 shader_param/use_soft_inner_corners = false
 shader_param/use_standard_shadow = false
 shader_param/use_thin_hlines = false
+
+[sub_resource type="CanvasItemMaterial" id=44]
+blend_mode = 1
 
 [node name="MajorText" type="Node2D"]
 z_index = 10
@@ -176,21 +181,33 @@ modulate = Color( 1, 1, 1, 0.498039 )
 
 [node name="Centerpoint" type="Node2D" parent="TurnHighlight/BG"]
 
-[node name="Texture2" type="Sprite" parent="TurnHighlight/BG/Centerpoint"]
-modulate = Color( 1, 1, 1, 0.239216 )
-material = SubResource( 38 )
-position = Vector2( 48, -40 )
-scale = Vector2( 0.335, 0.335 )
-texture = ExtResource( 4 )
-centered = false
+[node name="MainTexs" type="Node2D" parent="TurnHighlight/BG/Centerpoint"]
+modulate = Color( 1, 1, 1, 0.329412 )
 
-[node name="Texture1" type="Sprite" parent="TurnHighlight/BG/Centerpoint"]
-modulate = Color( 1, 1, 1, 0.239216 )
+[node name="TextureL" type="Sprite" parent="TurnHighlight/BG/Centerpoint/MainTexs"]
 material = SubResource( 38 )
-position = Vector2( -48, -40 )
-scale = Vector2( -0.335, 0.335 )
-texture = ExtResource( 4 )
+position = Vector2( -40, 0 )
+texture = ExtResource( 7 )
 centered = false
+offset = Vector2( -576, -108 )
+
+[node name="TextureR" type="Sprite" parent="TurnHighlight/BG/Centerpoint/MainTexs"]
+material = SubResource( 38 )
+position = Vector2( 40, 0 )
+rotation = 3.14159
+texture = ExtResource( 7 )
+centered = false
+offset = Vector2( -576, -468 )
+
+[node name="Highlight" type="Node2D" parent="TurnHighlight/BG/Centerpoint"]
+
+[node name="Yello" type="Sprite" parent="TurnHighlight/BG/Centerpoint/Highlight"]
+modulate = Color( 1, 1, 0.498039, 1 )
+self_modulate = Color( 1, 1, 1, 0.12549 )
+material = SubResource( 44 )
+position = Vector2( 0, 86 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 8 )
 
 [node name="Text" type="Node2D" parent="TurnHighlight"]
 

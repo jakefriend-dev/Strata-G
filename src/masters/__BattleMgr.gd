@@ -1256,6 +1256,7 @@ func process_prefight_actionsteps():
 	combatstate = C_TURN
 	field.hide_major_text()
 	
+	print("BATMAN.process_prefight_actionsteps() is progressing action queue to handle PRE FIGHT queued actions!")
 	progress_action_queue()
 	pass
 
@@ -1276,12 +1277,15 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 			if curr_actor.has_method("post_all_action_prep"):
 				curr_actor.call("post_all_action_prep")
 		
+		print("BATMAN.progress_action_queue(): EMPTY QUEUE on call ",aq_call_count,", frame ",last_execution_frame)
 		end_turn()
 		return
 	
 	# Final checks on if the actor is STILL valid, given some delays since vet_action()
 	var unvalidated_action: Array = action_queue.pop_front()
 	var actor: Actor = unvalidated_action[0]
+	
+	print("BATMAN.progress_action_queue(): NEW ACTION on call ",aq_call_count,", frame ",last_execution_frame)
 	
 	# We're actually intentionally NOT calling utils.actorpass() here, because it might be useful to let actors do a final "on death" action!
 	if !utils.valid(actor):
@@ -1330,9 +1334,17 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	# Great success! It's the actor's job to MANUALLY cue end_action()/end_telegraph() from here.
 	
+#	yield(self, "about_to_progress_actionqueue")
+#	print("BATMAN.progress_action_queue(): NEW ACTION on call ",aq_call_count,", frame ",last_execution_frame)
+	
 	yield(self, "ready_to_choose_next_unit_action")
+	
+	"This is problematic if MULTIPLE moves get jammed up here at once, then only the LAST one is allowed to do its actual cleanup!"
+	
+	print("BATMAN.progress_action_queue(): REACHED READY_TO_CHOOSE ENDSTAGE on call ",aq_call_count,", frame ",get_tree().get_frame())
 	if this_aq_call != aq_call_count:
 		print("BATMAN: After progressing actionqueue, AQ call ",this_aq_call," yielded until it was a different AQ call (",aq_call_count)
+		# I think this could happen naturally if at the end of a *series* of actionsteps, like Lunge Stomp
 		return
 	
 	# CONDITIONAL cleanup!
@@ -1343,6 +1355,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	if move.req_successful_telegraph:
 		if methodname == "ACT":
 #			print("Doing cleanup on ended actionstep's move ",move,"!")
+			"This is problematic for LUNGE STOMP which requires multiple ACT calls in a row!"
 			move.restage_MPD("BatMan post-action-processing cleanup A")
 	else:
 #		print("Doing cleanup on ended actionstep's move ",move,"!")
@@ -1399,7 +1412,7 @@ func prompt_next_turntaker_action():
 	end_turn()
 	pass
 
-func skip_action(): end_action() # Just a shortcut
+func skip_action(): end_action() # Just a shortcut; not sure anyone actually uses it though?
 
 func end_action(): # The call that an action 'step' has ended, or needs to be skipped
 	if combatstate != C_TURN: return
@@ -1421,6 +1434,7 @@ func end_action(): # The call that an action 'step' has ended, or needs to be sk
 		return
 	
 	# Since there are more actions, let's process one!
+	print("BATMAN.end_action() is progressing action queue! (",batman.action_queue.size()," actionstep(s) remain)")
 	progress_action_queue()
 	pass
 

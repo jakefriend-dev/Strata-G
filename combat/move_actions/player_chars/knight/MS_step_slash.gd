@@ -60,7 +60,7 @@ func ACT():
 			seq += 1
 			return
 	
-	end_action()
+	end_action() # Should never reach this line! Safeguard
 	pass
 
 func move_forward_and_stab():

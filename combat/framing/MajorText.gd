@@ -1,6 +1,7 @@
 extends Node2D
 
 var mt_time: float = 0.125
+var avg_wait_time: float
 
 # -
 
@@ -79,7 +80,14 @@ func show_new_turn_text(turntaker: Actor, lesser_text: String, instant: bool = f
 		modulate.a = 1.0
 	else:
 		utils.tween.interpolate_property(mtpar, "modulate:a", null, 1.0, mt_time, Tween.TRANS_CIRC, Tween.EASE_OUT)
-		utils.tween.start()
+	
+	var texs: Node2D = $TurnHighlight/BG/Centerpoint/MainTexs
+	var hili: Node2D = $TurnHighlight/BG/Centerpoint/Highlight
+	var yshift: float = 20.0 # MAX about 100 or so
+	utils.tween.interpolate_property(texs, "position:y", -yshift, yshift, batman.timeout_major_text, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	utils.tween.interpolate_property(hili, "position:y", yshift, -yshift, batman.timeout_major_text, Tween.TRANS_LINEAR, Tween.EASE_OUT)
+	
+	utils.tween.start()
 	pass
 
 # ---

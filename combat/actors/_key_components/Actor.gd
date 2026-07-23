@@ -409,6 +409,7 @@ func choose_action():
 		# It'd be empty if we failed to have assigned an action to the queue
 		actions_completed_this_turn += 1
 	
+	print("ACTOR.choose_action() is restarting action queue! (after appending ",batman.action_queue.size()," actionstep(s))")
 	batman.progress_action_queue() # If empty when this is called (ie. we could not afford an action at all, or chose not to take one), consider the turn auto-over
 	pass
 

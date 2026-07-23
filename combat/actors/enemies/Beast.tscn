@@ -66,28 +66,15 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 first_initiative = 2
 second_initiative = 4
-third_initiative = null
 max_health = 27
 max_shield = 1
 display_name = "Bigmaw"
-bui_level = null
 base_action_points = 5
-faction = null
 def_weight = 3
 tile_walk_speed = 0.75
-def_unmovable = null
 def_immune_jagged = true
-def_immune_fire = null
-def_immune_shrub = null
-def_immune_sand = null
-def_immune_mud = null
-def_immune_ice = null
 def_immune_poison = true
-def_immune_magnet = null
-def_immune_elec = null
-def_immune_piercing = null
 loaded_moves = [ ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), null, null, null ]
-keep_claims_at_eot = null
 
 [node name="ArtMgr" type="Node2D" parent="."]
 

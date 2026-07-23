@@ -43,10 +43,13 @@ func randomwalk_if_possible(auto_execute_if_true: bool = true) -> bool: # If tru
 	
 #	var move: MoveAction = LM["WALK"]
 #	LM["WALK"].actor = self
+	LM["WALK"].restage_MPD("actorenemy pre walk check")
 	LM["WALK"].manual_variant = motion
 	
 	if !LM["WALK"].quick_context_passfail_check():
+#		print(name," walk passfail check failed")
 		return false
+#	print(name," walk passfail check succeeeded")
 	
 	# Success!
 	if auto_execute_if_true:

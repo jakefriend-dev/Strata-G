@@ -9,6 +9,7 @@ var seq: int = 1
 
 
 func PREVIEW():
+	print(actor.name,"'s LUNGE PREVIEW start at: ",actor.get_tree().get_frame())
 	seq = 1
 	
 	var target: Vector2 = actor.coord + (actor.my_facing * DIST)
@@ -40,6 +41,7 @@ func PREVIEW():
 # No need for RE_TELEGRAPH; clear data and run TELEGRAPH again!
 
 func ACT():
+	print(actor.name,"'s LUNGE ACT-",seq," start at: ",actor.get_tree().get_frame())
 	
 	match seq:
 		1:

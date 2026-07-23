@@ -237,6 +237,7 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 			passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
 			if params.empty():
 				call("PREVIEW")
+				print(self," quick_context_passfail_check A")
 			else:
 				callv("PREVIEW", params)
 		
@@ -264,6 +265,7 @@ func quick_context_passfail_check(params: Array = []) -> bool:
 	passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
 	if has_method("PREVIEW"):
 		if params.empty():
+			print(self," quick_context_passfail_check B")
 			call("PREVIEW")
 		else:
 			callv("PREVIEW", params)
@@ -303,6 +305,8 @@ func will_next_use_be_a_telegraph() -> bool:
 func update_telegraph_previews():
 	if !utils.actorpass(actor): return
 	if actor.telegraphed_move != self: return
+	if batman.is_my_action(actor): return # We do NOT DO THIS during live actions, or we'll risk ending them!
+	
 	
 #	print(self,".update_telegraph_previews()")
 	passfail = false # Regardless of if we clear or not
@@ -314,6 +318,7 @@ func update_telegraph_previews():
 		# We DO clear here, because we're starting from scratch.
 		restage_MPD("MoveAction preview update A")
 		actor.release_targeted_tiles()
+		print(self," update_telegraph_previews")
 		call("PREVIEW")
 	else:
 		print(self,": This is a pre-validated impossible case. How did you get here?? Breakpoint!")
@@ -412,6 +417,7 @@ func end_telegraph():
 		actor.set_targeted_tiles(get_all_cells_by_MPD_type(ROWS.BAD)) # This is the OVERWRITE function, not append, jfyi! So no need to release first
 		print(actor.name,"'s targeted tiles: ",actor.targeted_tiles)
 		
+		print(self,".end_telegraph()")
 		if batman.is_my_action(actor):
 			end_action()
 	pass
