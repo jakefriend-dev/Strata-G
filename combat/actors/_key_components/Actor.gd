@@ -1018,7 +1018,7 @@ func hotjump(to_coord: Vector2, dur: float, height: float = 100.0):
 	pass
 
 # Immediate start, collision at the very end w/ a bit of recoil
-func hotpush_n_collide():
+func hotpush_n_collide(attacker: Actor, relvec: Vector2, dur: float, total_kb_dmg_value: int):
 	
 	pass
 
