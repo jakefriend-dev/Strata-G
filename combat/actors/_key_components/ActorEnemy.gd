@@ -2,7 +2,7 @@ extends Actor
 class_name ActorEnemy
 
 func execute_npc_move(move: MoveAction, free_prefight_telegraph: bool = false):
-	print(name,".execute_npc_move(",move,")")
+#	print(name,".execute_npc_move(",move,")")
 	
 	move.prepare_actualized_variants() # IDK if matters, frankly?
 	

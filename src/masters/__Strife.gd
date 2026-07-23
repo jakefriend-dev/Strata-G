@@ -530,6 +530,12 @@ var CAMsteps: Dictionary = { # With example!
 var last_CAM_score: int = -1
 
 func reset_CAMs():
+	for actor in CAMsteps.keys(): if actor is Actor:
+		if actor.is_ghost:
+#			print("CAMsteps resetting actor ",actor," FROM ghost mode for fresh use!")
+			actor.ghost_mode(false)
+			actor.release_claims()
+	
 	CAMsteps = {}
 	CAM_admin = {}
 	CAM_admin = CAM_default_admin.duplicate(true)
@@ -547,14 +553,19 @@ func set_CAM_admin(param: String, value):
 
 # Use this if we're being lazy and don't care whether or not an actor even exists
 func store_CAMstep_by_coord(start_coord: Vector2, relvec: Vector2, is_exact: bool = false):
+	# (reminder, it's the VICTIM'S start coordinate, not the caller's!
 	if !batman.grid_actors.has_cellv(start_coord): return
-	var actor: Actor = batman.grid_actors.get_cellv(start_coord)
 	
-	store_CAMstep_by_actor(actor, relvec, is_exact)
+	var victim: Actor = batman.grid_actors.get_cellv(start_coord)
+#	print("STRIFE: store_CAMstep() for ",victim," on coord ",start_coord)
+	
+	store_CAMstep_by_actor(victim, relvec, is_exact)
 	pass
 
 func store_CAMstep_by_actor(actor: Actor, relvec: Vector2, is_exact: bool = false):
-	if !utils.actorpass(actor): return
+	if !utils.actorpass(actor):
+#		print("STRIFE: store_CAMstep() no actor at relvec ",relvec,", aborting!")
+		return
 	if CAMsteps.keys().has(actor):
 		print("STRIFE: store_CAMstep() already has actor ",actor,"! Aborting")
 		return
@@ -576,6 +587,8 @@ func store_CAMstep_by_actor(actor: Actor, relvec: Vector2, is_exact: bool = fals
 		return
 	
 	# Both actor and dest are valid (don't perform movement validations until later for consistency) so let's add em
+	print("STRIFE: store_CAMstep() pass! --> ",actor.display_name)
+	
 	CAMsteps[actor] = {}
 	CAMsteps[actor]["actor"] = actor
 	CAMsteps[actor]["relvec"] = relvec
@@ -591,7 +604,7 @@ func validate_CAMs(): # Actually runs the check loops!
 	var loop_count: int = 0 # 1-based
 	var scores_in_order: Array = []
 	
-	var do_debug: bool = false
+	var do_debug: bool = true
 	
 	while true:
 		#
@@ -689,6 +702,7 @@ func validate_CAMs(): # Actually runs the check loops!
 			
 			# If there's another actor in our way, soft fail
 			if !support.is_tile_available(target_dest, [self]):
+				
 				if do_debug: print(actor.name," SOFT fail: actor at our dest pos ",target_dest)
 				continue
 			

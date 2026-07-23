@@ -34,6 +34,8 @@ var ccw_set: Array = [
 
 
 func PREVIEW():
+	print("SPIN DANCE preview starts! ",actor.get_tree().get_frame())
+	
 	var model_cw: bool = (batman.loaded_variant == Vector2( 9,  9))
 	var sets: Array
 	if model_cw:
@@ -53,6 +55,7 @@ func PREVIEW():
 	var results: Dictionary = strife.get_CAM_results() # Also runs validation!
 	if results.empty():
 		error_text = "No actors in range"
+		print("SPIN DANCE error, no actors")
 		return
 	
 	passfail = true
@@ -66,6 +69,8 @@ func PREVIEW():
 			add_arrow(victim.coord, target_dest, ROWS.NEUTRAL)
 		else:
 			add_actor(victim, ROWS.ERROR)
+	
+	print("SPIN DANCE pass, actors exist whether movable or not")
 	pass
 
 func ACT():

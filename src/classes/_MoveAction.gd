@@ -403,9 +403,9 @@ func end_turn():
 func end_telegraph():
 	if utils.actorpass(actor):
 		actor.set_targeted_tiles(get_all_cells_by_MPD_type(ROWS.BAD)) # This is the OVERWRITE function, not append, jfyi! So no need to release first
-		print(actor.name,"'s targeted tiles: ",actor.targeted_tiles)
+#		print(actor.name,"'s targeted tiles: ",actor.targeted_tiles)
 		
-		print(self,".end_telegraph()")
+#		print(self,".end_telegraph()")
 		if batman.is_my_action(actor):
 			end_action()
 	pass
