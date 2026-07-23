@@ -232,7 +232,7 @@ func quick_context_passfail_check() -> bool:
 		
 		if !repreviewed:
 			passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
-#			print(self," quick_context_passfail_check A")
+			print(self," quick_context_passfail_check A")
 			call("PREVIEW")
 		
 		if !passfail:
@@ -255,7 +255,7 @@ func quick_context_passfail_check() -> bool:
 	
 	passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
 	if has_method("PREVIEW"):
-#		print(self," quick_context_passfail_check B")
+		print(self," quick_context_passfail_check B")
 		call("PREVIEW")
 		if !passfail:
 			if !utils.actorpass(actor):
@@ -306,7 +306,7 @@ func update_telegraph_previews():
 		# We DO clear here, because we're starting from scratch.
 		restage_MPD("MoveAction preview update A")
 		actor.release_targeted_tiles()
-#		print(self," update_telegraph_previews")
+		print(self," update_telegraph_previews")
 		call("PREVIEW")
 	else:
 		print(self,": This is a pre-validated impossible case. How did you get here?? Breakpoint!")
@@ -423,7 +423,7 @@ func _to_string() -> String:
 # warning-ignore:unused_argument
 # "source" is only for debugging
 func restage_MPD(source: String): # Replaces BOTH initialize_MPD() and clear_MPD() of olde
-#	if resource_name == "BASIC_ARROWLINE": print(self,".restage_MPD(",source,")")
+	if resource_name == "SPIN_DANCE": print(self,".restage_MPD(",source,")")
 	
 	if sets == null: # One-time setup
 		sets = Array2D.new()

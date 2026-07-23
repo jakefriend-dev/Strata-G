@@ -604,7 +604,7 @@ func validate_CAMs(): # Actually runs the check loops!
 	var loop_count: int = 0 # 1-based
 	var scores_in_order: Array = []
 	
-	var do_debug: bool = true
+	var do_debug: bool = false
 	
 	while true:
 		#

@@ -1359,10 +1359,19 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 			move.restage_MPD("BatMan post-action-processing cleanup A")
 	else:
 #		print("Doing cleanup on ended actionstep's move ",move,"!")
-		move.restage_MPD("BatMan post-action-processing cleanup B")
+		# ISSUE: This runs AFTER MoveWindow prompts the player with their next preview!
+		if actor is ActorPlayer and actor == curr_actor:
+			# Just a complex "not" condition tbh
+			pass
+		else:
+			move.restage_MPD("BatMan post-action-processing cleanup B")
 	
 	if actor is ActorPlayer:
 		if move == actor.LM["WALK"]: return # Walking isn't real! No previews!
+		if actor == curr_actor:
+			# We don't want to double-run - this will already happen as MoveWindow re-appears!
+			return
+		print("BATMAN.progress_action_queue()")
 		actor.limited_run_move_preview(move)
 	pass
 

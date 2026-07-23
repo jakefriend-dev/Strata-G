@@ -58,7 +58,7 @@ func PREVIEW():
 		print("SPIN DANCE error, no actors")
 		return
 	
-	passfail = true
+	# It's a pass below here
 	
 	for key in results:
 		var victim: Actor = results[key]["actor"]
@@ -70,6 +70,7 @@ func PREVIEW():
 		else:
 			add_actor(victim, ROWS.ERROR)
 	
+	passfail = true
 	print("SPIN DANCE pass, actors exist whether movable or not")
 	pass
 
