@@ -751,6 +751,8 @@ func ghost_mode(to_ghost: bool, newly_claimed_tile: Vector2 = Vector2(-99, -99),
 		is_ghost = false
 		just_exited_ghost_mode = true
 		batman.change_actor_grid_coord(self, coord) # Manually - otherwise the system won't recognize the 'change'!
+		
+		batman.release_actor_claims(self) # We NEVER keep claims when successfully de-ghosting!
 		return true
 	pass
 
@@ -782,8 +784,8 @@ func claim_tile(claiming_coord: Vector2 = Vector2(-99, -99), allow_claiming_occu
 	return false
 	pass
 
-func release_claims():
-	batman.release_actor_claims(self)
+#func release_claims():
+#	batman.release_actor_claims(self)
 	pass
 
 func set_targeted_tiles(targetset: Array): # Also operates as an overwrite

@@ -566,7 +566,7 @@ func de_ghost_all_actors():
 	for actor in batman.living_actors: if actor is Actor:
 		if actor.is_ghost:
 			actor.ghost_mode(false)
-			actor.release_claims()
+#			actor.release_claims() # Now redundant!
 	pass
 
 func quip(gpos: Vector2, text: String):

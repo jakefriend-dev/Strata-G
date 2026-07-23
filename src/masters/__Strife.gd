@@ -534,7 +534,7 @@ func reset_CAMs():
 		if actor.is_ghost:
 #			print("CAMsteps resetting actor ",actor," FROM ghost mode for fresh use!")
 			actor.ghost_mode(false)
-			actor.release_claims()
+#			actor.release_claims() # Now redundant!
 	
 	CAMsteps = {}
 	CAM_admin = {}
@@ -614,14 +614,6 @@ func validate_CAMs(): # Actually runs the check loops!
 		loop_count += 1
 		last_CAM_score = this_CAM_score # Log it before updating against 'this'
 		
-		# Quick pre-loop to determine who is allowed to be an exception from the 'is tile available' check
-#		var exception_actors: Array = []
-#		for key in CAMsteps.keys():
-#			var actor: Actor = CAMsteps[key]["actor"]
-#			var outcome: String = CAMsteps[key]["outcome"]
-#			if outcome == "success":
-#				exception_actors.append(actor)
-		
 		#
 		# PROCESSING
 		#
@@ -639,13 +631,6 @@ func validate_CAMs(): # Actually runs the check loops!
 			
 			# Log an attempt so long as we're still in flux
 			CAMsteps[key]["attempts"] = (attempts + 1)
-			
-			# REMOVED this line! We shouldn't mess with ghosts EARLIER in validation, but we intentionally ghost out actors here!
-#			# If we're ghost mode, hard fail! Don't mess with ghosts externally!
-#			if actor.is_ghost:
-#				if do_debug: print(actor.name," FAIL: is ghost")
-#				CAMsteps[key]["outcome"] = "hard_fail"
-#				continue
 			
 			# If the relvec puts us off the grid, hard fail! (We've already validated against same-coord dests by accident)
 			var target_dest: Vector2 = actor.coord + relvec
@@ -727,9 +712,16 @@ func validate_CAMs(): # Actually runs the check loops!
 			# This is our 2nd exit condition: When all actorsteps are either success or hard fails, and may not further possibly change.
 			break
 		
-		# END THIS LOOP (CONTINUING B/C WE FAILED TO MEET BREAK CONDITIONS; THINGS ARE STILL CHANGING *AND* STILL HAVE ROOM TO CHANGE)
+		# END THIS LOOP (CONTINUING B/C WE'VE YET-FAILED TO MEET BREAK CONDITIONS; THINGS STILL HAVE THEORETICAL ROOM TO CHANGE)
 		pass
 	
+	# Now that we have our results, DE-claim and DE-ghost these folks so that other moves like Walk aren't blocked by claims (or false-succeed into actors in the way!)
+	for key in CAMsteps.keys():
+		var actor: Actor = CAMsteps[key]["actor"]
+		if actor.is_ghost:
+			actor.ghost_mode(false)
+#			actor.release_claims() # Now redundant!
+	# We already re-ghost upon execution anyways, so this is safe cleanup.
 	
 	if do_debug: print("STRIFE: validate_CAMs() ended after ",loop_count," loops, with logged scores of ",scores_in_order)
 	pass
