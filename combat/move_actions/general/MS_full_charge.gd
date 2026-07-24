@@ -60,7 +60,6 @@ func ACT_charge_forward():
 
 func ACT_bite():
 	strife.damage_actor_at_coord(actor, actor.coord + actor.my_facing, actor.dmg(base_damage))
-	print("dog charge: should have just dealt ",actor.dmg(base_damage)," damage at coord ",actor.coord + actor.my_facing," because actor.coord == ",actor.coord)
 	
 	var dur: float = 0.125
 	
@@ -87,7 +86,7 @@ func ACT_charge_back():
 	var valid_xdist: float = abs(return_tile.x - actor.coord.x)
 	
 	# Perform a visual movement to the destination cell!
-	var dur: float = valid_xdist*0.1
+	var dur: float = valid_xdist*0.25
 	actor.hotslide(return_tile, dur)
 	
 	yield(utils.yt(dur, actor), "timeout")

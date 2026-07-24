@@ -864,9 +864,9 @@ func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, f
 	if !batman.grid_actors.has_cellv(exact_coord): return
 	
 	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
-	print("STRIFE.damage_actor_at_coord(",attacker,", ",exact_coord,", ",damage,", ",flags,"): victim is ",victim)
+#	print("STRIFE.damage_actor_at_coord(",attacker,", ",exact_coord,", ",damage,", ",flags,"): victim is ",victim)
 	if !utils.actorpass(victim): return
-	print("and we DID actorpass")
+#	print("and we DID actorpass")
 	
 	var is_quiet: bool = flags.has("quiet")
 	

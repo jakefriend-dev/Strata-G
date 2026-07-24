@@ -7,8 +7,8 @@
 resource_local_to_scene = true
 resource_name = "FULL_CHARGE"
 script = ExtResource( 1 )
-display_name = "Charge"
-shorthand_name = ""
+display_name = "Charging Bite"
+shorthand_name = "ChargeBite"
 short_desc = "Charge across battlefield, bite for DMG dmg, then back"
 display_desc = "Charge into opposing territory, biting the first target you see for DMG dmg, then return to original position - but slightly closer than you'd been before (if possible). The bite counts as a [rest]."
 option_image = ExtResource( 2 )

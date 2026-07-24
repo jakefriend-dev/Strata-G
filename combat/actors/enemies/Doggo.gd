@@ -24,14 +24,14 @@ func pre_turn_setup():
 func prep_next_action(): # This func should END with setting up one or multiple actions!
 	allowed_over_faction_lines = false
 	var can_charge_fwd: bool = support.is_tile_traversable_relative(self, my_facing, true)
-	print("doggo can charge fwd? ",can_charge_fwd)
+#	print("doggo can charge fwd? ",can_charge_fwd)
 	
 	# Can we see a victim?
 	if can_see_victim():
-		print("CAN see victim")
+#		print("CAN see victim")
 		# Can we bite WITHOUT needing to charge?
 		if victim.coord == (coord + my_facing):
-			if moveset["BASIC_BITE"].totality_check(self, true):
+			if moveset["BASIC_BITE"].totality_check(self):
 				prime_npc_move(moveset["BASIC_BITE"])
 				return
 			# If we're literally next to the target and can't afford to bite, we have 1 or 0 AP left and are already where we want to be; give up manually and wait
@@ -40,7 +40,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		# Nope! Time to consider other options. From here on, we're not adjacent to our victim, but we CAN see one.
 		
 		# If we can afford to charge (and have space to), do that!
-		if can_charge_fwd and moveset["FULL_CHARGE"].totality_check(self, true):
+		if can_charge_fwd and moveset["FULL_CHARGE"].totality_check(self):
 			prime_npc_move(moveset["FULL_CHARGE"])
 			return
 		
@@ -58,7 +58,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		return
 	
 	# From here on, we know we CAN'T see the target.
-	print("CANNOT see victim (or sees shielded victim)")
+#	print("CANNOT see victim (or sees shielded victim)")
 	
 	# If we're enraged, charge/bite regardless! (If we can afford it)
 	if check_status("enrage"):
