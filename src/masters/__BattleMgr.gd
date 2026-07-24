@@ -785,7 +785,7 @@ func cycle_to_next_turn():
 func do_preturn_visuals(mtext: String):
 	emit_signal("turnqueue_updated")
 	if mtext != "": # Means it's not the first round
-		var unit_name: String = curr_actor.display_name
+#		var unit_name: String = curr_actor.display_name
 		field.show_new_turn_text(curr_actor, mtext)
 	
 	# TurnWindow scoot_time is (currently) 0.25, and a maximum sequence length would be half that times 3 for 0.375. So if we consistently hold a longer window than that here, we can ignore the turnwindow signal.
@@ -1275,6 +1275,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 #	reset_common_moves() # Nah, this actually gets auto-called post-actionstep by clean_all_MPDs_between_actionstep_batches()
 	
 	aq_call_count += 1
+# warning-ignore:unused_variable
 	var this_aq_call: int = aq_call_count
 	triplecheck_all_actor_coords()
 	emit_signal("about_to_progress_actionqueue")
@@ -1518,7 +1519,8 @@ func triplecheck_all_actor_coords():
 		actor.monitor_position_as_coordinate()
 		var coord_after: Vector2 = actor.coord
 		if coord_before != coord_after:
-			print("BATMAN: triplecheck_all_actor_coords() caught ",actor," changing from ",coord_before," to ",coord_after)
+#			print("BATMAN: triplecheck_all_actor_coords() caught ",actor," changing from ",coord_before," to ",coord_after)
+			pass
 	pass
 
 # Note that this only clears the FIRST previous cell! Also, new_coord is already applied to actor.coord before this method is called
