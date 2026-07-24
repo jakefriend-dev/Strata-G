@@ -27,9 +27,10 @@ func PREVIEW():
 	for n in batman.field.board_size.y:
 		y += 1
 		var coord: Vector2 = Vector2(their_frontline_x, y)
-		var o_actor: Actor = batman.grid_actors.get_cellv(coord)
+		var o_actor: Actor = support.get_actor_at_cellv(coord)
 		if utils.actorpass(o_actor):
 			if o_actor.faction != batman.factions.NEUTRAL:
+				print("PRESS FORWARD actor on opposing line: ",o_actor)
 				error_text = "Opposing frontline must be clear of units!"
 				add_actor(o_actor, ROWS.ERROR)
 	

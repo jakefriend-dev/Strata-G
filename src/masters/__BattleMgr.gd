@@ -1051,7 +1051,7 @@ func get_printable_turntaker_name(turndata: Dictionary) -> String:
 
 
 
-### Action management
+### Move selection and inputs
 
 func player_input_validation_checks() -> bool:
 #	if loaded_moveset.empty(): return false
@@ -1184,6 +1184,10 @@ func cycle_player_variant_forward():
 func cycle_player_variant_backward():
 	pass
 
+
+
+# Actionqueue!
+
 func vet_action(action: Array) -> bool:
 	# We expect 2-3 values: A valid actor, a valid method in that actor's script, and *optionally*, an array of param data for the method. The array is allowed to be missing or empty, and can have whatever in it. HOWEVER, in any situation where no paramset is sent, we add an empty array for consistency. A validated action DOES have 3 params.
 	
@@ -1269,6 +1273,7 @@ func progress_action_queue(): # Calls ONE next action, or if there is none, skip
 	
 	aq_call_count += 1
 	var this_aq_call: int = aq_call_count
+	triplecheck_all_actor_coords()
 	emit_signal("about_to_progress_actionqueue")
 	
 	if action_queue.empty(): # No actions queued when this was called! Time to move on
@@ -1503,6 +1508,15 @@ func update_targeted_tiles():
 
 
 # -
+
+func triplecheck_all_actor_coords():
+	for actor in living_actors: if utils.actorpass(actor):
+		var coord_before: Vector2 = actor.coord
+		actor.monitor_position_as_coordinate()
+		var coord_after: Vector2 = actor.coord
+		if coord_before != coord_after:
+			print("BATMAN: triplecheck_all_actor_coords() caught ",actor," changing from ",coord_before," to ",coord_after)
+	pass
 
 # Note that this only clears the FIRST previous cell! Also, new_coord is already applied to actor.coord before this method is called
 func change_actor_grid_coord(actor: Actor, new_coord: Vector2):

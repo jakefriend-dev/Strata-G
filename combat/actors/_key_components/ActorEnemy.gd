@@ -64,14 +64,14 @@ func randomwalk_if_possible(auto_execute_if_true: bool = true) -> bool: # If tru
 
 func walkdir_check(motion: Vector2, ignore_factionline: bool = false) -> bool:
 	if !support.is_tile_traversable_relative(self, motion, ignore_factionline):
-		print("walkdir_check(",motion,") cant traverse that way")
+#		print("walkdir_check(",motion,") cant traverse that way")
 		return false
 	
 	if action_points == 0:
-		print("walkdir_check needs at least 1 AP")
+#		print("walkdir_check needs at least 1 AP")
 		return false
 	
-	print("walkdir_check(",motion,") passed!")
+#	print("walkdir_check(",motion,") passed!")
 	return true
 	pass
 

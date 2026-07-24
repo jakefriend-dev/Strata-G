@@ -4,17 +4,25 @@ var seq: int = 1
 
 func PREVIEW():
 	seq = 1
+	if !support.is_tile_available(actor.coord + actor.my_facing):
+		error_text = "Can't charge if in front of target already"
+		return
+	
+	passfail = true
 	pass
 
 func ACT():
 	match seq:
 		1:
+			seq += 1
 			ACT_charge_forward()
 			return
 		2:
+			seq += 1
 			ACT_bite()
 			return
 		3:
+			seq += 1
 			ACT_charge_back()
 			return
 	end_action()
@@ -47,13 +55,14 @@ func ACT_charge_forward():
 
 func ACT_bite():
 	strife.damage_actor_at_coord(actor, actor.coord + actor.my_facing, actor.dmg(base_damage))
+	print("dog charge: should have just dealt ",actor.dmg(base_damage)," damage at coord ",actor.coord + actor.my_facing," because actor.coord == ",actor.coord)
 	
 	var dur: float = 0.125
 	
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
-	strife.emit_signal("actor_rest_event", self) # Always remember this could in theory kill us
+	strife.emit_signal("actor_rest_event", actor) # Always remember this could in theory kill us
 	if !utils.actorpass(actor): return
 	if !batman.is_my_action(actor): return
 	

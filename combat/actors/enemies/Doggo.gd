@@ -19,11 +19,6 @@ func pre_turn_setup():
 	victim = null
 	pass
 
-#func post_turn_teardown():
-#	allowed_over_faction_lines = false
-#	victim = null
-#	pass
-
 # -
 
 func prep_next_action(): # This func should END with setting up one or multiple actions!
@@ -50,7 +45,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 			return
 		
 		# Otherwise, if we can SEE the target but can't attack it - get angry!
-		elif moveset["ENRAGE_BUFF"].totality_check(self, true):
+		elif moveset["ENRAGE_BUFF"].totality_check(self):
 			prime_npc_move(moveset["ENRAGE_BUFF"])
 			return
 		
@@ -63,7 +58,7 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		return
 	
 	# From here on, we know we CAN'T see the target.
-	print("CANNOT see victim")
+	print("CANNOT see victim (or sees shielded victim)")
 	
 	# If we're enraged, charge/bite regardless! (If we can afford it)
 	if check_status("enrage"):
@@ -108,7 +103,12 @@ func can_see_victim() -> bool:
 	if utils.actorpass(victim):
 		if victim.faction != factions.NEUTRAL:
 			if victim.faction != faction:
-				return true
+				if (victim.coord == coord + my_facing) and victim.shield <= 3:
+					# Avoid shielded enemies if we're ALREADY next to them
+					victim = null
+					return false
+				else:
+					return true
 	victim = null
 	return false
 	pass

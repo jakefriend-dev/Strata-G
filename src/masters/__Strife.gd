@@ -117,7 +117,6 @@ func do_quiet_damage(attacker: Actor, defender: Actor, damage: int, flags: Array
 	# skip_own_faction: Typically FF is default-on; this would bypass that
 
 func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Array, is_quiet: bool):
-#	if damage <= 0: return # Moved this check to later, in case of damage-less effects like Cold
 	if !utils.actorpass(defender): return # Attacker is allowed to be null, though!
 	
 	var combat_package: Dictionary = {}
@@ -135,6 +134,7 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 	if !friendly_fire:
 		if attacker_is_real:
 			if attacker.faction == defender.faction:
+				print("STRIFE: Can't friendly fire!")
 				return
 	
 	# Clear "on next hit we deal" statuses, even if end result is 0 damage
@@ -864,7 +864,9 @@ func damage_actor_at_coord(attacker: Actor, exact_coord: Vector2, damage: int, f
 	if !batman.grid_actors.has_cellv(exact_coord): return
 	
 	var victim: Actor = batman.grid_actors.get_cellv(exact_coord)
+	print("STRIFE.damage_actor_at_coord(",attacker,", ",exact_coord,", ",damage,", ",flags,"): victim is ",victim)
 	if !utils.actorpass(victim): return
+	print("and we DID actorpass")
 	
 	var is_quiet: bool = flags.has("quiet")
 	

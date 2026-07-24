@@ -273,12 +273,13 @@ func is_tile_traversable_relative(actor: Actor, motion: Vector2, any_faction_ove
 	return is_tile_traversable_exact(actor, actor.coord + motion, any_faction_override)
 	
 func is_tile_traversable_exact(actor: Actor, target: Vector2, any_faction_override: bool = false) -> bool:
-	var _start_coord: Vector2 = actor.coord
+# warning-ignore:unused_variable
+	var start_coord: Vector2 = actor.coord
 	var end_coord: Vector2 = target
 	
 	# Can't move off the grid
 	if !batman.grid_tiles.has_cellv(end_coord):
-		print("ACT: iamp[1] Cell does not exist on board!")
+#		print("ACT: iamp[1] Cell ",end_coord," does not exist on board!")
 		return false
 	
 #	if !actor.is_ghost and !ignore_ghost:
@@ -287,7 +288,7 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2, any_faction_overri
 	# IN MOST CIRCUMSTANCES, you can't enter an unavailable space!
 	if !actor.is_ghost:
 		if !is_tile_available(end_coord):
-			print("ACT: iamp[2] Cell is unavailable!")
+#			print("ACT: iamp[2] Cell ",end_coord," is unavailable! (Start coord ",start_coord,")")
 			return false
 	
 	# Can't move on to other factions' cells
@@ -296,17 +297,17 @@ func is_tile_traversable_exact(actor: Actor, target: Vector2, any_faction_overri
 	if !actor.allowed_over_faction_lines and !any_faction_override:
 		if actor.faction == batman.factions.PLAYER:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.PLAYER:
-				print("ACT: iamp[3a] Player cannot exit its faction area!")
+#				print("ACT: iamp[3a] Player cannot exit its faction area!")
 				return false
 		if actor.faction == batman.factions.ENEMY:
 			if batman.grid_factions.get_cellv(end_coord) != batman.factions.ENEMY:
-				print("ACT: iamp[3b] Enemy cannot exit its faction area!")
+#				print("ACT: iamp[3b] Enemy cannot exit its faction area!")
 				return false
 	
 	# Can only move on pits IF you can hover
 	if batman.grid_tiles.get_cellv(end_coord) == batman.tiletypes.PIT:
 		if actor.weight != actor.weightclasses.HOVER:
-			print("ACT: cmev[4] Dest is pit but actor can't hover!")
+#			print("ACT: cmev[4] Dest ",end_coord," is pit but actor can't hover!")
 			return false
 	
 	return true

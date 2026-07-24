@@ -234,7 +234,7 @@ func quick_context_passfail_check() -> bool:
 		
 		if !repreviewed:
 			passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
-			print(self," quick_context_passfail_check A")
+#			print(self," quick_context_passfail_check A")
 			call("PREVIEW")
 		
 		if !passfail:
@@ -257,7 +257,7 @@ func quick_context_passfail_check() -> bool:
 	
 	passfail = false # Always reset passfail if it is NEITHER a telegraph or a RE-preview
 	if has_method("PREVIEW"):
-		print(self," quick_context_passfail_check B")
+#		print(self," quick_context_passfail_check B")
 		call("PREVIEW")
 		if !passfail:
 			if !utils.actorpass(actor):
@@ -269,11 +269,11 @@ func quick_context_passfail_check() -> bool:
 
 func totality_check(a: Actor = null, do_print: bool = false) -> bool:
 	if !quick_context_passfail_check():
-		print(self,".totality_check() failed context check")
+		if do_print: print(self,".totality_check() failed context check")
 		return false
 	
 	if !usability_check(a, do_print):
-		print(self,".totality_check() failed usability check")
+		if do_print: print(self,".totality_check() failed usability check")
 		return false
 	
 	return true
@@ -427,7 +427,7 @@ func _to_string() -> String:
 # warning-ignore:unused_argument
 # "source" is only for debugging
 func restage_MPD(source: String): # Replaces BOTH initialize_MPD() and clear_MPD() of olde
-	if resource_name == "SPIN_DANCE": print(self,".restage_MPD(",source,")")
+#	if resource_name == "SPIN_DANCE": print(self,".restage_MPD(",source,")")
 	
 	if sets == null: # One-time setup
 		sets = Array2D.new()

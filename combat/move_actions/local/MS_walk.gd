@@ -5,25 +5,25 @@ extends MoveAction
 
 
 func PREVIEW():
-	print("-\nWALK's preview manual_variant: ",manual_variant," when actor coord: ",actor.coord)
+#	print("-\nWALK's preview manual_variant: ",manual_variant," when actor coord: ",actor.coord)
 	
 	if actor.action_points == 0:
-		print("Walk outcome FAIL, action points")
+#		print("Walk outcome FAIL, action points")
 		error_text = "Can't walk when no AP"
 		return
 	
 	if manual_variant == Vector2.ZERO:
-		print("Walk outcome FAIL, zerovec")
+#		print("Walk outcome FAIL, zerovec")
 		error_text = "walkdir not set correctly"
 		return
 	
 	var to_coord: Vector2 = actor.coord + manual_variant
 	if !support.is_tile_traversable_exact(actor, to_coord):
-		print("Walk outcome FAIL, can't walk that way")
+#		print("Walk outcome FAIL, can't walk that way")
 		error_text = "Can't walk that way!"
 		return
 	
-	print("Walk outcome PASS")
+#	print("Walk outcome PASS")
 	passfail = true
 	pass
 
