@@ -36,6 +36,7 @@ export var max_shield: int = 0 # Actually "base/starting" shield; max is 16 (4 p
 var shield: int = 0
 
 export var display_name: String = "--"
+export var shorthand_name: String = "" # If not blank, it'll override some things (like turntakers)
 var numerated_name: String = ""
 
 enum bui_tiers {FULL, JUST_PIPS, JUST_HEALTH, INVIS_UNTIL_HIT, NOTHING_EVER}

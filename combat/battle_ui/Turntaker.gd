@@ -92,8 +92,11 @@ func update_values():
 	# Section here for portrait, *eventually!*
 	
 	# Name
-	if namelabel.text != actor.display_name:
-		namelabel.text = actor.display_name
+	var display_name: String = actor.display_name
+	if actor.shorthand_name != "":
+		display_name = actor.shorthand_name
+	if namelabel.text != display_name:
+		namelabel.text = display_name
 	
 	# Healthbar
 	var hp_percent: float = float(actor.health)/float(actor.max_health)

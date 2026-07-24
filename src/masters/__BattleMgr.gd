@@ -640,19 +640,19 @@ func roll_initiative():
 # warning-ignore:unused_variable
 	var actorcount: int = 0
 	
-	for actor in actorset:
+	for actor in actorset: if actor is Actor:
 		var initset: Array = actor.get_initiative() # Size 0-3; 0 for rocks etc
 		if !initset.empty():
 			actorcount += 1 # We just don't count rocks
 		
 		var count_of_type: int = 1
-		var n: String = actor.display_name
-		if !unique_actornames_observed.has(n):
-			unique_actornames_observed[n] = 1
+		var display_name: String = actor.display_name
+		if !unique_actornames_observed.has(display_name):
+			unique_actornames_observed[display_name] = 1
 		else:
-			count_of_type = unique_actornames_observed[n] + 1
-			unique_actornames_observed[n] = count_of_type
-		var numerated_name: String = str(n," ",count_of_type)
+			count_of_type = unique_actornames_observed[display_name] + 1
+			unique_actornames_observed[display_name] = count_of_type
+		var numerated_name: String = str(display_name," ",count_of_type)
 		actor.numerated_name = numerated_name
 		
 		# Go through each turn PER each actor
@@ -665,7 +665,11 @@ func roll_initiative():
 			turndata["init"] = init
 			turndata["has_finished_turn"] = false
 			
-			turndata["display_name"] = n
+			turndata["display_name"] = display_name
+			if actor.shorthand_name == "":
+				turndata["turntaker_name"] = display_name
+			else:
+				turndata["turntaker_name"] = actor.shorthand_name
 			turndata["numerated_name"] = numerated_name
 			turndata["numeration"] = count_of_type
 			turndata["turncount_of_this_actor"] = initcount # Typically 1, could be 2 or 3 for bosses
