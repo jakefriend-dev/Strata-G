@@ -63,7 +63,8 @@ export var misc: String # As of July 18, still not used anywhere...!
 var actor: Actor # Quickref!
 var variant: int # Shortcut that gets updated against batman.highlighted_subactop
 
-export var auto_refresh_MPDs_PCA: bool = true # PCA is "pre choose_action()" which is where the auto-refresh trigger has been moved to!
+export (String, MULTILINE) var dev_notes: String
+export var auto_refresh_MPDs_PCA: bool = true # PCA is "pre choose_action()" which is where the auto-refresh trigger has been moved to! ...okay, Lunge Stomp is using this, but that check also blocks "req_successful_telegraph" cases so what's the actual value of this? Deprecate-able? Or keep just in case? I'd like to flip to unchecked by default, anyways.
 
 
 # Preview data's storage (and telegraphs) --------------------------------------

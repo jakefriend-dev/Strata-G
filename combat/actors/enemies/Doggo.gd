@@ -29,11 +29,11 @@ func pre_turn_setup():
 func prep_next_action(): # This func should END with setting up one or multiple actions!
 	allowed_over_faction_lines = false
 	var can_charge_fwd: bool = support.is_tile_traversable_relative(self, my_facing, true)
-#	print("doggo can charge left? ",can_charge_left)
+	print("doggo can charge fwd? ",can_charge_fwd)
 	
 	# Can we see a victim?
 	if can_see_victim():
-		
+		print("CAN see victim")
 		# Can we bite WITHOUT needing to charge?
 		if victim.coord == (coord + my_facing):
 			if moveset["BASIC_BITE"].totality_check(self, true):
@@ -47,8 +47,6 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		# If we can afford to charge (and have space to), do that!
 		if can_charge_fwd and moveset["FULL_CHARGE"].totality_check(self, true):
 			prime_npc_move(moveset["FULL_CHARGE"])
-			prime_npc_move(moveset["BASIC_BITE"])
-			prime_npc_move(moveset["FULL_CHARGE"], true)
 			return
 		
 		# Otherwise, if we can SEE the target but can't attack it - get angry!
@@ -58,21 +56,20 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		
 		# *Otherwise*, if we can *only* afford to move towards the target, do that.
 		elif walkdir_check(my_facing):
-			LM["WALK"].directed_walk_if_possible(my_facing)
+			directed_walk_if_possible(my_facing)
 			return
 		
 		# If we can see the target but can't do ANYTHING else... just end the turn.
 		return
 	
 	# From here on, we know we CAN'T see the target.
+	print("CANNOT see victim")
 	
 	# If we're enraged, charge/bite regardless! (If we can afford it)
 	if check_status("enrage"):
 		if can_charge_fwd and moveset["FULL_CHARGE"].totality_check(self, true):
-				prime_npc_move(moveset["FULL_CHARGE"])
-				prime_npc_move(moveset["BASIC_BITE"])
-				prime_npc_move(moveset["FULL_CHARGE"], true)
-				return
+			prime_npc_move(moveset["FULL_CHARGE"])
+			return
 		elif support.is_cellv_occupied(coord + my_facing) and moveset["BASIC_BITE"].totality_check(self, true):
 			prime_npc_move(moveset["BASIC_BITE"])
 			return
@@ -82,14 +79,14 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# Move up or down if able (prioritizing your last direction)
 	var movedir: Vector2 = Vector2(0, last_movedir_y)
 	if walkdir_check(movedir):
-		LM["WALK"].directed_walk_if_possible(movedir)
+		directed_walk_if_possible(movedir)
 		return
 	
 	# If you can't move your preferred vert-way, flip!
 	last_movedir_y *= -1
 	movedir = Vector2(0, last_movedir_y)
 	if walkdir_check(movedir):
-		LM["WALK"].directed_walk_if_possible(movedir)
+		directed_walk_if_possible(movedir)
 		return
 	
 	# If we can't vertmove, horzmove? This will be at random.
@@ -97,10 +94,9 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	if !moptions.empty():
 		moptions.shuffle()
 	
-	for cell in moptions:
-		movedir = cell - coord
-		if walkdir_check(movedir):
-			LM["WALK"].directed_walk_if_possible(movedir)
+	for motion in moptions:
+		if walkdir_check(motion):
+			directed_walk_if_possible(motion)
 			return
 	
 	# Can't go anywhere, can't do nothin' :(

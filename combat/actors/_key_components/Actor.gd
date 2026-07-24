@@ -595,15 +595,16 @@ func start_status(status_key: String, override_ticks: int = 0):
 	update_bui()
 	pass
 
-func clear_status(status_key: String):
+func clear_status(status_key: String): # This is for a manual call, ending a status early! (or ending an infinite-duration one)
 	if !ongoing_statuses.has(status_key): return
 	
-	var ending_function: String = ongoing_statuses[status_key]["ending_function"]
-	if has_method(ending_function):
-		call(ending_function, status_key)
-	ongoing_statuses.erase(status_key)
-	log_ended_status(status_key, true)
-	on_any_status_change()
+	internal_conclude_status(status_key, true)
+#	var ending_function: String = ongoing_statuses[status_key]["ending_function"]
+#	if has_method(ending_function):
+#		call(ending_function, status_key)
+#	ongoing_statuses.erase(status_key)
+#	log_ended_status(status_key, true)
+#	on_any_status_change()
 	update_bui()
 	pass
 
@@ -674,16 +675,29 @@ func tick_down_ongoing_statuses(is_turn_start: bool):
 		pass
 	
 	for status_key in newly_ended_status_keys:
-		if ongoing_statuses.has(status_key):
-			var ending_function: String = ongoing_statuses[status_key]["ending_function"]
-			if has_method(ending_function):
-				call(ending_function, status_key)
-			ongoing_statuses.erase(status_key)
-			log_ended_status(status_key, false)
-			on_any_status_change()
+		internal_conclude_status(status_key, false)
+#		if ongoing_statuses.has(status_key):
+#			var ending_function: String = ongoing_statuses[status_key]["ending_function"]
+#			if has_method(ending_function):
+#				call(ending_function, status_key)
+#			ongoing_statuses.erase(status_key)
+#			log_ended_status(status_key, false)
+#			on_any_status_change()
 	update_bui()
 #	ongoing_statuses.clear()
 #	ongoing_statuses = new_dict
+	pass
+
+func internal_conclude_status(status_key: String, manual_end: bool):
+	if ongoing_statuses.has(status_key):
+		var ending_function: String = ongoing_statuses[status_key]["ending_function"]
+		if has_method(ending_function):
+			call(ending_function, status_key)
+	
+		ongoing_statuses.erase(status_key)
+	
+	log_ended_status(status_key, manual_end)
+	on_any_status_change() # Room for there to be confusion here if MULTIPLE statuses end at once...? maybe?
 	pass
 
 func log_ended_status(status_name: String, manual_end: bool):

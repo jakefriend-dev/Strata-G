@@ -137,13 +137,14 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			if attacker.faction == defender.faction:
 				return
 	
+	# Clear "on next hit we deal" statuses, even if end result is 0 damage
+	if attacker_is_real:
+		if attacker.check_status("enrage"):
+			attacker.clear_status("enrage")
+	
 	#
 	# Apply any elemental modifiers here! Increase the damage for hitting a weakness eg.
 	#
-	
-	# REFERENCE - these should ALWAYS be mutually exclusive, I thiiink?
-#	{NORMAL, COLD, FIRE, WOOD, GROUND, AIR, MAGIC, ELEC, POISON, BLOOD, LIGHT}
-	
 	
 	# Determine our element
 	var elem: String = "NORMAL"
@@ -179,7 +180,6 @@ func master_do_damage(attacker: Actor, defender: Actor, damage: int, flags: Arra
 			damage -= 4
 			if damage < 0: damage = 0
 			print("STRIFE: Defender's Overgrowth tile reduced incoming damage")
-	
 	
 	#
 	# Now begin the damage management

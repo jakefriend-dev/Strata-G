@@ -259,9 +259,11 @@ func test_new_combat(test: String):
 			init_new_combat({
 				"halfboard_size": Vector2(4, 4),
 				"npc_positions": [
-					[5, 1, "Thrower"],
+					[5, 1, "Rock"],
+#					[5, 1, "Thrower"],
 					[8, 1, "Doggo"],
-					[8, 2, "Thrower"],
+					[8, 2, "Rock"],
+#					[8, 2, "Thrower"],
 					[6, 3, "Rock"],
 				],
 			})
@@ -1057,7 +1059,6 @@ func player_input_validation_checks() -> bool:
 	if combatstate != C_TURN: return false
 	if !action_queue.empty(): return false
 	return true
-
 
 func change_movewindow_selrow(amount: int):
 	if !player_input_validation_checks(): return

@@ -1,22 +1,24 @@
-[gd_resource type="Resource" load_steps=2 format=2]
+[gd_resource type="Resource" load_steps=3 format=2]
 
 [ext_resource path="res://combat/move_actions/general/MS_full_charge.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/aimflowers/3x3 - east.png" type="Texture" id=2]
 
 [resource]
 resource_local_to_scene = true
 resource_name = "FULL_CHARGE"
 script = ExtResource( 1 )
-display_name = ""
+display_name = "Charge"
 shorthand_name = ""
-short_desc = ""
-display_desc = ""
-option_desc = ""
+short_desc = "Charge across battlefield, bite for DMG dmg, then back"
+display_desc = "Charge into opposing territory, biting the first target you see for DMG dmg, then return to original position. The bite counts as a [rest]."
+option_image = ExtResource( 2 )
+option_desc = "n/a"
 cost = 3
-base_damage = 0
-motion_type = 0
+base_damage = 2
+motion_type = 1
 on_use_cooldown = 0
 initial_cooldown = 0
-display_tags = ""
+display_tags = "resting"
 uses_per_turn = 0
 uses_per_battle = 0
 req_successful_preview = false
@@ -27,4 +29,5 @@ telegraph_cost = 0
 telegraph_motion_type = 0
 fracture_on_use = false
 misc = ""
+dev_notes = ""
 auto_refresh_MPDs_PCA = true

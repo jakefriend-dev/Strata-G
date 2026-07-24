@@ -12,6 +12,9 @@ func ACT():
 			ACT_charge_forward()
 			return
 		2:
+			ACT_bite()
+			return
+		3:
 			ACT_charge_back()
 			return
 	end_action()
@@ -38,6 +41,23 @@ func ACT_charge_forward():
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return
 	
+	batman.append_action(actor, self)
+	end_action()
+	pass
+
+func ACT_bite():
+	strife.damage_actor_at_coord(actor, actor.coord + actor.my_facing, actor.dmg(base_damage))
+	
+	var dur: float = 0.125
+	
+	yield(utils.yt(dur, actor), "timeout")
+	if !batman.is_my_action(actor): return
+	
+	strife.emit_signal("actor_rest_event", self) # Always remember this could in theory kill us
+	if !utils.actorpass(actor): return
+	if !batman.is_my_action(actor): return
+	
+	batman.append_action(actor, self)
 	end_action()
 	pass
 

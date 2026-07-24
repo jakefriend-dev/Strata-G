@@ -1,7 +1,7 @@
 extends MoveAction
 
 
-func _PREVIEW():
+func PREVIEW():
 	if actor.check_status("enrage"):
 		error_text = "Already enraged"
 		return

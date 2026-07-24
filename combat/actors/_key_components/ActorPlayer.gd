@@ -25,7 +25,7 @@ func run_move_preview(is_brand_new_move_selected: bool = false):
 #	print("running move preview for ",move)
 	if move == null: return
 	
-	print("ACTORPLAYER.run_move_preview()")
+#	print("ACTORPLAYER.run_move_preview()")
 	limited_run_move_preview(move, is_brand_new_move_selected)
 	pass
 
