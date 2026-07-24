@@ -54,8 +54,8 @@ func ACT():
 func REACT(_combat_package):
 	print("thrower react?")
 	if actor.telegraphed_move != self: return
-	
 	print("it succeeded bc we had telegraphed it")
+	
 	restage_MPD("drop rock reaction")
 	actor.release_targeted_tiles()
 	actor.sprite.frame = actor.DROPPED_ROCK
