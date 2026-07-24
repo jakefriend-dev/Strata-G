@@ -1,0 +1,33 @@
+[gd_resource type="Resource" load_steps=3 format=2]
+
+[ext_resource path="res://combat/move_actions/enemies/MS_rock_throwery.gd" type="Script" id=1]
+[ext_resource path="res://art/bui/aimflowers/3x3 - sole.png" type="Texture" id=2]
+
+[resource]
+resource_local_to_scene = true
+resource_name = "ROCK_THROWERY"
+script = ExtResource( 1 )
+display_name = "Rock Throw"
+shorthand_name = "RockThrow"
+short_desc = "Throws DMG dmg rock at rand unit"
+display_desc = "Aims a rock at a random opposing unit (prioritizing whoever isn't already threatened), then fires for DMG damage. If this unit's shield is broken while aiming, the attack is cancelled and the unit takes 1 damage instead."
+option_image = ExtResource( 2 )
+option_desc = ""
+cost = 2
+base_damage = 2
+motion_type = 0
+on_use_cooldown = 0
+initial_cooldown = 0
+display_tags = ""
+uses_per_turn = 0
+uses_per_battle = 0
+req_successful_preview = false
+selection_style = 0
+override_global_variant_on_move_load = false
+req_successful_telegraph = true
+telegraph_cost = 1
+telegraph_motion_type = 0
+fracture_on_use = false
+misc = ""
+dev_notes = ""
+auto_refresh_MPDs_PCA = true

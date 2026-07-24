@@ -286,7 +286,9 @@ func will_next_use_be_a_telegraph() -> bool:
 	if !utils.actorpass(actor):
 		return false
 	
-	if actor.telegraphed_move != self:
+	if actor.telegraphed_move == self:
+		# THE ISSUE HERE IS... actor.telegraphed_move is only updated RIGHT BEFORE the move is called, which is AFTER we have spent the cost. so on a successful telegraph, this is actually BLANK, and if it is already true, the next use will be ACT
+		# therefore BLANK telegraphed move = telegraph
 		return false
 	
 	return true
@@ -344,8 +346,10 @@ func effective_cost() -> int:
 	
 	# If not a player, separate telegraph cost is possible!
 	if will_next_use_be_a_telegraph():
+		print(self," cost will be ",telegraph_cost," telegraph cost")
 		return telegraph_cost
 	
+	print(self," cost will be ",cost," regular cost")
 	return cost
 	pass
 

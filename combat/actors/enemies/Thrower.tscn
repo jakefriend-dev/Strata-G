@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://combat/actors/enemies/Thrower.gd" type="Script" id=1]
 [ext_resource path="res://art/actors/Thrower.png" type="Texture" id=2]
 [ext_resource path="res://combat/actors/_key_components/ActorShadow.tscn" type="PackedScene" id=3]
 [ext_resource path="res://combat/actors/_key_components/Actor Shader UMS.tres" type="Shader" id=4]
+[ext_resource path="res://combat/move_actions/general/MR_ENRAGE_BUFF.tres" type="Resource" id=5]
+[ext_resource path="res://combat/move_actions/enemies/MR_ROCK_THROWERY.tres" type="Resource" id=6]
 
 [sub_resource type="ShaderMaterial" id=3]
 resource_local_to_scene = true
@@ -62,10 +64,12 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 max_shield = 2
 display_name = "Thrower"
+shorthand_name = "Throwr"
 base_action_points = 3
 def_weight = 3
 tile_walk_speed = 0.25
 def_immune_poison = true
+loaded_moves = [ ExtResource( 6 ), ExtResource( 5 ), null, null, null, null, null ]
 
 [node name="ArtMgr" type="Node2D" parent="."]
 
