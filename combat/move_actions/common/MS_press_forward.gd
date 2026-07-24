@@ -16,6 +16,7 @@ func PREVIEW():
 	elif actor.faction == batman.factions.ENEMY:
 		my_frontline_x = batman.enemy_frontline_col
 		their_frontline_x = batman.player_frontline_col
+	print("my_frontline_x = ",my_frontline_x,", their_frontline_x = ",their_frontline_x)
 	
 	# If I'm not against the frontline, fail
 	if actor.coord.x != my_frontline_x:

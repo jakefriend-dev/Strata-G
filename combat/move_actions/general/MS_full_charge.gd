@@ -1,6 +1,7 @@
 extends MoveAction
 
 var seq: int = 1
+var return_tile: Vector2
 
 func PREVIEW():
 	seq = 1
@@ -39,7 +40,11 @@ func ACT_charge_forward():
 		return
 	
 	# We're clear! Mark the endpoint and claim our og coord before moving
-	actor.claim_tile()
+	if support.is_actor_on_own_frontline(actor):
+		return_tile = actor.coord
+		# We've already validated charge room, so this should be 100% clear; let's claim the tile in FRONT of us so we seem to move closer!
+	else:
+		return_tile = (actor.coord + actor.my_facing)
 	var dest_coord: Vector2 = chargies.back()
 	
 	# Perform a visual movement to the destination cell!
@@ -66,21 +71,24 @@ func ACT_bite():
 	if !utils.actorpass(actor): return
 	if !batman.is_my_action(actor): return
 	
-	batman.append_action(actor, self)
+	if actor.coord != return_tile:
+		# Don't uncharge if we're already at our endpoint
+		batman.append_action(actor, self)
+	
 	end_action()
 	pass
 
 func ACT_charge_back():
 	# Safety check; we should not start from our claimed tile
-	if actor.coord == actor.claimed_tile:
+	if actor.coord == return_tile:
 		batman.skip_action()
 		return
 	
-	var valid_xdist: float = abs(actor.claimed_tile.x - actor.coord.x)
+	var valid_xdist: float = abs(return_tile.x - actor.coord.x)
 	
 	# Perform a visual movement to the destination cell!
 	var dur: float = valid_xdist*0.1
-	actor.hotslide(actor.claimed_tile, dur)
+	actor.hotslide(return_tile, dur)
 	
 	yield(utils.yt(dur, actor), "timeout")
 	if !batman.is_my_action(actor): return

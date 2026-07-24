@@ -103,7 +103,7 @@ func can_see_victim() -> bool:
 	if utils.actorpass(victim):
 		if victim.faction != factions.NEUTRAL:
 			if victim.faction != faction:
-				if (victim.coord == coord + my_facing) and victim.shield <= 3:
+				if (victim.coord == coord + my_facing) and victim.shield >= 4:
 					# Avoid shielded enemies if we're ALREADY next to them
 					victim = null
 					return false

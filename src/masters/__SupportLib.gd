@@ -190,6 +190,18 @@ func is_tile_available(exact_coord: Vector2, exception_actors: Array = []) -> bo
 	
 	return true
 
+func is_actor_on_own_frontline(actor: Actor) -> bool:
+	if actor is ActorPlayer:
+		return is_equal_approx(actor.coord.x, batman.player_frontline_col)
+	elif actor is ActorEnemy:
+		return is_equal_approx(actor.coord.x, batman.enemy_frontline_col)
+	else:
+		return (is_equal_approx(actor.coord.x, batman.player_frontline_col) or is_equal_approx(actor.coord.x, batman.enemy_frontline_col))
+	pass
+
+func is_actor_on_any_frontline(actor: Actor) -> bool:
+	return (is_equal_approx(actor.coord.x, batman.player_frontline_col) or is_equal_approx(actor.coord.x, batman.enemy_frontline_col))
+
 # PLAYER SHORTCUTS ---------------------------------------------------------------------------------
 
 # MOVE (ORTHAGONAL/ADJACENT) -----------------------------------------------------------------------

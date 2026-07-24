@@ -486,6 +486,9 @@ func load_battle_details():
 		local_board_size = battle_details["halfboard_size"]
 	else:
 		battle_details["halfboard_size"] = local_board_size
+	player_frontline_col = local_board_size.x
+	enemy_frontline_col = player_frontline_col + 1
+	
 	local_board_size.x *= 2
 	# And quickref
 	var w: int = local_board_size.x
