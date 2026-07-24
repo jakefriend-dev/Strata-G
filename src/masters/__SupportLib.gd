@@ -253,7 +253,7 @@ func change_tiletype_mass(coordset: Array, to_tiletype: int, restrictions_overri
 func vet_actormove_optionset_relative(actor: Actor, og_options: Array) -> Array:
 	return master_vet_actormove_optionset(actor, og_options, true)
 func vet_actormove_optionset_exact(actor: Actor, og_options: Array) -> Array:
-	return master_vet_actormove_optionset(actor, og_options, true)
+	return master_vet_actormove_optionset(actor, og_options, false)
 func master_vet_actormove_optionset(actor: Actor, og_options: Array, is_relative: bool = true) -> Array:
 	var valid_options: Array = []
 

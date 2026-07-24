@@ -87,7 +87,7 @@ func ACT_lunge_forward():
 	
 	# Center:
 	support.log_actorhit_if_occupied(actor, ctarget)
-	strife.damage_actor_at_coord(actor, ctarget, actor.dmg(2))
+	strife.damage_actor_at_coord(actor, ctarget, actor.dmg(base_damage))
 	strife.quick_vfx(ctarget, "dust")
 	if support.is_tile_available(ctarget, [actor]):
 		support.change_tiletype_single(ctarget, batman.tiletypes.JAGGED)

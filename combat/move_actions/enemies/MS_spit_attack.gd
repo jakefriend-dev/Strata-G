@@ -47,7 +47,7 @@ func RE_PREVIEW():
 
 func ACT():
 	for target in get_all_cells_by_MPD_type(ROWS.BAD):
-		strife.damage_actor_at_coord(actor, target, actor.dmg(1))
+		strife.damage_actor_at_coord(actor, target, actor.dmg(base_damage))
 		if utils.actorpass(batman.grid_actors.get_cellv(target)):
 			actor.log_hit()
 	

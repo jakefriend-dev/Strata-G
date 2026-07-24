@@ -1,7 +1,13 @@
 extends MoveAction
 
 
-
+func _PREVIEW():
+	if actor.check_status("enrage"):
+		error_text = "Already enraged"
+		return
+	
+	passfail = true
+	pass
 
 func ACT():
 	actor.start_status("enrage")

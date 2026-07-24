@@ -28,17 +28,16 @@ func pre_turn_setup():
 
 func prep_next_action(): # This func should END with setting up one or multiple actions!
 	allowed_over_faction_lines = false
-	var can_charge_left: bool = support.is_tile_traversable_relative(self, my_facing, true)
+	var can_charge_fwd: bool = support.is_tile_traversable_relative(self, my_facing, true)
 #	print("doggo can charge left? ",can_charge_left)
 	
 	# Can we see a victim?
 	if can_see_victim():
 		
-		# If so, can we bite WITHOUT needing to charge?
+		# Can we bite WITHOUT needing to charge?
 		if victim.coord == (coord + my_facing):
-			if can_afford(COST_BITE_NOCHARGE):
-				spend(COST_BITE_NOCHARGE)
-				batman.append_action(self, "bite")
+			if moveset["BASIC_BITE"].totality_check(self, true):
+				prime_npc_move(moveset["BASIC_BITE"])
 				return
 			# If we're literally next to the target and can't afford to bite, we have 1 or 0 AP left and are already where we want to be; give up manually and wait
 			return
@@ -46,71 +45,63 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		# Nope! Time to consider other options. From here on, we're not adjacent to our victim, but we CAN see one.
 		
 		# If we can afford to charge (and have space to), do that!
-		if can_afford(COST_CHARGE) and can_charge_left:
-			spend(COST_CHARGE) # This is the charge-AND-bite combo
-			batman.append_action(self, "charge_forward")
-			batman.append_action(self, "bite")
-			batman.append_action(self, "charge_back")
+		if can_charge_fwd and moveset["FULL_CHARGE"].totality_check(self, true):
+			prime_npc_move(moveset["FULL_CHARGE"])
+			prime_npc_move(moveset["BASIC_BITE"])
+			prime_npc_move(moveset["FULL_CHARGE"], true)
 			return
+		
 		# Otherwise, if we can SEE the target but can't attack it - get angry!
-		elif !check_status("enrage") and can_afford(COST_ENRAGE):
-			spend(COST_ENRAGE)
-			batman.append_action(self, "enrage")
+		elif moveset["ENRAGE_BUFF"].totality_check(self, true):
+			prime_npc_move(moveset["ENRAGE_BUFF"])
 			return
-		# *Otherwise*, if we can move towards the target, do that.
-		elif can_afford(COST_WALK):
-			if can_charge_left:
-				walk_spend_check()
-				batman.append_action(self, "walk", [Vector2.LEFT])
-				return
-		# If we can see the target but can't do ANYTHING else, just end the turn.
+		
+		# *Otherwise*, if we can *only* afford to move towards the target, do that.
+		elif walkdir_check(my_facing):
+			LM["WALK"].directed_walk_if_possible(my_facing)
+			return
+		
+		# If we can see the target but can't do ANYTHING else... just end the turn.
 		return
 	
-	# From here on, we know we CAN'T see the target. So we need to move!
+	# From here on, we know we CAN'T see the target.
 	
 	# If we're enraged, charge/bite regardless! (If we can afford it)
 	if check_status("enrage"):
-		if can_charge_left:
-			if can_afford(COST_CHARGE):
-				print("Doggo charging REGARDLESS OF LACK OF LOS because it enraged last turn! Ostensibly we have at least 1 tile we're allowed to charge into")
-				spend(COST_CHARGE)
-				batman.append_action(self, "charge_forward")
-				batman.append_action(self, "bite")
-				batman.append_action(self, "charge_back")
+		if can_charge_fwd and moveset["FULL_CHARGE"].totality_check(self, true):
+				prime_npc_move(moveset["FULL_CHARGE"])
+				prime_npc_move(moveset["BASIC_BITE"])
+				prime_npc_move(moveset["FULL_CHARGE"], true)
 				return
-		else:
-			if can_afford(COST_BITE_NOCHARGE):
-				print("Doggo biting REGARDLESS OF LACK OF LOS because it enraged last turn! And we don't have the ability to charge")
-				spend(COST_BITE_NOCHARGE)
-				batman.append_action(self, "bite")
-				return
+		elif support.is_cellv_occupied(coord + my_facing) and moveset["BASIC_BITE"].totality_check(self, true):
+			prime_npc_move(moveset["BASIC_BITE"])
+			return
 	
-	if !can_afford(COST_WALK):
-		# Or not - we've got no gas left.
-		return
+	# At this point, we're moving up and down randomly until we see someone.
 	
 	# Move up or down if able (prioritizing your last direction)
 	var movedir: Vector2 = Vector2(0, last_movedir_y)
-	if support.is_tile_traversable_relative(self, movedir):
-		walk_spend_check()
-		batman.append_action(self, "walk", [movedir])
+	if walkdir_check(movedir):
+		LM["WALK"].directed_walk_if_possible(movedir)
 		return
 	
-	# If you can't move your preferred way, flip!
+	# If you can't move your preferred vert-way, flip!
 	last_movedir_y *= -1
 	movedir = Vector2(0, last_movedir_y)
-	if support.is_tile_traversable_relative(self, movedir):
-		walk_spend_check()
-		batman.append_action(self, "walk", [movedir])
+	if walkdir_check(movedir):
+		LM["WALK"].directed_walk_if_possible(movedir)
 		return
 	
 	# If we can't vertmove, horzmove? This will be at random.
 	var moptions: Array = support.vet_actormove_optionset_relative(self, [Vector2.LEFT, Vector2.RIGHT])
 	if !moptions.empty():
 		moptions.shuffle()
-		walk_spend_check()
-		batman.append_action(self, "walk", [moptions[0]])
-		return
+	
+	for cell in moptions:
+		movedir = cell - coord
+		if walkdir_check(movedir):
+			LM["WALK"].directed_walk_if_possible(movedir)
+			return
 	
 	# Can't go anywhere, can't do nothin' :(
 	pass
@@ -118,59 +109,14 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 func can_see_victim() -> bool:
 	victim = support.find_nearest_actor_in_dir(coord, my_facing)
 #	print("victim: ",victim)
-	if victim != null:
-		if victim.faction == factions.PLAYER:
-			return true
+	if utils.actorpass(victim):
+		if victim.faction != factions.NEUTRAL:
+			if victim.faction != faction:
+				return true
 	victim = null
 	return false
 	pass
 
 # -
-
-func ACT_charge_forward():
-	# Claim everything to your left (that you can move to!
-	allowed_over_faction_lines = true
-	var chargies: Array = support.list_all_traversible_tiles_in_dir(my_facing, self)
-#	print("chargies: ",chargies)
-	var xdist: int = chargies.size()
-	
-	if xdist == 0: # Just in case
-		batman.skip_action()
-		return
-	
-	# We're clear! Mark the endpoint and claim our og coord before moving
-	claim_tile()
-	var dest_coord: Vector2 = chargies.back()
-	
-	# Perform a visual movement to the destination cell!
-	var dur: float = float(xdist)*0.1
-	hotslide(dest_coord, dur)
-	
-	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_action(self): return
-	
-	end_action()
-	pass
-
-func ACT_charge_back():
-#	print("Returning from our charge!")
-	
-	# Safety check; we should not start from our claimed tile
-	if coord == claimed_tile:
-		batman.skip_action()
-		return
-	
-	var valid_xdist: float = abs(claimed_tile.x - coord.x)
-	
-	# Perform a visual movement to the destination cell!
-	var dur: float = valid_xdist*0.1
-	hotslide(claimed_tile, dur)
-	
-	yield(utils.yt(dur, self), "timeout")
-	if !batman.is_my_action(self): return
-	
-	allowed_over_faction_lines = false
-	end_action()
-	pass
 
 

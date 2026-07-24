@@ -4,18 +4,6 @@ var seq: int = 1
 
 func PREVIEW():
 	seq = 1
-#
-#	var check_vector: Vector2 = batman.loaded_variant
-#
-#	var unoccupieds: Array = support.list_all_unoccupied_tiles_in_dir(actor.coord, check_vector)
-#	if !unoccupieds.empty():
-#		add_arrow(actor.coord, unoccupieds.back(), ROWS.PASS)
-#
-#	var victim: Actor = support.find_nearest_actor_in_dir(actor.coord, check_vector)
-#	if !utils.actorpass(victim): return
-#
-#	add_actor(victim, ROWS.BAD)
-#	passfail = true
 	pass
 
 func ACT():

@@ -35,10 +35,10 @@ func pre_combat_setup():
 #	print("Beast pre combat setup!")
 	if utils.coin_flip():
 		lunge_vs_spit_coin = false # NEXT one is lunge, so THIS one is spit
-		execute_npc_move(moveset["SPIT_ATTACK"], true)
+		prime_npc_move(moveset["SPIT_ATTACK"], true)
 	else:
 		lunge_vs_spit_coin = true
-		execute_npc_move(moveset["LUNGE_STOMP"], true)
+		prime_npc_move(moveset["LUNGE_STOMP"], true)
 		
 	pass
 
@@ -66,7 +66,7 @@ func prep_next_action():
 		# ...whether or not it actually plays out!
 		if telegraphed_move.totality_check(self, true):
 			did_main_attack = true
-			execute_npc_move(telegraphed_move)
+			prime_npc_move(telegraphed_move)
 			return
 		else:
 			clear_telegraphed_move()
@@ -87,7 +87,7 @@ func prep_next_action():
 	if action_points == next_main_attack.effective_cost():
 		readied_telegraph = true # Flag it as 'we tried' whether or not it executes
 		if next_main_attack.totality_check(self, true):
-			execute_npc_move(next_main_attack)
+			prime_npc_move(next_main_attack)
 			return
 	
 	
@@ -100,7 +100,7 @@ func prep_next_action():
 		var combo_cost: int = next_main_attack.effective_cost() + moveset["ACTION_STEAL_EFFECT"].effective_cost()
 		if can_afford(combo_cost):
 			if moveset["ACTION_STEAL_EFFECT"].totality_check():
-				execute_npc_move(moveset["ACTION_STEAL_EFFECT"])
+				prime_npc_move(moveset["ACTION_STEAL_EFFECT"])
 				return
 	
 	
@@ -124,7 +124,7 @@ func prep_next_action():
 				randomwalk_if_possible()
 				return
 			else:
-				execute_npc_move(moveset["REPO_JUMP"])
+				prime_npc_move(moveset["REPO_JUMP"])
 				return
 		
 		else: # ONLY walk!
@@ -132,13 +132,13 @@ func prep_next_action():
 			return
 	
 	elif can_repo: # ONLY repo!
-		execute_npc_move(moveset["REPO_JUMP"])
+		prime_npc_move(moveset["REPO_JUMP"])
 		return
 	
 	# And if we can't walk OR repo, well - maybe just skip ahead to the telegraph?
 	readied_telegraph = true # Once we get to this point, turn's over either way
 	if next_main_attack.totality_check(self, true):
-		execute_npc_move(next_main_attack)
+		prime_npc_move(next_main_attack)
 		return
 	
 	pass
