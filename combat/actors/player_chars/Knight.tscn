@@ -68,7 +68,7 @@ shader_param/replacer_col_9 = Color( 1, 1, 1, 1 )
 [node name="Knight" type="Node2D"]
 script = ExtResource( 1 )
 first_initiative = 3
-max_shield = 1
+max_shield = 2
 display_name = "Knight"
 base_action_points = 5
 faction = 1

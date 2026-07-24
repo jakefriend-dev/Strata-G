@@ -26,8 +26,8 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	var can_charge_fwd: bool = support.is_tile_traversable_relative(self, my_facing, true)
 #	print("doggo can charge fwd? ",can_charge_fwd)
 	
-	# Can we see a victim?
-	if can_see_victim():
+	# Can we see a (hurtable) victim?
+	if can_see_victim(true):
 #		print("CAN see victim")
 		# Can we bite WITHOUT needing to charge?
 		if victim.coord == (coord + my_facing):
@@ -56,6 +56,33 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 		
 		# If we can see the target but can't do ANYTHING else... just end the turn.
 		return
+	
+	# Can we see a victim we can ALMOST hurt?
+	if can_see_victim(false):
+#		print("a")
+		
+		# Check adjacency for non-charge-bite first
+		if victim.coord == (coord + my_facing):
+#			print("b1")
+			if victim.shield < (4 + get_damage_mod_total()) + 4:
+#				print("b2")
+				# If we COULD hurt it after enraging, try that!
+				if moveset["ENRAGE_BUFF"].totality_check(self):
+#					print("b3")
+					prime_npc_move(moveset["ENRAGE_BUFF"])
+					return
+		
+		# Then check against charge damage
+		else:
+#			print("c1")
+			if victim.shield < (8 + get_damage_mod_total()) + 4:
+#				print("c2")
+				# If we COULD hurt it after enraging, try that!
+				if moveset["ENRAGE_BUFF"].totality_check(self):
+#					print("c3")
+					prime_npc_move(moveset["ENRAGE_BUFF"])
+					return
+		
 	
 	# From here on, we know we CAN'T see the target.
 #	print("CANNOT see victim (or sees shielded victim)")
@@ -97,14 +124,18 @@ func prep_next_action(): # This func should END with setting up one or multiple 
 	# Can't go anywhere, can't do nothin' :(
 	pass
 
-func can_see_victim() -> bool:
+func can_see_victim(must_be_weak: bool) -> bool:
 	victim = support.find_nearest_actor_in_dir(coord, my_facing)
 #	print("victim: ",victim)
 	if utils.actorpass(victim):
 		if victim.faction != factions.NEUTRAL:
 			if victim.faction != faction:
-				if (victim.coord == coord + my_facing) and victim.shield >= 4:
-					# Avoid shielded enemies if we're ALREADY next to them
+				if must_be_weak and (victim.coord == coord + my_facing) and victim.shield >= (4 + get_damage_mod_total()):
+					# Avoid shielded enemies (against weaker bite)
+					victim = null
+					return false
+				elif must_be_weak and victim.shield >= (8 + get_damage_mod_total()):
+					# Avoid shielded enemies (against stronger bite-charge)
 					victim = null
 					return false
 				else:
